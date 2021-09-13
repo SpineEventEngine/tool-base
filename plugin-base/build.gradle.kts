@@ -27,6 +27,7 @@
 import com.google.common.io.Files
 import com.google.protobuf.gradle.generateProtoTasks
 import com.google.protobuf.gradle.protobuf
+import io.spine.gradle.internal.IncrementGuard
 import io.spine.internal.dependency.Grpc
 import io.spine.internal.dependency.Protobuf
 import java.util.*
@@ -79,3 +80,5 @@ val prepareProtocConfigVersions by tasks.registering {
 }
 
 tasks.processResources.get().dependsOn(prepareProtocConfigVersions)
+
+apply<IncrementGuard>()

@@ -24,6 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import io.spine.gradle.internal.IncrementGuard
 import io.spine.internal.dependency.JavaPoet
 import io.spine.internal.dependency.JavaX
 
@@ -38,3 +39,5 @@ dependencies {
 
     testImplementation("io.spine.tools:spine-testlib:$spineVersion")
 }
+
+apply<IncrementGuard>()
