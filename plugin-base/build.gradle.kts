@@ -30,6 +30,7 @@ import com.google.protobuf.gradle.protobuf
 import io.spine.gradle.internal.IncrementGuard
 import io.spine.internal.dependency.Grpc
 import io.spine.internal.dependency.Protobuf
+import io.spine.internal.dependency.Spine
 import java.util.*
 
 kotlin { explicitApi() }
@@ -41,8 +42,8 @@ dependencies {
     api(Protobuf.GradlePlugin.lib)
     api(project(":tool-base"))
 
-    testImplementation("io.spine.tools:spine-testlib:$spineVersion")
-    testImplementation("io.spine.tools:spine-plugin-testlib:$spineVersion")
+    testImplementation(project(":plugin-testlib"))
+    testImplementation(Spine(project).testlib)
 }
 
 protobuf {

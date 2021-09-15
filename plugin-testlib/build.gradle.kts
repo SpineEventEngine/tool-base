@@ -1,3 +1,5 @@
+import io.spine.internal.dependency.Spine
+
 /*
  * Copyright 2021, TeamDev. All rights reserved.
  *
@@ -28,7 +30,7 @@ val spineVersion: String by extra
 
 dependencies {
     implementation(project(":plugin-base"))
-    implementation("io.spine.tools:spine-testlib:$spineVersion")
+    implementation(Spine(project).testlib)
     implementation(gradleApi())
     implementation(gradleTestKit())
 }
