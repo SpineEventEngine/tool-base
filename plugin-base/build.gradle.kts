@@ -32,8 +32,6 @@ import io.spine.internal.dependency.Grpc
 import io.spine.internal.dependency.Protobuf
 import java.util.*
 
-group = "io.spine.tools"
-
 kotlin { explicitApi() }
 
 val spineVersion: String by extra

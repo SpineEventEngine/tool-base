@@ -28,8 +28,6 @@ import io.spine.gradle.internal.IncrementGuard
 import io.spine.internal.dependency.JavaPoet
 import io.spine.internal.dependency.JavaX
 
-group = "io.spine.tools"
-
 val spineVersion: String by extra
 
 dependencies {
