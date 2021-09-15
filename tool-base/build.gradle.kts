@@ -29,8 +29,6 @@ import io.spine.internal.dependency.JavaPoet
 import io.spine.internal.dependency.JavaX
 import io.spine.internal.dependency.Spine
 
-val spineVersion: String by extra
-
 dependencies {
     val spineDeps = Spine(project)
 

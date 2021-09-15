@@ -35,8 +35,6 @@ import java.util.*
 
 kotlin { explicitApi() }
 
-val spineVersion: String by extra
-
 dependencies {
     api(gradleApi())
     api(Protobuf.GradlePlugin.lib)
@@ -55,6 +53,8 @@ protobuf {
     }
 }
 
+val spineBaseVersion: String by extra
+
 val prepareProtocConfigVersions by tasks.registering {
     description = "Prepares the versions.properties file."
 
@@ -62,7 +62,7 @@ val prepareProtocConfigVersions by tasks.registering {
     outputs.file(file)
 
     val versions = Properties()
-    versions.setProperty("baseVersion", spineVersion)
+    versions.setProperty("baseVersion", spineBaseVersion)
     versions.setProperty("protobufVersion", Protobuf.version)
     versions.setProperty("gRPCVersion", Grpc.version)
 

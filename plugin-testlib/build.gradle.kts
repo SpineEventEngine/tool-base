@@ -26,8 +26,6 @@ import io.spine.internal.dependency.Spine
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val spineVersion: String by extra
-
 dependencies {
     implementation(project(":plugin-base"))
     implementation(Spine(project).testlib)
