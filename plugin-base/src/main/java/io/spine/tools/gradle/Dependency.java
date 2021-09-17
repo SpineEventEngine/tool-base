@@ -27,6 +27,7 @@
 package io.spine.tools.gradle;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static io.spine.util.Exceptions.newIllegalStateException;
 
 /**
  * A Maven-style dependency specification.
@@ -44,6 +45,25 @@ public interface Dependency {
      * Obtains the name of this dependency.
      */
     String name();
+
+    /**
+     * Obtains this dependency group ID and name joined on an underscore symbol ({@code _}).
+     */
+    default String fileSafeId() {
+        return groupId() + '_' + name();
+    }
+
+    /**
+     * Compiles an {@link Artifact} for this dependency with a version from the given
+     * set of versions.
+     */
+    default Artifact withVersionFrom(DependencyVersions versions) {
+        String version = versions.versionOf(this)
+                                 .orElseThrow(() -> newIllegalStateException(
+                                         "No version found for `%s`.", this
+                                 ));
+        return ofVersion(version);
+    }
 
     /**
      * Compiles an {@link Artifact} for this dependency.

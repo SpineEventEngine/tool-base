@@ -50,9 +50,11 @@ import static io.spine.tools.groovy.ConsumerClosure.closure;
  * <p>Any extending plugin requires {@code com.google.protobuf} plugin. If it is not applied,
  * no action is performed.
  */
+@SuppressWarnings("AbstractClassNeverImplemented")
+    // Implemented in language-specific parts of Model Compiler.
 public abstract class ProtocConfigurationPlugin extends SpinePlugin {
 
-    protected static final DependencyVersions VERSIONS = DependencyVersions.get();
+    protected static final DependencyVersions VERSIONS = DependencyVersions.loadFor("plugin-base");
 
     @Override
     public void apply(Project project) {
@@ -73,10 +75,10 @@ public abstract class ProtocConfigurationPlugin extends SpinePlugin {
     private void configureProtobuf(Project project, ProtobufConfigurator protobuf) {
         Path generatedFilesBaseDir = generatedFilesBaseDir(project);
         protobuf.setGeneratedFilesBaseDir(generatedFilesBaseDir.toString());
-        String version = VERSIONS.protobuf();
+        ThirdPartyDependency protoc = protobufCompiler();
+        String protocArtifactNotation = protoc.withVersionFrom(VERSIONS).notation();
         protobuf.protoc(closure(
-                (ExecutableLocator locator) ->
-                        locator.setArtifact(protobufCompiler().ofVersion(version).notation())
+                (ExecutableLocator locator) -> locator.setArtifact(protocArtifactNotation)
         ));
         ConsumerClosure<NamedDomainObjectContainer<ExecutableLocator>> pluginConfig = closure(
                 plugins -> configureProtocPlugins(plugins, project)

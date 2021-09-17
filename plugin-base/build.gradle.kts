@@ -24,13 +24,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.google.common.io.Files
 import com.google.protobuf.gradle.generateProtoTasks
 import com.google.protobuf.gradle.protobuf
 import io.spine.gradle.internal.IncrementGuard
-import io.spine.internal.dependency.Grpc
 import io.spine.internal.dependency.Protobuf
 import io.spine.internal.dependency.Spine
+import io.spine.internal.gradle.VersionWriter
+import io.spine.internal.gradle.WriteVersions
 import java.util.*
 
 kotlin { explicitApi() }
@@ -53,31 +53,5 @@ protobuf {
     }
 }
 
-val spineBaseVersion: String by extra
-
-val prepareProtocConfigVersions by tasks.registering {
-    description = "Prepares the versions.properties file."
-
-    val file = file("$projectDir/generated/main/resources/versions.properties")
-    outputs.file(file)
-
-    val versions = Properties()
-    versions.setProperty("baseVersion", spineBaseVersion)
-    versions.setProperty("protobufVersion", Protobuf.version)
-    versions.setProperty("gRPCVersion", Grpc.version)
-
-    @Suppress("UNCHECKED_CAST")
-    inputs.properties(HashMap(versions) as MutableMap<String, *>)
-
-    doLast {
-        Files.createParentDirs(file)
-        file.createNewFile()
-        file.outputStream().use {
-            versions.store(it, "Versions of dependencies of the Model Compiler plugin and the Spine Protoc plugin.")
-        }
-    }
-}
-
-tasks.processResources.get().dependsOn(prepareProtocConfigVersions)
-
 apply<IncrementGuard>()
+apply<VersionWriter>()
