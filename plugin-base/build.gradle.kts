@@ -55,3 +55,7 @@ protobuf {
 
 apply<IncrementGuard>()
 apply<VersionWriter>()
+
+tasks.withType<WriteVersions> {
+    version(Protobuf.compiler)
+}

@@ -54,7 +54,7 @@ import static io.spine.tools.groovy.ConsumerClosure.closure;
     // Implemented in language-specific parts of Model Compiler.
 public abstract class ProtocConfigurationPlugin extends SpinePlugin {
 
-    protected static final DependencyVersions VERSIONS = DependencyVersions.loadFor("plugin-base");
+    private static final DependencyVersions versions = DependencyVersions.loadFor("plugin-base");
 
     @Override
     public void apply(Project project) {
@@ -76,7 +76,7 @@ public abstract class ProtocConfigurationPlugin extends SpinePlugin {
         Path generatedFilesBaseDir = generatedFilesBaseDir(project);
         protobuf.setGeneratedFilesBaseDir(generatedFilesBaseDir.toString());
         ThirdPartyDependency protoc = protobufCompiler();
-        String protocArtifactNotation = protoc.withVersionFrom(VERSIONS).notation();
+        String protocArtifactNotation = protoc.withVersionFrom(versions).notation();
         protobuf.protoc(closure(
                 (ExecutableLocator locator) -> locator.setArtifact(protocArtifactNotation)
         ));
