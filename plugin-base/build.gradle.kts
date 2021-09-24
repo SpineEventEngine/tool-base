@@ -48,7 +48,8 @@ protobuf {
     generateProtoTasks {
         for (task in all()) {
             task.generateDescriptorSet = true
-            task.descriptorSetOptions.path = "$buildDir/descriptors/${task.sourceSet.name}/known_types.desc"
+            task.descriptorSetOptions.path =
+                "$buildDir/descriptors/${task.sourceSet.name}/known_types.desc"
         }
     }
 }
@@ -73,7 +74,10 @@ val prepareProtocConfigVersions by tasks.registering {
         Files.createParentDirs(file)
         file.createNewFile()
         file.outputStream().use {
-            versions.store(it, "Versions of dependencies of the Model Compiler plugin and the Spine Protoc plugin.")
+            versions.store(
+                it,
+                "Versions of dependencies of the Model Compiler plugin and the Spine Protoc plugin."
+            )
         }
     }
 }
