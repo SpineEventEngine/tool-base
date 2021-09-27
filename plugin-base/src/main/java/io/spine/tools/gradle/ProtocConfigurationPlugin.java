@@ -26,6 +26,7 @@
 
 package io.spine.tools.gradle;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.gradle.ExecutableLocator;
 import com.google.protobuf.gradle.GenerateProtoTask;
@@ -54,7 +55,9 @@ import static io.spine.tools.groovy.ConsumerClosure.closure;
     // Implemented in language-specific parts of Model Compiler.
 public abstract class ProtocConfigurationPlugin extends SpinePlugin {
 
-    private static final DependencyVersions versions = DependencyVersions.loadFor("plugin-base");
+    @SuppressWarnings("DuplicateStringLiteralInspection") // A duplicate in tests.
+    @VisibleForTesting
+    static final DependencyVersions versions = DependencyVersions.loadFor("plugin-base");
 
     @Override
     public void apply(Project project) {

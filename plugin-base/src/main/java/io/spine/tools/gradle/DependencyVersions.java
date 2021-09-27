@@ -39,6 +39,7 @@ import java.util.Properties;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static io.spine.util.Exceptions.illegalStateWithCauseOf;
+import static java.lang.String.format;
 
 /**
  * Versions of the dependencies that are used by Spine plugins.
@@ -63,7 +64,7 @@ public final class DependencyVersions {
      */
     public static DependencyVersions loadFor(String artifactName) {
         checkNotNull(artifactName);
-        String fileName = String.format("/versions-%s.properties", artifactName);
+        String fileName = format("versions-%s.properties", artifactName);
         Resource resource = Resource.file(fileName, DependencyVersions.class.getClassLoader());
         try (Reader reader = resource.openAsText()) {
             Properties properties = new Properties();
