@@ -28,16 +28,18 @@ package io.spine.tools.gradle;
 
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.NullPointerTester;
-import com.google.common.truth.Truth;
+import com.google.common.truth.StringSubject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static com.google.common.truth.Truth.assertThat;
 import static io.spine.tools.gradle.given.ThirdPartyDependencyTestEnv.BASE;
 import static io.spine.tools.gradle.given.ThirdPartyDependencyTestEnv.EXAMPLE;
 import static io.spine.tools.gradle.given.ThirdPartyDependencyTestEnv.EXAMPLE_GROUP;
 import static io.spine.tools.gradle.given.ThirdPartyDependencyTestEnv.SPINE_GROUP;
 import static java.lang.String.format;
 
+@DisplayName("`ThirdPartyDependency` should")
 class ThirdPartyDependencyTest {
 
     @Test
@@ -66,6 +68,18 @@ class ThirdPartyDependencyTest {
         Dependency dependency = new ThirdPartyDependency(EXAMPLE_GROUP, EXAMPLE);
         Artifact artifact = dependency.ofVersion(version);
         String expectedArtifactNotation = format("%s:%s:%s", EXAMPLE_GROUP, EXAMPLE, version);
-        Truth.assertThat(artifact.notation()).isEqualTo(expectedArtifactNotation);
+        assertThat(artifact.notation())
+                .isEqualTo(expectedArtifactNotation);
+    }
+
+    @Test
+    @DisplayName("create a file-safe ID for the dependency")
+    void fileSafeId() {
+        Dependency dependency = new ThirdPartyDependency(EXAMPLE_GROUP, EXAMPLE);
+        String id = dependency.fileSafeId();
+        StringSubject assertId = assertThat(id);
+        assertId.contains(EXAMPLE_GROUP);
+        assertId.contains(EXAMPLE);
+        assertId.doesNotContain(":");
     }
 }
