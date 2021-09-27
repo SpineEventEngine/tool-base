@@ -58,6 +58,7 @@ public interface Dependency {
      * set of versions.
      */
     default Artifact withVersionFrom(DependencyVersions versions) {
+        checkNotNull(versions);
         String version = versions.versionOf(this)
                                  .orElseThrow(() -> newIllegalStateException(
                                          "No version found for `%s`.", this
