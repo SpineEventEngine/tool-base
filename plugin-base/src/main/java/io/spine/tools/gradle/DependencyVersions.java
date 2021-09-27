@@ -89,6 +89,7 @@ public final class DependencyVersions {
      * @return the version or {@code Optional.empty()} if there is no version for the given artifact
      */
     public Optional<String> versionOf(Dependency dependency) {
+        checkNotNull(dependency);
         String key = dependency.fileSafeId();
         if (versions.containsKey(key)) {
             return Optional.of(versions.get(key));
