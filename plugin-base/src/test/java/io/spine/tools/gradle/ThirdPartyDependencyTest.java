@@ -33,6 +33,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static com.google.common.truth.Truth.assertThat;
+import static io.spine.testing.DisplayNames.NOT_ACCEPT_NULLS;
 import static io.spine.tools.gradle.given.ThirdPartyDependencyTestEnv.BASE;
 import static io.spine.tools.gradle.given.ThirdPartyDependencyTestEnv.EXAMPLE;
 import static io.spine.tools.gradle.given.ThirdPartyDependencyTestEnv.EXAMPLE_GROUP;
@@ -44,9 +45,18 @@ class ThirdPartyDependencyTest {
 
     @Test
     @DisplayName("not accept nulls on construction")
-    void nulls() {
+    void nullsInCtors() {
         new NullPointerTester()
                 .testAllPublicConstructors(ThirdPartyDependency.class);
+    }
+
+    @Test
+    @DisplayName(NOT_ACCEPT_NULLS)
+    void nulls() {
+        ThirdPartyDependency dependency =
+                new ThirdPartyDependency("org.example.group", "example-artifact-name");
+        new NullPointerTester()
+                .testAllPublicInstanceMethods(dependency);
     }
 
     @Test
