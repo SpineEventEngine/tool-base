@@ -55,8 +55,8 @@ import static io.spine.tools.groovy.ConsumerClosure.closure;
     // Implemented in language-specific parts of Model Compiler.
 public abstract class ProtocConfigurationPlugin extends SpinePlugin {
 
-    @SuppressWarnings("DuplicateStringLiteralInspection") // A duplicate in tests.
     @VisibleForTesting
+    @SuppressWarnings("DuplicateStringLiteralInspection" /* A duplicate in tests. */)
     static final DependencyVersions versions = DependencyVersions.loadFor("plugin-base");
 
     @Override
