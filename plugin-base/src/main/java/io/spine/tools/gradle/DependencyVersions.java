@@ -26,103 +26,76 @@
 
 package io.spine.tools.gradle;
 
+import com.google.common.collect.ImmutableMap;
+import io.spine.annotation.Internal;
+import io.spine.io.Resource;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
-import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static io.spine.util.Exceptions.illegalStateWithCauseOf;
+import static java.lang.String.format;
 
 /**
  * Versions of the dependencies that are used by Spine plugins.
  *
  * @see ProtocConfigurationPlugin
  */
+@Internal
 public final class DependencyVersions {
 
-    private static final String RESOURCE_NAME = "/versions.properties";
+    private final ImmutableMap<String, String> versions;
 
-    private static final DependencyVersions INSTANCE = load();
-
-    private final String spineBase;
-    private final String protobuf;
-    private final String grpc;
-
-    private DependencyVersions(String spineBase, String protobuf, String grpc) {
-        this.spineBase = spineBase;
-        this.protobuf = protobuf;
-        this.grpc = grpc;
+    private DependencyVersions(ImmutableMap<String, String> versions) {
+        this.versions = versions;
     }
 
     /**
-     * Obtains the {@code DependencyVersions} instance.
+     * Loads the versions from a {@code .properties} resource file.
+     *
+     * <p>The artifactName is the name of the artifact which supplied the {@code .properties} file.
+     * The name of the file must be {@code versions-[artifact name].properties},
+     * where {@code [artifact name]} is the given {@code artifactName}.
      */
-    public static DependencyVersions get() {
-        return INSTANCE;
-    }
-
-    /**
-     * Loads the versions from {@code versions.properties} resource file.
-     */
-    private static DependencyVersions load() {
-         try (InputStream resource = DependencyVersions.class.getResourceAsStream(RESOURCE_NAME)) {
-             checkState(resource != null, "The resource `%s` is not available.", RESOURCE_NAME);
-             Reader reader = new InputStreamReader(resource, UTF_8);
-             Properties properties = new Properties();
-             properties.load(reader);
-             return loadFrom(properties);
-         } catch (IOException e) {
-             throw illegalStateWithCauseOf(e);
-         }
-    }
-
-    private static DependencyVersions loadFrom(Properties properties) {
-        return new DependencyVersions(Property.SPINE.from(properties),
-                                      Property.PROTOBUF.from(properties),
-                                      Property.GRPC.from(properties));
-    }
-
-    /**
-     * Obtains the version of Spine base, Spine model-compiler plugin, and Spine Protoc plugin.
-     */
-    public String spineBase() {
-        return spineBase;
-    }
-
-    /**
-     * Obtains the version of Protobuf.
-     */
-    public String protobuf() {
-        return protobuf;
-    }
-
-    /**
-     * Obtains the version of gRPC.
-     */
-    public String grpc() {
-        return grpc;
-    }
-
-    private enum Property {
-
-        SPINE("baseVersion"),
-        PROTOBUF("protobufVersion"),
-        GRPC("gRPCVersion");
-
-        private final String name;
-
-        Property(String name) {
-            this.name = name;
+    public static DependencyVersions loadFor(String artifactName) {
+        checkNotNull(artifactName);
+        String fileName = format("versions-%s.properties", artifactName);
+        Resource resource = Resource.file(fileName, DependencyVersions.class.getClassLoader());
+        try (Reader reader = resource.openAsText()) {
+            Properties properties = new Properties();
+            properties.load(reader);
+            return loadFrom(properties);
+        } catch (IOException e) {
+            throw illegalStateWithCauseOf(e);
         }
+    }
 
-        private String from(Properties properties) {
-            String value = properties.getProperty(name);
-            checkNotNull(value, "The property `%s` could not be found.", name);
-            return value;
+    private static DependencyVersions loadFrom(Map<?, ?> properties) {
+        ImmutableMap<String, String> versions = properties
+                .entrySet()
+                .stream()
+                .collect(toImmutableMap(e -> e.getKey().toString(),
+                                        e -> e.getValue().toString()));
+        return new DependencyVersions(versions);
+    }
+
+    /**
+     * Obtains the version of the given artifact by its group ID and name.
+     *
+     * @return the version or {@code Optional.empty()} if there is no version for the given artifact
+     */
+    public Optional<String> versionOf(Dependency dependency) {
+        checkNotNull(dependency);
+        String key = dependency.fileSafeId();
+        if (versions.containsKey(key)) {
+            return Optional.of(versions.get(key));
+        } else {
+            return Optional.empty();
         }
     }
 }

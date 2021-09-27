@@ -26,6 +26,7 @@
 
 package io.spine.tools.gradle;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.gradle.ExecutableLocator;
 import com.google.protobuf.gradle.GenerateProtoTask;
@@ -50,9 +51,13 @@ import static io.spine.tools.groovy.ConsumerClosure.closure;
  * <p>Any extending plugin requires {@code com.google.protobuf} plugin. If it is not applied,
  * no action is performed.
  */
+@SuppressWarnings("AbstractClassNeverImplemented")
+    // Implemented in language-specific parts of Model Compiler.
 public abstract class ProtocConfigurationPlugin extends SpinePlugin {
 
-    protected static final DependencyVersions VERSIONS = DependencyVersions.get();
+    @VisibleForTesting
+    @SuppressWarnings("DuplicateStringLiteralInspection" /* A duplicate in tests. */)
+    static final DependencyVersions versions = DependencyVersions.loadFor("plugin-base");
 
     @Override
     public void apply(Project project) {
@@ -73,10 +78,10 @@ public abstract class ProtocConfigurationPlugin extends SpinePlugin {
     private void configureProtobuf(Project project, ProtobufConfigurator protobuf) {
         Path generatedFilesBaseDir = generatedFilesBaseDir(project);
         protobuf.setGeneratedFilesBaseDir(generatedFilesBaseDir.toString());
-        String version = VERSIONS.protobuf();
+        ThirdPartyDependency protoc = protobufCompiler();
+        String protocArtifactNotation = protoc.withVersionFrom(versions).notation();
         protobuf.protoc(closure(
-                (ExecutableLocator locator) ->
-                        locator.setArtifact(protobufCompiler().ofVersion(version).notation())
+                (ExecutableLocator locator) -> locator.setArtifact(protocArtifactNotation)
         ));
         ConsumerClosure<NamedDomainObjectContainer<ExecutableLocator>> pluginConfig = closure(
                 plugins -> configureProtocPlugins(plugins, project)
@@ -92,7 +97,7 @@ public abstract class ProtocConfigurationPlugin extends SpinePlugin {
         /*
          *  Creating a hard-copy of "live" view of matching Gradle tasks.
          *
-         *  Otherwise a `ConcurrentModificationException` is thrown upon an attempt to
+         *  Otherwise, a `ConcurrentModificationException` is thrown upon an attempt to
          *  insert a task into the Gradle lifecycle.
          */
         ImmutableList<GenerateProtoTask> allTasks = ImmutableList.copyOf(tasksProxy);
