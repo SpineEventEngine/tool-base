@@ -94,7 +94,7 @@ public abstract class ProtocConfigurationPlugin extends SpinePlugin {
         /*
          *  Creating a hard-copy of "live" view of matching Gradle tasks.
          *
-         *  Otherwise a `ConcurrentModificationException` is thrown upon an attempt to
+         *  Otherwise, a `ConcurrentModificationException` is thrown upon an attempt to
          *  insert a task into the Gradle lifecycle.
          */
         ImmutableList<GenerateProtoTask> allTasks = ImmutableList.copyOf(tasksProxy);
