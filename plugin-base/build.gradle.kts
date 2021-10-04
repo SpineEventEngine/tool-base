@@ -26,9 +26,9 @@
 
 import com.google.protobuf.gradle.generateProtoTasks
 import com.google.protobuf.gradle.protobuf
-import io.spine.gradle.internal.IncrementGuard
 import io.spine.internal.dependency.Protobuf
 import io.spine.internal.dependency.Spine
+import io.spine.internal.gradle.IncrementGuard
 import io.spine.internal.gradle.VersionWriter
 import io.spine.internal.gradle.WriteVersions
 import java.util.*
