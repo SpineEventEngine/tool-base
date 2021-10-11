@@ -26,12 +26,10 @@
 
 import com.google.protobuf.gradle.generateProtoTasks
 import com.google.protobuf.gradle.protobuf
-import io.spine.gradle.internal.IncrementGuard
 import io.spine.internal.dependency.Protobuf
-import io.spine.internal.dependency.Spine
+import io.spine.internal.gradle.IncrementGuard
 import io.spine.internal.gradle.VersionWriter
 import io.spine.internal.gradle.WriteVersions
-import java.util.*
 
 kotlin { explicitApi() }
 
@@ -41,7 +39,6 @@ dependencies {
     api(project(":tool-base"))
 
     testImplementation(project(":plugin-testlib"))
-    testImplementation(Spine(project).testlib)
 }
 
 protobuf {

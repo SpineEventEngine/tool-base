@@ -27,8 +27,8 @@
 import io.spine.internal.dependency.Spine
 
 dependencies {
-    implementation(project(":plugin-base"))
-    implementation(Spine(project).testlib)
-    implementation(gradleApi())
-    implementation(gradleTestKit())
+    api(gradleApi())
+    api(gradleTestKit())
+    api(Spine(project).testlib)
+    api(project(":plugin-base"))
 }
