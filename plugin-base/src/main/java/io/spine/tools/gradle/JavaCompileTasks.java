@@ -50,7 +50,7 @@ public final class JavaCompileTasks {
     }
 
     /**
-     * Creates a new instance for the passed projects.
+     * Creates a new instance for the given project.
      */
     public static JavaCompileTasks of(Project project) {
         checkNotNull(project);
