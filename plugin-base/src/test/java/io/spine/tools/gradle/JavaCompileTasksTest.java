@@ -26,46 +26,38 @@
 
 package io.spine.tools.gradle;
 
+import io.spine.tools.gradle.given.StubProject;
 import org.gradle.api.Project;
-import org.gradle.api.tasks.TaskCollection;
-import org.gradle.api.tasks.TaskContainer;
-import org.gradle.api.tasks.compile.CompileOptions;
-import org.gradle.api.tasks.compile.JavaCompile;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.List;
+import static io.spine.tools.gradle.given.ProjectConfigurations.assertCompileTasksContain;
+import static io.spine.tools.gradle.given.ProjectConfigurations.assertCompileTasksEmpty;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+@DisplayName("`JavaCompileTasks` should")
+class JavaCompileTasksTest {
 
-/**
- * Utilities for working with {@link JavaCompile} tasks.
- */
-public final class JavaCompileTasks {
+    private Project project;
 
-    private final TaskCollection<JavaCompile> tasks;
-
-    private JavaCompileTasks(Project project) {
-        TaskContainer allTasks = project.getTasks();
-        this.tasks = allTasks.withType(JavaCompile.class);
+    @BeforeEach
+    void createProject() {
+        project = StubProject.createFor(getClass()).get();
     }
 
-    /**
-     * Creates a new instance for the passed projects.
-     */
-    public static JavaCompileTasks of(Project project) {
-        checkNotNull(project);
-        return new JavaCompileTasks(project);
+    @Test
+    @DisplayName("add arguments to Java compile tasks")
+    void someArgs() {
+        String firstArg = "firstArg";
+        String secondArg = "secondArg";
+        JavaCompileTasks.of(project).addArgs(firstArg, secondArg);
+        assertCompileTasksContain(project, firstArg, secondArg);
     }
 
-    /**
-     * Adds specified arguments to all {@code JavaCompile} tasks of the project.
-     */
-    public void addArgs(String... arguments) {
-        checkNotNull(arguments);
-        for (JavaCompile task : tasks) {
-            CompileOptions taskOptions = task.getOptions();
-            List<String> compilerArgs = taskOptions.getCompilerArgs();
-            compilerArgs.addAll(Arrays.asList(arguments));
-        }
+    @Test
+    @DisplayName("not add arguments if none is specified")
+    void noArgs() {
+        JavaCompileTasks.of(project).addArgs();
+        assertCompileTasksEmpty(project);
     }
 }
