@@ -27,16 +27,13 @@
 import io.spine.internal.dependency.JavaPoet
 import io.spine.internal.dependency.JavaX
 import io.spine.internal.dependency.Spine
-import io.spine.internal.gradle.IncrementGuard
 
 dependencies {
-    val spineDeps = Spine(project)
-
-    api(spineDeps.base)
     api(JavaPoet.lib)
     api(JavaX.annotations)
 
-    testImplementation(spineDeps.testlib)
-}
+    val spine = Spine(project)
+    api(spine.base)
 
-apply<IncrementGuard>()
+    testImplementation(spine.testlib)
+}
