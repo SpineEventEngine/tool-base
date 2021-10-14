@@ -27,8 +27,6 @@
 import com.google.protobuf.gradle.generateProtoTasks
 import com.google.protobuf.gradle.protobuf
 import io.spine.internal.dependency.Protobuf
-import io.spine.internal.gradle.IncrementGuard
-import io.spine.internal.gradle.VersionWriter
 import io.spine.internal.gradle.WriteVersions
 
 kotlin { explicitApi() }
@@ -50,9 +48,6 @@ protobuf {
         }
     }
 }
-
-apply<IncrementGuard>()
-apply<VersionWriter>()
 
 tasks.withType<WriteVersions> {
     version(Protobuf.compiler)
