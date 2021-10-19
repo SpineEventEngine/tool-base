@@ -30,7 +30,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static io.spine.util.Preconditions2.checkNotEmptyOrBlank;
 
 /**
- * Utilities for creating name objects of the {@link io.spine.tools.protoc} package.
+ * Utilities for creating name objects of the {@code io.spine.tools.protoc} package.
  */
 public final class Names {
 
