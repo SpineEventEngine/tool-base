@@ -52,6 +52,11 @@ public final class Artifact {
      */
     public static final String SPINE_TOOLS_GROUP = "io.spine.tools";
 
+    /**
+     * The artifact ID of the published {@code plugin-base} module.
+     */
+    public static final String PLUGIN_BASE_ID = "spine-plugin-base";
+
     private static final char COLON = ':';
     private static final char AT = '@';
 

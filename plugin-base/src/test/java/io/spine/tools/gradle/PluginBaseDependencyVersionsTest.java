@@ -33,6 +33,7 @@ import java.util.Optional;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
+import static io.spine.tools.gradle.Artifact.PLUGIN_BASE_ID;
 import static io.spine.tools.gradle.Artifact.SPINE_TOOLS_GROUP;
 import static io.spine.tools.gradle.ProtobufDependencies.protobufCompiler;
 
@@ -55,8 +56,7 @@ class PluginBaseDependencyVersionsTest {
     @DisplayName("contain the version the module itself")
     void containOwnVersion() {
         DependencyVersions versions = ProtocConfigurationPlugin.versions;
-        @SuppressWarnings("DuplicateStringLiteralInspection")
-        Dependency protoc = new ThirdPartyDependency(SPINE_TOOLS_GROUP, "plugin-base");
+        Dependency protoc = new ThirdPartyDependency(SPINE_TOOLS_GROUP, PLUGIN_BASE_ID);
         Optional<String> version = versions.versionOf(protoc);
         assertThat(version)
                 .isPresent();
