@@ -41,6 +41,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.Collection;
 
+import static io.spine.tools.gradle.Artifact.PLUGIN_BASE_ID;
 import static io.spine.tools.gradle.ProtobufDependencies.gradlePlugin;
 import static io.spine.tools.gradle.ProtobufDependencies.protobufCompiler;
 import static io.spine.tools.groovy.ConsumerClosure.closure;
@@ -56,8 +57,7 @@ import static io.spine.tools.groovy.ConsumerClosure.closure;
 public abstract class ProtocConfigurationPlugin extends SpinePlugin {
 
     @VisibleForTesting
-    @SuppressWarnings("DuplicateStringLiteralInspection" /* A duplicate in tests. */)
-    static final DependencyVersions versions = DependencyVersions.loadFor("plugin-base");
+    static final DependencyVersions versions = DependencyVersions.loadFor(PLUGIN_BASE_ID);
 
     @Override
     public void apply(Project project) {

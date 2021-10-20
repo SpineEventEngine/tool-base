@@ -24,43 +24,45 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle;
+package io.spine.tools.protoc;
 
+import io.spine.testing.UtilityClassTest;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
-
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth8.assertThat;
-import static io.spine.tools.gradle.Artifact.PLUGIN_BASE_ID;
-import static io.spine.tools.gradle.Artifact.SPINE_TOOLS_GROUP;
-import static io.spine.tools.gradle.ProtobufDependencies.protobufCompiler;
+import static io.spine.tools.protoc.Names.className;
 
-@DisplayName("plugin-base `DependencyVersions` should")
-class PluginBaseDependencyVersionsTest {
+@DisplayName("`Names` utility class should")
+class NamesTest extends UtilityClassTest<Names> {
 
-    @Test
-    @DisplayName("contain the version of Protobuf compiler")
-    void containProtoc() {
-        DependencyVersions versions = ProtocConfigurationPlugin.versions;
-        Dependency protoc = protobufCompiler();
-        Optional<String> version = versions.versionOf(protoc);
-        assertThat(version)
-                .isPresent();
-        assertThat(version.get())
-                .matches("3\\.\\d+\\.\\d+");
+    NamesTest() {
+        super(Names.class);
     }
 
-    @Test
-    @DisplayName("contain the version the module itself")
-    void containOwnVersion() {
-        DependencyVersions versions = ProtocConfigurationPlugin.versions;
-        Dependency protoc = new ThirdPartyDependency(SPINE_TOOLS_GROUP, PLUGIN_BASE_ID);
-        Optional<String> version = versions.versionOf(protoc);
-        assertThat(version)
-                .isPresent();
-        assertThat(version.get())
-                .isNotEmpty();
+    @Nested
+    @DisplayName("create `ClassName` by ")
+    class ClassNameFactory {
+
+        @Test
+        @DisplayName("class")
+        void classRef() {
+            Class<NamesTest> cls = NamesTest.class;
+            JavaClassName className = className(cls);
+
+            assertThat(className.getCanonical())
+                    .isEqualTo(cls.getCanonicalName());
+        }
+
+        @Test
+        @DisplayName("given canonical class name")
+        void canonicalName() {
+            String canonicalName = NamesTest.class.getCanonicalName();
+            JavaClassName className = className(canonicalName);
+
+            assertThat(className.getCanonical())
+                    .isEqualTo(canonicalName);
+        }
     }
 }
