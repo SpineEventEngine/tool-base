@@ -49,7 +49,7 @@ import java.util.function.Predicate;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
-import static io.spine.io.Files2.copyDir;
+import static io.spine.io.Copy.copyDir;
 import static io.spine.util.Exceptions.illegalStateWithCauseOf;
 import static java.nio.file.Files.copy;
 import static java.nio.file.Files.createDirectories;
@@ -59,8 +59,12 @@ import static java.util.Arrays.asList;
 /**
  * Allows to configure a Gradle project for testing needs.
  *
- * <p>The project operates in the given test project directory and allows to execute Gradle tasks.
+ * <p>The project operates in the given test project directory and allows executing Gradle tasks.
  */
+@SuppressWarnings("unused") /* Some methods are used only in downstream repositories,
+    e.g. `mc-java`. This suppression should be removed after the split of modules from the `base`
+    is finished, and we have Model Compiler and related artifacts originated from `base` settled
+    in their new repositories. */
 public final class GradleProject {
 
     private static final String mainProtoDir = "src/main/proto/";
@@ -326,7 +330,7 @@ public final class GradleProject {
          *
          * <p>Use debug mode only for temporary debug purposes.
          */
-        @SuppressWarnings({"unused", "RedundantSuppression"})
+        @SuppressWarnings("RedundantSuppression")
         // Used only for debug purposes. Should never get to e.g. CI server.
         public Builder enableDebug() {
             this.debug = true;
@@ -338,7 +342,6 @@ public final class GradleProject {
          *
          * @see GradleRunner#withPluginClasspath()
          */
-        @SuppressWarnings("unused") // Used in downstream repositories.
         public Builder withPluginClasspath() {
             this.addPluginUnderTestClasspath = true;
             return this;
@@ -352,7 +355,6 @@ public final class GradleProject {
          * @param value
          *         value of the property
          */
-        @SuppressWarnings("unused")
         public Builder withProperty(String name, String value) {
             checkNotNull(name);
             checkNotNull(value);
@@ -365,7 +367,6 @@ public final class GradleProject {
          *
          * <p>If not set, the variables are inherited.
          */
-        @SuppressWarnings("unused")
         public Builder withEnvironment(ImmutableMap<String, String> environment) {
             checkNotNull(environment);
             this.environment = environment;
