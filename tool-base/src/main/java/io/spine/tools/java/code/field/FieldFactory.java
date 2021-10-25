@@ -30,8 +30,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.Immutable;
 import io.spine.base.SubscribableField;
 import io.spine.code.java.ClassName;
-import io.spine.tools.protoc.NestedClass;
-import io.spine.tools.protoc.NestedClassFactory;
+import io.spine.tools.java.code.NestedClass;
+import io.spine.tools.java.code.NestedClassFactory;
 import io.spine.type.MessageType;
 
 import java.util.List;

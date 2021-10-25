@@ -24,13 +24,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+package io.spine.tools.java.code;
+
+import com.google.common.annotations.VisibleForTesting;
+import com.google.errorprone.annotations.Immutable;
+import com.squareup.javapoet.MethodSpec;
+import io.spine.value.StringTypeValue;
+
 /**
- * This package provides extension points for Protoc plugins.
+ * A generated Java method source code.
+ *
+ * <p>SPI users are responsible for checking that the content of the method is properly formatted
+ * and contains all the required modifiers, comments, and Javadoc.
+ *
+ * <p>The actual compilation of the generated method is performed as a part of the compilation
+ * of other Protobuf-generated sources.
  */
-@CheckReturnValue
-@ParametersAreNonnullByDefault
-package io.spine.tools.protoc;
+@Immutable
+public class Method extends StringTypeValue {
 
-import com.google.errorprone.annotations.CheckReturnValue;
+    private static final long serialVersionUID = 0L;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+    /**
+     * Creates a new instance with the passed code block.
+     */
+    @VisibleForTesting
+    public Method(String code) {
+        super(code);
+    }
+
+    /**
+     * Creates an instance with the code of the method obtained from the passed spec.
+     */
+    public Method(MethodSpec spec) {
+        this(spec.toString());
+    }
+}

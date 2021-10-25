@@ -24,39 +24,46 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.protoc;
+package io.spine.tools.java.code;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.errorprone.annotations.Immutable;
-import com.squareup.javapoet.MethodSpec;
 import io.spine.value.StringTypeValue;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
- * A generated Java method source code.
+ * A generated Java nested class source code.
  *
- * <p>SPI users are responsible for checking that the content of the method is properly formatted
- * and contains all the required modifiers, comments, and Javadoc.
+ * <p>SPI users are responsible for checking that the generated code is properly formatted and
+ * contains all the required modifiers, comments, and Javadoc.
  *
- * <p>The actual compilation of the generated method is performed as a part of the compilation
- * of other Protobuf-generated sources.
+ * <p>The actual compilation of the class is performed as a part of the compilation of other
+ * Protobuf-generated sources.
  */
 @Immutable
-public class Method extends StringTypeValue {
+public final class NestedClass extends StringTypeValue {
 
     private static final long serialVersionUID = 0L;
 
     /**
-     * Creates a new instance with the passed code block.
+     * Creates a new instance of the generated code for a nested class.
      */
     @VisibleForTesting
-    public Method(String code) {
+    public NestedClass(String code) {
         super(code);
     }
 
     /**
-     * Creates an instance with the code of the method obtained from the passed spec.
+     * Creates an instance with the code of the class obtained from the passed spec.
      */
-    public Method(MethodSpec spec) {
-        this(spec.toString());
+    public NestedClass(TypeSpec spec) {
+        this(toCode(spec));
+    }
+
+    private static String toCode(TypeSpec spec) {
+        checkNotNull(spec);
+        com.squareup.javapoet.TypeSpec poet = spec.toPoet();
+        return poet.toString();
     }
 }

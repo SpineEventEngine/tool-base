@@ -23,43 +23,27 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+syntax = "proto3";
 
-package io.spine.tools.protoc;
+package spine.tools.proto;
 
-import com.google.common.collect.ImmutableList;
-import com.google.errorprone.annotations.Immutable;
-import io.spine.tools.java.code.NestedClass;
-import io.spine.tools.java.code.NestedClassFactory;
-import io.spine.type.MessageType;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import "spine/options.proto";
 
-import java.util.List;
+option (type_url_prefix) = "type.spine.io";
+option java_package = "io.spine.tools.proto.code";
+option java_outer_classname = "ProtoProto";
+option java_multiple_files = true;
 
-import static com.google.common.truth.Truth.assertThat;
-import static io.spine.testing.TestValues.nullRef;
+option (internal_all) = true;
 
-/**
- * With this unit test we are fixating the {@link NestedClassFactory} contract.
- */
-@DisplayName("`NestedClassFactory` should")
-final class NestedClassFactoryTest {
+// A full name of a Protobuf message type.
+message ProtoTypeName {
 
-    @DisplayName("obey the defined contract")
-    @Test
-    void obeyTheContract() {
-        assertThat(new TestNestedClassFactory().generateClassesFor(nullRef())).isEmpty();
-    }
+    string value = 1 [(required) = true];
+}
 
-    @Immutable
-    public static final class TestNestedClassFactory implements NestedClassFactory {
+// A full name of a Protobuf option.
+message ProtoOption {
 
-        public TestNestedClassFactory() {
-        }
-
-        @Override
-        public List<NestedClass> generateClassesFor(MessageType messageType) {
-            return ImmutableList.of();
-        }
-    }
+    string name = 1 [(required) = true];
 }

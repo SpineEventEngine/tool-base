@@ -23,46 +23,28 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+syntax = "proto3";
 
-package io.spine.tools.protoc;
+package spine.tools.java;
 
-import io.spine.testing.UtilityClassTest;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import "spine/options.proto";
 
-import static com.google.common.truth.Truth.assertThat;
-import static io.spine.tools.protoc.Names.className;
+option (type_url_prefix) = "type.spine.io";
+option java_package = "io.spine.tools.java.code";
+option java_outer_classname = "JavaProto";
+option java_multiple_files = true;
 
-@DisplayName("`Names` utility class should")
-class NamesTest extends UtilityClassTest<Names> {
+option (internal_all) = true;
 
-    NamesTest() {
-        super(Names.class);
-    }
+// A full canonical name of a Java class.
+message JavaClassName {
 
-    @Nested
-    @DisplayName("create `ClassName` by ")
-    class ClassNameFactory {
+    string canonical = 1 [(required) = true];
+}
 
-        @Test
-        @DisplayName("class")
-        void classRef() {
-            Class<NamesTest> cls = NamesTest.class;
-            JavaClassName className = className(cls);
+// A container for the Java classpath items.
+message Classpath {
 
-            assertThat(className.getCanonical())
-                    .isEqualTo(cls.getCanonicalName());
-        }
-
-        @Test
-        @DisplayName("given canonical class name")
-        void canonicalName() {
-            String canonicalName = NamesTest.class.getCanonicalName();
-            JavaClassName className = className(canonicalName);
-
-            assertThat(className.getCanonical())
-                    .isEqualTo(canonicalName);
-        }
-    }
+    // An absolute OS-dependent path to a particular classpath JAR.
+    repeated string jar = 1 [(required) = true];
 }
