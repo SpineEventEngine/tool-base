@@ -72,8 +72,8 @@ spinePublishing {
     with(PublishingRepos) {
         targetRepositories.addAll(
             cloudRepo,
-            gitHub("model-compiler"),
-            cloudArtifactRegistry
+            cloudArtifactRegistry,
+            gitHub("tool-base")
         )
     }
     projectsToPublish.addAll(subprojects.map { it.path })
