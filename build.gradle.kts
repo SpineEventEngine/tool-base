@@ -44,6 +44,8 @@ import io.spine.internal.gradle.checkstyle.CheckStyleConfig
 import io.spine.internal.gradle.excludeProtobufLite
 import io.spine.internal.gradle.forceVersions
 import io.spine.internal.gradle.github.pages.updateGitHubPages
+import io.spine.internal.gradle.javac.configureErrorProne
+import io.spine.internal.gradle.javac.configureJavac
 import io.spine.internal.gradle.javadoc.JavadocConfig
 import io.spine.internal.gradle.publish.Publish.Companion.publishProtoArtifact
 import io.spine.internal.gradle.publish.PublishingRepos
@@ -63,7 +65,7 @@ plugins {
         id(id).version(version)
     }
     io.spine.internal.dependency.ErrorProne.GradlePlugin.apply {
-        id(id).version(version)
+        id(id)
     }
     kotlin("jvm") version io.spine.internal.dependency.Kotlin.version
 }
@@ -106,7 +108,6 @@ subprojects {
         plugin(Protobuf.GradlePlugin.id)
 
         with(Scripts) {
-            from(javacArgs(project))
             from(testOutput(project))
             from(testArtifacts(project))
             from(slowTests(project))
@@ -139,6 +140,11 @@ subprojects {
     java {
         sourceCompatibility = javaVersion
         targetCompatibility = javaVersion
+    }
+
+    tasks.withType<JavaCompile> {
+        configureJavac()
+        configureErrorProne()
     }
 
     CheckStyleConfig.applyTo(project)
