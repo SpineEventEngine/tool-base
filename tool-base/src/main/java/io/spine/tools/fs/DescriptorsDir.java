@@ -32,8 +32,7 @@ import io.spine.code.fs.AbstractDirectory;
 import java.nio.file.Path;
 
 import static io.spine.tools.fs.DirectoryName.descriptors;
-import static io.spine.tools.fs.DirectoryName.main;
-import static io.spine.tools.fs.DirectoryName.test;
+import static io.spine.util.Preconditions2.checkNotEmptyOrBlank;
 
 /**
  * A directory with descriptor files.
@@ -50,16 +49,14 @@ public final class DescriptorsDir extends AbstractDirectory {
     }
 
     /**
-     * Obtains the path to the sub-directory under the {@code main}.
+     * Obtains the path to a sub-directory containing descriptor set files
+     * for the source set of interest.
+     *
+     * @param sourceSet
+     *          the name of the source set, such as {@code "main"} or {@code "test"}
      */
-    public Path mainDescriptors() {
-        return path().resolve(main.value());
-    }
-
-    /**
-     * Obtains the path to the sub-directory under the {@code test}.
-     */
-    public Path testDescriptors() {
-        return path().resolve(test.value());
+    public Path forSourceSet(String sourceSet) {
+        checkNotEmptyOrBlank(sourceSet);
+        return path().resolve(sourceSet);
     }
 }

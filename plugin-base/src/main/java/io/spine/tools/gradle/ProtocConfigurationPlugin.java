@@ -45,6 +45,7 @@ import static io.spine.tools.gradle.Artifact.PLUGIN_BASE_ID;
 import static io.spine.tools.gradle.ProtobufDependencies.gradlePlugin;
 import static io.spine.tools.gradle.ProtobufDependencies.protobufCompiler;
 import static io.spine.tools.groovy.ConsumerClosure.closure;
+import static org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME;
 
 /**
  * An abstract base for Gradle plugins that configure Protobuf compilation.
@@ -162,6 +163,6 @@ public abstract class ProtocConfigurationPlugin extends SpinePlugin {
     protected static boolean isTestsTask(GenerateProtoTask protocTask) {
         return protocTask.getSourceSet()
                          .getName()
-                         .contains(SourceScope.test.name());
+                         .contains(TEST_SOURCE_SET_NAME);
     }
 }
