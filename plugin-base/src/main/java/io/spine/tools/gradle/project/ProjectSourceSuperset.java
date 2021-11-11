@@ -32,7 +32,7 @@ import org.gradle.api.Project;
 import org.gradle.api.tasks.SourceSetContainer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static io.spine.tools.gradle.Projects.getSourceSets;
+import static io.spine.tools.gradle.project.Projects.getSourceSets;
 
 /**
  * A {@link SourceSuperset} implementation based on source sets of a Gradle project.
