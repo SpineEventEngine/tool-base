@@ -36,7 +36,6 @@ import io.spine.internal.dependency.JUnit
 import io.spine.internal.dependency.Protobuf
 import io.spine.internal.dependency.Truth
 import io.spine.internal.gradle.IncrementGuard
-import io.spine.internal.gradle.Scripts
 import io.spine.internal.gradle.VersionWriter
 import io.spine.internal.gradle.applyGitHubPackages
 import io.spine.internal.gradle.applyStandard
@@ -53,6 +52,8 @@ import io.spine.internal.gradle.publish.spinePublishing
 import io.spine.internal.gradle.report.coverage.JacocoConfig
 import io.spine.internal.gradle.report.license.LicenseReporter
 import io.spine.internal.gradle.report.pom.PomGenerator
+import io.spine.internal.gradle.testing.configureLogging
+import io.spine.internal.gradle.testing.registerTestTasks
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -106,12 +107,6 @@ subprojects {
         plugin("net.ltgt.errorprone")
         plugin("pmd-settings")
         plugin(Protobuf.GradlePlugin.id)
-
-        with(Scripts) {
-            from(testOutput(project))
-            from(testArtifacts(project))
-            from(slowTests(project))
-        }
     }
 
     dependencies {
@@ -149,7 +144,6 @@ subprojects {
 
     CheckStyleConfig.applyTo(project)
     JavadocConfig.applyTo(project)
-    LicenseReporter.generateReportIn(project)
 
     kotlin {
         explicitApi()
@@ -166,9 +160,13 @@ subprojects {
         }
     }
 
-    tasks.test {
-        useJUnitPlatform {
-            includeEngines("junit-jupiter")
+    tasks {
+        registerTestTasks()
+        test {
+            useJUnitPlatform {
+                includeEngines("junit-jupiter")
+            }
+            configureLogging()
         }
     }
 
@@ -187,8 +185,8 @@ subprojects {
 
     apply<IncrementGuard>()
     apply<VersionWriter>()
-
     publishProtoArtifact(project)
+    LicenseReporter.generateReportIn(project)
 
     val spineBaseVersion: String by extra
     updateGitHubPages(spineBaseVersion) {
