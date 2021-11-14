@@ -27,6 +27,9 @@
 package io.spine.tools.gradle.project
 
 import com.google.common.truth.Truth.assertThat
+import io.spine.tools.gradle.SourceSetName
+import io.spine.tools.gradle.SourceSetName.Companion.main
+import io.spine.tools.gradle.SourceSetName.Companion.test
 import java.io.File
 import java.nio.file.Path
 import org.gradle.api.Project
@@ -64,18 +67,18 @@ class `'ProjectExtensions' should` {
 
         @Test
         fun `without 'main' in the file name`() {
-            assertName(project.descriptorSetFile(MAIN_SOURCE_SET_NAME))
+            assertName(project.descriptorSetFile(main))
                 .doesNotContain(MAIN_SOURCE_SET_NAME)
         }
 
         @Test
         fun `with source set name in the file name`() {
-            assertName(project.descriptorSetFile(TEST_SOURCE_SET_NAME))
+            assertName(project.descriptorSetFile(test))
                 .contains(TEST_SOURCE_SET_NAME)
 
-            val customSourceSet = "integrationTest"
+            val customSourceSet = SourceSetName("integrationTest")
             assertName(project.descriptorSetFile(customSourceSet))
-                .contains(customSourceSet)
+                .contains(customSourceSet.value)
         }
 
         private fun assertName(descriptorSetFile: File) = assertThat(descriptorSetFile.name)
@@ -86,21 +89,21 @@ class `'ProjectExtensions' should` {
 
         @Test
         fun main() {
-            assertThat(project.artifact(MAIN_SOURCE_SET_NAME))
+            assertThat(project.artifact(main))
                 .isEqualTo(project.artifact)
         }
 
         @Test
         fun test() {
-            assertThat(project.artifact(TEST_SOURCE_SET_NAME))
+            assertThat(project.artifact(test))
                 .isEqualTo(project.testArtifact)
         }
 
         @Test
         fun custom() {
-            val customName = "slowTests"
+            val customName = SourceSetName("slowTests")
             assertThat(project.artifact(customName).fileSafeId())
-                .contains(customName)
+                .contains(customName.value)
         }
     }
 }
