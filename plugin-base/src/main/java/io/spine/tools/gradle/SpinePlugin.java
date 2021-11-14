@@ -26,6 +26,8 @@
 package io.spine.tools.gradle;
 
 import io.spine.logging.Logging;
+import io.spine.tools.gradle.task.GradleTask;
+import io.spine.tools.gradle.task.TaskName;
 import org.gradle.api.Action;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
@@ -44,27 +46,30 @@ import static io.spine.io.Files2.toAbsolute;
 public abstract class SpinePlugin implements Plugin<Project>, Logging {
 
     /**
-     * Create a new instance of {@link GradleTask.Builder}.
-     *
-     * <p>NOTE: the Gradle build steps are NOT modified until
-     * {@link GradleTask.Builder#applyNowTo(Project)} is invoked.
-     *
-     * @param name   the name for the new task
-     * @param action the action to invoke during the new task processing
-     * @return the instance of {@code Builder}
-     * @see GradleTask.Builder#applyNowTo(Project)
-     */
-    protected GradleTask.Builder newTask(TaskName name, Action<Task> action) {
-        GradleTask.Builder result = new GradleTask.Builder(name, action);
-        return result;
-    }
-
-    /**
      * Resolves an absolute file name obtained as a string from the passed supplier.
      */
     public static File resolve(Supplier<String> path) {
         String pathname = path.get();
         File result = toAbsolute(pathname);
+        return result;
+    }
+
+    /**
+     * Create a new instance of
+     * {@link io.spine.tools.gradle.task.GradleTask.Builder GradleTask.Builder}.
+     *
+     * <p>NOTE: the Gradle build steps are NOT modified until
+     * {@link io.spine.tools.gradle.task.GradleTask.Builder#applyNowTo(Project) applyNowTo(Project)}
+     * is invoked.
+     *
+     * @param name
+     *         the name for the new task
+     * @param action
+     *         the action to invoke during the new task processing
+     * @return the instance of {@code Builder}
+     */
+    protected GradleTask.Builder newTask(TaskName name, Action<Task> action) {
+        GradleTask.Builder result = GradleTask.newBuilder(name, action);
         return result;
     }
 }

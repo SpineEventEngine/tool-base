@@ -24,31 +24,48 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle;
+package io.spine.tools.gradle.task;
 
-import io.spine.annotation.Internal;
+import org.gradle.api.Project;
+import org.gradle.api.tasks.TaskCollection;
+import org.gradle.api.tasks.TaskContainer;
+import org.gradle.api.tasks.compile.CompileOptions;
+import org.gradle.api.tasks.compile.JavaCompile;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Names of Gradle tasks defined by the Protobuf Gradle plugin.
- *
- * @see <a href="https://github.com/google/protobuf-gradle-plugin">the plugin doc</a>
+ * Utilities for working with {@link JavaCompile} tasks.
  */
-@Internal
-public enum ProtobufTaskName implements TaskName {
+public final class JavaCompileTasks {
+
+    private final TaskCollection<JavaCompile> tasks;
+
+    private JavaCompileTasks(Project project) {
+        TaskContainer allTasks = project.getTasks();
+        this.tasks = allTasks.withType(JavaCompile.class);
+    }
 
     /**
-     * Generates production code from Protobuf.
-     *
-     * <p>Note that this task is not a public API of the plugin. Users should be conscious and
-     * cautious when depending on it.
+     * Creates a new instance for the given project.
      */
-    generateProto,
+    public static JavaCompileTasks of(Project project) {
+        checkNotNull(project);
+        return new JavaCompileTasks(project);
+    }
 
     /**
-     * Generates test code from Protobuf.
-     *
-     * <p>Note that this task is not a public API of the plugin. Users should be conscious and
-     * cautious when depending on it.
+     * Adds specified arguments to all {@code JavaCompile} tasks of the project.
      */
-    generateTestProto
+    public void addArgs(String... arguments) {
+        checkNotNull(arguments);
+        for (JavaCompile task : tasks) {
+            CompileOptions taskOptions = task.getOptions();
+            List<String> compilerArgs = taskOptions.getCompilerArgs();
+            compilerArgs.addAll(Arrays.asList(arguments));
+        }
+    }
 }

@@ -24,48 +24,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle;
+package io.spine.tools.gradle.task;
 
-import org.gradle.api.Project;
-import org.gradle.api.tasks.TaskCollection;
-import org.gradle.api.tasks.TaskContainer;
-import org.gradle.api.tasks.compile.CompileOptions;
-import org.gradle.api.tasks.compile.JavaCompile;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import io.spine.annotation.Internal;
 
 /**
- * Utilities for working with {@link JavaCompile} tasks.
+ * A name of a Gradle task.
  */
-public final class JavaCompileTasks {
-
-    private final TaskCollection<JavaCompile> tasks;
-
-    private JavaCompileTasks(Project project) {
-        TaskContainer allTasks = project.getTasks();
-        this.tasks = allTasks.withType(JavaCompile.class);
-    }
+@Internal
+public interface TaskName {
 
     /**
-     * Creates a new instance for the given project.
+     * The value of the name.
+     *
+     * <p>If an enum implements this interface, it is expected to name its constants so that
+     * the {@link Enum#name()} obtains the name of the task.
      */
-    public static JavaCompileTasks of(Project project) {
-        checkNotNull(project);
-        return new JavaCompileTasks(project);
-    }
+    String name();
 
     /**
-     * Adds specified arguments to all {@code JavaCompile} tasks of the project.
+     * Obtains this task name as a path.
+     *
+     * <p>It is expected that the referred task belongs to the root project (a.k.a {@code :}).
+     *
+     * @return the name with a colon symbol ({@code :}) at the beginning
      */
-    public void addArgs(String... arguments) {
-        checkNotNull(arguments);
-        for (JavaCompile task : tasks) {
-            CompileOptions taskOptions = task.getOptions();
-            List<String> compilerArgs = taskOptions.getCompilerArgs();
-            compilerArgs.addAll(Arrays.asList(arguments));
-        }
+    default String path() {
+        return ':' + name();
     }
 }

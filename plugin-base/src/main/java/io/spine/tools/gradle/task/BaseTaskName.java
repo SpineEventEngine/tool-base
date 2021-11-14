@@ -23,40 +23,38 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package io.spine.tools.gradle.task;
 
-package io.spine.tools.gradle;
+import io.spine.annotation.Internal;
 
 /**
- * A factory of Protobuf-related artifact specs.
+ * Names of Gradle tasks defined by the {@code base} plugin.
+ *
+ * @see <a href="https://docs.gradle.org/current/userguide/base_plugin.html#sec:base_tasks">
+ *         the plugin doc</a>
  */
-public final class ProtobufDependencies {
-
-    private static final String GROUP_ID = "com.google.protobuf";
-    private static final String PROTOBUF_LITE = "protobuf-lite";
-    private static final String PROTOC = "protoc";
-    private static final PluginId PROTOBUF_PLUGIN_ID = new PluginId(GROUP_ID);
+@Internal
+public enum BaseTaskName implements TaskName {
 
     /**
-     * Prevents the utility class instantiation.
+     * Deletes the temporary build artifacts.
      */
-    private ProtobufDependencies() {
-    }
+    clean,
 
     /**
-     * Obtains the ID of the Protobuf Gradle plugin.
+     * Aggregate task that assembles all the artifacts of this project.
      */
-    public static PluginId gradlePlugin() {
-        return PROTOBUF_PLUGIN_ID;
-    }
+    assemble,
 
     /**
-     * Obtains the {@link ThirdPartyDependency} on the Protobuf Lite Java runtime library.
+     * A lifecycle task which marks the project verification routines, such as static code analysis,
+     * executing tests, etc.
      */
-    public static ThirdPartyDependency protobufLite() {
-        return new ThirdPartyDependency(GROUP_ID, PROTOBUF_LITE);
-    }
+    check,
 
-    public static ThirdPartyDependency protobufCompiler() {
-        return new ThirdPartyDependency(GROUP_ID, PROTOC);
-    }
+    /**
+     * A lifecycle task which builds everything in the project, including running tests, producing
+     * production artifacts, and generating documentation.
+     */
+    build
 }

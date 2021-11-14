@@ -29,8 +29,8 @@ package io.spine.tools.gradle.testing;
 import com.google.common.truth.BooleanSubject;
 import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.Subject;
-import io.spine.tools.gradle.TaskDependencies;
-import io.spine.tools.gradle.TaskName;
+import io.spine.tools.gradle.task.TaskDependencies;
+import io.spine.tools.gradle.task.TaskName;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.gradle.api.Task;
 

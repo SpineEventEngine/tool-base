@@ -24,10 +24,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle;
+package io.spine.tools.gradle.task;
 
 import com.google.common.base.MoreObjects;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import io.spine.tools.gradle.project.ProjectHierarchy;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
@@ -65,6 +66,18 @@ public final class GradleTask {
         this.project = project;
     }
 
+    /**
+     * Creates a builder for a new task.
+     *
+     * @param name
+     *          the name of the task
+     * @param action
+     *          the configuration action for the task
+     */
+    public static Builder newBuilder(TaskName name, Action<Task> action) {
+        return new Builder(name, action);
+    }
+
     /** Creates a new instance from the specified {@code Task}. */
     public static GradleTask from(Task task) {
         checkNotNull(task);
@@ -96,13 +109,14 @@ public final class GradleTask {
      * {@code build(..)}. This is done to add some additional semantics to
      * such an irreversible action like this.
      */
+    @SuppressWarnings("unused")
     public static final class Builder {
         private final TaskName name;
         private final Action<Task> action;
 
-        private TaskName followingTask;
         private TaskName previousTask;
         private TaskName previousTaskOfAllProjects;
+        private TaskName followingTask;
 
         private boolean allowNoDependencies;
 
