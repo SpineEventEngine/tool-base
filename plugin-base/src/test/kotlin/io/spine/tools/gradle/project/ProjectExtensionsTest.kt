@@ -24,12 +24,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle
+package io.spine.tools.gradle.project
 
 import com.google.common.truth.Truth.assertThat
-import io.spine.tools.gradle.project.artifact
-import io.spine.tools.gradle.project.descriptorSetFile
-import io.spine.tools.gradle.project.testArtifact
 import java.io.File
 import java.nio.file.Path
 import org.gradle.api.Project
