@@ -39,8 +39,14 @@ public data class SourceSetName(val value: String) {
     }
 
     public companion object {
+        @JvmField
         public val main: SourceSetName = SourceSetName(MAIN_SOURCE_SET_NAME)
+
+        @JvmField
         public val test: SourceSetName = SourceSetName(TEST_SOURCE_SET_NAME)
+
+        @JvmField
+        public val proto: SourceSetName = SourceSetName("proto")
     }
 
     /** Returns the [value] of the source set name. */
