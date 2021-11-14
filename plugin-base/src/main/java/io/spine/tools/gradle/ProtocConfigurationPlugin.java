@@ -62,6 +62,13 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
     @VisibleForTesting
     static final DependencyVersions versions = DependencyVersions.loadFor(PLUGIN_BASE_ID);
 
+    @SuppressWarnings("WeakerAccess") // This method is used by implementing classes.
+    protected static boolean isTestsTask(GenerateProtoTask protocTask) {
+        return protocTask.getSourceSet()
+                         .getName()
+                         .contains(TEST_SOURCE_SET_NAME);
+    }
+
     @Override
     public void apply(Project project) {
         project.getPluginManager()
@@ -195,12 +202,6 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
             options.setPath(descriptor.getPath());
             options.setIncludeImports(true);
             options.setIncludeSourceInfo(true);
-        }
-
-        private static boolean isTestsTask(GenerateProtoTask protocTask) {
-            return protocTask.getSourceSet()
-                             .getName()
-                             .contains(TEST_SOURCE_SET_NAME);
         }
     }
 }
