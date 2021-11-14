@@ -37,7 +37,7 @@ import org.gradle.api.Task;
 import java.io.File;
 import java.util.function.Supplier;
 
-import static io.spine.tools.gradle.SpinePlugin.resolve;
+import static io.spine.tools.gradle.StandardTypes.toAbsoluteFile;
 
 /**
  * Abstract base for code generation actions.
@@ -132,7 +132,7 @@ public abstract class CodeGenerationAction implements Action<Task>, Logging {
      * Obtains directory with source proto files.
      */
     protected final File protoSrcDir() {
-        return resolve(protoSrcDirPath);
+        return toAbsoluteFile(protoSrcDirPath);
     }
 
     /**
@@ -140,7 +140,7 @@ public abstract class CodeGenerationAction implements Action<Task>, Logging {
      */
     protected final File targetDir() {
         if (targetDir == null) {
-            targetDir = resolve(targetDirPath);
+            targetDir = toAbsoluteFile(targetDirPath);
         }
         return targetDir;
     }

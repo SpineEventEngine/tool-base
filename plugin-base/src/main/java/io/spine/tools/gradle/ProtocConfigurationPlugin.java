@@ -35,6 +35,7 @@ import com.google.protobuf.gradle.ProtobufConfigurator.GenerateProtoTaskCollecti
 import com.google.protobuf.gradle.ProtobufConvention;
 import io.spine.tools.groovy.ConsumerClosure;
 import org.gradle.api.NamedDomainObjectContainer;
+import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 
 import java.io.File;
@@ -55,7 +56,7 @@ import static org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME;
  */
 @SuppressWarnings("AbstractClassNeverImplemented")
     // Implemented in language-specific parts of Model Compiler.
-public abstract class ProtocConfigurationPlugin extends SpinePlugin {
+public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
 
     @VisibleForTesting
     static final DependencyVersions versions = DependencyVersions.loadFor(PLUGIN_BASE_ID);
