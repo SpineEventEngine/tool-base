@@ -41,6 +41,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
+/**
+ * This test suite tests only [Project.generatedDir] extension property.
+ *
+ * For tests of other `Project` extensions, please see `ProjectExtensionsTest.kt`.
+ */
 class `'generatedDir' property of 'Project' should` {
 
     lateinit var project: Project
@@ -59,12 +64,12 @@ class `'generatedDir' property of 'Project' should` {
     }
 
     @Test
-    fun `use the framework convention if default value is used by the 'protobuf' plugin`() {
+    fun `use 'generated' under the project dir, if 'protobuf' plugin returns its default value`() {
         assertProperty().isEqualTo(project.projectDir.resolve(generated).toPath())
     }
 
     @Test
-    fun `take user-defined value specified in 'protobuf' closure`() {
+    fun `take user-defined value specified in the 'protobuf' closure`() {
         val customPath = File("${project.projectDir}/protoGenerated").toPath()
         project.protobufConvention.protobuf(closure { protobuf: ProtobufConfigurator ->
             protobuf.generatedFilesBaseDir = customPath.toString()
