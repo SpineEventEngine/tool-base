@@ -28,7 +28,10 @@
 
 package io.spine.tools.gradle
 
+import com.google.protobuf.gradle.GenerateProtoTask
 import io.spine.io.Files2.toAbsolute
+import io.spine.tools.fs.DirectoryName
+import io.spine.tools.gradle.project.descriptorSetFile
 import java.io.File
 import java.util.function.Supplier
 import org.gradle.api.tasks.SourceSet
@@ -39,3 +42,10 @@ public fun Supplier<String>.toAbsoluteFile(): File = toAbsolute(get())
 /** The name of this source set. */
 public val SourceSet.named: SourceSetName
     get() = SourceSetName(name)
+
+/** Obtains the descriptor set file associated with this task. */
+public val GenerateProtoTask.descriptorSetFile: File
+    get() = project.descriptorSetFile(sourceSet.named)
+
+/** Adds relative name to this directory. */
+public fun File.resolve(dir: DirectoryName): File = resolve(dir.value())
