@@ -129,13 +129,23 @@ public val Project.protobufConvention: ProtobufConvention
     get() = convention.getPlugin(ProtobufConvention::class.java)
 
 /**
+ * Tells if the `generatedFilesBaseDir` is set to the default value.
+ *
+ * For the default value, please see [com.google.protobuf.gradle.ProtobufConfigurator] constructor.
+ */
+internal val Project.conventionUsesDefaultGeneratedDir: Boolean
+    get() {
+    val fromConvention = protobufConvention.protobuf.generatedFilesBaseDir
+    return fromConvention.equals("${buildDir}/generated/source/proto")
+}
+
+/**
  * Obtains the path to the directory which will be used for placing files generated
  * from proto definitions.
  */
 public val Project.generatedDir: Path
     get() {
-        val fromConvention = protobufConvention.protobuf.generatedFilesBaseDir
-        if (fromConvention.startsWith(buildDir.toString())) {
+        if (conventionUsesDefaultGeneratedDir) {
             /*
                Ignore the default value specified by the plugin code because it "buries" the
                generated code under the `build` directory.
@@ -150,5 +160,6 @@ public val Project.generatedDir: Path
 
         /* If custom value was set by the programmer in the `protobuf` closure of the build
            script, use the specified path instead of the framework convention. */
+        val fromConvention = protobufConvention.protobuf.generatedFilesBaseDir
         return Paths.get(fromConvention)
     }

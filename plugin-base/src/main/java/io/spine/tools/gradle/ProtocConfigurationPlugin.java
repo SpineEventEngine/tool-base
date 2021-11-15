@@ -46,6 +46,7 @@ import static io.spine.tools.gradle.Artifact.PLUGIN_BASE_ID;
 import static io.spine.tools.gradle.ProtobufDependencies.gradlePlugin;
 import static io.spine.tools.gradle.ProtobufDependencies.protobufCompiler;
 import static io.spine.tools.gradle.StandardTypes.getDescriptorSetFile;
+import static io.spine.tools.gradle.project.Projects.getConventionUsesDefaultGeneratedDir;
 import static io.spine.tools.gradle.project.Projects.getGeneratedDir;
 import static io.spine.tools.gradle.project.Projects.getProtobufConvention;
 import static io.spine.tools.groovy.ConsumerClosure.closure;
@@ -153,9 +154,17 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
             ));
         }
 
+        /**
+         * Sets the {@code generatedFilesBaseDir} property of {@link ProtobufConfigurator}
+         * to the value used by the framework, if no custom value is supplied by the programmer.
+         *
+         * <p>Otherwise, the supplied value should be used.
+         */
         private void setGeneratedFilesBaseDir() {
-            Path generatedFilesBaseDir = getGeneratedDir(project);
-            protobuf.setGeneratedFilesBaseDir(generatedFilesBaseDir.toString());
+            if (getConventionUsesDefaultGeneratedDir(project)) {
+                Path generatedFilesBaseDir = getGeneratedDir(project);
+                protobuf.setGeneratedFilesBaseDir(generatedFilesBaseDir.toString());
+            }
         }
 
         private void configurePlugins() {
