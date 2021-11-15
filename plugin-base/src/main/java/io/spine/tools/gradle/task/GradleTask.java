@@ -75,6 +75,8 @@ public final class GradleTask {
      *          the configuration action for the task
      */
     public static Builder newBuilder(TaskName name, Action<Task> action) {
+        checkNotNull(name);
+        checkNotNull(action);
         return new Builder(name, action);
     }
 
