@@ -24,32 +24,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle;
+package io.spine.tools.gradle
 
-import io.spine.annotation.Internal;
+import com.google.common.truth.Truth.assertThat
+import org.gradle.api.tasks.SourceSet.MAIN_SOURCE_SET_NAME
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
-/**
- * A name of a Gradle task.
- */
-@Internal
-public interface TaskName {
+class `'SourceSetName' should` {
 
-    /**
-     * The value of the name.
-     *
-     * <p>If an enum implements this interface, it is expected to name its constants so that
-     * the {@link Enum#name()} obtains the name of the task.
-     */
-    String name();
+    @Test
+    fun `reject empty values`() {
+        assertThrows<IllegalArgumentException> { SourceSetName("") }
+    }
 
-    /**
-     * Obtains this task name as a path.
-     *
-     * <p>It is expected that the referred task belongs to the root project (a.k.a {@code :}).
-     *
-     * @return the name with a colon symbol ({@code :}) at the beginning
-     */
-    default String path() {
-        return ':' + name();
+    @Test
+    fun `reject blank values`() {
+        assertThrows<IllegalArgumentException> { SourceSetName(" ") }
+    }
+
+    @Test
+    fun `expose the value`() {
+        assertThat(SourceSetName.main.value)
+            .isEqualTo(MAIN_SOURCE_SET_NAME)
     }
 }

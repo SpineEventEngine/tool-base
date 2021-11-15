@@ -26,7 +26,6 @@
 
 package io.spine.tools.gradle;
 
-
 /**
  * A factory of Protobuf-related artifact specs.
  */

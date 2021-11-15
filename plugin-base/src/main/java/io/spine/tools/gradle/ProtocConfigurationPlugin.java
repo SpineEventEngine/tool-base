@@ -30,11 +30,13 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.gradle.ExecutableLocator;
 import com.google.protobuf.gradle.GenerateProtoTask;
+import com.google.protobuf.gradle.GenerateProtoTask.DescriptorSetOptions;
 import com.google.protobuf.gradle.ProtobufConfigurator;
 import com.google.protobuf.gradle.ProtobufConfigurator.GenerateProtoTaskCollection;
 import com.google.protobuf.gradle.ProtobufConvention;
 import io.spine.tools.groovy.ConsumerClosure;
 import org.gradle.api.NamedDomainObjectContainer;
+import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 
 import java.io.File;
@@ -54,11 +56,18 @@ import static org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME;
  * no action is performed.
  */
 @SuppressWarnings("AbstractClassNeverImplemented")
-    // Implemented in language-specific parts of Model Compiler.
-public abstract class ProtocConfigurationPlugin extends SpinePlugin {
+// Implemented in language-specific parts of Model Compiler.
+public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
 
     @VisibleForTesting
     static final DependencyVersions versions = DependencyVersions.loadFor(PLUGIN_BASE_ID);
+
+    @SuppressWarnings("WeakerAccess") // This method is used by implementing classes.
+    protected static boolean isTestsTask(GenerateProtoTask protocTask) {
+        return protocTask.getSourceSet()
+                         .getName()
+                         .contains(TEST_SOURCE_SET_NAME);
+    }
 
     @Override
     public void apply(Project project) {
@@ -66,8 +75,8 @@ public abstract class ProtocConfigurationPlugin extends SpinePlugin {
                .withPlugin(gradlePlugin().value(), plugin -> applyTo(project));
     }
 
-    @SuppressWarnings("deprecation")
-        // we have to use `getConvention()` until Protobuf Gradle Plugin migrates to new API.
+    @SuppressWarnings("deprecation" /* We have to use `getConvention()` until
+        Protobuf Gradle Plugin migrates to new API. */)
     private void applyTo(Project project) {
         project.getConvention()
                .getPlugin(ProtobufConvention.class)
@@ -77,34 +86,8 @@ public abstract class ProtocConfigurationPlugin extends SpinePlugin {
     }
 
     private void configureProtobuf(Project project, ProtobufConfigurator protobuf) {
-        Path generatedFilesBaseDir = generatedFilesBaseDir(project);
-        protobuf.setGeneratedFilesBaseDir(generatedFilesBaseDir.toString());
-        ThirdPartyDependency protoc = protobufCompiler();
-        String protocArtifactNotation = protoc.withVersionFrom(versions).notation();
-        protobuf.protoc(closure(
-                (ExecutableLocator locator) -> locator.setArtifact(protocArtifactNotation)
-        ));
-        ConsumerClosure<NamedDomainObjectContainer<ExecutableLocator>> pluginConfig = closure(
-                plugins -> configureProtocPlugins(plugins, project)
-        );
-        protobuf.plugins(pluginConfig);
-        protobuf.generateProtoTasks(closure(this::configureProtocTasks));
-    }
-
-    private void configureProtocTasks(GenerateProtoTaskCollection tasks) {
-        // This is a "live" view of the current Gradle tasks.
-        Collection<GenerateProtoTask> tasksProxy = tasks.all();
-
-        /*
-         *  Creating a hard-copy of "live" view of matching Gradle tasks.
-         *
-         *  Otherwise, a `ConcurrentModificationException` is thrown upon an attempt to
-         *  insert a task into the Gradle lifecycle.
-         */
-        ImmutableList<GenerateProtoTask> allTasks = ImmutableList.copyOf(tasksProxy);
-        for (GenerateProtoTask task : allTasks) {
-            configureProtocTask(task);
-        }
+        Helper helper = new Helper(this, project, protobuf);
+        helper.configure();
     }
 
     /**
@@ -120,25 +103,6 @@ public abstract class ProtocConfigurationPlugin extends SpinePlugin {
      */
     protected abstract void
     configureProtocPlugins(NamedDomainObjectContainer<ExecutableLocator> plugins, Project project);
-
-    private void configureProtocTask(GenerateProtoTask protocTask) {
-        configureDescriptorSetGeneration(protocTask);
-        customizeTask(protocTask);
-    }
-
-    private void configureDescriptorSetGeneration(GenerateProtoTask protocTask) {
-        protocTask.setGenerateDescriptorSet(true);
-        boolean tests = isTestsTask(protocTask);
-        Project project = protocTask.getProject();
-        File descriptor;
-        descriptor = tests
-                     ? getTestDescriptorSet(project)
-                     : getMainDescriptorSet(project);
-        GenerateProtoTask.DescriptorSetOptions options = protocTask.getDescriptorSetOptions();
-        options.setPath(descriptor.getPath());
-        options.setIncludeImports(true);
-        options.setIncludeSourceInfo(true);
-    }
 
     /**
      * Allows subclasses to specify additional generation task settings.
@@ -160,9 +124,84 @@ public abstract class ProtocConfigurationPlugin extends SpinePlugin {
     /** Obtains the merged descriptor set file of the {@code test} module. */
     protected abstract File getTestDescriptorSet(Project project);
 
-    protected static boolean isTestsTask(GenerateProtoTask protocTask) {
-        return protocTask.getSourceSet()
-                         .getName()
-                         .contains(TEST_SOURCE_SET_NAME);
+    /**
+     * Configures Protobuf Gradle plugin.
+     */
+    private static class Helper {
+
+        private final ProtocConfigurationPlugin plugin;
+        private final Project project;
+        private final ProtobufConfigurator protobuf;
+
+        private Helper(ProtocConfigurationPlugin plugin,
+                       Project project,
+                       ProtobufConfigurator protobuf) {
+            this.plugin = plugin;
+            this.project = project;
+            this.protobuf = protobuf;
+        }
+
+        private void configure() {
+            setGeneratedFilesBaseDir();
+            setProtocArtifact();
+            configurePlugins();
+            protobuf.generateProtoTasks(closure(this::configureProtocTasks));
+        }
+
+        private void setProtocArtifact() {
+            ThirdPartyDependency protoc = protobufCompiler();
+            String protocArtifact =
+                    protoc.withVersionFrom(versions)
+                          .notation();
+            protobuf.protoc(closure(
+                    (ExecutableLocator locator) -> locator.setArtifact(protocArtifact)
+            ));
+        }
+
+        private void setGeneratedFilesBaseDir() {
+            Path generatedFilesBaseDir = plugin.generatedFilesBaseDir(project);
+            protobuf.setGeneratedFilesBaseDir(generatedFilesBaseDir.toString());
+        }
+
+        private void configurePlugins() {
+            ConsumerClosure<NamedDomainObjectContainer<ExecutableLocator>> pluginConfig = closure(
+                    plugins -> plugin.configureProtocPlugins(plugins, project)
+            );
+            protobuf.plugins(pluginConfig);
+        }
+
+        private void configureProtocTasks(GenerateProtoTaskCollection tasks) {
+            // This is a "live" view of the current Gradle tasks.
+            Collection<GenerateProtoTask> tasksProxy = tasks.all();
+
+            /*
+             *  Creating a hard-copy of "live" view of matching Gradle tasks.
+             *
+             *  Otherwise, a `ConcurrentModificationException` is thrown upon an attempt to
+             *  insert a task into the Gradle lifecycle.
+             */
+            ImmutableList<GenerateProtoTask> allTasks = ImmutableList.copyOf(tasksProxy);
+            for (GenerateProtoTask task : allTasks) {
+                configureProtocTask(task);
+            }
+        }
+
+        private void configureProtocTask(GenerateProtoTask protocTask) {
+            configureDescriptorSetGeneration(protocTask);
+            plugin.customizeTask(protocTask);
+        }
+
+        private void configureDescriptorSetGeneration(GenerateProtoTask protocTask) {
+            protocTask.setGenerateDescriptorSet(true);
+            boolean tests = isTestsTask(protocTask);
+            Project project = protocTask.getProject();
+            File descriptor = tests
+                              ? plugin.getTestDescriptorSet(project)
+                              : plugin.getMainDescriptorSet(project);
+            DescriptorSetOptions options = protocTask.getDescriptorSetOptions();
+            options.setPath(descriptor.getPath());
+            options.setIncludeImports(true);
+            options.setIncludeSourceInfo(true);
+        }
     }
 }

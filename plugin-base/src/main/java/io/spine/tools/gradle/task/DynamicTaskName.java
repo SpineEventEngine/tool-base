@@ -23,38 +23,24 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package io.spine.tools.gradle;
 
-import io.spine.annotation.Internal;
+package io.spine.tools.gradle.task;
+
+import io.spine.value.StringTypeValue;
 
 /**
- * Names of Gradle tasks defined by the {@code base} plugin.
- *
- * @see <a href="https://docs.gradle.org/current/userguide/base_plugin.html#sec:base_tasks">
- *         the plugin doc</a>
+ * A name of a task which is not known at compile time.
  */
-@Internal
-public enum BaseTaskName implements TaskName {
+final class DynamicTaskName extends StringTypeValue implements TaskName {
 
-    /**
-     * Deletes the temporary build artifacts.
-     */
-    clean,
+    private static final long serialVersionUID = 0L;
 
-    /**
-     * Aggregate task that assembles all the artifacts of this project.
-     */
-    assemble,
+    DynamicTaskName(String value) {
+        super(value);
+    }
 
-    /**
-     * A lifecycle task which marks the project verification routines, such as static code analysis,
-     * executing tests, etc.
-     */
-    check,
-
-    /**
-     * A lifecycle task which builds everything in the project, including running tests, producing
-     * production artifacts, and generating documentation.
-     */
-    build
+    @Override
+    public String name() {
+        return value();
+    }
 }

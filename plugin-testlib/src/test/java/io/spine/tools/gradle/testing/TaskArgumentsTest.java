@@ -31,7 +31,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static com.google.common.truth.Truth.assertThat;
-import static io.spine.tools.gradle.JavaTaskName.compileJava;
+import static io.spine.tools.gradle.task.JavaTaskName.compileJava;
 import static io.spine.tools.gradle.testing.TaskArguments.DEBUG_CLI_OPTION;
 import static io.spine.tools.gradle.testing.TaskArguments.STACKTRACE_CLI_OPTION;
 

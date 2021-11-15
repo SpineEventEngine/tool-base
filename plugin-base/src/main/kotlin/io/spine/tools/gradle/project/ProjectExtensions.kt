@@ -31,13 +31,12 @@ package io.spine.tools.gradle.project
 import io.spine.tools.fs.DefaultPaths
 import io.spine.tools.fs.DescriptorsDir
 import io.spine.tools.gradle.Artifact
+import io.spine.tools.gradle.SourceSetName
 import java.io.File
 import java.nio.file.Path
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.tasks.SourceSet
-import org.gradle.api.tasks.SourceSet.MAIN_SOURCE_SET_NAME
-import org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME
 import org.gradle.api.tasks.SourceSetContainer
 
 /**
@@ -52,10 +51,11 @@ public val Project.javaPluginExtension: JavaPluginExtension
 public val Project.sourceSets: SourceSetContainer
     get() = javaPluginExtension.sourceSets
 
-/**
- * Obtains a source set by the given scope name.
- */
+/** Obtains a source set by the given name. */
 public fun Project.sourceSet(name: String): SourceSet = sourceSets.getByName(name)
+
+/** Obtains a source set by the given name. */
+public fun Project.sourceSet(name: SourceSetName): SourceSet = sourceSets.getByName(name.value)
 
 private fun Project.toArtifactBuilder(): Artifact.Builder =
     Artifact.newBuilder()
@@ -83,13 +83,11 @@ public val Project.testArtifact: Artifact
  *
  * For other source sets, the given name would be used as a classifier of the artifact.
  */
-public fun Project.artifact(sourceSet: String): Artifact {
-    require(sourceSet.isNotEmpty())
-    require(sourceSet.isNotBlank())
-    return when (sourceSet) {
-        MAIN_SOURCE_SET_NAME -> artifact
-        TEST_SOURCE_SET_NAME -> testArtifact
-        else -> toArtifactBuilder().setClassifier(sourceSet).build()
+public fun Project.artifact(ss: SourceSetName): Artifact {
+    return when (ss) {
+        SourceSetName.main -> artifact
+        SourceSetName.test -> testArtifact
+        else -> toArtifactBuilder().setClassifier(ss.value).build()
     }
 }
 
@@ -108,10 +106,10 @@ private val Project.descriptorsDir: DescriptorsDir
 /**
  * Obtains the descriptor set file for the specified source set of this project.
  */
-public fun Project.descriptorSetFile(sourceSet: String): File {
-    val theArtifact = artifact(sourceSet)
+public fun Project.descriptorSetFile(ss: SourceSetName): File {
+    val theArtifact = artifact(ss)
     val descriptorSetFile = theArtifact.descriptorSetFile()
-    val dir = descriptorsDir.forSourceSet(sourceSet)
+    val dir = descriptorsDir.forSourceSet(ss.value)
     val path = descriptorSetFile.under(dir)
     return path.toFile()
 }

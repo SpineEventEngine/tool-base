@@ -39,7 +39,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static io.spine.tools.gradle.JavaTaskName.compileJava;
+import static io.spine.tools.gradle.task.JavaTaskName.compileJava;
 import static org.gradle.testkit.runner.TaskOutcome.FAILED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

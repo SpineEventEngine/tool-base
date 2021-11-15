@@ -1,5 +1,5 @@
 /*
- * Copyright 2020, TeamDev. All rights reserved.
+ * Copyright 2021, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,5 +24,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val spineBaseVersion: String by extra("2.0.0-SNAPSHOT.75")
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.76")
+package io.spine.tools.gradle
+
+import org.gradle.api.tasks.SourceSet.MAIN_SOURCE_SET_NAME
+import org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME
+
+/**
+ * A name of a Gradle project source set.
+ */
+public data class SourceSetName(val value: String) {
+
+    init {
+        require(value.isNotEmpty())
+        require(value.isNotBlank())
+    }
+
+    public companion object {
+        @JvmField
+        public val main: SourceSetName = SourceSetName(MAIN_SOURCE_SET_NAME)
+
+        @JvmField
+        public val test: SourceSetName = SourceSetName(TEST_SOURCE_SET_NAME)
+
+        @JvmField
+        public val proto: SourceSetName = SourceSetName("proto")
+    }
+
+    /** Returns the [value] of the source set name. */
+    override fun toString(): String {
+        return value
+    }
+}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020, TeamDev. All rights reserved.
+ * Copyright 2021, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,5 +24,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val spineBaseVersion: String by extra("2.0.0-SNAPSHOT.75")
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.76")
+package io.spine.tools.gradle.task
+
+import com.google.common.testing.NullPointerTester
+import org.junit.jupiter.api.Test
+
+class `'GradleTask' should` {
+
+    @Test
+    fun `handle 'null' arguments in static methods`() {
+        NullPointerTester().testAllPublicStaticMethods(GradleTask::class.java)
+    }
+}

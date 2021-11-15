@@ -24,7 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle;
+package io.spine.tools.gradle.project;
 
 import org.gradle.api.Action;
 import org.gradle.api.Project;

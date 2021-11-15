@@ -24,48 +24,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle;
+package io.spine.tools.gradle.task;
 
-import org.gradle.api.Project;
-import org.gradle.api.tasks.TaskCollection;
-import org.gradle.api.tasks.TaskContainer;
-import org.gradle.api.tasks.compile.CompileOptions;
-import org.gradle.api.tasks.compile.JavaCompile;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import io.spine.annotation.Internal;
 
 /**
- * Utilities for working with {@link JavaCompile} tasks.
+ * Names of Gradle tasks defined by the {@code java} plugin.
+ *
+ * @see <a href="https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_tasks">
+ *         the plugin doc</a>
  */
-public final class JavaCompileTasks {
-
-    private final TaskCollection<JavaCompile> tasks;
-
-    private JavaCompileTasks(Project project) {
-        TaskContainer allTasks = project.getTasks();
-        this.tasks = allTasks.withType(JavaCompile.class);
-    }
+@Internal
+public enum JavaTaskName implements TaskName {
 
     /**
-     * Creates a new instance for the given project.
+     * Compiles production Java source files using the JDK compiler.
      */
-    public static JavaCompileTasks of(Project project) {
-        checkNotNull(project);
-        return new JavaCompileTasks(project);
-    }
+    compileJava,
 
     /**
-     * Adds specified arguments to all {@code JavaCompile} tasks of the project.
+     * Compiles test Java source files using the JDK compiler.
      */
-    public void addArgs(String... arguments) {
-        checkNotNull(arguments);
-        for (JavaCompile task : tasks) {
-            CompileOptions taskOptions = task.getOptions();
-            List<String> compilerArgs = taskOptions.getCompilerArgs();
-            compilerArgs.addAll(Arrays.asList(arguments));
-        }
-    }
+    compileTestJava,
+
+    /**
+     * A lifecycle task which marks processing of all the classes and resources in this project.
+     */
+    classes,
+
+    /**
+     * A lifecycle task which marks processing of all the test classes and resources in this
+     * project.
+     */
+    testClasses,
+
+    /**
+     * Copies production resources into the production resources directory.
+     */
+    processResources,
+
+    /**
+     * Copies test resources into the test resources directory.
+     */
+    processTestResources
 }

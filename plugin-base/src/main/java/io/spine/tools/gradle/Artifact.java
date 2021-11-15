@@ -44,7 +44,6 @@ import static io.spine.code.proto.FileDescriptors.DESC_EXTENSION;
  * <p>An artifact must have a group, a name, and a version.
  * Also, it may have a classifier and an extension.
  */
-@Internal
 public final class Artifact {
 
     /**

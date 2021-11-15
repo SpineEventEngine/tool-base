@@ -24,7 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle;
+package io.spine.tools.gradle.project;
 
 import com.google.common.testing.NullPointerTester;
 import io.spine.testing.UtilityClassTest;
@@ -40,7 +40,7 @@ import java.util.Set;
 import static com.google.common.collect.Sets.newHashSet;
 import static com.google.common.truth.Truth.assertThat;
 import static io.spine.testing.Assertions.assertIllegalArgument;
-import static io.spine.tools.gradle.ProjectHierarchy.applyToAll;
+import static io.spine.tools.gradle.project.ProjectHierarchy.applyToAll;
 import static io.spine.tools.gradle.testing.NoOp.action;
 
 @DisplayName("`ProjectHierarchy` should")

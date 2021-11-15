@@ -1,5 +1,5 @@
 /*
- * Copyright 2020, TeamDev. All rights reserved.
+ * Copyright 2021, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,5 +24,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val spineBaseVersion: String by extra("2.0.0-SNAPSHOT.75")
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.76")
+package io.spine.tools.gradle.task;
+
+import io.spine.annotation.Internal;
+
+/**
+ * A name of a Gradle task.
+ */
+@Internal
+public interface TaskName {
+
+    /**
+     * The value of the name.
+     *
+     * <p>If an enum implements this interface, it is expected to name its constants so that
+     * the {@link Enum#name()} obtains the name of the task.
+     */
+    String name();
+
+    /**
+     * Obtains this task name as a path.
+     *
+     * <p>It is expected that the referred task belongs to the root project (a.k.a {@code :}).
+     *
+     * @return the name with a colon symbol ({@code :}) at the beginning
+     */
+    default String path() {
+        return ':' + name();
+    }
+}

@@ -24,40 +24,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle;
+package io.spine.tools.gradle.task;
 
-import io.spine.tools.gradle.given.StubProject;
-import org.gradle.api.Project;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+/**
+ * Names of Gradle tasks defined by the Protobuf Gradle plugin.
+ *
+ * @see <a href="https://github.com/google/protobuf-gradle-plugin">the plugin doc</a>
+ */
+public enum ProtobufTaskName implements TaskName {
 
-import static io.spine.tools.gradle.given.ProjectConfigurations.assertCompileTasksContain;
-import static io.spine.tools.gradle.given.ProjectConfigurations.assertCompileTasksEmpty;
+    /**
+     * Generates production code from Protobuf.
+     *
+     * <p>Note that this task is not a public API of the plugin. Users should be conscious and
+     * cautious when depending on it.
+     */
+    generateProto,
 
-@DisplayName("`JavaCompileTasks` should")
-class JavaCompileTasksTest {
-
-    private Project project;
-
-    @BeforeEach
-    void createProject() {
-        project = StubProject.createFor(getClass()).get();
-    }
-
-    @Test
-    @DisplayName("add arguments to Java compile tasks")
-    void someArgs() {
-        String firstArg = "firstArg";
-        String secondArg = "secondArg";
-        JavaCompileTasks.of(project).addArgs(firstArg, secondArg);
-        assertCompileTasksContain(project, firstArg, secondArg);
-    }
-
-    @Test
-    @DisplayName("not add arguments if none is specified")
-    void noArgs() {
-        JavaCompileTasks.of(project).addArgs();
-        assertCompileTasksEmpty(project);
-    }
+    /**
+     * Generates test code from Protobuf.
+     *
+     * <p>Note that this task is not a public API of the plugin. Users should be conscious and
+     * cautious when depending on it.
+     */
+    generateTestProto
 }

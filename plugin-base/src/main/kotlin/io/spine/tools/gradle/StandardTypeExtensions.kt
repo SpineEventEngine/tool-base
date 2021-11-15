@@ -24,23 +24,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle;
+@file:JvmName("StandardTypes")
 
-import io.spine.value.StringTypeValue;
+package io.spine.tools.gradle
 
-/**
- * A name of a task which is not known at compile time.
- */
-final class DynamicTaskName extends StringTypeValue implements TaskName {
+import io.spine.io.Files2.toAbsolute
+import java.io.File
+import java.util.function.Supplier
+import org.gradle.api.tasks.SourceSet
 
-    private static final long serialVersionUID = 0L;
+/** Resolves an absolute file name obtained from the supplier. */
+public fun Supplier<String>.toAbsoluteFile(): File = toAbsolute(get())
 
-    DynamicTaskName(String value) {
-        super(value);
-    }
-
-    @Override
-    public String name() {
-        return value();
-    }
-}
+/** The name of this source set. */
+public val SourceSet.named: SourceSetName
+    get() = SourceSetName(name)

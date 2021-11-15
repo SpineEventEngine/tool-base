@@ -24,47 +24,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle;
+package io.spine.tools.gradle.task;
 
-import io.spine.annotation.Internal;
+import io.spine.tools.gradle.given.StubProject;
+import org.gradle.api.Project;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
-/**
- * Names of Gradle tasks defined by the {@code java} plugin.
- *
- * @see <a href="https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_tasks">
- *         the plugin doc</a>
- */
-@Internal
-public enum JavaTaskName implements TaskName {
+import static io.spine.tools.gradle.given.ProjectConfigurations.assertCompileTasksContain;
+import static io.spine.tools.gradle.given.ProjectConfigurations.assertCompileTasksEmpty;
 
-    /**
-     * Compiles production Java source files using the JDK compiler.
-     */
-    compileJava,
+@DisplayName("`JavaCompileTasks` should")
+class JavaCompileTasksTest {
 
-    /**
-     * Compiles test Java source files using the JDK compiler.
-     */
-    compileTestJava,
+    private Project project;
 
-    /**
-     * A lifecycle task which marks processing of all the classes and resources in this project.
-     */
-    classes,
+    @BeforeEach
+    void createProject() {
+        project = StubProject.createFor(getClass()).get();
+    }
 
-    /**
-     * A lifecycle task which marks processing of all the test classes and resources in this
-     * project.
-     */
-    testClasses,
+    @Test
+    @DisplayName("add arguments to Java compile tasks")
+    void someArgs() {
+        String firstArg = "firstArg";
+        String secondArg = "secondArg";
+        JavaCompileTasks.of(project).addArgs(firstArg, secondArg);
+        assertCompileTasksContain(project, firstArg, secondArg);
+    }
 
-    /**
-     * Copies production resources into the production resources directory.
-     */
-    processResources,
-
-    /**
-     * Copies test resources into the test resources directory.
-     */
-    processTestResources
+    @Test
+    @DisplayName("not add arguments if none is specified")
+    void noArgs() {
+        JavaCompileTasks.of(project).addArgs();
+        assertCompileTasksEmpty(project);
+    }
 }
