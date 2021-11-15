@@ -29,7 +29,7 @@ package io.spine.tools.gradle;
 import io.spine.annotation.Internal;
 
 /**
- * The names of Gradle configurations used by the Spine model compiler plugin.
+ * The names of Gradle configurations used by the Spine Gradle plugins.
  *
  * <p>See <a href="https://docs.gradle.org/current/userguide/managing_dependency_configurations.html">
  * the Gradle doc</a> on dependency configurations for more info.
@@ -78,8 +78,8 @@ public enum ConfigurationName {
     /**
      * All the dependencies included for the Java module compilation.
      *
-     * <p>Users cannot add dependencies directly to this configuration. However, this configuration
-     * may be resolved.
+     * <p>Users cannot add dependencies directly to this configuration.
+     * However, this configuration may be resolved.
      */
     compileClasspath,
 
@@ -94,8 +94,8 @@ public enum ConfigurationName {
     /**
      * All the dependencies included for the Java module runtime.
      *
-     * <p>Users cannot add dependencies directly to this configuration. However, this configuration
-     * may be resolved.
+     * <p>Users cannot add dependencies directly to this configuration.
+     * However, this configuration may be resolved.
      */
     runtimeClasspath,
 
@@ -116,8 +116,8 @@ public enum ConfigurationName {
     /**
      * All the dependencies included for the Java module tests compilation.
      *
-     * <p>Users cannot add dependencies directly to this configuration. However, this configuration
-     * may be resolved.
+     * <p>Users cannot add dependencies directly to this configuration.
+     * However, this configuration may be resolved.
      */
     testCompileClasspath,
 
@@ -131,16 +131,13 @@ public enum ConfigurationName {
     /**
      * All the dependencies included for the Java module test runtime.
      *
-     * <p>Users cannot add dependencies directly to this configuration. However, this configuration
-     * may be resolved.
+     * <p>Users cannot add dependencies directly to this configuration.
+     * However, this configuration may be resolved.
      */
     testRuntimeClasspath,
 
     /**
      * Configuration that allows to compile {@code .proto} files form the dependencies.
-     *
-     * <p>Users should use {@code compile} when adding Protobuf dependencies to other strictly
-     * Protobuf modules.
      */
     protobuf,
 
