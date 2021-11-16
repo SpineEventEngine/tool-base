@@ -26,11 +26,13 @@
 
 package io.spine.tools.gradle.task;
 
+import com.google.common.collect.ImmutableList;
 import io.spine.tools.gradle.testing.NoOp;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.tasks.TaskContainer;
+import org.gradle.api.tasks.TaskInputs;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -168,11 +170,15 @@ class GradleTaskBuilderTest {
         Task task = project.getTasks()
                            .findByPath(preClean.name());
         assertNotNull(task);
-        File singleInput = task.getInputs()
-                               .getFiles()
-                               .getFiles()
-                               .iterator()
-                               .next();
-        assertEquals(input.getCanonicalFile(), singleInput.getCanonicalFile());
+        TaskInputs inputs = task.getInputs();
+        assertNotNull(inputs);
+
+        ImmutableList<File> inputFiles =
+                ImmutableList.copyOf(inputs.getFiles()
+                                           .getFiles());
+        assertThat(inputFiles)
+                .hasSize(1);
+        assertThat(inputFiles.get(0).getCanonicalFile())
+                .isEqualTo(input.getCanonicalFile());
     }
 }
