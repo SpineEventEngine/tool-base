@@ -27,6 +27,7 @@ package io.spine.tools.gradle.task
 
 import io.spine.tools.gradle.SourceSetName
 import io.spine.tools.gradle.SourceSetName.Companion.main
+import io.spine.tools.gradle.SourceSetName.Companion.test
 
 /**
  * Names of Gradle tasks defined by the `java` plugin.
@@ -68,6 +69,10 @@ internal constructor(private val value: String, val sourceSetName: SourceSetName
         /** Obtains the name of the compilation task for the [main] source set. */
         @JvmField
         public val compileJava: JavaTaskName = compileJava(main)
+
+        /** Obtains the name of the compilation task for the [test] source set. */
+        @JvmField
+        public val compileTestJava: JavaTaskName = compileJava(test)
     }
 
     /** Obtains the name the task. */

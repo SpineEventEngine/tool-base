@@ -32,6 +32,7 @@ import io.spine.tools.gradle.SourceSetName.Companion.main
 import io.spine.tools.gradle.SourceSetName.Companion.test
 import io.spine.tools.gradle.task.JavaTaskName.Companion.classes
 import io.spine.tools.gradle.task.JavaTaskName.Companion.compileJava
+import io.spine.tools.gradle.task.JavaTaskName.Companion.compileTestJava
 import io.spine.tools.gradle.task.JavaTaskName.Companion.processResources
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -102,5 +103,10 @@ class `'JavaTaskName' should` {
             assertThat(processResources(SourceSetName("goldMine")).name())
                 .isEqualTo("processGoldMineResources")
         }
+    }
+
+    @Test
+    fun `expose 'compileTestJava' property for compatibility`() {
+        assertThat(compileTestJava).isEqualTo(compileJava(test))
     }
 }
