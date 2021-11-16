@@ -25,15 +25,13 @@
  */
 package io.spine.tools.gradle.task;
 
-import io.spine.annotation.Internal;
-
 /**
  * Names of Gradle tasks defined by the {@code base} plugin.
  *
  * @see <a href="https://docs.gradle.org/current/userguide/base_plugin.html#sec:base_tasks">
  *         the plugin doc</a>
  */
-@Internal
+@SuppressWarnings("unused")
 public enum BaseTaskName implements TaskName {
 
     /**
