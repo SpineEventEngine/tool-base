@@ -47,7 +47,6 @@ class TaskArgumentsTest {
                         .containsExactly(compileJava.name(), STACKTRACE_CLI_OPTION);
     }
 
-
     @Test
     @DisplayName("print debug flag")
     void debug() {
