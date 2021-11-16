@@ -35,6 +35,7 @@ import io.spine.tools.gradle.task.JavaTaskName.Companion.compileJava
 import io.spine.tools.gradle.task.JavaTaskName.Companion.compileTestJava
 import io.spine.tools.gradle.task.JavaTaskName.Companion.processResources
 import io.spine.tools.gradle.task.JavaTaskName.Companion.processTestResources
+import io.spine.tools.gradle.task.JavaTaskName.Companion.testClasses
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
@@ -110,6 +111,8 @@ class `'JavaTaskName' should` {
     fun `expose properties for compatibility with the previous versions`() {
         assertThat(compileJava).isEqualTo(compileJava(main))
         assertThat(compileTestJava).isEqualTo(compileJava(test))
+        assertThat(classes).isEqualTo(classes(main))
+        assertThat(testClasses).isEqualTo(classes(test))
         assertThat(processResources).isEqualTo(processResources(main))
         assertThat(processTestResources).isEqualTo(processResources(test))
     }

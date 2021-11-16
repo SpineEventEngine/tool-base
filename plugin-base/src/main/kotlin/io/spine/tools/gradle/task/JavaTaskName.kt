@@ -60,25 +60,34 @@ internal constructor(private val value: String, val sourceSetName: SourceSetName
             )
 
         /**
-         * Copies resources into the build resources directory of the specified source set.
+         * Obtains the name of the task which copies resources into the build resources directory
+         * of the specified source set.
          */
         @JvmStatic
         public fun processResources(ssn: SourceSetName): JavaTaskName =
             JavaTaskName("process${ssn.toInfix()}Resources", ssn)
 
-        /** Obtains the name of the compilation task for the [main] source set. */
+        /** The name of the compilation task for the [main] source set. */
         @JvmField
         public val compileJava: JavaTaskName = compileJava(main)
 
-        /** Obtains the name of the compilation task for the [test] source set. */
+        /** The name of the compilation task for the [test] source set. */
         @JvmField
         public val compileTestJava: JavaTaskName = compileJava(test)
 
-        /** Obtains the name of the resources processing task from the [main] source set. */
+        /** The name of the 'classes' task for the [main] source set. */
+        @JvmField
+        public val classes: JavaTaskName = classes(main)
+
+        /** The name of the 'classes' task for the [test] source set. */
+        @JvmField
+        public val testClasses: JavaTaskName = classes(test)
+
+        /** The name of the resources processing task from the [main] source set. */
         @JvmField
         public val processResources: JavaTaskName = processResources(main)
 
-        /** Obtains the name of the resources processing task from the [test] source set. */
+        /** The name of the resources processing task from the [test] source set. */
         @JvmField
         public val processTestResources: JavaTaskName = processResources(test)
     }
