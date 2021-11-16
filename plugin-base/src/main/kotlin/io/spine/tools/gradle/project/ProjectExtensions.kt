@@ -34,6 +34,8 @@ import io.spine.tools.fs.DescriptorsDir
 import io.spine.tools.fs.DirectoryName.generated
 import io.spine.tools.gradle.Artifact
 import io.spine.tools.gradle.SourceSetName
+import io.spine.tools.gradle.SourceSetName.Companion.main
+import io.spine.tools.gradle.SourceSetName.Companion.test
 import io.spine.tools.gradle.resolve
 import java.io.File
 import java.nio.file.Path
@@ -89,8 +91,8 @@ public val Project.testArtifact: Artifact
  */
 public fun Project.artifact(ss: SourceSetName): Artifact {
     return when (ss) {
-        SourceSetName.main -> artifact
-        SourceSetName.test -> testArtifact
+        main -> artifact
+        test -> testArtifact
         else -> toArtifactBuilder().setClassifier(ss.value).build()
     }
 }
