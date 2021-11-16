@@ -73,6 +73,14 @@ internal constructor(private val value: String, val sourceSetName: SourceSetName
         /** Obtains the name of the compilation task for the [test] source set. */
         @JvmField
         public val compileTestJava: JavaTaskName = compileJava(test)
+
+        /** Obtains the name of the resources processing task from the [main] source set. */
+        @JvmField
+        public val processResources: JavaTaskName = processResources(main)
+
+        /** Obtains the name of the resources processing task from the [test] source set. */
+        @JvmField
+        public val processTestResources: JavaTaskName = processResources(test)
     }
 
     /** Obtains the name the task. */
