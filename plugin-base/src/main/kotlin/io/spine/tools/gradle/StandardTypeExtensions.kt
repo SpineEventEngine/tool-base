@@ -49,3 +49,6 @@ public val GenerateProtoTask.descriptorSetFile: File
 
 /** Adds relative name to this directory. */
 public fun File.resolve(dir: DirectoryName): File = resolve(dir.value())
+
+/** Obtains a copy of this string with the first character capitalized . */
+public fun String.titlecaseFirstChar(): String = replaceFirstChar(Char::titlecase)

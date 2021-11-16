@@ -54,4 +54,27 @@ public data class SourceSetName(val value: String) {
     override fun toString(): String {
         return value
     }
+
+    /**
+     * Obtains the name of the source set with the first character capitalized, if
+     * it is not [main].
+     *
+     * For [main], an empty string is returned.
+     */
+    public fun toInfix(): String {
+        if (this == main) {
+            return ""
+        }
+        return value.titlecaseFirstChar()
+    }
+
+    /**
+     * If this name is not [main], returns its value. For [main], returns an empty string.
+     */
+    public fun toPrefix(): String {
+        if (this == main) {
+            return ""
+        }
+        return value
+    }
 }
