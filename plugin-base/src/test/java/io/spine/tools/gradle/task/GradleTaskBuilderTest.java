@@ -55,9 +55,7 @@ import static io.spine.tools.gradle.task.ProtobufTaskName.generateProto;
 import static io.spine.tools.gradle.task.ProtobufTaskName.generateTestProto;
 import static io.spine.tools.gradle.testing.GradleProject.javaPlugin;
 import static io.spine.tools.gradle.testing.NoOp.action;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Tests {@link GradleTask.Builder}.
@@ -88,7 +86,8 @@ class GradleTaskBuilderTest {
                 .applyNowTo(subProject);
         TaskContainer subProjectTasks = subProject.getTasks();
         Task newTask = subProjectTasks.findByName(task.getName().name());
-        assertNotNull(newTask);
+        assertThat(newTask)
+                .isNotNull();
         Collection<?> dependencies = newTask.getDependsOn();
 
         assertThat(dependencies)
@@ -106,8 +105,11 @@ class GradleTaskBuilderTest {
               .insertBeforeTask(classes)
               .applyNowTo(project);
         TaskContainer tasks = project.getTasks();
+
         Task classes = tasks.findByName(JavaTaskName.classes.name());
-        assertNotNull(classes);
+        assertThat(classes)
+                .isNotNull();
+
         Task verifyModelTask = tasks.findByName(verifyModel.name());
         assertThat(classes.getDependsOn())
                 .contains(verifyModelTask);
@@ -120,10 +122,14 @@ class GradleTaskBuilderTest {
               .insertAfterTask(compileJava)
               .applyNowTo(project);
         TaskContainer tasks = project.getTasks();
+
         Task compileJavaTask = tasks.findByName(compileJava.name());
-        assertNotNull(compileJavaTask);
+        assertThat(compileJavaTask)
+                .isNotNull();
         Task verifyModelTask = tasks.findByName(verifyModel.name());
-        assertNotNull(verifyModelTask);
+
+        assertThat(verifyModelTask)
+                .isNotNull();
         assertThat(verifyModelTask.getDependsOn())
                 .contains(compileJavaTask.getName());
     }
@@ -135,10 +141,14 @@ class GradleTaskBuilderTest {
               .insertAfterAllTasks(generateProto)
               .applyNowTo(project);
         TaskContainer tasks = project.getTasks();
+
         Task generateProtoTask = tasks.findByName(generateProto.name());
-        assertNull(generateProtoTask);
+        assertThat(generateProtoTask)
+                .isNull();
+
         Task generateTestProtoTask = tasks.findByName(generateTestProto.name());
-        assertNotNull(generateTestProtoTask);
+        assertThat(generateTestProtoTask)
+                .isNotNull();
     }
 
     @Test
@@ -154,8 +164,10 @@ class GradleTaskBuilderTest {
         GradleTask desc = GradleTask.newBuilder(preClean, NoOp.action())
                 .insertBeforeTask(clean)
                 .applyNowTo(project);
-        assertEquals(preClean, desc.getName());
-        assertEquals(project, desc.getProject());
+        assertThat(desc.getName())
+                .isEqualTo(preClean);
+        assertThat(desc.getProject())
+                .isEqualTo(project);
     }
 
     @Test
