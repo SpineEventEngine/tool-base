@@ -23,48 +23,53 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package io.spine.tools.gradle.task
 
-package io.spine.tools.gradle.task;
-
-import io.spine.annotation.Internal;
+import io.spine.tools.gradle.SourceSetName
+import io.spine.tools.gradle.SourceSetName.Companion.main
 
 /**
- * Names of Gradle tasks defined by the {@code java} plugin.
+ * Names of Gradle tasks defined by the `java` plugin.
  *
- * @see <a href="https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_tasks">
- *         the plugin doc</a>
+ * @see <a href="https://docs.gradle.org/current/userguide/java_plugin.html.sec:java_tasks">
+ *     The 'java' plugin documentation</a>
  */
-@Internal
-public enum JavaTaskName implements TaskName {
+public data class JavaTaskName
+internal constructor(private val value: String, val sourceSetName: SourceSetName) : TaskName {
 
-    /**
-     * Compiles production Java source files using the JDK compiler.
-     */
-    compileJava,
+    public companion object {
 
-    /**
-     * Compiles test Java source files using the JDK compiler.
-     */
-    compileTestJava,
+        /**
+         * Obtains a name of the task which compiles Java source files of the specified
+         * source set using the JDK compiler.
+         */
+        @JvmStatic
+        public fun compileJava(ssn: SourceSetName): JavaTaskName =
+            JavaTaskName("compile${ssn.toInfix()}Java", ssn)
 
-    /**
-     * A lifecycle task which marks processing of all the classes and resources in this project.
-     */
-    classes,
+        /**
+         * Obtains a name of the task which marks processing of all the classes and resources
+         * of the specified source set.
+         */
+        @JvmStatic
+        public fun classes(ssn: SourceSetName): JavaTaskName =
+            JavaTaskName(
+                "${ssn.toPrefix()}${if (ssn.toPrefix().isEmpty()) "classes" else "Classes"}",
+                ssn
+            )
 
-    /**
-     * A lifecycle task which marks processing of all the test classes and resources in this
-     * project.
-     */
-    testClasses,
+        /**
+         * Copies resources into the build resources directory of the specified source set.
+         */
+        @JvmStatic
+        public fun processResources(ssn: SourceSetName): JavaTaskName =
+            JavaTaskName("process${ssn.toInfix()}Resources", ssn)
 
-    /**
-     * Copies production resources into the production resources directory.
-     */
-    processResources,
+        /** Obtains the name of the compilation task for the [main] source set. */
+        @JvmField
+        public val compileJava: JavaTaskName = compileJava(main)
+    }
 
-    /**
-     * Copies test resources into the test resources directory.
-     */
-    processTestResources
+    /** Obtains the name the task. */
+    override fun name(): String = value
 }
