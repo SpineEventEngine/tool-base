@@ -28,6 +28,7 @@ package io.spine.tools.gradle;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
+import com.google.errorprone.annotations.InlineMe;
 import com.google.protobuf.gradle.ExecutableLocator;
 import com.google.protobuf.gradle.GenerateProtoTask;
 import com.google.protobuf.gradle.GenerateProtoTask.DescriptorSetOptions;
@@ -72,6 +73,10 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
      */
     @SuppressWarnings("WeakerAccess") // This method is used by implementing classes.
     @Deprecated
+    @InlineMe(
+            replacement = "protocTask.getSourceSet().getName().contains(TEST_SOURCE_SET_NAME)",
+            staticImports = "org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME"
+    )
     protected static boolean isTestsTask(GenerateProtoTask protocTask) {
         return protocTask.getSourceSet()
                          .getName()
