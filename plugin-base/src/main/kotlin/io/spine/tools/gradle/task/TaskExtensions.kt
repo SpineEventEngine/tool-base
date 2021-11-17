@@ -24,25 +24,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@file:JvmName("StandardTypes")
+@file:JvmName("Tasks")
 
-package io.spine.tools.gradle
+package io.spine.tools.gradle.task
 
-import io.spine.io.Files2.toAbsolute
-import io.spine.tools.fs.DirectoryName
+import com.google.protobuf.gradle.GenerateProtoTask
+import io.spine.tools.gradle.SourceSetName
+import io.spine.tools.gradle.named
+import io.spine.tools.gradle.project.descriptorSetFile
 import java.io.File
-import java.util.function.Supplier
-import org.gradle.api.tasks.SourceSet
 
-/** Resolves an absolute file name obtained from the supplier. */
-public fun Supplier<String>.toAbsoluteFile(): File = toAbsolute(get())
+/** Obtains the descriptor set file associated with this task. */
+public val GenerateProtoTask.descriptorSetFile: File
+    get() = project.descriptorSetFile(sourceSet.named)
 
-/** The name of this source set. */
-public val SourceSet.named: SourceSetName
-    get() = SourceSetName(name)
-
-/** Adds relative name to this directory. */
-public fun File.resolve(dir: DirectoryName): File = resolve(dir.value())
-
-/** Obtains a copy of this string with the first character capitalized . */
-public fun String.titlecaseFirstChar(): String = replaceFirstChar(Char::titlecase)
+/** Obtains the name of the source set to which this task belongs. */
+public val GenerateProtoTask.sourceSetName: SourceSetName
+    get() = sourceSet.named

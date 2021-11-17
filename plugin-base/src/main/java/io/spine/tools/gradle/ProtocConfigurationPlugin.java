@@ -46,7 +46,7 @@ import java.util.Collection;
 import static io.spine.tools.gradle.Artifact.PLUGIN_BASE_ID;
 import static io.spine.tools.gradle.ProtobufDependencies.gradlePlugin;
 import static io.spine.tools.gradle.ProtobufDependencies.protobufCompiler;
-import static io.spine.tools.gradle.StandardTypes.getDescriptorSetFile;
+import static io.spine.tools.gradle.task.Tasks.getDescriptorSetFile;
 import static io.spine.tools.gradle.project.Projects.getConventionUsesDefaultGeneratedDir;
 import static io.spine.tools.gradle.project.Projects.getGeneratedDir;
 import static io.spine.tools.gradle.project.Projects.getProtobufConvention;
