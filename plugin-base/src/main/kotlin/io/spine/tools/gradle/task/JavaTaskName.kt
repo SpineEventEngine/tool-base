@@ -83,11 +83,11 @@ internal constructor(private val value: String, val sourceSetName: SourceSetName
         @JvmField
         public val testClasses: JavaTaskName = classes(test)
 
-        /** The name of the resources processing task from the [main] source set. */
+        /** The name of the resource processing task from the [main] source set. */
         @JvmField
         public val processResources: JavaTaskName = processResources(main)
 
-        /** The name of the resources processing task from the [test] source set. */
+        /** The name of the resource processing task from the [test] source set. */
         @JvmField
         public val processTestResources: JavaTaskName = processResources(test)
     }
