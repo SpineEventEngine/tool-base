@@ -35,8 +35,7 @@ import io.spine.tools.gradle.SourceSetName.Companion.test
  * @see <a href="https://docs.gradle.org/current/userguide/java_plugin.html.sec:java_tasks">
  *     The 'java' plugin documentation</a>
  */
-public data class JavaTaskName
-internal constructor(private val value: String, val sourceSetName: SourceSetName) : TaskName {
+public class JavaTaskName(value: String, ssn: SourceSetName) : TaskWithSourceSetName(value, ssn) {
 
     public companion object {
 
@@ -91,7 +90,4 @@ internal constructor(private val value: String, val sourceSetName: SourceSetName
         @JvmField
         public val processTestResources: JavaTaskName = processResources(test)
     }
-
-    /** Obtains the name the task. */
-    override fun name(): String = value
 }
