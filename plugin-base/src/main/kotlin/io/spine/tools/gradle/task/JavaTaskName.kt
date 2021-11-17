@@ -44,7 +44,7 @@ public class JavaTaskName(value: String, ssn: SourceSetName) : TaskWithSourceSet
          * source set using the JDK compiler.
          */
         @JvmStatic
-        public fun compileJava(ssn: SourceSetName): JavaTaskName =
+        public fun compileJava(ssn: SourceSetName): TaskName =
             JavaTaskName("compile${ssn.toInfix()}Java", ssn)
 
         /**
@@ -52,7 +52,7 @@ public class JavaTaskName(value: String, ssn: SourceSetName) : TaskWithSourceSet
          * of the specified source set.
          */
         @JvmStatic
-        public fun classes(ssn: SourceSetName): JavaTaskName =
+        public fun classes(ssn: SourceSetName): TaskName =
             JavaTaskName(
                 "${ssn.toPrefix()}${if (ssn.toPrefix().isEmpty()) "classes" else "Classes"}",
                 ssn
@@ -63,31 +63,31 @@ public class JavaTaskName(value: String, ssn: SourceSetName) : TaskWithSourceSet
          * of the specified source set.
          */
         @JvmStatic
-        public fun processResources(ssn: SourceSetName): JavaTaskName =
+        public fun processResources(ssn: SourceSetName): TaskName =
             JavaTaskName("process${ssn.toInfix()}Resources", ssn)
 
         /** The name of the compilation task for the [main] source set. */
         @JvmField
-        public val compileJava: JavaTaskName = compileJava(main)
+        public val compileJava: TaskName = compileJava(main)
 
         /** The name of the compilation task for the [test] source set. */
         @JvmField
-        public val compileTestJava: JavaTaskName = compileJava(test)
+        public val compileTestJava: TaskName = compileJava(test)
 
         /** The name of the 'classes' task for the [main] source set. */
         @JvmField
-        public val classes: JavaTaskName = classes(main)
+        public val classes: TaskName = classes(main)
 
         /** The name of the 'classes' task for the [test] source set. */
         @JvmField
-        public val testClasses: JavaTaskName = classes(test)
+        public val testClasses: TaskName = classes(test)
 
         /** The name of the resource processing task from the [main] source set. */
         @JvmField
-        public val processResources: JavaTaskName = processResources(main)
+        public val processResources: TaskName = processResources(main)
 
         /** The name of the resource processing task from the [test] source set. */
         @JvmField
-        public val processTestResources: JavaTaskName = processResources(test)
+        public val processTestResources: TaskName = processResources(test)
     }
 }
