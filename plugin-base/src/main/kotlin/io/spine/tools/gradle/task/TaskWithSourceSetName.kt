@@ -62,5 +62,13 @@ public abstract class TaskWithSourceSetName(
         }
         other as TaskWithSourceSetName
         return value == other.value
+                // Just comparing values should be enough for equality because the `value` property
+                // refers to a name of a source set.
+                // This comparison is a safety measure for the cases similar to
+                // the `SourceSetName.main` which returns empty string in prefix and infix forms.
+                // Other cases for `SourceSetName` introduced in the future may break our
+                // current assumptions for equality. Comparing both properties keeps us at the
+                // safe side.
+                && sourceSetName == other.sourceSetName
     }
 }
