@@ -28,6 +28,7 @@ package io.spine.tools.gradle.task;
 
 import com.google.common.collect.ImmutableList;
 import io.spine.tools.gradle.testing.NoOp;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.file.FileCollection;
@@ -182,7 +183,7 @@ class GradleTaskBuilderTest {
         Task task = project.getTasks()
                            .findByPath(preClean.name());
         assertNotNull(task);
-        TaskInputs inputs = task.getInputs();
+        @Nullable TaskInputs inputs = task.getInputs();
         assertNotNull(inputs);
 
         ImmutableList<File> inputFiles =
