@@ -27,7 +27,9 @@
 package io.spine.tools.gradle
 
 import com.google.common.truth.Truth.assertThat
+import io.spine.tools.gradle.SourceSetName.Companion.main
 import org.gradle.api.tasks.SourceSet.MAIN_SOURCE_SET_NAME
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
@@ -45,7 +47,41 @@ class `'SourceSetName' should` {
 
     @Test
     fun `expose the value`() {
-        assertThat(SourceSetName.main.value)
+        assertThat(main.value)
             .isEqualTo(MAIN_SOURCE_SET_NAME)
+    }
+
+    @Nested
+    inner class `provide infix form` {
+
+        @Test
+        fun `of 'main' as empty string`() {
+            assertThat(main.toInfix())
+                .isEmpty()
+        }
+
+        @Test
+        fun `as value in 'TitleCase'`() {
+            val customName = "customName"
+            assertThat(SourceSetName(customName).toInfix())
+                .isEqualTo(customName.titlecaseFirstChar())
+        }
+    }
+
+    @Nested
+    inner class `provide prefix form` {
+
+        @Test
+        fun `of 'main' as empty string`() {
+            assertThat(main.toPrefix())
+                .isEmpty()
+        }
+
+        @Test
+        fun `as value`() {
+            val mySourceSetName = "mySourceSetName"
+            assertThat(SourceSetName(mySourceSetName).toPrefix())
+                .isEqualTo(mySourceSetName)
+        }
     }
 }

@@ -28,12 +28,12 @@ package io.spine.tools.gradle;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
+import com.google.errorprone.annotations.InlineMe;
 import com.google.protobuf.gradle.ExecutableLocator;
 import com.google.protobuf.gradle.GenerateProtoTask;
 import com.google.protobuf.gradle.GenerateProtoTask.DescriptorSetOptions;
 import com.google.protobuf.gradle.ProtobufConfigurator;
 import com.google.protobuf.gradle.ProtobufConfigurator.GenerateProtoTaskCollection;
-import com.google.protobuf.gradle.ProtobufConvention;
 import io.spine.tools.groovy.ConsumerClosure;
 import org.gradle.api.NamedDomainObjectContainer;
 import org.gradle.api.Plugin;
@@ -46,6 +46,10 @@ import java.util.Collection;
 import static io.spine.tools.gradle.Artifact.PLUGIN_BASE_ID;
 import static io.spine.tools.gradle.ProtobufDependencies.gradlePlugin;
 import static io.spine.tools.gradle.ProtobufDependencies.protobufCompiler;
+import static io.spine.tools.gradle.task.Tasks.getDescriptorSetFile;
+import static io.spine.tools.gradle.project.Projects.getConventionUsesDefaultGeneratedDir;
+import static io.spine.tools.gradle.project.Projects.getGeneratedDir;
+import static io.spine.tools.gradle.project.Projects.getProtobufConvention;
 import static io.spine.tools.groovy.ConsumerClosure.closure;
 import static org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME;
 
@@ -62,7 +66,17 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
     @VisibleForTesting
     static final DependencyVersions versions = DependencyVersions.loadFor(PLUGIN_BASE_ID);
 
+    /**
+     * Tells if the source set of the given task contains {@code "test"} in its name.
+     *
+     * @deprecated Please a name of the source set of the given task instead.
+     */
     @SuppressWarnings("WeakerAccess") // This method is used by implementing classes.
+    @Deprecated
+    @InlineMe(
+            replacement = "protocTask.getSourceSet().getName().contains(TEST_SOURCE_SET_NAME)",
+            staticImports = "org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME"
+    )
     protected static boolean isTestsTask(GenerateProtoTask protocTask) {
         return protocTask.getSourceSet()
                          .getName()
@@ -75,12 +89,8 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
                .withPlugin(gradlePlugin().value(), plugin -> applyTo(project));
     }
 
-    @SuppressWarnings("deprecation" /* We have to use `getConvention()` until
-        Protobuf Gradle Plugin migrates to new API. */)
     private void applyTo(Project project) {
-        project.getConvention()
-               .getPlugin(ProtobufConvention.class)
-               .protobuf(closure(
+        getProtobufConvention(project).protobuf(closure(
                        (ProtobufConfigurator protobuf) -> configureProtobuf(project, protobuf)
                ));
     }
@@ -110,19 +120,10 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
      * @param protocTask
      *         code generation task
      */
-    @SuppressWarnings("NoopMethodInAbstractClass")
+    @SuppressWarnings({"NoopMethodInAbstractClass", "unused" /* parameter in no-op impl. */})
     protected void customizeTask(GenerateProtoTask protocTask) {
         // NO-OP by default.
     }
-
-    /** Obtains the location of the {@code generated} directory of the specified project. */
-    protected abstract Path generatedFilesBaseDir(Project project);
-
-    /** Obtains the merged descriptor set file of the {@code main} module. */
-    protected abstract File getMainDescriptorSet(Project project);
-
-    /** Obtains the merged descriptor set file of the {@code test} module. */
-    protected abstract File getTestDescriptorSet(Project project);
 
     /**
      * Configures Protobuf Gradle plugin.
@@ -158,9 +159,17 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
             ));
         }
 
+        /**
+         * Sets the {@code generatedFilesBaseDir} property of {@link ProtobufConfigurator}
+         * to the value used by the framework, if no custom value is supplied by the programmer.
+         *
+         * <p>Otherwise, the supplied value should be used.
+         */
         private void setGeneratedFilesBaseDir() {
-            Path generatedFilesBaseDir = plugin.generatedFilesBaseDir(project);
-            protobuf.setGeneratedFilesBaseDir(generatedFilesBaseDir.toString());
+            if (getConventionUsesDefaultGeneratedDir(project)) {
+                Path generatedFilesBaseDir = getGeneratedDir(project);
+                protobuf.setGeneratedFilesBaseDir(generatedFilesBaseDir.toString());
+            }
         }
 
         private void configurePlugins() {
@@ -193,13 +202,9 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
 
         private void configureDescriptorSetGeneration(GenerateProtoTask protocTask) {
             protocTask.setGenerateDescriptorSet(true);
-            boolean tests = isTestsTask(protocTask);
-            Project project = protocTask.getProject();
-            File descriptor = tests
-                              ? plugin.getTestDescriptorSet(project)
-                              : plugin.getMainDescriptorSet(project);
             DescriptorSetOptions options = protocTask.getDescriptorSetOptions();
-            options.setPath(descriptor.getPath());
+            File descriptorSetFile = getDescriptorSetFile(protocTask);
+            options.setPath(descriptorSetFile.getPath());
             options.setIncludeImports(true);
             options.setIncludeSourceInfo(true);
         }

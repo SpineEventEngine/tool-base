@@ -24,47 +24,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.task;
+@file:JvmName("Tasks")
 
-import io.spine.annotation.Internal;
+package io.spine.tools.gradle.task
 
-/**
- * Names of Gradle tasks defined by the {@code java} plugin.
- *
- * @see <a href="https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_tasks">
- *         the plugin doc</a>
- */
-@Internal
-public enum JavaTaskName implements TaskName {
+import com.google.protobuf.gradle.GenerateProtoTask
+import io.spine.tools.gradle.SourceSetName
+import io.spine.tools.gradle.named
+import io.spine.tools.gradle.project.descriptorSetFile
+import java.io.File
 
-    /**
-     * Compiles production Java source files using the JDK compiler.
-     */
-    compileJava,
+/** Obtains the descriptor set file associated with this task. */
+public val GenerateProtoTask.descriptorSetFile: File
+    get() = project.descriptorSetFile(sourceSet.named)
 
-    /**
-     * Compiles test Java source files using the JDK compiler.
-     */
-    compileTestJava,
-
-    /**
-     * A lifecycle task which marks processing of all the classes and resources in this project.
-     */
-    classes,
-
-    /**
-     * A lifecycle task which marks processing of all the test classes and resources in this
-     * project.
-     */
-    testClasses,
-
-    /**
-     * Copies production resources into the production resources directory.
-     */
-    processResources,
-
-    /**
-     * Copies test resources into the test resources directory.
-     */
-    processTestResources
-}
+/** Obtains the name of the source set to which this task belongs. */
+public val GenerateProtoTask.sourceSetName: SourceSetName
+    get() = sourceSet.named

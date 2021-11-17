@@ -29,6 +29,7 @@
 package io.spine.tools.gradle
 
 import io.spine.io.Files2.toAbsolute
+import io.spine.tools.fs.DirectoryName
 import java.io.File
 import java.util.function.Supplier
 import org.gradle.api.tasks.SourceSet
@@ -39,3 +40,9 @@ public fun Supplier<String>.toAbsoluteFile(): File = toAbsolute(get())
 /** The name of this source set. */
 public val SourceSet.named: SourceSetName
     get() = SourceSetName(name)
+
+/** Adds relative name to this directory. */
+public fun File.resolve(dir: DirectoryName): File = resolve(dir.value())
+
+/** Obtains a copy of this string with the first character capitalized . */
+public fun String.titlecaseFirstChar(): String = replaceFirstChar(Char::titlecase)
