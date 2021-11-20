@@ -37,8 +37,8 @@ import org.gradle.api.artifacts.Configuration;
 import java.io.File;
 import java.util.function.Supplier;
 
-import static io.spine.tools.gradle.ConfigurationName.runtimeClasspath;
-import static io.spine.tools.gradle.ConfigurationName.testRuntimeClasspath;
+import static io.spine.tools.gradle.JavaConfigurationName.runtimeClasspath;
+import static io.spine.tools.gradle.JavaConfigurationName.testRuntimeClasspath;
 
 /**
  * A plugin performing code-generation based on a {@code .proto} files.

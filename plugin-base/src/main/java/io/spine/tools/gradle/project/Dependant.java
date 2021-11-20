@@ -28,9 +28,10 @@ package io.spine.tools.gradle.project;
 
 import io.spine.tools.gradle.Artifact;
 import io.spine.tools.gradle.ConfigurationName;
+import io.spine.tools.gradle.JavaConfigurationName;
 import io.spine.tools.gradle.Dependency;
 
-import static io.spine.tools.gradle.ConfigurationName.implementation;
+import static io.spine.tools.gradle.JavaConfigurationName.implementation;
 
 /**
  * Manages the dependencies of a Gradle project.
@@ -111,7 +112,7 @@ public interface Dependant {
      */
     @SuppressWarnings("deprecation") // See the doc.
     default void compile(String notation) {
-        depend(ConfigurationName.compile, notation);
+        depend(JavaConfigurationName.compile, notation);
     }
 
     /**

@@ -30,6 +30,7 @@ import com.google.common.base.Function;
 import com.google.common.truth.Correspondence;
 import io.spine.tools.gradle.Artifact;
 import io.spine.tools.gradle.ConfigurationName;
+import io.spine.tools.gradle.JavaConfigurationName;
 import io.spine.tools.gradle.Dependency;
 import io.spine.tools.gradle.ThirdPartyDependency;
 import org.gradle.api.Project;
@@ -52,9 +53,9 @@ import java.util.Set;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.truth.Truth.assertThat;
-import static io.spine.tools.gradle.ConfigurationName.implementation;
-import static io.spine.tools.gradle.ConfigurationName.runtimeClasspath;
-import static io.spine.tools.gradle.ConfigurationName.testRuntimeClasspath;
+import static io.spine.tools.gradle.JavaConfigurationName.implementation;
+import static io.spine.tools.gradle.JavaConfigurationName.runtimeClasspath;
+import static io.spine.tools.gradle.JavaConfigurationName.testRuntimeClasspath;
 import static java.lang.String.format;
 
 @SuppressWarnings("DuplicateStringLiteralInspection") // Test display names duplication.
@@ -193,7 +194,7 @@ class DependantProjectTest {
         }
     }
 
-    private void checkDependency(ConfigurationName configuration, Artifact dependency) {
+    private void checkDependency(JavaConfigurationName configuration, Artifact dependency) {
         DependencySet dependencies = project.getConfigurations()
                                             .getByName(configuration.value())
                                             .getDependencies();
@@ -203,9 +204,10 @@ class DependantProjectTest {
     }
 
     private void checkExcluded(ConfigurationName fromConfiguration, Dependency unwanted) {
-        Set<ExcludeRule> runtimeExclusionRules = project.getConfigurations()
-                                                        .getByName(fromConfiguration.value())
-                                                        .getExcludeRules();
+        Set<ExcludeRule> runtimeExclusionRules =
+                project.getConfigurations()
+                       .getByName(fromConfiguration.value())
+                       .getExcludeRules();
         ExcludeRule excludeRule = new DefaultExcludeRule(unwanted.groupId(), unwanted.name());
         assertThat(runtimeExclusionRules).containsExactly(excludeRule);
     }

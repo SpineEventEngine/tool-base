@@ -29,6 +29,7 @@ package io.spine.tools.gradle.project;
 import com.google.common.collect.ImmutableMap;
 import io.spine.tools.gradle.Artifact;
 import io.spine.tools.gradle.ConfigurationName;
+import io.spine.tools.gradle.JavaConfigurationName;
 import io.spine.tools.gradle.Dependency;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
@@ -42,8 +43,8 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static io.spine.tools.gradle.ConfigurationName.runtimeClasspath;
-import static io.spine.tools.gradle.ConfigurationName.testRuntimeClasspath;
+import static io.spine.tools.gradle.JavaConfigurationName.runtimeClasspath;
+import static io.spine.tools.gradle.JavaConfigurationName.testRuntimeClasspath;
 import static org.gradle.api.artifacts.ExcludeRule.GROUP_KEY;
 import static org.gradle.api.artifacts.ExcludeRule.MODULE_KEY;
 
