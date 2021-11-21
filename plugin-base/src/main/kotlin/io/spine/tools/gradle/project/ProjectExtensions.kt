@@ -33,6 +33,7 @@ import io.spine.tools.fs.DefaultPaths
 import io.spine.tools.fs.DescriptorsDir
 import io.spine.tools.fs.DirectoryName.generated
 import io.spine.tools.gradle.Artifact
+import io.spine.tools.gradle.ConfigurationName
 import io.spine.tools.gradle.SourceSetName
 import io.spine.tools.gradle.SourceSetName.Companion.main
 import io.spine.tools.gradle.SourceSetName.Companion.test
@@ -41,6 +42,7 @@ import java.io.File
 import java.nio.file.Path
 import java.nio.file.Paths
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Configuration
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
@@ -165,3 +167,10 @@ public val Project.generatedDir: Path
         val fromConvention = protobufConvention.protobuf.generatedFilesBaseDir
         return Paths.get(fromConvention)
     }
+
+/** Obtains a configuration by its name. */
+public fun Project.configuration(name: String): Configuration = configurations.getByName(name)
+
+/** Obtains a configuration by its name. */
+public fun Project.configuration(name: ConfigurationName): Configuration =
+    configuration(name.value())
