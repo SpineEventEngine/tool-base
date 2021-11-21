@@ -29,7 +29,6 @@ package io.spine.tools.gradle.project;
 import com.google.common.collect.ImmutableMap;
 import io.spine.tools.gradle.Artifact;
 import io.spine.tools.gradle.ConfigurationName;
-import io.spine.tools.gradle.JavaConfigurationName;
 import io.spine.tools.gradle.Dependency;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
@@ -67,8 +66,7 @@ public final class DependantProject implements Dependant {
      */
     public static DependantProject from(Project project) {
         checkNotNull(project);
-        return new DependantProject(project.getDependencies(),
-                                    project.getConfigurations());
+        return new DependantProject(project.getDependencies(), project.getConfigurations());
     }
 
     @Override
@@ -131,8 +129,9 @@ public final class DependantProject implements Dependant {
      */
     private static void
     removeForcedDependency(Configuration configuration, Predicate<ModuleVersionSelector> filter) {
-        Set<ModuleVersionSelector> forcedModules = configuration.getResolutionStrategy()
-                                                                .getForcedModules();
+        Set<ModuleVersionSelector> forcedModules =
+                configuration.getResolutionStrategy()
+                             .getForcedModules();
         Collection<ModuleVersionSelector> newForcedModules = new HashSet<>(forcedModules);
         newForcedModules.removeIf(filter);
 
@@ -160,8 +159,7 @@ public final class DependantProject implements Dependant {
      */
     private static Predicate<ModuleVersionSelector> equalsTo(String notation) {
         return selector -> {
-            Artifact.Builder artifact = Artifact
-                    .newBuilder()
+            Artifact.Builder artifact = Artifact.newBuilder()
                     .setGroup(selector.getGroup())
                     .setName(selector.getName());
             if (selector.getVersion() != null) {
