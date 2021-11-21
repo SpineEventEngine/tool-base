@@ -27,6 +27,7 @@
 package io.spine.tools.gradle.project;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.errorprone.annotations.InlineMe;
 import io.spine.tools.gradle.Artifact;
 import io.spine.tools.gradle.ConfigurationName;
 import io.spine.tools.gradle.Dependency;
@@ -68,6 +69,7 @@ public final class DependantProject implements Dependant {
      * @deprecated please use {@link #newInstance(Project)} instead.
      */
     @Deprecated
+    @InlineMe(replacement = "newInstance(project)")
     public static DependantProject from(Project project) {
         checkNotNull(project);
         return newInstance(project);
