@@ -30,6 +30,7 @@ import com.google.common.collect.ImmutableMap;
 import io.spine.tools.gradle.Artifact;
 import io.spine.tools.gradle.ConfigurationName;
 import io.spine.tools.gradle.Dependency;
+import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.ConfigurationContainer;
@@ -63,24 +64,50 @@ public final class DependantProject implements Dependant {
 
     /**
      * Creates a new instance for the given project.
+     *
+     * @deprecated please use {@link #newInstance(Project)} instead.
      */
+    @Deprecated
     public static DependantProject from(Project project) {
+        checkNotNull(project);
+        return newInstance(project);
+    }
+
+    /**
+     * Creates a new instance for the given project.
+     */
+    public static DependantProject newInstance(Project project) {
         checkNotNull(project);
         return new DependantProject(project.getDependencies(), project.getConfigurations());
     }
 
     @Override
-    public void depend(ConfigurationName configurationName, String notation) {
-        dependencies.add(configurationName.value(), notation);
+    public void depend(ConfigurationName configuration, String notation) {
+        dependencies.add(configuration.value(), notation);
+    }
+
+    private Configuration configuration(ConfigurationName name) {
+        Configuration result = configurations.getByName(name.value());
+        return result;
     }
 
     @Override
     public void exclude(Dependency dependency) {
-        Configuration mainConfig = configurations.getByName(runtimeClasspath.value());
+        Configuration mainConfig = configuration(runtimeClasspath);
         exclude(mainConfig, dependency);
 
-        Configuration testConfig = configurations.getByName(testRuntimeClasspath.value());
+        Configuration testConfig = configuration(testRuntimeClasspath);
         exclude(testConfig, dependency);
+    }
+
+    private void forAllConfigurations(Action<Configuration> action) {
+        configurations.all(action);
+    }
+
+    @Override
+    public void force(String artifact) {
+        forAllConfigurations(config -> config.getResolutionStrategy()
+                                             .force(artifact));
     }
 
     @Override
@@ -89,19 +116,13 @@ public final class DependantProject implements Dependant {
     }
 
     @Override
-    public void force(String notation) {
-        configurations.all(config -> config.getResolutionStrategy()
-                                           .force(notation));
-    }
-
-    @Override
     public void removeForcedDependency(Dependency dependency) {
-        configurations.all(config -> removeForcedDependency(config, equalsTo(dependency)));
+        forAllConfigurations(config -> removeForcedDependency(config, equalsTo(dependency)));
     }
 
     @Override
     public void removeForcedDependency(String notation) {
-        configurations.all(config -> removeForcedDependency(config, equalsTo(notation)));
+        forAllConfigurations(config -> removeForcedDependency(config, equalsTo(notation)));
     }
 
     /**

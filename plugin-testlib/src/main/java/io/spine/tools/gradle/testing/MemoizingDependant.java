@@ -62,8 +62,8 @@ public final class MemoizingDependant implements Dependant {
     }
 
     @Override
-    public void force(String notation) {
-        forcedDependencies.add(notation);
+    public void force(String artifact) {
+        forcedDependencies.add(artifact);
     }
 
     @Override

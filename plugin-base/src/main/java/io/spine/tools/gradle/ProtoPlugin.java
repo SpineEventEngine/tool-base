@@ -39,6 +39,7 @@ import java.util.function.Supplier;
 
 import static io.spine.tools.gradle.JavaConfigurationName.runtimeClasspath;
 import static io.spine.tools.gradle.JavaConfigurationName.testRuntimeClasspath;
+import static io.spine.tools.gradle.project.Projects.configuration;
 
 /**
  * A plugin performing code-generation based on a {@code .proto} files.
@@ -101,10 +102,5 @@ public abstract class ProtoPlugin implements Plugin<Project> {
             mergedSet.loadIntoKnownTypes();
             return mergedSet.fileSet();
         };
-    }
-
-    private static Configuration configuration(Project project, ConfigurationName name) {
-        return project.getConfigurations()
-                      .getByName(name.value());
     }
 }

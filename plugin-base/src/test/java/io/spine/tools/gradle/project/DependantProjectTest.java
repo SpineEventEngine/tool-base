@@ -30,7 +30,6 @@ import com.google.common.base.Function;
 import com.google.common.truth.Correspondence;
 import io.spine.tools.gradle.Artifact;
 import io.spine.tools.gradle.ConfigurationName;
-import io.spine.tools.gradle.JavaConfigurationName;
 import io.spine.tools.gradle.Dependency;
 import io.spine.tools.gradle.ThirdPartyDependency;
 import org.gradle.api.Project;
@@ -52,34 +51,35 @@ import java.nio.file.Path;
 import java.util.Set;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static com.google.common.truth.Correspondence.transforming;
 import static com.google.common.truth.Truth.assertThat;
 import static io.spine.tools.gradle.JavaConfigurationName.implementation;
 import static io.spine.tools.gradle.JavaConfigurationName.runtimeClasspath;
 import static io.spine.tools.gradle.JavaConfigurationName.testRuntimeClasspath;
+import static io.spine.tools.gradle.project.Projects.configuration;
 import static java.lang.String.format;
 
-@SuppressWarnings("DuplicateStringLiteralInspection") // Test display names duplication.
 @DisplayName("`DependantProject` should")
 class DependantProjectTest {
 
     private Project project;
+    private DependantProject dependant;
 
     @BeforeEach
     void setUp(@TempDir Path projectPath) {
-        project = ProjectBuilder
-                .builder()
+        project = ProjectBuilder.builder()
                 .withProjectDir(projectPath.toFile())
                 .build();
         project.getPluginManager()
                .apply(JavaPlugin.class);
+        dependant = DependantProject.newInstance(project);
     }
 
     @Test
     @DisplayName("add a given dependency")
     void addDependency() {
-        DependantProject container = DependantProject.from(project);
         Artifact dependency = artifact();
-        container.depend(implementation, dependency.notation());
+        dependant.depend(implementation, dependency);
 
         checkDependency(implementation, dependency);
     }
@@ -87,9 +87,8 @@ class DependantProjectTest {
     @Test
     @DisplayName("add an implementation dependency")
     void implementation() {
-        DependantProject container = DependantProject.from(project);
         Artifact dependency = artifact();
-        container.implementation(dependency.notation());
+        dependant.implementation(dependency.notation());
 
         checkDependency(implementation, dependency);
     }
@@ -97,9 +96,8 @@ class DependantProjectTest {
     @Test
     @DisplayName("exclude dependencies")
     void excludeDependencies() {
-        DependantProject container = DependantProject.from(project);
         Dependency unwanted = dependency();
-        container.exclude(unwanted);
+        dependant.exclude(unwanted);
 
         checkExcluded(runtimeClasspath, unwanted);
         checkExcluded(testRuntimeClasspath, unwanted);
@@ -109,42 +107,42 @@ class DependantProjectTest {
     @DisplayName("force the dependency to resolve to a particular version")
     class ForceDependency {
 
+        private Artifact artifact;
+
+        @BeforeEach
+        void obtainArtifact() {
+            artifact = artifact();
+        }
+
         @Test
         @DisplayName("when the dependency is represented as `Artifact`")
         void asArtifact() {
-            DependantProject container = DependantProject.from(project);
-            Artifact artifact = artifact();
-            container.force(artifact);
-
-            checkForced(artifact);
+            dependant.force(artifact);
+            checkForced();
         }
 
         @Test
         @DisplayName("when the dependency is represented as `String` notation")
         void asString() {
-            DependantProject container = DependantProject.from(project);
-            Artifact artifact = artifact();
-            String notation = artifact.notation();
-            container.force(notation);
-
-            checkForced(artifact);
+            dependant.force(artifact.notation());
+            checkForced();
         }
 
-        private void checkForced(Artifact artifact) {
+        private void checkForced() {
             ConfigurationContainer configurations = project.getConfigurations();
-            configurations.forEach(config -> checkForced(config, artifact));
+            configurations.forEach(this::checkForced);
         }
 
-        private void checkForced(Configuration config, Artifact artifact) {
-            String notation = artifact.notation();
-            Set<ModuleVersionSelector> forcedModules = config.getResolutionStrategy()
-                                                             .getForcedModules();
+        private void checkForced(Configuration config) {
+            Set<ModuleVersionSelector> forcedModules =
+                    config.getResolutionStrategy()
+                          .getForcedModules();
             String description = "in string form equals to";
             Correspondence<ModuleVersionSelector, String> correspondence =
-                    Correspondence.transforming(new ModuleVersionSelectorToNotation(), description);
+                    transforming(new SelectorToNotation(), description);
             assertThat(forcedModules)
                     .comparingElementsUsing(correspondence)
-                    .contains(notation);
+                    .contains(artifact.notation());
         }
     }
 
@@ -152,40 +150,34 @@ class DependantProjectTest {
     @DisplayName("remove a dependency from the forced dependencies list")
     class RemoveForcedDependency {
 
-        @Test
-        @DisplayName("when the dependency is represented as `Dependency`")
-        void asDependency() {
-            Dependency dependency = dependency();
+        private Dependency dependency;
+        private String notation;
+
+        @BeforeEach
+        void forceDependency() {
+            dependency = dependency();
             String version = version();
-            String notation = dependency.ofVersion(version)
+            notation = dependency.ofVersion(version)
                                         .notation();
-            forceDependency(notation);
-
-            DependantProject container = DependantProject.from(project);
-            container.removeForcedDependency(dependency);
-
-            checkNotForced();
-        }
-
-        @Test
-        @DisplayName("when the dependency is represented as `String` notation")
-        void asString() {
-            Dependency dependency = dependency();
-            String version = version();
-            String notation = dependency.ofVersion(version)
-                                        .notation();
-            forceDependency(notation);
-
-            DependantProject container = DependantProject.from(project);
-            container.removeForcedDependency(notation);
-
-            checkNotForced();
-        }
-
-        private void forceDependency(String notation) {
             project.getConfigurations()
                    .forEach(config -> config.getResolutionStrategy()
                                             .setForcedModules(notation));
+        }
+
+        @Test
+        @DisplayName("by `Dependency` instance")
+        void asDependency() {
+            dependant.removeForcedDependency(dependency);
+
+            checkNotForced();
+        }
+
+        @Test
+        @DisplayName("by `String` notation")
+        void asString() {
+            dependant.removeForcedDependency(notation);
+
+            checkNotForced();
         }
 
         private void checkNotForced() {
@@ -194,10 +186,8 @@ class DependantProjectTest {
         }
     }
 
-    private void checkDependency(JavaConfigurationName configuration, Artifact dependency) {
-        DependencySet dependencies = project.getConfigurations()
-                                            .getByName(configuration.value())
-                                            .getDependencies();
+    private void checkDependency(ConfigurationName configuration, Artifact dependency) {
+        DependencySet dependencies = configuration(project, configuration).getDependencies();
         assertThat(dependencies).hasSize(1);
         Artifact actualDependency = Artifact.from(getOnlyElement(dependencies));
         assertThat(actualDependency).isEqualTo(dependency);
@@ -205,16 +195,16 @@ class DependantProjectTest {
 
     private void checkExcluded(ConfigurationName fromConfiguration, Dependency unwanted) {
         Set<ExcludeRule> runtimeExclusionRules =
-                project.getConfigurations()
-                       .getByName(fromConfiguration.value())
-                       .getExcludeRules();
+                configuration(project, fromConfiguration)
+                        .getExcludeRules();
         ExcludeRule excludeRule = new DefaultExcludeRule(unwanted.groupId(), unwanted.name());
         assertThat(runtimeExclusionRules).containsExactly(excludeRule);
     }
 
     private static void checkForcedModulesEmpty(Configuration config) {
-        Set<ModuleVersionSelector> forcedModules = config.getResolutionStrategy()
-                                                         .getForcedModules();
+        Set<ModuleVersionSelector> forcedModules =
+                config.getResolutionStrategy()
+                      .getForcedModules();
         assertThat(forcedModules).isEmpty();
     }
 
@@ -229,8 +219,7 @@ class DependantProjectTest {
     }
 
     private static Artifact artifact() {
-        Artifact artifact = Artifact
-                .newBuilder()
+        Artifact artifact = Artifact.newBuilder()
                 .useSpineToolsGroup()
                 .setName("test-artifact")
                 .setVersion("42.0")
@@ -238,8 +227,11 @@ class DependantProjectTest {
         return artifact;
     }
 
-    private static class ModuleVersionSelectorToNotation
-            implements Function<ModuleVersionSelector, String> {
+    /**
+     * Transforms an instance of {@link ModuleVersionSelector} to corresponding
+     * Maven artifact notation.
+     */
+    private static class SelectorToNotation implements Function<ModuleVersionSelector, String> {
 
         @Override
         public String apply(ModuleVersionSelector selector) {
