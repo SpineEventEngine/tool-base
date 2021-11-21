@@ -24,134 +24,206 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle;
+package io.spine.tools.gradle
 
-import io.spine.annotation.Internal;
+import io.spine.tools.gradle.SourceSetName.Companion.main
+import io.spine.tools.gradle.SourceSetName.Companion.test
 
 /**
- * The names of Gradle configurations used by the Spine Gradle plugins.
+ * Names of Java project configurations used by the Spine Gradle plugins.
  *
- * <p>See <a href="https://docs.gradle.org/current/userguide/managing_dependency_configurations.html">
- * the Gradle doc</a> on dependency configurations for more info.
+ * @see <a href="https://docs.gradle.org/current/userguide/managing_dependency_configurations.html">Gradle documentation</a>
  */
-public enum JavaConfigurationName implements ConfigurationName {
+public class JavaConfigurationName(value: String, sourceSetName: SourceSetName) :
+    SourceSetBasedName(value, sourceSetName), ConfigurationName {
 
-    /**
-     * The classpath of the Gradle build process.
-     */
-    classpath,
+    public companion object {
 
-    /**
-     * The annotation processors used during the compilation of this module.
-     *
-     * <p>These dependencies are not accessible to the user at compile-time or at runtime directly.
-     */
-    annotationProcessor,
+        /**
+         * The classpath of a Gradle build process.
+         */
+        @JvmField
+        public val classpath: ConfigurationName = ConfigurationNameImpl()
 
-    /**
-     * The API of a Java library.
-     *
-     * <p>The dependencies are available at compile-time and runtime.
-     *
-     * <p>Dependencies in this configuration are included as compile-time transitive dependencies in
-     * the artifacts of the library.
-     */
-    api,
+        private fun prefixed(ssn: SourceSetName, value: String) =
+            JavaConfigurationName("${ssn.toPrefix()}${suffix(ssn, value)}", ssn)
 
-    /**
-     * Dependencies on which the Java module relies for implementation.
-     *
-     * <p>The dependencies are available at compile-time and runtime.
-     *
-     * <p>Dependencies in this configuration are included as runtime transitive dependencies in
-     * the artifacts of the module.
-     */
-    implementation,
+        /**
+         * Obtains a name of the `annotationProcessor` configuration for the specified source set.
+         */
+        @JvmStatic
+        public fun annotationProcessor(ssn: SourceSetName): ConfigurationName =
+            prefixed(ssn, "annotationProcessor")
 
-    /**
-     * Dependencies available at compile-time but not at runtime.
-     *
-     * <p>Suitable for annotations with {@link java.lang.annotation.RetentionPolicy#CLASS}.
-     */
-    compileOnly,
+        /**
+         * Obtains a name of the `implementation` configuration for the specified source set.
+         */
+        @JvmStatic
+        public fun implementation(ssn: SourceSetName): ConfigurationName =
+            prefixed(ssn, "implementation")
 
-    /**
-     * All the dependencies included for the Java module compilation.
-     *
-     * <p>Users cannot add dependencies directly to this configuration.
-     * However, this configuration may be resolved.
-     */
-    compileClasspath,
+        /**
+         * Obtains a name of the `compileClasspath` configuration for the specified source set.
+         */
+        @JvmStatic
+        public fun compileClasspath(ssn: SourceSetName): ConfigurationName =
+            prefixed(ssn, "compileClasspath")
 
-    /**
-     * Dependencies available at runtime but not at compile-time.
-     *
-     * <p>Suitable for SPI implementations loaded via {@link java.util.ServiceLoader} or other
-     * classpath scanning utilities.
-     */
-    runtimeOnly,
+        /**
+         * Obtains a name of the `runtimeOnly` configuration for the specified source set.
+         */
+        @JvmStatic
+        public fun runtimeOnly(ssn: SourceSetName): ConfigurationName =
+            prefixed(ssn, "runtimeOnly")
 
-    /**
-     * All the dependencies included for the Java module runtime.
-     *
-     * <p>Users cannot add dependencies directly to this configuration.
-     * However, this configuration may be resolved.
-     */
-    runtimeClasspath,
+        /**
+         * Obtains a name of the configuration `runtimeClasspath` for the specified source set.
+         */
+        @JvmStatic
+        public fun runtimeClasspath(ssn: SourceSetName): ConfigurationName =
+            prefixed(ssn, "runtimeClasspath")
 
-    /**
-     * The annotation processors used during the compilation of the tests of this module.
-     *
-     * <p>These dependencies are not accessible to the user at compile-time or at runtime directly.
-     */
-    testAnnotationProcessor,
+        /**
+         * The annotation processors used during the compilation of this module.
+         *
+         * These dependencies are not accessible to the user at compile-time or at runtime directly.
+         */
+        @Suppress("unused")
+        @JvmField
+        public val annotationProcessor: ConfigurationName = annotationProcessor(main)
 
-    /**
-     * Dependencies on which the Java module tests rely for implementation.
-     *
-     * <p>The dependencies are available at compile-time of the test code and at the test runtime.
-     */
-    testImplementation,
+        /**
+         * The API of a Java library.
+         *
+         * The dependencies are available at compile-time and runtime.
+         *
+         * Dependencies in this configuration are included as compile-time transitive dependencies
+         * in the artifacts of the library.
+         */
+        @JvmField
+        public val api: ConfigurationName = name("api")
 
-    /**
-     * All the dependencies included for the Java module tests compilation.
-     *
-     * <p>Users cannot add dependencies directly to this configuration.
-     * However, this configuration may be resolved.
-     */
-    testCompileClasspath,
+        /**
+         * Dependencies on which the Java module relies for implementation.
+         *
+         * The dependencies are available at compile-time and runtime.
+         *
+         * Dependencies in this configuration are included as runtime transitive dependencies in
+         * the artifacts of the module.
+         */
+        @JvmField
+        public val implementation: ConfigurationName = implementation(main)
 
-    /**
-     * Dependencies available at test runtime but not at compile-time.
-     *
-     * <p>For example, JUnit runners may be depended on with this configuration.
-     */
-    testRuntimeOnly,
+        /**
+         * Dependencies available at compile-time but not at runtime.
+         *
+         * Suitable for annotations with [java.lang.annotation.RetentionPolicy.CLASS].
+         */
+        @Suppress("unused")
+        @JvmField
+        public val compileOnly: ConfigurationName = name("compileOnly")
 
-    /**
-     * All the dependencies included for the Java module test runtime.
-     *
-     * <p>Users cannot add dependencies directly to this configuration.
-     * However, this configuration may be resolved.
-     */
-    testRuntimeClasspath,
+        /**
+         * All the dependencies included for the Java module compilation.
+         *
+         * Users cannot add dependencies directly to this configuration.
+         * However, this configuration may be resolved.
+         */
+        @JvmField
+        public val compileClasspath: ConfigurationName = compileClasspath(main)
 
-    /**
-     * Configuration that allows to compile {@code .proto} files form the dependencies.
-     */
-    protobuf,
+        /**
+         * Dependencies available at runtime but not at compile-time.
+         *
+         * Suitable for SPI implementations loaded via [java.util.ServiceLoader] or other
+         * classpath scanning utilities.
+         */
+        @Suppress("unused")
+        @JvmField
+        public val runtimeOnly: ConfigurationName = runtimeOnly(main)
 
-    /**
-     * A Spine-specific configuration used to download and resolve artifacts.
-     */
-    @Internal
-    fetch,
+        /**
+         * All the dependencies included for the Java module runtime.
+         *
+         * Users cannot add dependencies directly to this configuration.
+         * However, this configuration may be resolved.
+         */
+        @JvmField
+        public val runtimeClasspath: ConfigurationName = runtimeClasspath(main)
 
-    /**
-     * The {@code compile} configuration.
-     *
-     * @deprecated Deprecated since Gradle 5.0. Use {@link #implementation} or {@link #api} instead.
-     */
-    @Deprecated
-    compile
+        /**
+         * The annotation processors used during the compilation of the tests of this module.
+         *
+         * These dependencies are not accessible to the user at compile-time or at runtime directly.
+         */
+        @JvmField
+        public val testAnnotationProcessor: ConfigurationName = annotationProcessor(test)
+
+        /**
+         * Dependencies on which the Java module tests rely for implementation.
+         *
+         * The dependencies are available at compile-time of the test code and at the test runtime.
+         */
+        @JvmField
+        public val  testImplementation: ConfigurationName = implementation(test)
+
+        /**
+         * All the dependencies included for the Java module tests compilation.
+         *
+         * Users cannot add dependencies directly to this configuration.
+         * However, this configuration may be resolved.
+         */
+        @Suppress("unused")
+        @JvmField
+        public val testCompileClasspath: ConfigurationName = compileClasspath(test)
+
+        /**
+         * Dependencies available at test runtime but not at compile-time.
+         *
+         * For example, JUnit runners may be depended on with this configuration.
+         */
+        @Suppress("unused")
+        @JvmField
+        public val testRuntimeOnly: ConfigurationName = runtimeOnly(test)
+
+        /**
+         * All the dependencies included for the Java module test runtime.
+         *
+         * Users cannot add dependencies directly to this configuration.
+         * However, this configuration may be resolved.
+         */
+        @JvmField
+        public val  testRuntimeClasspath: ConfigurationName = runtimeClasspath(test)
+
+        /**
+         * Configuration that allows to compile `.proto` files form the dependencies.
+         */
+        @JvmField
+        public val protobuf: ConfigurationName = name("protobuf")
+
+        /**
+         * A Spine-specific configuration used to download and resolve artifacts.
+         */
+        @JvmField
+        @io.spine.annotation.Internal
+        public val fetch: ConfigurationName = name("fetch")
+
+        /**
+         * The `compile` configuration.
+         *
+         * Although the `compile` configuration is deprecated in Gradle, it is still used in order
+         * to define Protobuf dependencies without re-generating the Java/JS sources from
+         * the upstream Protobuf definitions.
+         */
+        @JvmField
+        @Deprecated("Deprecated since Gradle 5.0. Use {@link #implementation} or {@link #api} instead.")
+        public val compile: ConfigurationName = name("compile")
+
+        private fun name(value: String) = ConfigurationNameImpl(value)
+    }
+}
+
+private data class ConfigurationNameImpl(private val value: String = "classpath") :
+    ConfigurationName {
+    override fun name(): String = value
 }

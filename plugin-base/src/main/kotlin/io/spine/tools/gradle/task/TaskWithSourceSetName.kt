@@ -26,49 +26,13 @@
 
 package io.spine.tools.gradle.task
 
+import io.spine.tools.gradle.SourceSetBasedName
 import io.spine.tools.gradle.SourceSetName
 
 /**
  * An abstract base for a task name type the value of which depend on a name of a source set
  * to which this task belongs.
  */
-public abstract class TaskWithSourceSetName(
-
-    /**
-     * A formatting string which refers the source set using [SourceSetName.toPrefix]
-     * of the task name has it at the beginning of the name, or by [SourceSetName.toInfix]
-     * if the name of the source set comes in the middle.
-     */
-    private val value: String,
-
-    /**
-     * The name of the source set to which this task belongs.
-     */
-    public val sourceSetName: SourceSetName
-) : TaskName {
-
-    override fun name(): String = value
-
-    override fun toString(): String = value
-
-    override fun hashCode(): Int = value.hashCode()
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
-        if (javaClass != other?.javaClass) {
-            return false
-        }
-        other as TaskWithSourceSetName
-        return value == other.value
-                // Just comparing values should be enough for equality because the `value` property
-                // refers to a name of a source set.
-                // This comparison is a safety measure for the cases similar to
-                // the `SourceSetName.main` which returns empty string in prefix and infix forms.
-                // Other cases for `SourceSetName` introduced in the future may break our
-                // current assumptions for equality. Comparing both properties keeps us at the
-                // safe side.
-                && sourceSetName == other.sourceSetName
-    }
+public abstract class TaskWithSourceSetName(value: String, sourceSetName: SourceSetName) :
+    SourceSetBasedName(value, sourceSetName), TaskName {
 }

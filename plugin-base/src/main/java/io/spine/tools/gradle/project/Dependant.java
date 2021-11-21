@@ -28,8 +28,8 @@ package io.spine.tools.gradle.project;
 
 import io.spine.tools.gradle.Artifact;
 import io.spine.tools.gradle.ConfigurationName;
-import io.spine.tools.gradle.JavaConfigurationName;
 import io.spine.tools.gradle.Dependency;
+import io.spine.tools.gradle.JavaConfigurationName;
 
 import static io.spine.tools.gradle.JavaConfigurationName.implementation;
 
@@ -122,7 +122,7 @@ public interface Dependant {
      *
      * @see #depend(ConfigurationName, String)
      */
-    @SuppressWarnings("deprecation") // See the doc.
+    @SuppressWarnings({"deprecation", "RedundantSuppression"}) // See the doc.
     default void compile(String notation) {
         depend(JavaConfigurationName.compile, notation);
     }
