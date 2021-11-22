@@ -69,9 +69,9 @@ public final class DependantProject implements Dependant {
      * @deprecated please use {@link #newInstance(Project)} instead.
      */
     @Deprecated
-    @InlineMe(replacement = "newInstance(project)")
+    @InlineMe(replacement = "DependantProject.newInstance(project)",
+            imports = "io.spine.tools.gradle.project.DependantProject")
     public static DependantProject from(Project project) {
-        checkNotNull(project);
         return newInstance(project);
     }
 
