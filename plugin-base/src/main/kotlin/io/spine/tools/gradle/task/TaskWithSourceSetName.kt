@@ -34,5 +34,4 @@ import io.spine.tools.gradle.SourceSetName
  * to which this task belongs.
  */
 public abstract class TaskWithSourceSetName(value: String, sourceSetName: SourceSetName) :
-    SourceSetBasedName(value, sourceSetName), TaskName {
-}
+    SourceSetBasedName(value, sourceSetName), TaskName
