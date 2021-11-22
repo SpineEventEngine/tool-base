@@ -23,29 +23,45 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package io.spine.tools.gradle.task
 
-package io.spine.tools.gradle.task;
+import io.spine.tools.gradle.SourceSetName
+import io.spine.tools.gradle.SourceSetName.Companion.main
+import io.spine.tools.gradle.SourceSetName.Companion.test
 
 /**
  * Names of Gradle tasks defined by the Protobuf Gradle plugin.
  *
- * @see <a href="https://github.com/google/protobuf-gradle-plugin">the plugin doc</a>
+ * @see <a href="https://github.com/google/protobuf-gradle-plugin">Protobuf Gradle plugin</a>
  */
-public enum ProtobufTaskName implements TaskName {
+public class ProtobufTaskName(value: String, ssn: SourceSetName) :
+    TaskWithSourceSetName(value, ssn) {
 
-    /**
-     * Generates production code from Protobuf.
-     *
-     * <p>Note that this task is not a public API of the plugin. Users should be conscious and
-     * cautious when depending on it.
-     */
-    generateProto,
+    public companion object {
 
-    /**
-     * Generates test code from Protobuf.
-     *
-     * <p>Note that this task is not a public API of the plugin. Users should be conscious and
-     * cautious when depending on it.
-     */
-    generateTestProto
+        /**
+         * Obtains a name of the `generateProto` task for the specified source set.
+         */
+        @JvmStatic
+        public fun generateProto(ssn: SourceSetName): TaskName =
+            ProtobufTaskName("generate${ssn.toInfix()}Proto", ssn)
+
+        /**
+         * Generates production code from Protobuf.
+         *
+         * Note that this task is not a public API of the plugin.
+         * Users should be conscious and cautious when depending on it.
+         */
+        @JvmField
+        public val generateProto: TaskName = generateProto(main)
+
+        /**
+         * Generates test code from Protobuf.
+         *
+         * Note that this task is not a public API of the plugin.
+         * Users should be conscious and cautious when depending on it.
+         */
+        @JvmField
+        public val generateTestProto: TaskName = generateProto(test)
+    }
 }
