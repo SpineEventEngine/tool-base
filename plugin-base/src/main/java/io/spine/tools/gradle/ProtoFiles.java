@@ -27,74 +27,63 @@
 package io.spine.tools.gradle;
 
 import io.spine.code.proto.FileSet;
+import io.spine.tools.gradle.project.Projects;
 import io.spine.tools.type.FileDescriptorSuperset;
 import io.spine.tools.type.MergedDescriptorSet;
 import io.spine.tools.type.MoreKnownTypes;
-import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
 
 import java.io.File;
 import java.util.function.Supplier;
 
-import static io.spine.tools.gradle.JavaConfigurationName.runtimeClasspath;
-import static io.spine.tools.gradle.JavaConfigurationName.testRuntimeClasspath;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static io.spine.tools.gradle.project.Projects.configuration;
 
 /**
- * A plugin performing code-generation based on a {@code .proto} files.
+ * Utilities for Gradle plugins performing code-generation based on {@code .proto} files.
  *
  * @implNote This class uses {@code Supplier}s instead of direct values because at the time
- *           of creation Gradle project is not fully evaluated, and the values
- *           are not yet defined.
+ *         of creation Gradle project is not fully evaluated, and the values are not yet defined.
  */
-public abstract class ProtoPlugin implements Plugin<Project> {
+public final class ProtoFiles {
 
-    /**
-     * Obtains {@linkplain #protoFiles(Supplier, Configuration) Protobuf} files for the main scope.
-     */
-    protected final Supplier<FileSet> mainProtoFiles(Project project) {
-        Supplier<File> descriptorSet = mainDescriptorFile(project);
-        Configuration configuration = configuration(project, runtimeClasspath);
-        return protoFiles(descriptorSet, configuration);
+    /** Prevents instantiation of this utility class. */
+    private ProtoFiles() {
     }
 
     /**
-     * Obtains {@linkplain #protoFiles(Supplier, Configuration) Protobuf} files for the test scope.
+     * Obtains a supplier of file set containing proto files of the specified source set
+     * and all proto files from the dependencies.
+     *
+     * <p>Extends {@linkplain MoreKnownTypes known types} with types form collected files.
      */
-    protected final Supplier<FileSet> testProtoFiles(Project project) {
-        Supplier<File> descriptorSet = testDescriptorFile(project);
-        Configuration configuration = configuration(project, testRuntimeClasspath);
-        return protoFiles(descriptorSet, configuration);
+    public static Supplier<FileSet> collect(Project project, SourceSetName ssn) {
+        checkNotNull(project);
+        checkNotNull(ssn);
+        Supplier<File> descriptorSetFile = () -> Projects.descriptorSetFile(project, ssn);
+        ConfigurationName cn = JavaConfigurationName.runtimeClasspath(ssn);
+        Configuration configuration = configuration(project, cn);
+        return collect(descriptorSetFile, configuration);
     }
 
     /**
-     * Obtains the descriptor set file for the main scope.
-     */
-    protected abstract Supplier<File> mainDescriptorFile(Project project);
-
-    /**
-     * Obtains the descriptor set file for the test scope.
-     */
-    protected abstract Supplier<File> testDescriptorFile(Project project);
-
-    /**
-     * Obtains all files from the specified descriptor set file and the configuration.
+     * Obtains a supplier of all {@code '.proto'} files from the specified descriptor set file and
+     * {@code '.proto'} proto from the dependencies of the given configuration.
      *
      * <p>Extends {@linkplain MoreKnownTypes known types} with types form collected files.
      *
-     * @param descriptorSet
+     * @param descriptorSetFile
      *         the path to the descriptor set file
      * @param configuration
      *         the configuration to scan descriptor set files from
-     * @return the collected files
      */
-    private static Supplier<FileSet> protoFiles(Supplier<File> descriptorSet,
-                                                Configuration configuration) {
+    private static Supplier<FileSet> collect(Supplier<File> descriptorSetFile,
+                                             Configuration configuration) {
         return () -> {
             FileDescriptorSuperset superset = new FileDescriptorSuperset();
             configuration.forEach(superset::addFromDependency);
-            File suppliedDescriptorSet = descriptorSet.get();
+            File suppliedDescriptorSet = descriptorSetFile.get();
             if (suppliedDescriptorSet.exists()) {
                 superset.addFromDependency(suppliedDescriptorSet);
             }
