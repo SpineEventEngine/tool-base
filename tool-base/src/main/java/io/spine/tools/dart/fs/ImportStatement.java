@@ -41,7 +41,9 @@ import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static io.spine.util.Preconditions2.checkNotEmptyOrBlank;
 import static java.lang.String.format;
+import static java.util.Objects.requireNonNull;
 import static java.util.regex.Pattern.compile;
 
 /**
@@ -66,13 +68,15 @@ final class ImportStatement implements Element, Logging {
      * @param text
      *         the text of the source code line with the import statement
      */
-    ImportStatement(DartFile sourceFile, String text) {
-        this(sourceFile.directory(), text);
+    static ImportStatement in(DartFile sourceFile, String text) {
+        checkNotEmptyOrBlank(text);
+        Path sourceCodeDir = requireNonNull(sourceFile.parent());
+        return new ImportStatement(sourceCodeDir, text);
     }
 
     private ImportStatement(Path sourceDirectory, String text) {
-        this.text = checkNotNull(text);
         this.sourceDirectory = sourceDirectory;
+        this.text = text;
         Matcher matcher = PATTERN.matcher(text);
         checkArgument(
                 matcher.matches(),
