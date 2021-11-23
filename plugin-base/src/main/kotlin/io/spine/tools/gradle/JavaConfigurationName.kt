@@ -193,10 +193,10 @@ public class JavaConfigurationName(value: String, sourceSetName: SourceSetName) 
          * However, this configuration may be resolved.
          */
         @JvmField
-        public val  testRuntimeClasspath: ConfigurationName = runtimeClasspath(test)
+        public val testRuntimeClasspath: ConfigurationName = runtimeClasspath(test)
 
         /**
-         * Configuration that allows to compile `.proto` files form the dependencies.
+         * Configuration that allows to compile `.proto` files from the dependencies.
          */
         @JvmField
         public val protobuf: ConfigurationName = name("protobuf")
