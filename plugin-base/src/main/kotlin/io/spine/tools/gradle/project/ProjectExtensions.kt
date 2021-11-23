@@ -43,6 +43,7 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
+import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
@@ -97,12 +98,23 @@ public val Project.testArtifact: Artifact
  *
  * For other source sets, the given name would be used as a classifier of the artifact.
  */
-public fun Project.artifact(ss: SourceSetName): Artifact {
-    return when (ss) {
+public fun Project.artifact(ssn: SourceSetName): Artifact {
+    return when (ssn) {
         main -> artifact
         test -> testArtifact
-        else -> toArtifactBuilder().setClassifier(ss.value).build()
+        else -> toArtifactBuilder().setClassifier(ssn.value).build()
     }
+}
+
+/**
+ * Attempts to find a source directory set named `proto` in the given source set.
+ *
+ * @return the found instance or `null` if the source set does not contain Protobuf code.
+ */
+public fun Project.protoDirectorySet(ssn: SourceSetName): SourceDirectorySet? {
+    val sourceSet: SourceSet = sourceSet(ssn)
+    val found = sourceSet.extensions.findByName("proto") as SourceDirectorySet?
+    return found
 }
 
 /**
@@ -120,10 +132,10 @@ private val Project.descriptorsDir: DescriptorsDir
 /**
  * Obtains the descriptor set file for the specified source set of this project.
  */
-public fun Project.descriptorSetFile(ss: SourceSetName): File {
-    val theArtifact = artifact(ss)
+public fun Project.descriptorSetFile(ssn: SourceSetName): File {
+    val theArtifact = artifact(ssn)
     val descriptorSetFile = theArtifact.descriptorSetFile()
-    val dir = descriptorsDir.forSourceSet(ss.value)
+    val dir = descriptorsDir.forSourceSet(ssn.value)
     val path = descriptorSetFile.under(dir)
     return path.toFile()
 }

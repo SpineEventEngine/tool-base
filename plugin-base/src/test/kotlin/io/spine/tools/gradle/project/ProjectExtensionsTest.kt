@@ -27,6 +27,7 @@
 package io.spine.tools.gradle.project
 
 import com.google.common.truth.Truth.assertThat
+import io.spine.tools.gradle.ProtobufDependencies
 import io.spine.tools.gradle.SourceSetName
 import io.spine.tools.gradle.SourceSetName.Companion.main
 import io.spine.tools.gradle.SourceSetName.Companion.test
@@ -37,28 +38,25 @@ import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.SourceSet.MAIN_SOURCE_SET_NAME
 import org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME
 import org.gradle.testfixtures.ProjectBuilder
-import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
 class `'ProjectExtensions' should` {
 
-    companion object {
+    lateinit var project: Project
 
-        lateinit var project: Project
-
-        @JvmStatic
-        @BeforeAll
-        fun setUp(@TempDir projectPath: Path) {
-            project = ProjectBuilder.builder()
-                .withName("prj-ext")
-                .withProjectDir(projectPath.toFile())
-                .build()
-            project.getPluginManager()
-                .apply(JavaPlugin::class.java)
-            project.group = "io.spine.testing"
-            project.version = "1.2.3"
+    @BeforeEach
+    fun setUp(@TempDir projectPath: Path) {
+        project = ProjectBuilder.builder()
+            .withName("prj-ext")
+            .withProjectDir(projectPath.toFile())
+            .build()
+        with(project) {
+            pluginManager.apply(JavaPlugin::class.java)
+            group = "io.spine.testing"
+            version = "1.2.3"
         }
     }
 
@@ -115,5 +113,24 @@ class `'ProjectExtensions' should` {
         val assertNames = assertThat(sourceSetNames)
         assertNames.hasSize(sourceSets.size)
         assertNames.containsExactlyElementsIn(sourceSets.map { s -> SourceSetName(s.name) })
+    }
+
+    @Nested
+    inner class `obtain 'protoDirectorySet'` {
+
+        @Test
+        fun `equal to 'null' if no 'proto' extension added`() {
+
+            assertDirectorySet().isNull()
+        }
+
+        @Test
+        fun `from the 'proto' extension`() {
+            project.plugins.apply(ProtobufDependencies.gradlePlugin().value())
+
+            assertDirectorySet().isNotNull()
+        }
+
+        private fun assertDirectorySet() = assertThat(project.protoDirectorySet(main))
     }
 }
