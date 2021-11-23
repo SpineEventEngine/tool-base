@@ -53,8 +53,7 @@ public final class ProtobufDependencies {
     }
 
     /**
-     * Obtains the name of the extension of {@code SourceSet} installed by
-     * the Protobuf Gradle plugin.
+     * Obtains the name of the {@code SourceSet} extension installed by the Protobuf Gradle plugin.
      */
     public static String sourceSetExtensionName() {
         return SOURCE_SET_EXTENSION;
