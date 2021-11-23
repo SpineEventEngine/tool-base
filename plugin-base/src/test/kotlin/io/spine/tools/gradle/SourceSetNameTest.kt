@@ -28,6 +28,7 @@ package io.spine.tools.gradle
 
 import com.google.common.truth.Truth.assertThat
 import io.spine.tools.gradle.SourceSetName.Companion.main
+import io.spine.tools.titlecaseFirstChar
 import org.gradle.api.tasks.SourceSet.MAIN_SOURCE_SET_NAME
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test

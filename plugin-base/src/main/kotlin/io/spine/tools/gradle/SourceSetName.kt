@@ -26,6 +26,7 @@
 
 package io.spine.tools.gradle
 
+import io.spine.tools.titlecaseFirstChar
 import org.gradle.api.tasks.SourceSet.MAIN_SOURCE_SET_NAME
 import org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME
 

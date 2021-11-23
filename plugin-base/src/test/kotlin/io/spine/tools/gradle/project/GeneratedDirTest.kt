@@ -30,7 +30,7 @@ import com.google.common.truth.Truth.assertThat
 import com.google.protobuf.gradle.ProtobufConfigurator
 import io.spine.tools.fs.DirectoryName.generated
 import io.spine.tools.gradle.ProtobufDependencies.gradlePlugin
-import io.spine.tools.gradle.resolve
+import io.spine.tools.resolve
 import io.spine.tools.groovy.ConsumerClosure.closure
 import java.io.File
 import java.nio.file.Path

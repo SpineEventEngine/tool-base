@@ -38,7 +38,7 @@ import io.spine.tools.gradle.ProtobufDependencies.sourceSetExtensionName
 import io.spine.tools.gradle.SourceSetName
 import io.spine.tools.gradle.SourceSetName.Companion.main
 import io.spine.tools.gradle.SourceSetName.Companion.test
-import io.spine.tools.gradle.resolve
+import io.spine.tools.resolve
 import java.io.File
 import java.nio.file.Path
 import java.nio.file.Paths

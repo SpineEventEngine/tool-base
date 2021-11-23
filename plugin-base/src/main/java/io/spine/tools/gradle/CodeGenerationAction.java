@@ -37,7 +37,7 @@ import org.gradle.api.Task;
 import java.io.File;
 import java.util.function.Supplier;
 
-import static io.spine.tools.gradle.StandardTypes.toAbsoluteFile;
+import static io.spine.tools.StandardTypes.toAbsoluteFile;
 
 /**
  * Abstract base for code generation actions.

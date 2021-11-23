@@ -26,11 +26,21 @@
 
 @file:JvmName("StandardTypes")
 
-package io.spine.tools.gradle
+package io.spine.tools
 
-import org.gradle.api.tasks.SourceSet
+import io.spine.io.Files2
+import io.spine.tools.fs.DirectoryName
+import java.io.File
+import java.util.function.Supplier
 
-/** The name of this source set. */
-public val SourceSet.named: SourceSetName
-    get() = SourceSetName(name)
+/** Obtains a copy of this string with the first character capitalized . */
+public fun String.titlecaseFirstChar(): String = replaceFirstChar(Char::titlecase)
 
+/** Resolves an absolute file name obtained from the supplier. */
+public fun Supplier<String>.toAbsoluteFile(): File = Files2.toAbsolute(get())
+
+/** Adds relative name to this directory. */
+public fun File.resolve(dir: DirectoryName): File = resolve(dir.value())
+
+/** Tells if this is a Protobuf source code file. */
+public fun File.isProtoSource(): Boolean = extension == "proto"

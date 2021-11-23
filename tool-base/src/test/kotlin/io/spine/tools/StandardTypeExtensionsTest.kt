@@ -24,13 +24,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@file:JvmName("StandardTypes")
+package io.spine.tools
 
-package io.spine.tools.gradle
+import com.google.common.truth.Truth.assertThat
+import java.io.File
+import java.util.function.Supplier
+import org.junit.jupiter.api.Test
 
-import org.gradle.api.tasks.SourceSet
+class `'StandardTypeExtensions' should` {
 
-/** The name of this source set. */
-public val SourceSet.named: SourceSetName
-    get() = SourceSetName(name)
+    @Test
+    fun `provide title case version of 'String'`() {
+        assertThat("foo".titlecaseFirstChar())
+            .isEqualTo("Foo")
+        assertThat("Bar".titlecaseFirstChar())
+            .isEqualTo("Bar")
+    }
 
+    @Test
+    fun `convert a 'String' 'Supplier' to absolute file`() {
+        val sup: Supplier<String> = Supplier { "." }
+
+        assertThat(sup.toAbsoluteFile().isAbsolute)
+            .isTrue()
+    }
+
+    @Test
+    fun `tell if a file is a Protobuf source code file`() {
+        assertThat(File("mycode.proto").isProtoSource())
+            .isTrue()
+        assertThat(File("util.java").isProtoSource())
+            .isFalse()
+    }
+}
