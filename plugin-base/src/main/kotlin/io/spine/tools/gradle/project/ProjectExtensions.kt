@@ -59,6 +59,12 @@ public val Project.javaPluginExtension: JavaPluginExtension
 public val Project.sourceSets: SourceSetContainer
     get() = javaPluginExtension.sourceSets
 
+/**
+ * Obtains names of the source sets of this project.
+ */
+public val Project.sourceSetNames: List<SourceSetName>
+    get() = sourceSets.map { s -> SourceSetName(s.name) }
+
 /** Obtains a source set by the given name. */
 public fun Project.sourceSet(name: String): SourceSet = sourceSets.getByName(name)
 

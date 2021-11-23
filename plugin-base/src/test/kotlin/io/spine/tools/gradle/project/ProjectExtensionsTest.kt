@@ -106,4 +106,14 @@ class `'ProjectExtensions' should` {
                 .contains(customName.value)
         }
     }
+
+    @Test
+    fun `obtain names of source sets`() {
+        val sourceSets = project.sourceSets
+        val sourceSetNames = project.sourceSetNames
+
+        val assertNames = assertThat(sourceSetNames)
+        assertNames.hasSize(sourceSets.size)
+        assertNames.containsExactlyElementsIn(sourceSets.map { s -> SourceSetName(s.name) })
+    }
 }
