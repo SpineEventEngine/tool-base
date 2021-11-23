@@ -206,6 +206,7 @@ public class JavaConfigurationName(value: String, sourceSetName: SourceSetName) 
          */
         @JvmField
         @io.spine.annotation.Internal
+        @Deprecated("No longer used in v2.x.")
         public val fetch: ConfigurationName = name("fetch")
 
         /**
