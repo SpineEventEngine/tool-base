@@ -34,6 +34,7 @@ import io.spine.tools.fs.DescriptorsDir
 import io.spine.tools.fs.DirectoryName.generated
 import io.spine.tools.gradle.Artifact
 import io.spine.tools.gradle.ConfigurationName
+import io.spine.tools.gradle.ProtobufDependencies.sourceSetExtensionName
 import io.spine.tools.gradle.SourceSetName
 import io.spine.tools.gradle.SourceSetName.Companion.main
 import io.spine.tools.gradle.SourceSetName.Companion.test
@@ -113,7 +114,7 @@ public fun Project.artifact(ssn: SourceSetName): Artifact {
  */
 public fun Project.protoDirectorySet(ssn: SourceSetName): SourceDirectorySet? {
     val sourceSet: SourceSet = sourceSet(ssn)
-    val found = sourceSet.extensions.findByName("proto") as SourceDirectorySet?
+    val found = sourceSet.extensions.findByName(sourceSetExtensionName()) as SourceDirectorySet?
     return found
 }
 

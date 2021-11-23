@@ -26,12 +26,15 @@
 
 package io.spine.tools.gradle;
 
+import io.spine.tools.proto.fs.Directory;
+
 /**
  * A factory of Protobuf-related artifact specs.
  */
 public final class ProtobufDependencies {
 
     private static final String GROUP_ID = "com.google.protobuf";
+    private static final String SOURCE_SET_EXTENSION = Directory.rootName();
     private static final String PROTOBUF_LITE = "protobuf-lite";
     private static final String PROTOC = "protoc";
     private static final PluginId PROTOBUF_PLUGIN_ID = new PluginId(GROUP_ID);
@@ -47,6 +50,14 @@ public final class ProtobufDependencies {
      */
     public static PluginId gradlePlugin() {
         return PROTOBUF_PLUGIN_ID;
+    }
+
+    /**
+     * Obtains the name of the extension of {@code SourceSet} installed by
+     * the Protobuf Gradle plugin.
+     */
+    public static String sourceSetExtensionName() {
+        return SOURCE_SET_EXTENSION;
     }
 
     /**
