@@ -26,139 +26,20 @@
 
 package io.spine.tools.gradle;
 
-import io.spine.annotation.Internal;
-
 /**
- * The names of Gradle configurations used by the Spine Gradle plugins.
- *
- * <p>See <a href="https://docs.gradle.org/current/userguide/managing_dependency_configurations.html">
- * the Gradle doc</a> on dependency configurations for more info.
+ * A name of a Gradle configuration.
  */
-public enum ConfigurationName {
+public interface ConfigurationName {
 
     /**
-     * The classpath of the Gradle build process.
+     * Obtains the string value of this name.
      */
-    classpath,
+    String name();
 
     /**
-     * The annotation processors used during the compilation of this module.
-     *
-     * <p>These dependencies are not accessible to the user at compile-time or at runtime directly.
+     * Obtains a string value of this task name.
      */
-    annotationProcessor,
-
-    /**
-     * The API of a Java library.
-     *
-     * <p>The dependencies are available at compile-time and runtime.
-     *
-     * <p>Dependencies in this configuration are included as compile-time transitive dependencies in
-     * the artifacts of the library.
-     */
-    api,
-
-    /**
-     * Dependencies on which the Java module relies for implementation.
-     *
-     * <p>The dependencies are available at compile-time and runtime.
-     *
-     * <p>Dependencies in this configuration are included as runtime transitive dependencies in
-     * the artifacts of the module.
-     */
-    implementation,
-
-    /**
-     * Dependencies available at compile-time but not at runtime.
-     *
-     * <p>Suitable for annotations with {@link java.lang.annotation.RetentionPolicy#CLASS}.
-     */
-    compileOnly,
-
-    /**
-     * All the dependencies included for the Java module compilation.
-     *
-     * <p>Users cannot add dependencies directly to this configuration.
-     * However, this configuration may be resolved.
-     */
-    compileClasspath,
-
-    /**
-     * Dependencies available at runtime but not at compile-time.
-     *
-     * <p>Suitable for SPI implementations loaded via {@link java.util.ServiceLoader} or other
-     * classpath scanning utilities.
-     */
-    runtimeOnly,
-
-    /**
-     * All the dependencies included for the Java module runtime.
-     *
-     * <p>Users cannot add dependencies directly to this configuration.
-     * However, this configuration may be resolved.
-     */
-    runtimeClasspath,
-
-    /**
-     * The annotation processors used during the compilation of the tests of this module.
-     *
-     * <p>These dependencies are not accessible to the user at compile-time or at runtime directly.
-     */
-    testAnnotationProcessor,
-
-    /**
-     * Dependencies on which the Java module tests rely for implementation.
-     *
-     * <p>The dependencies are available at compile-time of the test code and at the test runtime.
-     */
-    testImplementation,
-
-    /**
-     * All the dependencies included for the Java module tests compilation.
-     *
-     * <p>Users cannot add dependencies directly to this configuration.
-     * However, this configuration may be resolved.
-     */
-    testCompileClasspath,
-
-    /**
-     * Dependencies available at test runtime but not at compile-time.
-     *
-     * <p>For example, JUnit runners may be depended on with this configuration.
-     */
-    testRuntimeOnly,
-
-    /**
-     * All the dependencies included for the Java module test runtime.
-     *
-     * <p>Users cannot add dependencies directly to this configuration.
-     * However, this configuration may be resolved.
-     */
-    testRuntimeClasspath,
-
-    /**
-     * Configuration that allows to compile {@code .proto} files form the dependencies.
-     */
-    protobuf,
-
-    /**
-     * A Spine-specific configuration used to download and resolve artifacts.
-     */
-    @Internal
-    fetch,
-
-    /**
-     * The {@code compile} configuration.
-     *
-     * @deprecated Deprecated since Gradle 5.0. Use {@link #implementation} or {@link #api} instead.
-     */
-    @Deprecated
-    compile;
-
-    /**
-     * Obtains the configuration name as a string.
-     */
-    public String value() {
+    default String value() {
         return name();
     }
 }

@@ -24,28 +24,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.task;
+package io.spine.tools.gradle;
 
-/**
- * Names of Gradle tasks defined by the Protobuf Gradle plugin.
- *
- * @see <a href="https://github.com/google/protobuf-gradle-plugin">the plugin doc</a>
- */
-public enum ProtobufTaskName implements TaskName {
+import io.spine.testing.UtilityClassTest;
+import org.junit.jupiter.api.DisplayName;
 
-    /**
-     * Generates production code from Protobuf.
-     *
-     * <p>Note that this task is not a public API of the plugin. Users should be conscious and
-     * cautious when depending on it.
-     */
-    generateProto,
+@DisplayName("`ProtoFiles` utility class should")
+class ProtoFilesTest extends UtilityClassTest<ProtoFiles> {
 
-    /**
-     * Generates test code from Protobuf.
-     *
-     * <p>Note that this task is not a public API of the plugin. Users should be conscious and
-     * cautious when depending on it.
-     */
-    generateTestProto
+    ProtoFilesTest() {
+        super(ProtoFiles.class);
+    }
 }

@@ -29,26 +29,39 @@ package io.spine.tools.gradle.project;
 import io.spine.tools.gradle.Artifact;
 import io.spine.tools.gradle.ConfigurationName;
 import io.spine.tools.gradle.Dependency;
+import io.spine.tools.gradle.JavaConfigurationName;
 
-import static io.spine.tools.gradle.ConfigurationName.implementation;
+import static io.spine.tools.gradle.JavaConfigurationName.implementation;
 
 /**
  * Manages the dependencies of a Gradle project.
  *
- * <p>Typically, represented by a {@link org.gradle.api.artifacts.dsl.DependencyHandler} of
- * the project.
+ * <p>Implementing classes are expected to manipulate with an instance of
+ * a {@link org.gradle.api.artifacts.dsl.DependencyHandler DependencyHandler} of the project.
  */
 public interface Dependant {
 
     /**
      * Adds a new dependency within a given configuration.
      *
-     * @param configurationName
+     * @param configuration
      *         the name of the Gradle configuration
      * @param notation
      *         the dependency string, e.g. {@code "io.spine:spine-base:1.0.0"}
      */
-    void depend(ConfigurationName configurationName, String notation);
+    void depend(ConfigurationName configuration, String notation);
+
+    /**
+     * Adds a new dependency within a given configuration.
+     *
+     * @param configuration
+     *         the name of the Gradle configuration
+     * @param artifact
+     *         the artifact on which the configuration is going to depend
+     */
+    default void depend(ConfigurationName configuration, Artifact artifact) {
+        depend(configuration, artifact.notation());
+    }
 
     /**
      * Excludes the given dependency from the project.
@@ -70,10 +83,10 @@ public interface Dependant {
     /**
      * Forces all project configurations to fetch the particular dependency version.
      *
-     * @param notation
+     * @param artifact
      *         the dependency spec, e.g. {@code com.google.protobuf:protoc:3.9.0}
      */
-    void force(String notation);
+    void force(String artifact);
 
     /**
      * Removes a forced dependency from resolution strategies of all project configurations.
@@ -109,9 +122,9 @@ public interface Dependant {
      *
      * @see #depend(ConfigurationName, String)
      */
-    @SuppressWarnings("deprecation") // See the doc.
+    @SuppressWarnings({"deprecation", "RedundantSuppression"}) // See the doc.
     default void compile(String notation) {
-        depend(ConfigurationName.compile, notation);
+        depend(JavaConfigurationName.compile, notation);
     }
 
     /**

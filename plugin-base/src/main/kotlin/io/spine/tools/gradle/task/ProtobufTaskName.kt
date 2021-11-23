@@ -23,15 +23,45 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package io.spine.tools.gradle.task
 
-import io.spine.tools.gradle.SourceSetBasedName
 import io.spine.tools.gradle.SourceSetName
+import io.spine.tools.gradle.SourceSetName.Companion.main
+import io.spine.tools.gradle.SourceSetName.Companion.test
 
 /**
- * An abstract base for a task name type the value of which depend on a name of a source set
- * to which this task belongs.
+ * Names of Gradle tasks defined by the Protobuf Gradle plugin.
+ *
+ * @see <a href="https://github.com/google/protobuf-gradle-plugin">Protobuf Gradle plugin</a>
  */
-public abstract class TaskWithSourceSetName(value: String, sourceSetName: SourceSetName) :
-    SourceSetBasedName(value, sourceSetName), TaskName
+public class ProtobufTaskName(value: String, ssn: SourceSetName) :
+    TaskWithSourceSetName(value, ssn) {
+
+    public companion object {
+
+        /**
+         * Obtains a name of the `generateProto` task for the specified source set.
+         */
+        @JvmStatic
+        public fun generateProto(ssn: SourceSetName): TaskName =
+            ProtobufTaskName("generate${ssn.toInfix()}Proto", ssn)
+
+        /**
+         * Generates production code from Protobuf.
+         *
+         * Note that this task is not a public API of the plugin.
+         * Users should be conscious and cautious when depending on it.
+         */
+        @JvmField
+        public val generateProto: TaskName = generateProto(main)
+
+        /**
+         * Generates test code from Protobuf.
+         *
+         * Note that this task is not a public API of the plugin.
+         * Users should be conscious and cautious when depending on it.
+         */
+        @JvmField
+        public val generateTestProto: TaskName = generateProto(test)
+    }
+}

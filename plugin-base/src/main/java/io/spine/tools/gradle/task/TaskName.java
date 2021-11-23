@@ -43,6 +43,13 @@ public interface TaskName {
     String name();
 
     /**
+     * Obtains a string value of this task name.
+     */
+    default String value() {
+        return name();
+    }
+
+    /**
      * Obtains this task name as a path.
      *
      * <p>It is expected that the referred task belongs to the root project (a.k.a {@code :}).

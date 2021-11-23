@@ -53,10 +53,7 @@ public class JavaTaskName(value: String, ssn: SourceSetName) : TaskWithSourceSet
          */
         @JvmStatic
         public fun classes(ssn: SourceSetName): TaskName =
-            JavaTaskName(
-                "${ssn.toPrefix()}${if (ssn.toPrefix().isEmpty()) "classes" else "Classes"}",
-                ssn
-            )
+            JavaTaskName("${ssn.toPrefix()}${suffix(ssn, "classes")}", ssn)
 
         /**
          * Obtains the name of the task which copies resources into the build resources directory
