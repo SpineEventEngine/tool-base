@@ -59,7 +59,7 @@ public final class DartFile extends FileWithImports {
 
     @Override
     protected String resolveImport(String line, Path libPath, ExternalModules modules) {
-        ImportStatement statement = new ImportStatement(this, line);
+        ImportStatement statement = ImportStatement.in(this, line);
         ImportStatement resolved = statement.resolve(libPath, modules);
         return resolved.text();
     }

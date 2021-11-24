@@ -26,6 +26,8 @@
 
 package io.spine.tools.gradle
 
+import io.spine.tools.titlecaseFirstChar
+
 /**
  * An abstract base for names of Gradle project objects that are based on a name of a source set.
  */

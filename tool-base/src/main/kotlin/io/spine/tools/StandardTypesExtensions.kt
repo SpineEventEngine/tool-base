@@ -1,5 +1,5 @@
 /*
- * Copyright 2020, TeamDev. All rights reserved.
+ * Copyright 2021, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,5 +24,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val spineBaseVersion: String by extra("2.0.0-SNAPSHOT.76")
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.80")
+@file:JvmName("StandardTypes")
+
+package io.spine.tools
+
+import io.spine.io.Files2
+import io.spine.tools.fs.DirectoryName
+import java.io.File
+import java.util.function.Supplier
+
+/** Obtains a copy of this string with the first character capitalized . */
+public fun String.titlecaseFirstChar(): String = replaceFirstChar(Char::titlecase)
+
+/** Resolves an absolute file name obtained from the supplier. */
+public fun Supplier<String>.toAbsoluteFile(): File = Files2.toAbsolute(get())
+
+/** Adds relative name to this directory. */
+public fun File.resolve(dir: DirectoryName): File = resolve(dir.value())
+
+/** Tells if this is a Protobuf source code file. */
+public fun File.isProtoSource(): Boolean = extension == "proto"

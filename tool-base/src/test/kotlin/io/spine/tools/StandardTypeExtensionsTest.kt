@@ -1,5 +1,5 @@
 /*
- * Copyright 2020, TeamDev. All rights reserved.
+ * Copyright 2021, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,5 +24,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val spineBaseVersion: String by extra("2.0.0-SNAPSHOT.76")
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.80")
+package io.spine.tools
+
+import com.google.common.truth.Truth.assertThat
+import java.io.File
+import java.util.function.Supplier
+import org.junit.jupiter.api.Test
+
+class `'StandardTypeExtensions' should` {
+
+    @Test
+    fun `provide title case version of 'String'`() {
+        assertThat("foo".titlecaseFirstChar())
+            .isEqualTo("Foo")
+        assertThat("Bar".titlecaseFirstChar())
+            .isEqualTo("Bar")
+    }
+
+    @Test
+    fun `convert a 'String' 'Supplier' to absolute file`() {
+        val sup: Supplier<String> = Supplier { "." }
+
+        assertThat(sup.toAbsoluteFile().isAbsolute)
+            .isTrue()
+    }
+
+    @Test
+    fun `tell if a file is a Protobuf source code file`() {
+        assertThat(File("mycode.proto").isProtoSource())
+            .isTrue()
+        assertThat(File("util.java").isProtoSource())
+            .isFalse()
+    }
+}

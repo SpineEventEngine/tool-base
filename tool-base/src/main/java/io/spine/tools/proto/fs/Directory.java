@@ -38,7 +38,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public final class Directory extends SourceCodeDirectory {
 
-    @SuppressWarnings("DuplicateStringLiteralInspection") // Same name for different directories.
     private static final String ROOT_NAME = "proto";
 
     private Directory(Path path) {
@@ -51,6 +50,13 @@ public final class Directory extends SourceCodeDirectory {
     static Directory at(Path path) {
         checkNotNull(path);
         return new Directory(path);
+    }
+
+    /**
+     * Obtains a short name for the root directory containing Protobuf code.
+     */
+    public static String rootName() {
+        return ROOT_NAME;
     }
 
     /**
