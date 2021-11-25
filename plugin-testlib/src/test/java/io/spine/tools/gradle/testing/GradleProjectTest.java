@@ -110,7 +110,7 @@ class GradleProjectTest {
         @Test
         @DisplayName("does not accept `null`s")
         void nulls() {
-            GradleProject.Builder instance = GradleProject.newBuilder();
+            GradleProjectBuilder instance = GradleProject.newBuilder();
             new NullPointerTester()
                     .testAllPublicInstanceMethods(instance);
         }
