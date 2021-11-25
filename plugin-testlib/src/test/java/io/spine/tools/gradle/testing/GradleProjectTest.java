@@ -62,7 +62,7 @@ class GradleProjectTest {
     void buildFromProjectFolderAndProjectName() {
         GradleProject project = GradleProject.newBuilder()
                 .setProjectDir(temporaryFolder)
-                .setProjectName(PROJECT_NAME)
+                .setResourceOrigin(PROJECT_NAME)
                 .build();
         assertNotNull(project);
     }
@@ -75,7 +75,7 @@ class GradleProjectTest {
         String[] files = {"Foo.java", "Bar.java"};
         GradleProject.newBuilder()
                 .setProjectDir(temporaryFolder)
-                .setProjectName(PROJECT_NAME)
+                .setResourceOrigin(PROJECT_NAME)
                 .addJavaFiles(files)
                 .build();
         Path root = temporaryFolder.toPath()
@@ -92,7 +92,7 @@ class GradleProjectTest {
     @DisplayName("execute faulty build")
     void executeFaultyBuild() {
         GradleProject project = GradleProject.newBuilder()
-                .setProjectName(PROJECT_NAME)
+                .setResourceOrigin(PROJECT_NAME)
                 .setProjectDir(temporaryFolder)
                 .addJavaFiles("Faulty.java")
                 .build();

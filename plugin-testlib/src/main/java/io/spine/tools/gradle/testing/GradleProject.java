@@ -94,7 +94,7 @@ public final class GradleProject {
     }
 
     private GradleProject(Builder builder) throws IOException {
-        this.name = builder.name;
+        this.name = builder.origin;
         this.arguments = builder.arguments;
         this.runner = GradleRunner.create()
                 .withProjectDir(builder.dir)
@@ -232,7 +232,7 @@ public final class GradleProject {
                                .build();
 
         private @Nullable ImmutableMap<String, String> environment;
-        private @MonotonicNonNull String name;
+        private @MonotonicNonNull String origin;
         private @MonotonicNonNull File dir;
 
         private RunnerArguments arguments = new RunnerArguments();
@@ -263,8 +263,8 @@ public final class GradleProject {
          * Sets the name of the subdirectory under {@code resources} which contains files
          * for the project to be created.
          */
-        public Builder setProjectName(String name) {
-            this.name = checkNotNull(name);
+        public Builder setResourceOrigin(String name) {
+            this.origin = checkNotNull(name);
             return this;
         }
 
@@ -282,7 +282,7 @@ public final class GradleProject {
          *
          * @param fileName
          *         a name of the proto file relative to {@code src/main/proto} subdirectory
-         *         under the one specified in {@link #setProjectName(String)}
+         *         under the one specified in {@link #setResourceOrigin(String)}
          */
         public Builder addProtoFile(String fileName) {
             checkNotNull(fileName);
@@ -297,7 +297,7 @@ public final class GradleProject {
          *          the name of the source set
          * @param fileName
          *         a name of the proto file relative to {@code src/SourceSetName/proto}
-         *         subdirectory under the one specified in {@link #setProjectName(String)}
+         *         subdirectory under the one specified in {@link #setResourceOrigin(String)}
          */
         public Builder addProtoFile(SourceSetName ssn, String fileName) {
             checkNotNull(ssn);
@@ -376,7 +376,7 @@ public final class GradleProject {
          *
          * @param fileNames
          *         names of the Java files relative to {@code src/main/java} subdirectory
-         *         under the one specified in {@link #setProjectName(String)}
+         *         under the one specified in {@link #setResourceOrigin(String)}
          */
         public Builder addJavaFiles(String... fileNames) {
             checkNotNull(fileNames);
@@ -390,7 +390,7 @@ public final class GradleProject {
          *         the name of the source set
          * @param fileNames
          *         names of the Java files relative to {@code src/main/java} subdirectory
-         *         under the one specified in {@link #setProjectName(String)}
+         *         under the one specified in {@link #setResourceOrigin(String)}
          */
         public Builder addJavaFiles(SourceSetName ssn, Iterable<String> fileNames) {
             checkNotNull(ssn);
@@ -486,7 +486,7 @@ public final class GradleProject {
 
         public GradleProject build() {
             try {
-                checkNotNull(name, "Project name");
+                checkNotNull(origin, "Project name");
                 checkNotNull(dir, "Project folder");
                 GradleProject result = new GradleProject(this);
                 return result;
