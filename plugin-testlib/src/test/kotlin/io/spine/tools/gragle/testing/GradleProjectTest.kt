@@ -23,81 +23,73 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package io.spine.tools.gragle.testing
 
-package io.spine.tools.gradle.testing;
+import com.google.common.truth.Truth.assertThat
+import io.spine.tools.gradle.task.JavaTaskName.Companion.compileJava
+import io.spine.tools.gradle.testing.GradleProject
+import io.spine.tools.gradle.testing.GradleProjectSetup
+import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
+import org.gradle.testkit.runner.TaskOutcome
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 
-import org.gradle.testkit.runner.BuildResult;
-import org.gradle.testkit.runner.BuildTask;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
+class `'GradleProject' should` {
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
+    companion object {
+        private const val resourceDir = "gradle_project_test"
+    }
 
-import static io.spine.tools.gradle.task.JavaTaskName.compileJava;
-import static org.gradle.testkit.runner.TaskOutcome.FAILED;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-@DisplayName("`GradleProject` should")
-class GradleProjectTest {
-
-    private static final String PROJECT_NAME = "gradle_project_test";
-
-    private File temporaryFolder;
+    private lateinit var temporaryFolder: File
+    private lateinit var setup: GradleProjectSetup
 
     @BeforeEach
-    void setUp(@TempDir Path tempDirPath) {
-        temporaryFolder = tempDirPath.toFile();
+    fun setUp(@TempDir tempDirPath: Path) {
+        temporaryFolder = tempDirPath.toFile()
+        setup = GradleProject.fromResources()
+            .setOrigin(resourceDir)
+            .setProjectDir(temporaryFolder)
     }
 
     @Test
-    @DisplayName("build from project folder and project name")
-    void buildFromProjectFolderAndProjectName() {
-        GradleProject project = GradleProject.fromResources()
-                .setProjectDir(temporaryFolder)
-                .setOrigin(PROJECT_NAME)
-                .create();
-        assertNotNull(project);
+    fun `be created by resource dir and project dir`() {
+        val project = setup.create()
+        assertNotNull(project)
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    // OK for this test case; result of `build` it ignored.
     @Test
-    @DisplayName("write given Java files")
-    void writeGivenJavaFiles() {
-        String[] files = {"Foo.java", "Bar.java"};
-        GradleProject.fromResources()
-                .setProjectDir(temporaryFolder)
-                .setOrigin(PROJECT_NAME)
-                .addJavaFiles(files)
-                .create();
-        Path root = temporaryFolder.toPath()
-                                   .resolve("src")
-                                   .resolve("main")
-                                   .resolve("java");
-        for (String fileName : files) {
-            Path file = root.resolve(fileName);
-            assertTrue(Files.exists(file));
+    fun `write given Java files`() {
+        val files = arrayOf("Foo.java", "Bar.java")
+        setup.addJavaFiles(*files)
+            .create()
+        val root = temporaryFolder.toPath()
+            .resolve("src")
+            .resolve("main")
+            .resolve("java")
+        for (fileName in files) {
+            val file = root.resolve(fileName)
+            assertTrue(Files.exists(file))
         }
     }
 
     @Test
     @DisplayName("execute faulty build")
-    void executeFaultyBuild() {
-        GradleProject project = GradleProject.fromResources()
-                .setOrigin(PROJECT_NAME)
-                .setProjectDir(temporaryFolder)
-                .addJavaFiles("Faulty.java")
-                .create();
-        BuildResult buildResult = project.executeAndFail(compileJava);
-        assertNotNull(buildResult);
-        BuildTask compileTask = buildResult.task(compileJava.path());
-        assertNotNull(compileTask);
-        assertEquals(FAILED, compileTask.getOutcome());
+    fun executeFaultyBuild() {
+        val project = setup.addJavaFiles("Faulty.java").create()
+
+        val buildResult = project.executeAndFail(compileJava)
+        assertNotNull(buildResult)
+
+        val compileTask = buildResult.task(compileJava.path())
+        assertNotNull(compileTask)
+
+        assertThat(compileTask!!.outcome)
+            .isEqualTo(TaskOutcome.FAILED)
     }
 }
