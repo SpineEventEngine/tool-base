@@ -226,7 +226,7 @@ public final class GradleProject {
         private String name;
         private File folder;
 
-        private RunnerArguments arguments;
+        private RunnerArguments arguments = new RunnerArguments();
 
         private boolean debug;
 
@@ -326,7 +326,7 @@ public final class GradleProject {
          * E.g. it should never get to e.g. CI server.
          */
         public Builder enableDebug() {
-            arguments.withDebug();
+            this.arguments = arguments.withDebug();
             return this;
         }
 
@@ -350,9 +350,10 @@ public final class GradleProject {
          *         value of the property
          */
         public Builder withProperty(String name, String value) {
+            checkNotNull(name);
             checkNotEmptyOrBlank(name);
             checkNotNull(value);
-            arguments.withProperty(name, value);
+            this.arguments = arguments.withProperty(name, value);
             return this;
         }
 

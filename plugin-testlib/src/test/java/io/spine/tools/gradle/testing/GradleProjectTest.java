@@ -60,8 +60,7 @@ class GradleProjectTest {
     @Test
     @DisplayName("build from project folder and project name")
     void buildFromProjectFolderAndProjectName() {
-        GradleProject project = GradleProject
-                .newBuilder()
+        GradleProject project = GradleProject.newBuilder()
                 .setProjectFolder(temporaryFolder)
                 .setProjectName(PROJECT_NAME)
                 .build();
@@ -75,10 +74,10 @@ class GradleProjectTest {
     void writeGivenJavaFiles() {
         String[] files = {"Foo.java", "Bar.java"};
         GradleProject.newBuilder()
-                     .setProjectFolder(temporaryFolder)
-                     .setProjectName(PROJECT_NAME)
-                     .addJavaFiles(files)
-                     .build();
+                .setProjectFolder(temporaryFolder)
+                .setProjectName(PROJECT_NAME)
+                .addJavaFiles(files)
+                .build();
         Path root = temporaryFolder.toPath()
                                    .resolve("src")
                                    .resolve("main")
@@ -93,10 +92,10 @@ class GradleProjectTest {
     @DisplayName("execute faulty build")
     void executeFaultyBuild() {
         GradleProject project = GradleProject.newBuilder()
-                                             .setProjectName(PROJECT_NAME)
-                                             .setProjectFolder(temporaryFolder)
-                                             .addJavaFiles("Faulty.java")
-                                             .build();
+                .setProjectName(PROJECT_NAME)
+                .setProjectFolder(temporaryFolder)
+                .addJavaFiles("Faulty.java")
+                .build();
         BuildResult buildResult = project.executeAndFail(compileJava);
         assertNotNull(buildResult);
         BuildTask compileTask = buildResult.task(compileJava.path());
@@ -105,11 +104,11 @@ class GradleProjectTest {
     }
 
     @Nested
-    @DisplayName("have Builder which")
+    @DisplayName("have `Builder` which")
     class Builder {
 
         @Test
-        @DisplayName("does not accept nulls")
+        @DisplayName("does not accept `null`s")
         void nulls() {
             GradleProject.Builder instance = GradleProject.newBuilder();
             new NullPointerTester()
