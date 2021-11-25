@@ -39,7 +39,7 @@ import static java.lang.String.format;
  * Creates a Gradle script which points to the root directory of the project.
  *
  * <p>The variable {@link #VAR_NAME} should be later used for referencing dependencies
- * in the test Gradle sub-projects.
+ * in the test Gradle subprojects.
  */
 final class TestEnvGradle {
 
@@ -49,8 +49,8 @@ final class TestEnvGradle {
     private final Path projectRoot;
     private final Path testProjectRoot;
 
-    TestEnvGradle(Path projectRoot, Path testProjectRoot) {
-        this.projectRoot = projectRoot;
+    TestEnvGradle(Path testProjectRoot) {
+        this.projectRoot = RootProject.path();
         this.testProjectRoot = testProjectRoot;
     }
 

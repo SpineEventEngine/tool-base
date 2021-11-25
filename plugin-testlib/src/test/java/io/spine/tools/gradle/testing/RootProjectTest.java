@@ -31,14 +31,13 @@ import org.junit.jupiter.api.Test;
 
 import static com.google.common.truth.Truth.assertThat;
 
-@DisplayName("ProjectRoot utility should")
-class ProjectRootTest {
+@DisplayName("`ProjectRoot` utility should")
+class RootProjectTest {
 
     @Test
     @DisplayName("locate the project root")
     void find() {
-        assertThat(ProjectRoot.instance()
-                              .toFile()
-                              .exists()).isTrue();
+        assertThat(RootProject.dir().exists())
+                .isTrue();
     }
 }

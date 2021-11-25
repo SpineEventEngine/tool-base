@@ -34,31 +34,29 @@ import static com.google.common.base.Preconditions.checkState;
 import static java.nio.file.Files.exists;
 
 /**
- * Finds a root of a project by presence of the {@link #VERSION_GRADLE version.gradle} or
- * {@link #VERSION_GRADLE_KTS version.gradle.kts} file.
- *
- * <p>Starts from the current directory, climbing up, until the file is found. By convention
- * a project should have only one version file, which is placed in the root directory of
- * the project.
+ * Utilities for obtaining properties of a project which runs {@link GradleProject} in its tests.
  */
-enum ProjectRoot {
-
-    INSTANCE;
+final class RootProject {
 
     private static final String VERSION_GRADLE = "version.gradle";
     private static final String VERSION_GRADLE_KTS = "version.gradle.kts";
 
-    static ProjectRoot instance() {
-        return INSTANCE;
+    /** Prevents instantiation of this utility class. */
+    private RootProject() {
     }
 
     /**
-     * Obtains a root directory of the project.
+     * Finds a root of a project by presence of the {@link #VERSION_GRADLE version.gradle} or
+     * {@link #VERSION_GRADLE_KTS version.gradle.kts} file.
+     *
+     * <p>Starts from the current directory, climbing up, until the file is found. By convention
+     * a project should have only one version file, which is placed in the root directory of
+     * the project.
      *
      * @throws IllegalStateException
      *         if the {@link #VERSION_GRADLE version.gradle.kts} file is not found
      */
-    Path toPath() {
+    static Path path() {
         Path workingFolderPath = Paths.get(".")
                                       .toAbsolutePath();
         Path extGradleDirPath = workingFolderPath;
@@ -79,13 +77,13 @@ enum ProjectRoot {
     }
 
     /**
-     * Obtains root directory of the project.
+     * Same as {@link #path()}, but returning {@code File} instance.
      *
      * @throws IllegalStateException
      *         if the {@link #VERSION_GRADLE version.gradle.kts} file is not found
-     * @see #toPath()
+     * @see #path()
      */
-    File toFile() {
-        return toPath().toFile();
+    static File dir() {
+        return path().toFile();
     }
 }

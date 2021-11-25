@@ -31,31 +31,36 @@ import io.spine.io.Resource;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static io.spine.util.Exceptions.newIllegalStateException;
+import static java.nio.file.Files.copy;
+import static java.nio.file.Files.createDirectories;
 
 /**
- * Creates {@link #BUILD_GRADLE build.gradle} or {@link #BUILD_GRADLE_KTS build.gradle.kts} file in
- * the root of the test project, copying it from resources.
+ * Creates {@link #BUILD_GRADLE build.gradle} OR {@link #BUILD_GRADLE_KTS build.gradle.kts} file in
+ * the directory of the project, copying it from resources.
  *
- * <p>If a {@code build.gradle} file is found, it is used for the build. Otherwise, if
- * a {@code build.gradle.kts} file is found, it is used for the build.
+ * <p>{@code build.gradle} has a priority over {@code build.gradle.kts}. If both files are
+ * present in resources, only {@code build.gradle} file will be copied.
+ *
+ * <p>If none of the files are available from resources {@code IllegalStateException}
+ * will be thrown.
  */
 final class BuildGradle {
 
-    /**
-     * The name of the build file.
-     */
+    /** The name of the Gradle build file. */
     @VisibleForTesting
     static final String BUILD_GRADLE = "build.gradle";
+
+    /** The name of the Gradle Kotlin Script build file. */
     private static final String BUILD_GRADLE_KTS = "build.gradle.kts";
 
-    private final Path testProjectRoot;
+    private final Path projectDir;
 
-    BuildGradle(Path root) {
-        testProjectRoot = root;
+    BuildGradle(Path projectDir) {
+        this.projectDir = checkNotNull(projectDir);
     }
 
     /**
@@ -63,27 +68,32 @@ final class BuildGradle {
      *
      * @throws IOException
      *         if the file cannot be written
+     * @throws IllegalStateException
+     *         if none of the build scripts were found in resources
      */
     void createFile() throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
         Resource buildGradle = Resource.file(BUILD_GRADLE, classLoader);
         Resource buildGradleKts = Resource.file(BUILD_GRADLE_KTS, classLoader);
-        Path resultingPath;
+        Path targetPath;
         Resource file;
         if (buildGradle.exists()) {
-            resultingPath = testProjectRoot.resolve(BUILD_GRADLE);
+            targetPath = projectDir.resolve(BUILD_GRADLE);
             file = buildGradle;
         } else if (buildGradleKts.exists()) {
-            resultingPath = testProjectRoot.resolve(BUILD_GRADLE_KTS);
+            targetPath = projectDir.resolve(BUILD_GRADLE_KTS);
             file = buildGradleKts;
         } else {
-            throw new IllegalStateException("Build script is not found.");
+            throw newIllegalStateException(
+                    "Neither `%s` nor `%s` were found in resources.",
+                    BUILD_GRADLE, BUILD_GRADLE_KTS
+            );
         }
 
         try (InputStream fileContent = file.open()) {
-            Files.createDirectories(resultingPath.getParent());
+            createDirectories(targetPath.getParent());
             checkNotNull(fileContent);
-            Files.copy(fileContent, resultingPath);
+            copy(fileContent, targetPath);
         }
     }
 }

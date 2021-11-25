@@ -29,9 +29,14 @@ package io.spine.tools.gradle.testing;
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import io.spine.tools.fs.DirectoryName;
+import io.spine.tools.gradle.SourceSetName;
 import io.spine.tools.gradle.task.TaskName;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
@@ -40,17 +45,17 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static io.spine.io.Copy.copyDir;
+import static io.spine.tools.gradle.SourceSetName.main;
 import static io.spine.util.Exceptions.illegalStateWithCauseOf;
 import static io.spine.util.Preconditions2.checkNotEmptyOrBlank;
+import static java.lang.String.format;
 import static java.nio.file.Files.copy;
 import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.write;
@@ -67,13 +72,11 @@ import static java.util.Arrays.asList;
     in their new repositories. */
 public final class GradleProject {
 
-    private static final String mainProtoDir = "src/main/proto/";
-    private static final String mainJavaDir = "src/main/java/";
     private static final String buildSrcDir = "buildSrc";
 
     private final String name;
-    private final GradleRunner runner;
 
+    private final GradleRunner runner;
     private final RunnerArguments arguments;
 
     /**
@@ -94,7 +97,7 @@ public final class GradleProject {
         this.name = builder.name;
         this.arguments = builder.arguments;
         this.runner = GradleRunner.create()
-                .withProjectDir(builder.folder)
+                .withProjectDir(builder.dir)
                 .withDebug(builder.debug);
         if (builder.addPluginUnderTestClasspath) {
             runner.withPluginClasspath();
@@ -109,18 +112,24 @@ public final class GradleProject {
     }
 
     private void writeGradleScripts() throws IOException {
-        BuildGradle buildGradle = new BuildGradle(projectRoot());
+        Path projectDir = projectDir();
+        BuildGradle buildGradle = new BuildGradle(projectDir);
         buildGradle.createFile();
 
-        Path projectRoot = ProjectRoot.instance().toPath();
-        TestEnvGradle testEnvGradle = new TestEnvGradle(projectRoot, projectRoot());
+        TestEnvGradle testEnvGradle = new TestEnvGradle(projectDir);
         testEnvGradle.createFile();
     }
 
+    /** The directory of this project. */
+    private Path projectDir() {
+        return runner.getProjectDir()
+                     .toPath();
+    }
+
     private void writeBuildSrc() throws IOException {
-        Path projectRoot = ProjectRoot.instance().toPath();
+        Path projectRoot = RootProject.path();
         Path buildSrc = projectRoot.resolve(buildSrcDir);
-        Path target = projectRoot();
+        Path target = projectDir();
         copyDir(buildSrc, target, new SkipNonSrcDirs());
     }
 
@@ -132,6 +141,7 @@ public final class GradleProject {
      * under Windows, which fails the build because locked under the {@code .gradle}
      * directory could not be copied.
      */
+
     private static class SkipNonSrcDirs implements Predicate<Path> {
 
         @Override
@@ -145,17 +155,17 @@ public final class GradleProject {
             boolean isBuildDir = str.contains(slash + DirectoryName.build.value() + slash);
             return !isGradleCache && !isBuildDir;
         }
-    }
 
-    private void writeProtoFiles(Iterable<String> fileNames) throws IOException {
-        for (String protoFile : fileNames) {
-            writeProto(protoFile);
+    }
+    private void writeProtoFiles(Multimap<SourceSetName, String> fileNames) throws IOException {
+        for (Map.Entry<SourceSetName, String> protoFile : fileNames.entries()) {
+            writeProto(protoFile.getKey(), protoFile.getValue());
         }
     }
 
-    private void writeJavaFiles(Iterable<String> fileNames) throws IOException {
-        for (String javaFile : fileNames) {
-            writeJava(javaFile);
+    private void writeJavaFiles(Multimap<SourceSetName, String> fileNames) throws IOException {
+        for (Map.Entry<SourceSetName, String> javaFile : fileNames.entries()) {
+            writeJava(javaFile.getKey(), javaFile.getValue());
         }
     }
 
@@ -174,19 +184,27 @@ public final class GradleProject {
         return runner.withArguments(args);
     }
 
-    private void writeProto(String fileName) throws IOException {
-        writeFile(fileName, mainProtoDir);
+    private void writeProto(SourceSetName ssn, String fileName) throws IOException {
+        writeFile(fileName, protoDir(ssn));
     }
 
-    private void writeJava(String fileName) throws IOException {
-        writeFile(fileName, mainJavaDir);
+    private static String protoDir(SourceSetName ssn) {
+        return format("src/%s/proto/", ssn);
+    }
+
+    private void writeJava(SourceSetName ssn, String fileName) throws IOException {
+        writeFile(fileName, javaDir(ssn));
+    }
+
+    private static String javaDir(SourceSetName ssn) {
+        return format("src/%s/java/", ssn);
     }
 
     private void writeFile(String fileName, String dir) throws IOException {
         String filePath = dir + fileName;
         String resourcePath = name + '/' + filePath;
         try (InputStream fileContent = openResource(resourcePath)) {
-            Path fileSystemPath = projectRoot().resolve(filePath);
+            Path fileSystemPath = projectDir().resolve(filePath);
             createDirectories(fileSystemPath.getParent());
             copy(fileContent, fileSystemPath);
         }
@@ -199,25 +217,27 @@ public final class GradleProject {
         return stream;
     }
 
-    private Path projectRoot() {
-        return runner.getProjectDir()
-                     .toPath();
-    }
-
     /**
      * A builder for new {@code GradleProject}.
      */
     public static class Builder {
 
-        private final List<String> protoFileNames = new ArrayList<>();
-        private final List<String> javaFileNames = new ArrayList<>();
+        private final Multimap<SourceSetName, String> protoFileNames =
+                MultimapBuilder.hashKeys()
+                               .arrayListValues()
+                               .build();
+        private final Multimap<SourceSetName, String> javaFileNames =
+                MultimapBuilder.hashKeys()
+                               .arrayListValues()
+                               .build();
 
         private @Nullable ImmutableMap<String, String> environment;
-        private String name;
-        private File folder;
+        private @MonotonicNonNull String name;
+        private @MonotonicNonNull File dir;
 
         private RunnerArguments arguments = new RunnerArguments();
 
+        /** The flag to be passed to {@link GradleRunner#withDebug(boolean)}. */
         private boolean debug;
 
         /**
@@ -249,36 +269,65 @@ public final class GradleProject {
         }
 
         /**
-         * Sets the name of the directory on the file system under which
-         * the project will be created.
+         * Sets the directory on the file system under which the project will be created.
          */
-        public Builder setProjectFolder(File folder) {
-            this.folder = checkNotNull(folder);
+        public Builder setProjectDir(File dir) {
+            this.dir = checkNotNull(dir);
             return this;
         }
 
         /**
-         * Adds a {@code .proto} file to the project to be created.
+         * Adds a {@code .proto} file to the {@link SourceSetName#main main} source set of
+         * the project to be created.
          *
-         * @param protoFileName
-         *         a name of the proto file relative to {@code src/main/proto} sub-directory
+         * @param fileName
+         *         a name of the proto file relative to {@code src/main/proto} subdirectory
          *         under the one specified in {@link #setProjectName(String)}
          */
-        public Builder addProtoFile(String protoFileName) {
-            checkNotNull(protoFileName);
-            checkArgument(!protoFileName.isEmpty());
-            protoFileNames.add(protoFileName);
+        public Builder addProtoFile(String fileName) {
+            checkNotNull(fileName);
+            checkNotEmptyOrBlank(fileName);
+            return addProtoFile(main, fileName);
+        }
+
+        /**
+         * Adds a {@code .proto} file to the specified source set of the project to be created.
+         *
+         * @param ssn
+         *          the name of the source set
+         * @param fileName
+         *         a name of the proto file relative to {@code src/SourceSetName/proto}
+         *         subdirectory under the one specified in {@link #setProjectName(String)}
+         */
+        public Builder addProtoFile(SourceSetName ssn, String fileName) {
+            checkNotNull(ssn);
+            checkNotNull(fileName);
+            checkNotEmptyOrBlank(fileName);
+            protoFileNames.put(ssn, fileName);
             return this;
         }
 
         /**
-         * Adds a collection of {@code .proto} files to the project to be created.
+         * Adds a collection of {@code .proto} files to the {@link SourceSetName#main main}
+         * source set of the project to be created.
          *
          * @see #addProtoFile(String)
          */
-        public Builder addProtoFiles(Collection<String> protoFileNames) {
-            checkNotNull(protoFileNames);
-            protoFileNames.forEach(this::addProtoFile);
+        public Builder addProtoFiles(Collection<String> fileNames) {
+            checkNotNull(fileNames);
+            return addProtoFiles(main, fileNames);
+        }
+
+        /**
+         * Adds a collection of {@code .proto} files to the specified source set of
+         * the project to be created.
+         *
+         * @see #addProtoFile(String)
+         */
+        public Builder addProtoFiles(SourceSetName ssn, Collection<String> fileNames) {
+            checkNotNull(ssn);
+            checkNotNull(fileNames);
+            fileNames.forEach(fileName -> addProtoFile(ssn, fileName));
             return this;
         }
 
@@ -293,7 +342,37 @@ public final class GradleProject {
         }
 
         /**
-         * Adds {@code .java} files to the project to be created.
+         * Creates a {@code .proto} source file with the given name and content
+         * in the the {@link SourceSetName#main main} source set of the project.
+         *
+         * @param fileName
+         *         the name of the file relative to {@code src/main/proto} directory
+         * @param lines
+         *         the content of the file
+         */
+        public Builder createProto(String fileName, Iterable<String> lines) {
+            checkNotNull(fileName);
+            checkNotNull(lines);
+            return createProto(main, lines, fileName);
+        }
+
+        /**
+         * Creates a {@code .proto} source file with the given name and content
+         * in the the specified source set of the project.
+         *
+         * @param fileName
+         *         the name of the file relative to {@code src/SourceSetName/proto} directory
+         * @param lines
+         *         the content of the file
+         */
+        public Builder createProto(SourceSetName ssn, Iterable<String> lines, String fileName) {
+            String path = protoDir(ssn) + fileName;
+            return createFile(path, lines);
+        }
+
+        /**
+         * Adds {@code .java} files to the {@link SourceSetName#main main}
+         * source set of the project to be created.
          *
          * @param fileNames
          *         names of the Java files relative to {@code src/main/java} subdirectory
@@ -301,8 +380,55 @@ public final class GradleProject {
          */
         public Builder addJavaFiles(String... fileNames) {
             checkNotNull(fileNames);
-            javaFileNames.addAll(asList(fileNames));
+            return addJavaFiles(main, asList(fileNames));
+        }
+
+        /**
+         * Adds {@code .java} files to the specified source set of the project to be created.
+         *
+         * @param ssn
+         *         the name of the source set
+         * @param fileNames
+         *         names of the Java files relative to {@code src/main/java} subdirectory
+         *         under the one specified in {@link #setProjectName(String)}
+         */
+        public Builder addJavaFiles(SourceSetName ssn, Iterable<String> fileNames) {
+            checkNotNull(ssn);
+            checkNotNull(fileNames);
+            javaFileNames.putAll(ssn, fileNames);
             return this;
+        }
+
+        /**
+         * Creates a file in the project directory under the given path and with the given content.
+         *
+         * @param path
+         *         the path to the file relative to the project root directory
+         * @param lines
+         *         the content of the file
+         */
+        public Builder createFile(String path, Iterable<String> lines) {
+            checkNotNull(path);
+            checkNotNull(lines);
+            Path sourcePath = resolve(path);
+            try {
+                createDirectories(sourcePath.getParent());
+                write(sourcePath, lines, Charsets.UTF_8);
+            } catch (IOException e) {
+                throw illegalStateWithCauseOf(e);
+            }
+            return this;
+        }
+
+        @NonNull
+        private Path resolve(String path) {
+            checkNotNull(
+                    dir,
+                    "A project directory is not specified. Please call `setProjectDir(File)`."
+            );
+            Path sourcePath = dir.toPath()
+                                 .resolve(path);
+            return sourcePath;
         }
 
         /**
@@ -358,49 +484,10 @@ public final class GradleProject {
             return this;
         }
 
-        /**
-         * Creates a {@code .proto} source file with the given name and content.
-         *
-         * @param fileName
-         *         the name of the file relative to {@code src/main/proto} directory
-         * @param lines
-         *         the content of the file
-         */
-        public Builder createProto(String fileName, Iterable<String> lines) {
-            checkNotNull(fileName);
-            checkNotNull(lines);
-
-            String path = mainProtoDir + fileName;
-            return createFile(path, lines);
-        }
-
-        /**
-         * Creates a file in the project directory under the given path and with the given content.
-         *
-         * @param path
-         *         the path to the file relative to the project root directory
-         * @param lines
-         *         the content of the file
-         */
-        public Builder createFile(String path, Iterable<String> lines) {
-            checkNotNull(path);
-            checkNotNull(lines);
-
-            Path sourcePath = folder.toPath()
-                                    .resolve(path);
-            try {
-                createDirectories(sourcePath.getParent());
-                write(sourcePath, lines, Charsets.UTF_8);
-            } catch (IOException e) {
-                throw illegalStateWithCauseOf(e);
-            }
-            return this;
-        }
-
         public GradleProject build() {
             try {
                 checkNotNull(name, "Project name");
-                checkNotNull(folder, "Project folder");
+                checkNotNull(dir, "Project folder");
                 GradleProject result = new GradleProject(this);
                 return result;
             } catch (IOException e) {

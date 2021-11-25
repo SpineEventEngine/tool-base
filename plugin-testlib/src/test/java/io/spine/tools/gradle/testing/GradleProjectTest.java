@@ -61,7 +61,7 @@ class GradleProjectTest {
     @DisplayName("build from project folder and project name")
     void buildFromProjectFolderAndProjectName() {
         GradleProject project = GradleProject.newBuilder()
-                .setProjectFolder(temporaryFolder)
+                .setProjectDir(temporaryFolder)
                 .setProjectName(PROJECT_NAME)
                 .build();
         assertNotNull(project);
@@ -74,7 +74,7 @@ class GradleProjectTest {
     void writeGivenJavaFiles() {
         String[] files = {"Foo.java", "Bar.java"};
         GradleProject.newBuilder()
-                .setProjectFolder(temporaryFolder)
+                .setProjectDir(temporaryFolder)
                 .setProjectName(PROJECT_NAME)
                 .addJavaFiles(files)
                 .build();
@@ -93,7 +93,7 @@ class GradleProjectTest {
     void executeFaultyBuild() {
         GradleProject project = GradleProject.newBuilder()
                 .setProjectName(PROJECT_NAME)
-                .setProjectFolder(temporaryFolder)
+                .setProjectDir(temporaryFolder)
                 .addJavaFiles("Faulty.java")
                 .build();
         BuildResult buildResult = project.executeAndFail(compileJava);
