@@ -182,8 +182,11 @@ public final class GradleProject {
     }
 
     private GradleRunner prepareRun(TaskName taskName) {
-        String[] args = RunnerArguments.mode(debug)
-                                       .of(taskName, properties);
+        RunnerArguments arguments = RunnerArguments.forTask(taskName);
+        if (debug) {
+            arguments = arguments.withDebug();
+        }
+        String[] args = arguments.apply(properties);
         return runner.withArguments(args);
     }
 

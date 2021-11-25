@@ -25,20 +25,19 @@
  */
 package io.spine.tools.gragle.testing
 
-import com.google.common.collect.ImmutableMap
 import com.google.common.truth.Truth.assertThat
 import io.spine.tools.gradle.task.JavaTaskName.Companion.compileJava
 import io.spine.tools.gradle.testing.CliOption.Companion.debug
+import io.spine.tools.gradle.testing.CliOption.Companion.noDaemon
 import io.spine.tools.gradle.testing.CliOption.Companion.stacktrace
 import io.spine.tools.gradle.testing.RunnerArguments
 import org.junit.jupiter.api.Test
 
-class `'RunnerArguments' should contain` {
+class `'RunnerArguments' should` {
 
     @Test
-    fun `task name`() {
-        val args = RunnerArguments.mode(false)
-            .of(compileJava, ImmutableMap.of())
+    fun `contain task name`() {
+        val args = RunnerArguments.forTask(compileJava).toArray()
         assertArgs(args).containsExactly(
             compileJava.name(),
             stacktrace.argument()
@@ -46,11 +45,9 @@ class `'RunnerArguments' should contain` {
     }
 
     @Test
-    fun `debug flag`() {
-        val args = RunnerArguments.mode(true)
-            .of(compileJava, ImmutableMap.of())
-        assertArgs(args)
-            .containsExactly(
+    fun `contain debug flag`() {
+        val args = RunnerArguments.forTask(compileJava).withDebug().toArray()
+        assertArgs(args).containsExactly(
                 compileJava.name(),
                 stacktrace.argument(),
                 debug.argument()
@@ -58,11 +55,11 @@ class `'RunnerArguments' should contain` {
     }
 
     @Test
-    fun `Gradle properties`() {
-        val args = RunnerArguments.mode(false).of(
-            compileJava, ImmutableMap.of(
-                "foo1", "bar1",
-                "foo2", "bar2"
+    fun `contain Gradle properties`() {
+        val args = RunnerArguments.forTask(compileJava).apply(
+            mapOf(
+                "foo1" to "bar1",
+                "foo2" to "bar2"
             )
         )
         assertArgs(args).containsExactly(
@@ -71,6 +68,18 @@ class `'RunnerArguments' should contain` {
             "-Pfoo1=bar1",
             "-Pfoo2=bar2"
         )
+    }
+
+    @Test
+    fun `turn off stacktrace output`() {
+        val args = RunnerArguments.forTask(compileJava).noStacktrace().toArray()
+        assertArgs(args).doesNotContain(stacktrace.argument())
+    }
+
+    @Test
+    fun `turn off daemons mode`() {
+        val args = RunnerArguments.forTask(compileJava).noDaemon().toArray()
+        assertArgs(args).contains(noDaemon.argument())
     }
 
     private fun assertArgs(args: Array<String>) = assertThat(args).asList()

@@ -25,42 +25,70 @@
  */
 package io.spine.tools.gradle.testing
 
-import com.google.common.collect.ImmutableMap
-import com.google.common.collect.Lists
 import io.spine.tools.gradle.task.TaskName
-import io.spine.tools.gradle.testing.CliOption.Companion.stacktrace
 
 /**
  * Create Gradle Runner arguments for a task.
  */
-internal class RunnerArguments private constructor(
-    /** If `true`, the `debug` level of logging will be turned for a task.  */
-    private val debug: Boolean
+public class RunnerArguments private constructor(
+    /** The name of the task to be executed by the runner. */
+    private val task: TaskName,
+
+    /** If `true`, [CliOption.debug] will be passed to the runner.  */
+    private val debug: Boolean = false,
+
+    /** If `true`, [CliOption.stacktrace] will be passed to the runner. */
+    private val stacktrace: Boolean = true,
+
+    /** If `true`, [CliOption.noDaemon] will be passed to the runner. */
+    private val noDaemon: Boolean = false
 ) {
 
-    companion object {
+    public companion object {
 
+        /** Creates new instance or runner arguments for the specified task. */
         @JvmStatic
-        fun mode(debug: Boolean): RunnerArguments {
-            return RunnerArguments(debug)
-        }
+        public fun forTask(task: TaskName): RunnerArguments = RunnerArguments(task)
     }
 
-    fun of(taskName: TaskName, properties: ImmutableMap<String, String>): Array<String> {
-        val task = taskName.name()
-        val result: MutableList<String> = Lists.newArrayList(task, stacktrace.toString())
+    /** Turns on the debug flag. */
+    public fun withDebug(): RunnerArguments {
+        return RunnerArguments(task,true, stacktrace)
+    }
+
+    /** Turns off the stacktrace output. */
+    public fun noStacktrace(): RunnerArguments {
+        return RunnerArguments(task, debug, false)
+    }
+
+    /** Turns on the `--no-daemon` flag. */
+    public fun noDaemon(): RunnerArguments {
+        return RunnerArguments(task, debug, stacktrace, true)
+    }
+
+    /** Obtains arguments as an array. */
+    public fun toArray(): Array<String> = taskWithOptions().toTypedArray()
+
+    /** Applies passed properties and returns resulting array of command line arguments. */
+    public fun apply(properties: Map<String, String>): Array<String> {
+        val args: MutableList<String> = taskWithOptions()
+        properties.forEach { (name, value) ->
+            args.add("-P${name}=${value}")
+        }
+        return args.toTypedArray()
+    }
+
+    private fun taskWithOptions(): MutableList<String> {
+        val args: MutableList<String> = mutableListOf(task.name())
         if (debug) {
-            result.add(CliOption.debug.toString())
+            args.add(CliOption.debug.argument())
         }
-        properties.forEach { (name: String?, property: String?) ->
-            result.add(
-                String.format(
-                    "-P%s=%s",
-                    name,
-                    property
-                )
-            )
+        if (stacktrace) {
+            args.add(CliOption.stacktrace.argument())
         }
-        return result.toTypedArray()
+        if (noDaemon) {
+            args.add(CliOption.noDaemon.argument())
+        }
+        return args
     }
 }
