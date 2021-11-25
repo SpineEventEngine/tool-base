@@ -29,36 +29,36 @@ package io.spine.tools.gradle.testing
 /**
  * A command line option passed to a Gradle runner.
  */
-public data class CliOption(val name: String) {
+internal data class CliOption(val name: String) {
 
     init {
         require(name.isNotEmpty())
         require(name.isNotBlank())
     }
 
-    public companion object {
+    companion object {
 
         internal const val prefix = "--"
 
         @JvmField
-        public val stacktrace: CliOption = CliOption("stacktrace")
+        val stacktrace: CliOption = CliOption("stacktrace")
 
         @JvmField
-        public val debug: CliOption = CliOption("debug")
+        val debug: CliOption = CliOption("debug")
 
         @JvmField
-        public val noDaemon: CliOption = CliOption("no-daemon")
+        val noDaemon: CliOption = CliOption("no-daemon")
     }
 
     /**
      * Obtains the name of this option prefixed with `--` to be used as command line argument.
      */
-    public fun argument(): String = prefix + name
+    fun argument(): String = prefix + name
 
     /**
      * Obtains the value for passing in a command line.
      *
      * @see [argument]
      */
-    public override fun toString(): String = argument()
+    override fun toString(): String = argument()
 }

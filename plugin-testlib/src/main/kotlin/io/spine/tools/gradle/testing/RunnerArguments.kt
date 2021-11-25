@@ -30,7 +30,7 @@ import io.spine.tools.gradle.task.TaskName
 /**
  * Create Gradle Runner arguments for a task.
  */
-public class RunnerArguments internal constructor(
+internal class RunnerArguments internal constructor(
 
     /** If `true`, [CliOption.debug] will be passed to the runner.  */
     private val debug: Boolean = false,
@@ -46,7 +46,7 @@ public class RunnerArguments internal constructor(
 ) {
 
     /** Turns on the debug flag. */
-    public fun withDebug(): RunnerArguments {
+    fun withDebug(): RunnerArguments {
         return RunnerArguments(
             debug = true,
             stacktrace = this.stacktrace,
@@ -56,7 +56,7 @@ public class RunnerArguments internal constructor(
     }
 
     /** Turns off the stacktrace output. */
-    public fun noStacktrace(): RunnerArguments {
+    fun noStacktrace(): RunnerArguments {
         return RunnerArguments(
             debug = this.debug,
             stacktrace = false,
@@ -66,7 +66,7 @@ public class RunnerArguments internal constructor(
     }
 
     /** Turns on the `--no-daemon` flag. */
-    public fun noDaemon(): RunnerArguments {
+    fun noDaemon(): RunnerArguments {
         return RunnerArguments(
             debug = this.debug,
             stacktrace = this.stacktrace,
@@ -76,7 +76,7 @@ public class RunnerArguments internal constructor(
     }
 
     /** Adds a Gradle property entry to the command line arguments. */
-    public fun withProperty(name: String, value: String): RunnerArguments {
+    fun withProperty(name: String, value: String): RunnerArguments {
         require(name.isNotEmpty())
         require(name.isNotBlank())
         require(value.isNotBlank())
@@ -89,7 +89,7 @@ public class RunnerArguments internal constructor(
     }
 
     /** Adds passed properties to the arguments. */
-    public fun withProperties(properties: Map<String, String>): RunnerArguments{
+    fun withProperties(properties: Map<String, String>): RunnerArguments{
         return RunnerArguments(
             debug = this.debug,
             stacktrace = this.stacktrace,
@@ -102,7 +102,7 @@ public class RunnerArguments internal constructor(
      * Adds the passed properties to those that may be already applied and returns
      * resulting array of command line arguments.
      */
-    public fun forTask(task: TaskName): Array<String> {
+    fun forTask(task: TaskName): Array<String> {
         val args: MutableList<String> = taskWithOptions(task)
         properties.forEach { entry ->
             args.add(CliProperty(entry).argument())

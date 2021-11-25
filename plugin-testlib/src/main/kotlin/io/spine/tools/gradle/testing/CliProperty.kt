@@ -29,7 +29,7 @@ package io.spine.tools.gradle.testing
 /**
  * A command line argument for properties passed to Gradle runner.
  */
-public data class CliProperty(val name: String, val value: String) {
+internal data class CliProperty(val name: String, val value: String) {
 
     init {
         require(name.isNotEmpty())
@@ -39,10 +39,10 @@ public data class CliProperty(val name: String, val value: String) {
     /**
      * Creates a property from a map entry.
      */
-    public constructor(entry: Map.Entry<String, String>): this(entry.key, entry.value)
+    constructor(entry: Map.Entry<String, String>): this(entry.key, entry.value)
 
     /**
      * Obtains the value passed as command line argument using the format `"-P${name}=${value}"`
      */
-    public fun argument(): String = "-P${name}=${value}"
+    fun argument(): String = "-P${name}=${value}"
 }
