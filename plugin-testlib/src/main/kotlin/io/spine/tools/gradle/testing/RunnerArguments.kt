@@ -30,9 +30,7 @@ import io.spine.tools.gradle.task.TaskName
 /**
  * Create Gradle Runner arguments for a task.
  */
-public class RunnerArguments private constructor(
-    /** The name of the task to be executed by the runner. */
-    private val task: TaskName,
+public class RunnerArguments internal constructor(
 
     /** If `true`, [CliOption.debug] will be passed to the runner.  */
     private val debug: Boolean = false,
@@ -41,44 +39,78 @@ public class RunnerArguments private constructor(
     private val stacktrace: Boolean = true,
 
     /** If `true`, [CliOption.noDaemon] will be passed to the runner. */
-    private val noDaemon: Boolean = false
+    private val noDaemon: Boolean = false,
+
+    /** Properties passed to the runner. */
+    private val properties: Map<String, String> = mapOf()
 ) {
-
-    public companion object {
-
-        /** Creates new instance or runner arguments for the specified task. */
-        @JvmStatic
-        public fun forTask(task: TaskName): RunnerArguments = RunnerArguments(task)
-    }
 
     /** Turns on the debug flag. */
     public fun withDebug(): RunnerArguments {
-        return RunnerArguments(task,true, stacktrace)
+        return RunnerArguments(
+            debug = true,
+            stacktrace = this.stacktrace,
+            noDaemon = this.noDaemon,
+            properties = this.properties
+        )
     }
 
     /** Turns off the stacktrace output. */
     public fun noStacktrace(): RunnerArguments {
-        return RunnerArguments(task, debug, false)
+        return RunnerArguments(
+            debug = this.debug,
+            stacktrace = false,
+            noDaemon = this.noDaemon,
+            properties = this.properties
+        )
     }
 
     /** Turns on the `--no-daemon` flag. */
     public fun noDaemon(): RunnerArguments {
-        return RunnerArguments(task, debug, stacktrace, true)
+        return RunnerArguments(
+            debug = this.debug,
+            stacktrace = this.stacktrace,
+            noDaemon = true,
+            properties = this.properties
+        )
     }
 
-    /** Obtains arguments as an array. */
-    public fun toArray(): Array<String> = taskWithOptions().toTypedArray()
+    /** Adds a Gradle property entry to the command line arguments. */
+    public fun withProperty(name: String, value: String): RunnerArguments {
+        require(name.isNotEmpty())
+        require(name.isNotBlank())
+        require(value.isNotBlank())
+        return RunnerArguments(
+            debug = this.debug,
+            stacktrace = this.stacktrace,
+            noDaemon = this.noDaemon,
+            properties = this.properties + Pair(name, value)
+        )
+    }
 
-    /** Applies passed properties and returns resulting array of command line arguments. */
-    public fun apply(properties: Map<String, String>): Array<String> {
-        val args: MutableList<String> = taskWithOptions()
-        properties.forEach { (name, value) ->
-            args.add("-P${name}=${value}")
+    /** Adds passed properties to the arguments. */
+    public fun withProperties(properties: Map<String, String>): RunnerArguments{
+        return RunnerArguments(
+            debug = this.debug,
+            stacktrace = this.stacktrace,
+            noDaemon = this.noDaemon,
+            properties = this.properties + properties
+        )
+    }
+
+    /**
+     * Adds the passed properties to those that may be already applied and returns
+     * resulting array of command line arguments.
+     */
+    public fun forTask(task: TaskName): Array<String> {
+        val args: MutableList<String> = taskWithOptions(task)
+        properties.forEach { entry ->
+            args.add(CliProperty(entry).argument())
         }
         return args.toTypedArray()
     }
 
-    private fun taskWithOptions(): MutableList<String> {
+    private fun taskWithOptions(task: TaskName): MutableList<String> {
         val args: MutableList<String> = mutableListOf(task.name())
         if (debug) {
             args.add(CliOption.debug.argument())

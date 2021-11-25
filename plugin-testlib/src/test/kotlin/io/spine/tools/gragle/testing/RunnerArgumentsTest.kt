@@ -30,6 +30,7 @@ import io.spine.tools.gradle.task.JavaTaskName.Companion.compileJava
 import io.spine.tools.gradle.testing.CliOption.Companion.debug
 import io.spine.tools.gradle.testing.CliOption.Companion.noDaemon
 import io.spine.tools.gradle.testing.CliOption.Companion.stacktrace
+import io.spine.tools.gradle.testing.CliProperty
 import io.spine.tools.gradle.testing.RunnerArguments
 import org.junit.jupiter.api.Test
 
@@ -37,7 +38,7 @@ class `'RunnerArguments' should` {
 
     @Test
     fun `contain task name`() {
-        val args = RunnerArguments.forTask(compileJava).toArray()
+        val args = RunnerArguments().forTask(compileJava)
         assertArgs(args).containsExactly(
             compileJava.name(),
             stacktrace.argument()
@@ -46,39 +47,40 @@ class `'RunnerArguments' should` {
 
     @Test
     fun `contain debug flag`() {
-        val args = RunnerArguments.forTask(compileJava).withDebug().toArray()
+        val args = RunnerArguments().withDebug().forTask(compileJava)
         assertArgs(args).containsExactly(
-                compileJava.name(),
-                stacktrace.argument(),
-                debug.argument()
-            )
+            compileJava.name(),
+            stacktrace.argument(),
+            debug.argument()
+        )
     }
 
     @Test
     fun `contain Gradle properties`() {
-        val args = RunnerArguments.forTask(compileJava).apply(
+        val args = RunnerArguments().withProperties(
             mapOf(
                 "foo1" to "bar1",
                 "foo2" to "bar2"
             )
-        )
+        ).forTask(compileJava)
+
         assertArgs(args).containsExactly(
             compileJava.name(),
             stacktrace.argument(),
-            "-Pfoo1=bar1",
-            "-Pfoo2=bar2"
+            CliProperty("foo1", "bar1").argument(),
+            CliProperty("foo2", "bar2").argument()
         )
     }
 
     @Test
     fun `turn off stacktrace output`() {
-        val args = RunnerArguments.forTask(compileJava).noStacktrace().toArray()
+        val args = RunnerArguments().noStacktrace().forTask(compileJava)
         assertArgs(args).doesNotContain(stacktrace.argument())
     }
 
     @Test
     fun `turn off daemons mode`() {
-        val args = RunnerArguments.forTask(compileJava).noDaemon().toArray()
+        val args = RunnerArguments().noDaemon().forTask(compileJava)
         assertArgs(args).contains(noDaemon.argument())
     }
 

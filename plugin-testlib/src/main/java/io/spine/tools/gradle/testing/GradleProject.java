@@ -41,9 +41,7 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Predicate;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -51,6 +49,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static io.spine.io.Copy.copyDir;
 import static io.spine.util.Exceptions.illegalStateWithCauseOf;
+import static io.spine.util.Preconditions2.checkNotEmptyOrBlank;
 import static java.nio.file.Files.copy;
 import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.write;
@@ -73,8 +72,8 @@ public final class GradleProject {
 
     private final String name;
     private final GradleRunner runner;
-    private final boolean debug;
-    private final ImmutableMap<String, String> properties;
+
+    private final RunnerArguments arguments;
 
     /**
      * Creates new builder for the project.
@@ -92,7 +91,7 @@ public final class GradleProject {
 
     private GradleProject(Builder builder) throws IOException {
         this.name = builder.name;
-        this.debug = builder.debug;
+        this.arguments = builder.arguments;
         this.runner = GradleRunner.create()
                 .withProjectDir(builder.folder)
                 .withDebug(builder.debug);
@@ -102,7 +101,6 @@ public final class GradleProject {
         if (builder.environment != null) {
             runner.withEnvironment(builder.environment);
         }
-        this.properties = ImmutableMap.copyOf(builder.properties);
         writeGradleScripts();
         writeBuildSrc();
         writeProtoFiles(builder.protoFileNames);
@@ -182,11 +180,7 @@ public final class GradleProject {
     }
 
     private GradleRunner prepareRun(TaskName taskName) {
-        RunnerArguments arguments = RunnerArguments.forTask(taskName);
-        if (debug) {
-            arguments = arguments.withDebug();
-        }
-        String[] args = arguments.apply(properties);
+        String[] args = arguments.forTask(taskName);
         return runner.withArguments(args);
     }
 
@@ -227,20 +221,13 @@ public final class GradleProject {
 
         private final List<String> protoFileNames = new ArrayList<>();
         private final List<String> javaFileNames = new ArrayList<>();
-        private final Map<String, String> properties = new HashMap<>();
 
         private @Nullable ImmutableMap<String, String> environment;
         private String name;
         private File folder;
 
-        /**
-         * Determines whether the code can be debugged.
-         *
-         * <p>Affects the code executed during a {@linkplain #executeTask Gradle task}.
-         *
-         * <p>NOTE: when the value is {@code true}, all code is executed in a single JVM.
-         * This leads to a high consumption of a memory.
-         */
+        private RunnerArguments arguments;
+
         private boolean debug;
 
         /**
@@ -331,12 +318,15 @@ public final class GradleProject {
         /**
          * Enables the debug mode of the GradleRunner.
          *
-         * <p>Use debug mode only for temporary debug purposes.
+         * <p>Affects the code executed during a {@linkplain #executeTask Gradle task}.
+         * When turned on, all code is executed in a single JVM.
+         * This leads to a high consumption of a memory.
+         *
+         * <p>Use this mode only for temporary debug purposes.
+         * E.g. it should never get to e.g. CI server.
          */
-        @SuppressWarnings("RedundantSuppression")
-        // Used only for debug purposes. Should never get to e.g. CI server.
         public Builder enableDebug() {
-            this.debug = true;
+            arguments.withDebug();
             return this;
         }
 
@@ -360,9 +350,9 @@ public final class GradleProject {
          *         value of the property
          */
         public Builder withProperty(String name, String value) {
-            checkNotNull(name);
+            checkNotEmptyOrBlank(name);
             checkNotNull(value);
-            this.properties.put(name, value);
+            arguments.withProperty(name, value);
             return this;
         }
 
