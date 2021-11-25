@@ -44,6 +44,7 @@ import java.util.Collection;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static io.spine.tools.gradle.SourceSetName.main;
+import static io.spine.tools.gradle.testing.Sources.protoDir;
 import static io.spine.util.Exceptions.illegalStateWithCauseOf;
 import static io.spine.util.Preconditions2.checkNotEmptyOrBlank;
 import static java.nio.file.Files.createDirectories;
@@ -214,7 +215,7 @@ public final class GradleProjectSetup {
      */
     public GradleProjectSetup createProto(SourceSetName ssn, Iterable<String> lines,
                                           String fileName) {
-        String path = GradleProject.protoDir(ssn) + fileName;
+        String path = protoDir(ssn) + fileName;
         return createFile(path, lines);
     }
 
