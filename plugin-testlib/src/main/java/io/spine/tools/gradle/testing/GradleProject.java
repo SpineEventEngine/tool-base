@@ -351,8 +351,8 @@ public final class GradleProject {
          */
         public Builder withProperty(String name, String value) {
             checkNotNull(name);
-            checkNotEmptyOrBlank(name);
             checkNotNull(value);
+            checkNotEmptyOrBlank(name);
             this.arguments = arguments.withProperty(name, value);
             return this;
         }
