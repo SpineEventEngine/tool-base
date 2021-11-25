@@ -26,12 +26,15 @@
 
 package io.spine.tools.gradle.testing;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static com.google.common.base.Preconditions.checkState;
 import static java.nio.file.Files.exists;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Utilities for obtaining properties of a project which runs {@link GradleProject} in its tests.
@@ -59,7 +62,7 @@ final class RootProject {
     static Path path() {
         Path workingFolderPath = Paths.get(".")
                                       .toAbsolutePath();
-        Path extGradleDirPath = workingFolderPath;
+        @Nullable Path extGradleDirPath = workingFolderPath;
         while (extGradleDirPath != null && !hasVersionGradle(extGradleDirPath)) {
             extGradleDirPath = extGradleDirPath.getParent();
         }
@@ -68,7 +71,7 @@ final class RootProject {
                    VERSION_GRADLE,
                    VERSION_GRADLE_KTS,
                    workingFolderPath);
-        return extGradleDirPath;
+        return requireNonNull(extGradleDirPath);
     }
 
     private static boolean hasVersionGradle(Path directory) {
