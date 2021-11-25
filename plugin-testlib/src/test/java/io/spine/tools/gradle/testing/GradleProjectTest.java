@@ -26,12 +26,10 @@
 
 package io.spine.tools.gradle.testing;
 
-import com.google.common.testing.NullPointerTester;
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.BuildTask;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -45,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("GradleProject should")
+@DisplayName("`GradleProject` should")
 class GradleProjectTest {
 
     private static final String PROJECT_NAME = "gradle_project_test";
@@ -60,10 +58,10 @@ class GradleProjectTest {
     @Test
     @DisplayName("build from project folder and project name")
     void buildFromProjectFolderAndProjectName() {
-        GradleProject project = GradleProject.newBuilder()
+        GradleProject project = GradleProject.fromResources()
                 .setProjectDir(temporaryFolder)
-                .setResourceOrigin(PROJECT_NAME)
-                .build();
+                .setOrigin(PROJECT_NAME)
+                .create();
         assertNotNull(project);
     }
 
@@ -73,11 +71,11 @@ class GradleProjectTest {
     @DisplayName("write given Java files")
     void writeGivenJavaFiles() {
         String[] files = {"Foo.java", "Bar.java"};
-        GradleProject.newBuilder()
+        GradleProject.fromResources()
                 .setProjectDir(temporaryFolder)
-                .setResourceOrigin(PROJECT_NAME)
+                .setOrigin(PROJECT_NAME)
                 .addJavaFiles(files)
-                .build();
+                .create();
         Path root = temporaryFolder.toPath()
                                    .resolve("src")
                                    .resolve("main")
@@ -91,28 +89,15 @@ class GradleProjectTest {
     @Test
     @DisplayName("execute faulty build")
     void executeFaultyBuild() {
-        GradleProject project = GradleProject.newBuilder()
-                .setResourceOrigin(PROJECT_NAME)
+        GradleProject project = GradleProject.fromResources()
+                .setOrigin(PROJECT_NAME)
                 .setProjectDir(temporaryFolder)
                 .addJavaFiles("Faulty.java")
-                .build();
+                .create();
         BuildResult buildResult = project.executeAndFail(compileJava);
         assertNotNull(buildResult);
         BuildTask compileTask = buildResult.task(compileJava.path());
         assertNotNull(compileTask);
         assertEquals(FAILED, compileTask.getOutcome());
-    }
-
-    @Nested
-    @DisplayName("have `Builder` which")
-    class Builder {
-
-        @Test
-        @DisplayName("does not accept `null`s")
-        void nulls() {
-            GradleProjectBuilder instance = GradleProject.newBuilder();
-            new NullPointerTester()
-                    .testAllPublicInstanceMethods(instance);
-        }
     }
 }

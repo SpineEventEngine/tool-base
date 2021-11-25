@@ -28,21 +28,17 @@ package io.spine.tools.gradle.testing;
 
 import com.google.common.collect.Multimap;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import io.spine.tools.fs.DirectoryName;
 import io.spine.tools.gradle.SourceSetName;
 import io.spine.tools.gradle.task.TaskName;
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Map;
-import java.util.function.Predicate;
 
 import static com.google.common.base.Preconditions.checkState;
-import static io.spine.io.Copy.copyDir;
 import static java.lang.String.format;
 import static java.nio.file.Files.copy;
 import static java.nio.file.Files.createDirectories;
@@ -54,18 +50,17 @@ import static java.nio.file.Files.createDirectories;
  */
 public final class GradleProject {
 
-    private static final String buildSrcDir = "buildSrc";
-
     /** The name of the directory under {@code resources} which contains files for this project. */
     private final String origin;
+
     private final GradleRunner runner;
     private final RunnerArguments arguments;
 
     /**
      * Creates new builder for the project.
      */
-    public static GradleProjectBuilder newBuilder() {
-        return new GradleProjectBuilder();
+    public static GradleProjectSetup fromResources() {
+        return new GradleProjectSetup();
     }
 
     /**
@@ -75,7 +70,7 @@ public final class GradleProject {
         return "java";
     }
 
-    GradleProject(GradleProjectBuilder builder) throws IOException {
+    GradleProject(GradleProjectSetup builder) throws IOException {
         this.origin = builder.origin();
         this.arguments = builder.arguments();
         this.runner = GradleRunner.create()
@@ -91,6 +86,14 @@ public final class GradleProject {
         writeBuildSrc();
         writeProtoFiles(builder.protoFileNames());
         writeJavaFiles(builder.javaFileNames());
+    }
+
+    /**
+     * Expose {@link GradleRunner} used by this Gradle project for finer tuning.
+     */
+    @SuppressWarnings("unused")
+    public GradleRunner runner() {
+        return runner;
     }
 
     private void writeGradleScripts() throws IOException {
@@ -109,36 +112,10 @@ public final class GradleProject {
     }
 
     private void writeBuildSrc() throws IOException {
-        Path projectRoot = RootProject.path();
-        Path buildSrc = projectRoot.resolve(buildSrcDir);
-        Path target = projectDir();
-        copyDir(buildSrc, target, new SkipNonSrcDirs());
+        Path targetDir = projectDir();
+        BuildSrc.writeTo(targetDir);
     }
 
-    /**
-     * The predicate to prevent copying unnecessary files when {@linkplain #writeBuildSrc() copying}
-     * the {@code buildSrc} directory.
-     *
-     * <p>The predicate 1) saves on unnecessary copying, 2) prevents file locking issue
-     * under Windows, which fails the build because locked under the {@code .gradle}
-     * directory could not be copied.
-     */
-
-    private static class SkipNonSrcDirs implements Predicate<Path> {
-
-        @Override
-        public boolean test(Path path) {
-            String str = path.toString();
-            String slash = File.separator;
-            // Use leading slash to accept `.gradle` files, but filter out the Gradle cache dir.
-            boolean isGradleCache = str.contains(slash + ".gradle");
-
-            // Use two slashes to accept `build.gradle.kts`, but filter out the `build` dir.
-            boolean isBuildDir = str.contains(slash + DirectoryName.build.value() + slash);
-            return !isGradleCache && !isBuildDir;
-        }
-
-    }
     private void writeProtoFiles(Multimap<SourceSetName, String> fileNames) throws IOException {
         for (Map.Entry<SourceSetName, String> protoFile : fileNames.entries()) {
             writeProto(protoFile.getKey(), protoFile.getValue());

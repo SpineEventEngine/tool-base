@@ -52,7 +52,13 @@ import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 
 /**
- * A builder for new {@code GradleProject}.
+ * Customizes a new {@code GradleProject}.
+ *
+ * @apiNote We avoid builder pattern naming around this class to avoid the confusion associated with
+ *         having a {@code build()} method in association with {@link GradleProject}.
+ *         This is caused by the fact that {@link GradleRunner} — which is used and
+ *         {@linkplain GradleProject#runner() exposed} by {@code GradleProject} — does have
+ *         the {@link GradleRunner#build() build()} method which executes a Gradle build.
  */
 @SuppressWarnings({
         "unused"  /* Some methods are used only in downstream repositories, e.g. `mc-java`.
@@ -61,7 +67,7 @@ import static java.util.Objects.requireNonNull;
           settled in their new repositories. */,
         "ClassWithTooManyMethods"}
 )
-public final class GradleProjectBuilder {
+public final class GradleProjectSetup {
 
     private final Multimap<SourceSetName, String> protoFileNames =
             MultimapBuilder.hashKeys()
@@ -97,14 +103,14 @@ public final class GradleProjectBuilder {
     private boolean addPluginUnderTestClasspath;
 
     /** Prevents direct instantiation of this class. */
-    GradleProjectBuilder() {
+    GradleProjectSetup() {
     }
 
     /**
      * Sets the name of the subdirectory under {@code resources} which contains files
      * for the project to be created.
      */
-    public GradleProjectBuilder setResourceOrigin(String name) {
+    public GradleProjectSetup setOrigin(String name) {
         this.origin = checkNotNull(name);
         return this;
     }
@@ -112,7 +118,7 @@ public final class GradleProjectBuilder {
     /**
      * Sets the directory on the file system under which the project will be created.
      */
-    public GradleProjectBuilder setProjectDir(File dir) {
+    public GradleProjectSetup setProjectDir(File dir) {
         this.dir = checkNotNull(dir);
         return this;
     }
@@ -123,9 +129,9 @@ public final class GradleProjectBuilder {
      *
      * @param fileName
      *         a name of the proto file relative to {@code src/main/proto} subdirectory
-     *         under the one specified in {@link #setResourceOrigin(String)}
+     *         under the one specified in {@link #setOrigin(String)}
      */
-    public GradleProjectBuilder addProtoFile(String fileName) {
+    public GradleProjectSetup addProtoFile(String fileName) {
         checkNotNull(fileName);
         checkNotEmptyOrBlank(fileName);
         return addProtoFile(main, fileName);
@@ -138,9 +144,9 @@ public final class GradleProjectBuilder {
      *         the name of the source set
      * @param fileName
      *         a name of the proto file relative to {@code src/SourceSetName/proto}
-     *         subdirectory under the one specified in {@link #setResourceOrigin(String)}
+     *         subdirectory under the one specified in {@link #setOrigin(String)}
      */
-    public GradleProjectBuilder addProtoFile(SourceSetName ssn, String fileName) {
+    public GradleProjectSetup addProtoFile(SourceSetName ssn, String fileName) {
         checkNotNull(ssn);
         checkNotNull(fileName);
         checkNotEmptyOrBlank(fileName);
@@ -154,7 +160,7 @@ public final class GradleProjectBuilder {
      *
      * @see #addProtoFile(String)
      */
-    public GradleProjectBuilder addProtoFiles(Collection<String> fileNames) {
+    public GradleProjectSetup addProtoFiles(Collection<String> fileNames) {
         checkNotNull(fileNames);
         return addProtoFiles(main, fileNames);
     }
@@ -165,7 +171,7 @@ public final class GradleProjectBuilder {
      *
      * @see #addProtoFile(String)
      */
-    public GradleProjectBuilder addProtoFiles(SourceSetName ssn, Collection<String> fileNames) {
+    public GradleProjectSetup addProtoFiles(SourceSetName ssn, Collection<String> fileNames) {
         checkNotNull(ssn);
         checkNotNull(fileNames);
         fileNames.forEach(fileName -> addProtoFile(ssn, fileName));
@@ -177,7 +183,7 @@ public final class GradleProjectBuilder {
      *
      * @see #addProtoFile(String)
      */
-    public GradleProjectBuilder addProtoFiles(String... fileNames) {
+    public GradleProjectSetup addProtoFiles(String... fileNames) {
         checkNotNull(fileNames);
         return addProtoFiles(ImmutableList.copyOf(fileNames));
     }
@@ -191,7 +197,7 @@ public final class GradleProjectBuilder {
      * @param lines
      *         the content of the file
      */
-    public GradleProjectBuilder createProto(String fileName, Iterable<String> lines) {
+    public GradleProjectSetup createProto(String fileName, Iterable<String> lines) {
         checkNotNull(fileName);
         checkNotNull(lines);
         return createProto(main, lines, fileName);
@@ -206,8 +212,8 @@ public final class GradleProjectBuilder {
      * @param lines
      *         the content of the file
      */
-    public GradleProjectBuilder createProto(SourceSetName ssn, Iterable<String> lines,
-                                            String fileName) {
+    public GradleProjectSetup createProto(SourceSetName ssn, Iterable<String> lines,
+                                          String fileName) {
         String path = GradleProject.protoDir(ssn) + fileName;
         return createFile(path, lines);
     }
@@ -218,9 +224,9 @@ public final class GradleProjectBuilder {
      *
      * @param fileNames
      *         names of the Java files relative to {@code src/main/java} subdirectory
-     *         under the one specified in {@link #setResourceOrigin(String)}
+     *         under the one specified in {@link #setOrigin(String)}
      */
-    public GradleProjectBuilder addJavaFiles(String... fileNames) {
+    public GradleProjectSetup addJavaFiles(String... fileNames) {
         checkNotNull(fileNames);
         return addJavaFiles(main, asList(fileNames));
     }
@@ -232,9 +238,9 @@ public final class GradleProjectBuilder {
      *         the name of the source set
      * @param fileNames
      *         names of the Java files relative to {@code src/main/java} subdirectory
-     *         under the one specified in {@link #setResourceOrigin(String)}
+     *         under the one specified in {@link #setOrigin(String)}
      */
-    public GradleProjectBuilder addJavaFiles(SourceSetName ssn, Iterable<String> fileNames) {
+    public GradleProjectSetup addJavaFiles(SourceSetName ssn, Iterable<String> fileNames) {
         checkNotNull(ssn);
         checkNotNull(fileNames);
         javaFileNames.putAll(ssn, fileNames);
@@ -249,7 +255,7 @@ public final class GradleProjectBuilder {
      * @param lines
      *         the content of the file
      */
-    public GradleProjectBuilder createFile(String path, Iterable<String> lines) {
+    public GradleProjectSetup createFile(String path, Iterable<String> lines) {
         checkNotNull(path);
         checkNotNull(lines);
         Path sourcePath = resolve(path);
@@ -283,7 +289,7 @@ public final class GradleProjectBuilder {
      * <p>Use this mode only for temporary debug purposes.
      * E.g. it should never get to e.g. CI server.
      */
-    public GradleProjectBuilder enableDebug() {
+    public GradleProjectSetup enableDebug() {
         this.arguments = arguments.withDebug();
         return this;
     }
@@ -293,7 +299,7 @@ public final class GradleProjectBuilder {
      *
      * @see GradleRunner#withPluginClasspath()
      */
-    public GradleProjectBuilder withPluginClasspath() {
+    public GradleProjectSetup withPluginClasspath() {
         this.addPluginUnderTestClasspath = true;
         return this;
     }
@@ -307,7 +313,7 @@ public final class GradleProjectBuilder {
      * @param value
      *         value of the property
      */
-    public GradleProjectBuilder withProperty(String name, String value) {
+    public GradleProjectSetup withProperty(String name, String value) {
         checkNotNull(name);
         checkNotNull(value);
         checkNotEmptyOrBlank(name);
@@ -320,13 +326,16 @@ public final class GradleProjectBuilder {
      *
      * <p>If not set, the variables are inherited.
      */
-    public GradleProjectBuilder withEnvironment(ImmutableMap<String, String> environment) {
+    public GradleProjectSetup withEnvironment(ImmutableMap<String, String> environment) {
         checkNotNull(environment);
         this.environment = environment;
         return this;
     }
 
-    public GradleProject build() {
+    /**
+     * Creates a new project on the file system.
+     */
+    public GradleProject create() {
         try {
             checkNotNull(origin, "Project name");
             checkNotNull(dir, "Project folder");
