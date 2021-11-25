@@ -23,49 +23,55 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package io.spine.tools.gragle.testing
 
-package io.spine.tools.gradle.testing;
+import com.google.common.collect.ImmutableMap
+import com.google.common.truth.Truth.assertThat
+import io.spine.tools.gradle.task.JavaTaskName.Companion.compileJava
+import io.spine.tools.gradle.testing.CliOption.Companion.debug
+import io.spine.tools.gradle.testing.CliOption.Companion.stacktrace
+import io.spine.tools.gradle.testing.RunnerArguments
+import org.junit.jupiter.api.Test
 
-import com.google.common.collect.ImmutableMap;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-import static com.google.common.truth.Truth.assertThat;
-import static io.spine.tools.gradle.task.JavaTaskName.compileJava;
-import static io.spine.tools.gradle.testing.RunnerArguments.DEBUG_CLI_OPTION;
-import static io.spine.tools.gradle.testing.RunnerArguments.STACKTRACE_CLI_OPTION;
-
-@DisplayName("`RunnerArguments` should")
-class RunnerArgumentsTest {
+class `'RunnerArguments' should contain` {
 
     @Test
-    @DisplayName("print task name")
-    void task() {
-        String[] args = RunnerArguments.mode(false)
-                                       .of(compileJava, ImmutableMap.of());
-        assertThat(args).asList()
-                        .containsExactly(compileJava.name(), STACKTRACE_CLI_OPTION);
+    fun `task name`() {
+        val args = RunnerArguments.mode(false)
+            .of(compileJava, ImmutableMap.of())
+        assertArgs(args).containsExactly(
+            compileJava.name(),
+            stacktrace.argument()
+        )
     }
 
     @Test
-    @DisplayName("print debug flag")
-    void debug() {
-        String[] args = RunnerArguments.mode(true)
-                                       .of(compileJava, ImmutableMap.of());
-        assertThat(args)
-                .asList()
-                .containsExactly(compileJava.name(), STACKTRACE_CLI_OPTION, DEBUG_CLI_OPTION);
+    fun `debug flag`() {
+        val args = RunnerArguments.mode(true)
+            .of(compileJava, ImmutableMap.of())
+        assertArgs(args)
+            .containsExactly(
+                compileJava.name(),
+                stacktrace.argument(),
+                debug.argument()
+            )
     }
 
     @Test
-    @DisplayName("print Gradle properties")
-    void properties() {
-        String[] args = RunnerArguments.mode(false).of(compileJava, ImmutableMap.of(
+    fun `Gradle properties`() {
+        val args = RunnerArguments.mode(false).of(
+            compileJava, ImmutableMap.of(
                 "foo1", "bar1",
                 "foo2", "bar2"
-        ));
-        assertThat(args).asList().containsExactly(
-                compileJava.name(), STACKTRACE_CLI_OPTION, "-Pfoo1=bar1", "-Pfoo2=bar2"
-        );
+            )
+        )
+        assertArgs(args).containsExactly(
+            compileJava.name(),
+            stacktrace.argument(),
+            "-Pfoo1=bar1",
+            "-Pfoo2=bar2"
+        )
     }
+
+    private fun assertArgs(args: Array<String>) = assertThat(args).asList()
 }

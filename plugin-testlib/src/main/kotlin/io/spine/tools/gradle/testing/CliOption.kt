@@ -23,44 +23,42 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package io.spine.tools.gradle.testing
 
-import com.google.common.collect.ImmutableMap
-import com.google.common.collect.Lists
-import io.spine.tools.gradle.task.TaskName
-import io.spine.tools.gradle.testing.CliOption.Companion.stacktrace
-
 /**
- * Create Gradle Runner arguments for a task.
+ * A command line option passed to a Gradle runner.
  */
-internal class RunnerArguments private constructor(
-    /** If `true`, the `debug` level of logging will be turned for a task.  */
-    private val debug: Boolean
-) {
+public data class CliOption(val name: String) {
 
-    companion object {
-
-        @JvmStatic
-        fun mode(debug: Boolean): RunnerArguments {
-            return RunnerArguments(debug)
-        }
+    init {
+        require(name.isNotEmpty())
+        require(name.isNotBlank())
     }
 
-    fun of(taskName: TaskName, properties: ImmutableMap<String, String>): Array<String> {
-        val task = taskName.name()
-        val result: MutableList<String> = Lists.newArrayList(task, stacktrace.toString())
-        if (debug) {
-            result.add(CliOption.debug.toString())
-        }
-        properties.forEach { (name: String?, property: String?) ->
-            result.add(
-                String.format(
-                    "-P%s=%s",
-                    name,
-                    property
-                )
-            )
-        }
-        return result.toTypedArray()
+    public companion object {
+
+        internal const val prefix = "--"
+
+        @JvmField
+        public val stacktrace: CliOption = CliOption("stacktrace")
+
+        @JvmField
+        public val debug: CliOption = CliOption("debug")
+
+        @JvmField
+        public val noDaemon: CliOption = CliOption("no-daemon")
     }
+
+    /**
+     * Obtains the name of this option prefixed with `--` to be used as command line argument.
+     */
+    public fun argument(): String = prefix + name
+
+    /**
+     * Obtains the value for passing in a command line.
+     *
+     * @see [argument]
+     */
+    public override fun toString(): String = argument()
 }

@@ -23,44 +23,27 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package io.spine.tools.gradle.testing
 
-import com.google.common.collect.ImmutableMap
-import com.google.common.collect.Lists
-import io.spine.tools.gradle.task.TaskName
+package io.spine.tools.gragle.testing
+
+import com.google.common.truth.Truth.assertThat
+import io.spine.tools.gradle.testing.CliOption
+import io.spine.tools.gradle.testing.CliOption.Companion.prefix
 import io.spine.tools.gradle.testing.CliOption.Companion.stacktrace
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
-/**
- * Create Gradle Runner arguments for a task.
- */
-internal class RunnerArguments private constructor(
-    /** If `true`, the `debug` level of logging will be turned for a task.  */
-    private val debug: Boolean
-) {
+class `'CliOption' should` {
 
-    companion object {
-
-        @JvmStatic
-        fun mode(debug: Boolean): RunnerArguments {
-            return RunnerArguments(debug)
-        }
+    @Test
+    fun `prohibit empty or blank values`() {
+        assertThrows<IllegalArgumentException> {  CliOption("") }
+        assertThrows<IllegalArgumentException> {  CliOption(" ") }
     }
 
-    fun of(taskName: TaskName, properties: ImmutableMap<String, String>): Array<String> {
-        val task = taskName.name()
-        val result: MutableList<String> = Lists.newArrayList(task, stacktrace.toString())
-        if (debug) {
-            result.add(CliOption.debug.toString())
-        }
-        properties.forEach { (name: String?, property: String?) ->
-            result.add(
-                String.format(
-                    "-P%s=%s",
-                    name,
-                    property
-                )
-            )
-        }
-        return result.toTypedArray()
+    @Test
+    fun `have prefix in string form`() {
+        assertThat(stacktrace.toString()).startsWith(prefix)
     }
+
 }
