@@ -32,17 +32,17 @@ import org.junit.jupiter.api.Test;
 
 import static com.google.common.truth.Truth.assertThat;
 import static io.spine.tools.gradle.task.JavaTaskName.compileJava;
-import static io.spine.tools.gradle.testing.TaskArguments.DEBUG_CLI_OPTION;
-import static io.spine.tools.gradle.testing.TaskArguments.STACKTRACE_CLI_OPTION;
+import static io.spine.tools.gradle.testing.RunnerArguments.DEBUG_CLI_OPTION;
+import static io.spine.tools.gradle.testing.RunnerArguments.STACKTRACE_CLI_OPTION;
 
-@DisplayName("`TaskArguments` should")
-class TaskArgumentsTest {
+@DisplayName("`RunnerArguments` should")
+class RunnerArgumentsTest {
 
     @Test
     @DisplayName("print task name")
     void task() {
-        String[] args = TaskArguments.mode(false)
-                                     .of(compileJava, ImmutableMap.of());
+        String[] args = RunnerArguments.mode(false)
+                                       .of(compileJava, ImmutableMap.of());
         assertThat(args).asList()
                         .containsExactly(compileJava.name(), STACKTRACE_CLI_OPTION);
     }
@@ -50,8 +50,8 @@ class TaskArgumentsTest {
     @Test
     @DisplayName("print debug flag")
     void debug() {
-        String[] args = TaskArguments.mode(true)
-                                     .of(compileJava, ImmutableMap.of());
+        String[] args = RunnerArguments.mode(true)
+                                       .of(compileJava, ImmutableMap.of());
         assertThat(args)
                 .asList()
                 .containsExactly(compileJava.name(), STACKTRACE_CLI_OPTION, DEBUG_CLI_OPTION);
@@ -60,7 +60,7 @@ class TaskArgumentsTest {
     @Test
     @DisplayName("print Gradle properties")
     void properties() {
-        String[] args = TaskArguments.mode(false).of(compileJava, ImmutableMap.of(
+        String[] args = RunnerArguments.mode(false).of(compileJava, ImmutableMap.of(
                 "foo1", "bar1",
                 "foo2", "bar2"
         ));

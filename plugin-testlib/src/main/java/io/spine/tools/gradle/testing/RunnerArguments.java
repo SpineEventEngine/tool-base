@@ -38,7 +38,7 @@ import static java.lang.String.format;
 /**
  * Create Gradle Runner arguments for a task.
  */
-final class TaskArguments {
+final class RunnerArguments {
 
     /** Gradle command line argument to turn stacktrace output. */
     @VisibleForTesting
@@ -54,11 +54,11 @@ final class TaskArguments {
     /** If true debug level of logging will be turned for a task. */
     private final boolean debug;
 
-    static TaskArguments mode(boolean debug) {
-        return new TaskArguments(debug);
+    static RunnerArguments mode(boolean debug) {
+        return new RunnerArguments(debug);
     }
 
-    private TaskArguments(boolean debug) {
+    private RunnerArguments(boolean debug) {
         this.debug = debug;
     }
 
