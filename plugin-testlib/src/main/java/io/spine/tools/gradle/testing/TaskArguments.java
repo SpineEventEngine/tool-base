@@ -62,15 +62,13 @@ final class TaskArguments {
         this.debug = debug;
     }
 
-    String[] of(TaskName taskName, ImmutableMap<String, String> gradleProperties) {
+    String[] of(TaskName taskName, ImmutableMap<String, String> properties) {
         String task = taskName.name();
         List<String> result = Lists.newArrayList(task, STACKTRACE_CLI_OPTION);
         if (debug) {
             result.add(DEBUG_CLI_OPTION);
         }
-        gradleProperties.forEach((name, property) -> {
-            result.add(format("-P%s=%s", name, property));
-        });
+        properties.forEach((name, property) -> result.add(format("-P%s=%s", name, property)));
         return result.toArray(OF_STRING);
     }
 }

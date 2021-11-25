@@ -72,9 +72,9 @@ public final class GradleProject {
     private static final String buildSrcDir = "buildSrc";
 
     private final String name;
-    private final GradleRunner gradleRunner;
+    private final GradleRunner runner;
     private final boolean debug;
-    private final ImmutableMap<String, String> gradleProperties;
+    private final ImmutableMap<String, String> properties;
 
     /**
      * Creates new builder for the project.
@@ -93,16 +93,16 @@ public final class GradleProject {
     private GradleProject(Builder builder) throws IOException {
         this.name = builder.name;
         this.debug = builder.debug;
-        this.gradleRunner = GradleRunner.create()
+        this.runner = GradleRunner.create()
                 .withProjectDir(builder.folder)
                 .withDebug(builder.debug);
         if (builder.addPluginUnderTestClasspath) {
-            gradleRunner.withPluginClasspath();
+            runner.withPluginClasspath();
         }
         if (builder.environment != null) {
-            gradleRunner.withEnvironment(builder.environment);
+            runner.withEnvironment(builder.environment);
         }
-        this.gradleProperties = ImmutableMap.copyOf(builder.gradleProperties);
+        this.properties = ImmutableMap.copyOf(builder.properties);
         writeGradleScripts();
         writeBuildSrc();
         writeProtoFiles(builder.protoFileNames);
@@ -183,8 +183,8 @@ public final class GradleProject {
 
     private GradleRunner prepareRun(TaskName taskName) {
         String[] args = TaskArguments.mode(debug)
-                                     .of(taskName, gradleProperties);
-        return gradleRunner.withArguments(args);
+                                     .of(taskName, properties);
+        return runner.withArguments(args);
     }
 
     private void writeProto(String fileName) throws IOException {
@@ -213,8 +213,8 @@ public final class GradleProject {
     }
 
     private Path projectRoot() {
-        return gradleRunner.getProjectDir()
-                           .toPath();
+        return runner.getProjectDir()
+                     .toPath();
     }
 
     /**
@@ -224,7 +224,7 @@ public final class GradleProject {
 
         private final List<String> protoFileNames = new ArrayList<>();
         private final List<String> javaFileNames = new ArrayList<>();
-        private final Map<String, String> gradleProperties = new HashMap<>();
+        private final Map<String, String> properties = new HashMap<>();
 
         private @Nullable ImmutableMap<String, String> environment;
         private String name;
@@ -260,7 +260,7 @@ public final class GradleProject {
         }
 
         /**
-         * Sets the name of the sub-directory under {@code resources} which contains files
+         * Sets the name of the subdirectory under {@code resources} which contains files
          * for the project to be created.
          */
         public Builder setProjectName(String name) {
@@ -316,7 +316,7 @@ public final class GradleProject {
          * Adds {@code .java} files to the project to be created.
          *
          * @param fileNames
-         *         names of the Java files relative to {@code src/main/java} sub-directory
+         *         names of the Java files relative to {@code src/main/java} subdirectory
          *         under the one specified in {@link #setProjectName(String)}
          */
         public Builder addJavaFiles(String... fileNames) {
@@ -348,7 +348,8 @@ public final class GradleProject {
         }
 
         /**
-         * Adds a Gradle property to be passed to the Gradle build.
+         * Adds a property to be passed to the Gradle build using
+         * the {@code "-P${name}=${value}"} command line option.
          *
          * @param name
          *         name of the property
@@ -358,7 +359,7 @@ public final class GradleProject {
         public Builder withProperty(String name, String value) {
             checkNotNull(name);
             checkNotNull(value);
-            this.gradleProperties.put(name, value);
+            this.properties.put(name, value);
             return this;
         }
 
