@@ -30,6 +30,7 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import io.spine.tools.fs.DirectoryName;
 import io.spine.tools.gradle.task.TaskName;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.gradle.testkit.runner.BuildResult;
@@ -140,20 +141,9 @@ public final class GradleProject {
             // Use leading slash to accept `.gradle` files, but filter out the Gradle cache dir.
             boolean isGradleCache = str.contains(slash + ".gradle");
 
-            /**
-             * The following block is commented out because not copying the `build`
-             * makes dependencies defined as Kotlin objects (see
-             * `buildSrc/src/main/kotlin/io/spine/internal/dependency`) unresolvable in
-             * Groovy-based Gradle scripts in tests.
-             *
-             * Uncomment the below block and the associated boolean operation in the `return`
-             * statement when resolving
-             * the [associated issue][https://github.com/SpineEventEngine/base/issues/655].
-             */
-//            // Use two slashes to accept `build.gradle.kts`, but filter out the `build` dir.
-//            @SuppressWarnings("DuplicateStringLiteralInspection")
-//            boolean isBuildDir = str.contains(slash + "build" + slash);
-            return !isGradleCache /*&& !isBuildDir*/;
+            // Use two slashes to accept `build.gradle.kts`, but filter out the `build` dir.
+            boolean isBuildDir = str.contains(slash + DirectoryName.build.value() + slash);
+            return !isGradleCache && !isBuildDir;
         }
     }
 
