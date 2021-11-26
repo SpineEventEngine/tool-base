@@ -32,6 +32,7 @@ import io.spine.io.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static io.spine.util.Exceptions.newIllegalStateException;
@@ -57,9 +58,11 @@ final class BuildGradle {
     /** The name of the Gradle Kotlin Script build file. */
     private static final String BUILD_GRADLE_KTS = "build.gradle.kts";
 
+    private final String origin;
     private final Path projectDir;
 
-    BuildGradle(Path projectDir) {
+    BuildGradle(String origin, Path projectDir) {
+        this.origin = checkNotNull(origin);
         this.projectDir = checkNotNull(projectDir);
     }
 
@@ -72,9 +75,15 @@ final class BuildGradle {
      *         if none of the build scripts were found in resources
      */
     void createFile() throws IOException {
+        Path originPath = Paths.get(origin);
         ClassLoader classLoader = getClass().getClassLoader();
-        Resource buildGradle = Resource.file(BUILD_GRADLE, classLoader);
-        Resource buildGradleKts = Resource.file(BUILD_GRADLE_KTS, classLoader);
+        Resource buildGradle = Resource.file(
+                originPath.resolve(BUILD_GRADLE).toString(),
+                classLoader
+        );
+        Resource buildGradleKts = Resource.file(
+                originPath.resolve(BUILD_GRADLE_KTS).toString(), classLoader
+        );
         Path targetPath;
         Resource file;
         if (buildGradle.exists()) {

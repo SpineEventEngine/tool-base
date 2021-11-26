@@ -48,7 +48,6 @@ import static io.spine.tools.gradle.testing.Sources.protoDir;
 import static io.spine.util.Exceptions.illegalStateWithCauseOf;
 import static io.spine.util.Preconditions2.checkNotEmptyOrBlank;
 import static java.util.Arrays.asList;
-import static java.util.Objects.requireNonNull;
 
 /**
  * Customizes a new {@code GradleProject}.
@@ -343,8 +342,13 @@ public final class GradleProjectSetup {
         }
     }
 
-    String origin() {
-        return requireNonNull(origin);
+    /**
+     * Obtains the previously configured resource origin.
+     *
+     * @return the origin or {@code null} if {@link #setOrigin(String)} was never called
+     */
+    @Nullable String origin() {
+        return origin;
     }
 
     @Nullable ImmutableMap<String, String> environment() {

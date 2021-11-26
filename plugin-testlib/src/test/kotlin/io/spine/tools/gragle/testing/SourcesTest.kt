@@ -23,25 +23,24 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package io.spine.tools.gragle.testing
 
-import com.google.common.truth.Truth.assertThat
-import io.spine.tools.gradle.task.JavaTaskName.Companion.compileJava
 import io.spine.tools.gradle.testing.GradleProject
 import io.spine.tools.gradle.testing.GradleProjectSetup
 import java.io.File
+import java.nio.file.Files.exists
 import java.nio.file.Path
-import org.gradle.testkit.runner.TaskOutcome
-import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
-class `'GradleProject' should` {
+class `'Sources' should` {
 
     companion object {
-        private const val origin = "gradle_project_test"
+        private const val origin = "sources_test"
     }
 
     private lateinit var projectDir: File
@@ -51,27 +50,43 @@ class `'GradleProject' should` {
     fun setUp(@TempDir tempDir: Path) {
         projectDir = tempDir.toFile()
         setup = GradleProject.setup(projectDir)
-            .setOrigin(origin)
     }
 
-    @Test
-    fun `be created by resource dir and project dir`() {
-        val project = setup.create()
-        assertNotNull(project)
+    private fun resolve(path: String): Path = projectDir.toPath().resolve(path)
+    private fun mainProto() = resolve("src/main/proto")
+    private fun mainJava() = resolve("src/main/java")
+
+    @Nested
+    inner class `load files from resources` {
+
+        @BeforeEach
+        fun setOrigin() {
+            setup.setOrigin(origin)
+        }
+
+        @Test
+        fun `by Java file names`() {
+            val files = arrayOf("Foo.java", "Bar.java")
+            setup.addJavaFiles(*files)
+                .create()
+            val mainJava = mainJava()
+            for (fileName in files) {
+                val file = mainJava.resolve(fileName)
+                assertExists(file)
+            }
+        }
+
+        @Test
+        fun `by Protobuf file names`() {
+            val protoFile = "main/code/empty.proto"
+            setup.addProtoFile(protoFile)
+                .create()
+            val mainProto = mainProto()
+            assertExists(mainProto.resolve(protoFile))
+        }
     }
 
-   @Test
-    @DisplayName("execute faulty build")
-    fun executeFaultyBuild() {
-        val project = setup.addJavaFiles("Faulty.java").create()
-
-        val buildResult = project.executeAndFail(compileJava)
-        assertNotNull(buildResult)
-
-        val compileTask = buildResult.task(compileJava.path())
-        assertNotNull(compileTask)
-
-        assertThat(compileTask!!.outcome)
-            .isEqualTo(TaskOutcome.FAILED)
+    private fun assertExists(file: Path) {
+        assertTrue(exists(file), "`${file}` does not exist.")
     }
 }

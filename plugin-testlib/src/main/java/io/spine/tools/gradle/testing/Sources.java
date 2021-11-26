@@ -67,7 +67,12 @@ final class Sources {
     }
 
     private String origin() {
-        return setup.origin();
+        String origin = setup.origin();
+        checkState(origin != null,
+                   "The project is not configured to load files from resources." +
+                           " Please call `%s.setOrigin(String)`.",
+                   GradleProjectSetup.class.getSimpleName());
+        return origin;
     }
 
     private Path projectDir() {
@@ -81,7 +86,7 @@ final class Sources {
 
     private void writeGradleScripts() throws IOException {
         Path projectDir = projectDir();
-        BuildGradle buildGradle = new BuildGradle(projectDir);
+        BuildGradle buildGradle = new BuildGradle(origin(), projectDir);
         buildGradle.createFile();
 
         TestEnvGradle testEnvGradle = new TestEnvGradle(projectDir);
