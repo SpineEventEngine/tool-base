@@ -26,14 +26,12 @@
 
 package io.spine.tools.gradle.testing;
 
-import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import io.spine.tools.gradle.SourceSetName;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.gradle.testkit.runner.GradleRunner;
 
@@ -41,14 +39,14 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static io.spine.tools.gradle.SourceSetName.main;
 import static io.spine.tools.gradle.testing.Sources.protoDir;
 import static io.spine.util.Exceptions.illegalStateWithCauseOf;
 import static io.spine.util.Preconditions2.checkNotEmptyOrBlank;
-import static java.nio.file.Files.createDirectories;
-import static java.nio.file.Files.write;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 
@@ -70,19 +68,21 @@ import static java.util.Objects.requireNonNull;
 )
 public final class GradleProjectSetup {
 
+    /** Path on the file system under which the project will be created. */
+    private final File projectDir;
+
     private final Multimap<SourceSetName, String> protoFileNames =
             MultimapBuilder.hashKeys()
                            .arrayListValues()
                            .build();
+
     private final Multimap<SourceSetName, String> javaFileNames =
             MultimapBuilder.hashKeys()
                            .arrayListValues()
                            .build();
 
-    /**
-     * Path on the file system under which the project will be created.
-     */
-    private final File projectDir;
+    /** Maps a relative name of a file to its content. */
+    private final Map<String, ImmutableList<String>> filesToCreate = new HashMap<>();
 
     /**
      * The name of the directory under {@code resources} for loading files of the project.
@@ -203,10 +203,10 @@ public final class GradleProjectSetup {
      * @param lines
      *         the content of the file
      */
-    public GradleProjectSetup createProto(String fileName, Iterable<String> lines) {
+    public GradleProjectSetup addProto(String fileName, Iterable<String> lines) {
         checkNotNull(fileName);
         checkNotNull(lines);
-        return createProto(main, fileName, lines);
+        return addProto(main, fileName, lines);
     }
 
     /**
@@ -218,14 +218,14 @@ public final class GradleProjectSetup {
      * @param lines
      *         the content of the file
      */
-    public GradleProjectSetup createProto(SourceSetName ssn,
-                                          String fileName,
-                                          Iterable<String> lines) {
+    public GradleProjectSetup addProto(SourceSetName ssn,
+                                       String fileName,
+                                       Iterable<String> lines) {
         checkNotNull(ssn);
         checkNotNull(fileName);
         checkNotNull(lines);
         String path = protoDir(ssn) + fileName;
-        return createFile(path, lines);
+        return addFile(path, lines);
     }
 
     /**
@@ -258,27 +258,20 @@ public final class GradleProjectSetup {
     }
 
     /**
-     * Creates a file in the project directory under the given path and with the given content.
+     * Creates a source code file with the given content.
      *
      * @param path
      *         the path to the file relative to the project root directory
      * @param lines
      *         the content of the file
      */
-    public GradleProjectSetup createFile(String path, Iterable<String> lines) {
+    public GradleProjectSetup addFile(String path, Iterable<String> lines) {
         checkNotNull(path);
         checkNotNull(lines);
-        Path sourcePath = resolve(path);
-        try {
-            createDirectories(sourcePath.getParent());
-            write(sourcePath, lines, Charsets.UTF_8);
-        } catch (IOException e) {
-            throw illegalStateWithCauseOf(e);
-        }
+        filesToCreate.put(path, ImmutableList.copyOf(lines));
         return this;
     }
 
-    @NonNull
     private Path resolve(String path) {
         Path sourcePath = projectDir.toPath()
                                     .resolve(path);
@@ -362,16 +355,6 @@ public final class GradleProjectSetup {
         return arguments;
     }
 
-    @SuppressWarnings("AssignmentOrReturnOfFieldWithMutableType") // OK in this builder arrangement.
-    Multimap<SourceSetName, String> protoFileNames() {
-        return protoFileNames;
-    }
-
-    @SuppressWarnings("AssignmentOrReturnOfFieldWithMutableType") // OK in this builder arrangement.
-    Multimap<SourceSetName, String> javaFileNames() {
-        return javaFileNames;
-    }
-
     File projectDir() {
         return projectDir;
     }
@@ -382,5 +365,20 @@ public final class GradleProjectSetup {
 
     boolean addPluginUnderTestClasspath() {
         return addPluginUnderTestClasspath;
+    }
+
+    @SuppressWarnings("AssignmentOrReturnOfFieldWithMutableType") // OK in this builder arrangement.
+    Multimap<SourceSetName, String> protoFileNames() {
+        return protoFileNames;
+    }
+
+    @SuppressWarnings("AssignmentOrReturnOfFieldWithMutableType") // OK in this builder arrangement.
+    Multimap<SourceSetName, String> javaFileNames() {
+        return javaFileNames;
+    }
+
+    @SuppressWarnings("AssignmentOrReturnOfFieldWithMutableType") // OK in this builder arrangement.
+    Map<String, ImmutableList<String>> filesToCreate() {
+        return filesToCreate;
     }
 }

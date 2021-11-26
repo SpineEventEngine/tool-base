@@ -26,16 +26,20 @@
 
 package io.spine.tools.gradle.testing;
 
+import com.google.common.base.Charsets;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import io.spine.tools.gradle.SourceSetName;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static io.spine.util.Exceptions.illegalStateWithCauseOf;
 import static java.lang.String.format;
 import static java.nio.file.Files.copy;
 import static java.nio.file.Files.createDirectories;
@@ -55,10 +59,11 @@ final class Sources {
      * Creates source code files for a new {@link GradleProject}.
      */
     void write() throws IOException {
-        writeBuildSrc();
+        copyBuildSrc();
         writeGradleScripts();
         writeProtoFiles(setup.protoFileNames());
         writeJavaFiles(setup.javaFileNames());
+        createFiles(setup.filesToCreate());
     }
 
     private String origin() {
@@ -67,6 +72,11 @@ final class Sources {
 
     private Path projectDir() {
         return setup.projectDir().toPath();
+    }
+
+    private Path resolve(String path) {
+        Path sourcePath = projectDir().resolve(path);
+        return sourcePath;
     }
 
     private void writeGradleScripts() throws IOException {
@@ -78,7 +88,7 @@ final class Sources {
         testEnvGradle.createFile();
     }
 
-    private void writeBuildSrc() throws IOException {
+    private void copyBuildSrc() throws IOException {
         BuildSrc.writeTo(projectDir());
     }
 
@@ -113,9 +123,8 @@ final class Sources {
     private void writeFile(String fileName, String dir) throws IOException {
         String filePath = dir + fileName;
         String resourcePath = origin() + '/' + filePath;
-        Path projectDir = projectDir();
         try (InputStream fileContent = openResource(resourcePath)) {
-            Path fileSystemPath = projectDir.resolve(filePath);
+            Path fileSystemPath = resolve(filePath);
             createDirectories(fileSystemPath.getParent());
             copy(fileContent, fileSystemPath);
         }
@@ -126,5 +135,19 @@ final class Sources {
                                        .getResourceAsStream(fullPath);
         checkState(stream != null, "Unable to locate resource: `%s`.", fullPath);
         return stream;
+    }
+
+    private void createFiles(Map<String, ImmutableList<String>> files) {
+        files.forEach(this::createFile);
+    }
+
+    private void createFile(String path, Iterable<String> lines) {
+        Path sourcePath = resolve(path);
+        try {
+            createDirectories(sourcePath.getParent());
+            Files.write(sourcePath, lines, Charsets.UTF_8);
+        } catch (IOException e) {
+            throw illegalStateWithCauseOf(e);
+        }
     }
 }
