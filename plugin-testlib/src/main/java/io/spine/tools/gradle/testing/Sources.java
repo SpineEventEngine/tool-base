@@ -69,7 +69,7 @@ final class Sources {
     }
 
     private String origin() {
-        String origin = setup.origin();
+        String origin = setup.resourceDir();
         checkState(origin != null,
                    "The project is not configured to load files from resources." +
                            " Please call `%s.setOrigin(String)`.",

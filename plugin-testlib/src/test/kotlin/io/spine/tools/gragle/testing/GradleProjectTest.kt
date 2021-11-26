@@ -50,8 +50,7 @@ class `'GradleProject' should` {
     @BeforeEach
     fun setUp(@TempDir tempDir: Path) {
         projectDir = tempDir.toFile()
-        setup = GradleProject.setup(projectDir)
-            .setOrigin(origin)
+        setup = GradleProject.setupAt(projectDir).fromResources(origin)
     }
 
     @Test

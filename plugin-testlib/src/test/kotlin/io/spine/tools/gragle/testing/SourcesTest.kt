@@ -49,7 +49,7 @@ class `'Sources' should` {
     @BeforeEach
     fun setUp(@TempDir tempDir: Path) {
         projectDir = tempDir.toFile()
-        setup = GradleProject.setup(projectDir)
+        setup = GradleProject.setupAt(projectDir)
     }
 
     private fun resolve(path: String): Path = projectDir.toPath().resolve(path)
@@ -61,7 +61,7 @@ class `'Sources' should` {
 
         @BeforeEach
         fun setOrigin() {
-            setup.setOrigin(origin)
+            setup.fromResources(origin)
         }
 
         @Test

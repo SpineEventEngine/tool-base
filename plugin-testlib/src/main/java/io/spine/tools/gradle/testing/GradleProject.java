@@ -53,7 +53,7 @@ public final class GradleProject {
      *         the name of the directory on the file system under which the project
      *         will be created
      */
-    public static GradleProjectSetup setup(File projectDir) {
+    public static GradleProjectSetup setupAt(File projectDir) {
         checkNotNull(projectDir);
         return new GradleProjectSetup(projectDir);
     }

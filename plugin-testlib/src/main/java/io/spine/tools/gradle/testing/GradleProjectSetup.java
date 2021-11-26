@@ -88,7 +88,7 @@ public final class GradleProjectSetup {
      *
      * <p>Is {@code null} if files will be created on the fly.
      */
-    private @MonotonicNonNull String origin;
+    private @MonotonicNonNull String resourceDir;
 
     private @Nullable ImmutableMap<String, String> environment;
 
@@ -129,8 +129,8 @@ public final class GradleProjectSetup {
      * Sets the name of the resource directory from which to load files of
      * the project to be created.
      */
-    public GradleProjectSetup setOrigin(String origin) {
-        this.origin = checkNotNull(origin);
+    public GradleProjectSetup fromResources(String resourceDir) {
+        this.resourceDir = checkNotNull(resourceDir);
         return this;
     }
 
@@ -140,7 +140,7 @@ public final class GradleProjectSetup {
      *
      * @param fileName
      *         a name of the proto file relative to {@code src/main/proto} subdirectory
-     *         under the one specified in {@link #setOrigin(String)}
+     *         under the one specified in {@link #fromResources(String)}
      */
     public GradleProjectSetup addProtoFile(String fileName) {
         checkNotNull(fileName);
@@ -155,7 +155,7 @@ public final class GradleProjectSetup {
      *         the name of the source set
      * @param fileName
      *         a name of the proto file relative to {@code src/SourceSetName/proto}
-     *         subdirectory under the one specified in {@link #setOrigin(String)}
+     *         subdirectory under the one specified in {@link #fromResources(String)}
      */
     public GradleProjectSetup addProtoFile(SourceSetName ssn, String fileName) {
         checkNotNull(ssn);
@@ -239,7 +239,7 @@ public final class GradleProjectSetup {
      *
      * @param fileNames
      *         names of the Java files relative to {@code src/main/java} subdirectory
-     *         under the one specified in {@link #setOrigin(String)}
+     *         under the one specified in {@link #fromResources(String)}
      */
     public GradleProjectSetup addJavaFiles(String... fileNames) {
         checkNotNull(fileNames);
@@ -253,7 +253,7 @@ public final class GradleProjectSetup {
      *         the name of the source set
      * @param fileNames
      *         names of the Java files relative to {@code src/main/java} subdirectory
-     *         under the one specified in {@link #setOrigin(String)}
+     *         under the one specified in {@link #fromResources(String)}
      */
     public GradleProjectSetup addJavaFiles(SourceSetName ssn, Iterable<String> fileNames) {
         checkNotNull(ssn);
@@ -360,10 +360,10 @@ public final class GradleProjectSetup {
     /**
      * Obtains the previously configured resource origin.
      *
-     * @return the origin or {@code null} if {@link #setOrigin(String)} was never called
+     * @return the origin or {@code null} if {@link #fromResources(String)} was never called
      */
-    @Nullable String origin() {
-        return origin;
+    @Nullable String resourceDir() {
+        return resourceDir;
     }
 
     @Nullable ImmutableMap<String, String> environment() {

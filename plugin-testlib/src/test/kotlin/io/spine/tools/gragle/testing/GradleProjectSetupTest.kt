@@ -36,7 +36,7 @@ class `'GradleProjectSetup' should` {
 
     @Test
     fun `not accept 'null' arguments`(@TempDir tmpDir: File) {
-        val instance = GradleProject.setup(tmpDir)
+        val instance = GradleProject.setupAt(tmpDir)
         NullPointerTester().testAllPublicInstanceMethods(instance)
     }
 }
