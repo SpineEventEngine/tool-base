@@ -59,7 +59,9 @@ final class Sources {
      * Creates source code files for a new {@link GradleProject}.
      */
     void write() throws IOException {
-        copyBuildSrc();
+        if (setup.needsBuildSrc()) {
+            copyBuildSrc();
+        }
         writeGradleScripts();
         writeProtoFiles(setup.protoFileNames());
         writeJavaFiles(setup.javaFileNames());

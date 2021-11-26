@@ -94,6 +94,12 @@ public final class GradleProjectSetup {
 
     private RunnerArguments arguments = new RunnerArguments();
 
+    /**
+     * If set, the {@code buildSrc} directory will be copied from the root project
+     * into the directory of the project to be created.
+     */
+    private boolean needsBuildSrc;
+
     /** The flag to be passed to {@link GradleRunner#withDebug(boolean)}. */
     private boolean debug;
 
@@ -293,6 +299,15 @@ public final class GradleProjectSetup {
     }
 
     /**
+     * Instructs to copy the {@code buildSrc} directory from the parent project
+     * into the directory of the project to be created.
+     */
+    public GradleProjectSetup copyBuildSrc() {
+        this.needsBuildSrc = true;
+        return this;
+    }
+
+    /**
      * Configures this runner to include the plugin under development into the classpath.
      *
      * @see GradleRunner#withPluginClasspath()
@@ -365,6 +380,10 @@ public final class GradleProjectSetup {
 
     boolean debug() {
         return debug;
+    }
+
+    boolean needsBuildSrc() {
+        return needsBuildSrc;
     }
 
     boolean addPluginUnderTestClasspath() {
