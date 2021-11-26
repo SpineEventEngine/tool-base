@@ -78,20 +78,19 @@ final class BuildGradle {
         Path originPath = Paths.get(origin);
         ClassLoader classLoader = getClass().getClassLoader();
         Resource buildGradle = Resource.file(
-                originPath.resolve(BUILD_GRADLE).toString(),
-                classLoader
+                originPath.resolve(BUILD_GRADLE).toString(), classLoader
         );
         Resource buildGradleKts = Resource.file(
                 originPath.resolve(BUILD_GRADLE_KTS).toString(), classLoader
         );
         Path targetPath;
-        Resource file;
+        Resource resource;
         if (buildGradle.exists()) {
             targetPath = projectDir.resolve(BUILD_GRADLE);
-            file = buildGradle;
+            resource = buildGradle;
         } else if (buildGradleKts.exists()) {
             targetPath = projectDir.resolve(BUILD_GRADLE_KTS);
-            file = buildGradleKts;
+            resource = buildGradleKts;
         } else {
             throw newIllegalStateException(
                     "Neither `%s` nor `%s` were found in resources.",
@@ -99,7 +98,7 @@ final class BuildGradle {
             );
         }
 
-        try (InputStream fileContent = file.open()) {
+        try (InputStream fileContent = resource.open()) {
             createDirectories(targetPath.getParent());
             checkNotNull(fileContent);
             copy(fileContent, targetPath);
