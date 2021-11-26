@@ -78,7 +78,7 @@ class `'Sources' should` {
 
         @Test
         fun `by Protobuf file names`() {
-            val protoFile = "main/code/empty.proto"
+            val protoFile = "prod/code/empty.proto"
             setup.addProtoFile(protoFile)
                 .create()
             val mainProto = mainProto()
