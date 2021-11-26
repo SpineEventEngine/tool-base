@@ -79,8 +79,18 @@ public final class GradleProjectSetup {
                            .arrayListValues()
                            .build();
 
+    /**
+     * Path on the file system under which the project will be created.
+     */
+    private final File projectDir;
+
+    /**
+     * The name of the directory under {@code resources} for loading files of the project.
+     *
+     * <p>Is {@code null} if files will be created on the fly.
+     */
     private @MonotonicNonNull String origin;
-    private @MonotonicNonNull File dir;
+
     private @Nullable ImmutableMap<String, String> environment;
 
     private RunnerArguments arguments = new RunnerArguments();
@@ -103,24 +113,19 @@ public final class GradleProjectSetup {
      */
     private boolean addPluginUnderTestClasspath;
 
-    /** Prevents direct instantiation of this class. */
-    GradleProjectSetup() {
+    /**
+     * Creates a new instance with the specified project directory.
+     */
+    GradleProjectSetup(File projectDir) {
+        this.projectDir = checkNotNull(projectDir);
     }
 
     /**
-     * Sets the name of the subdirectory under {@code resources} which contains files
-     * for the project to be created.
+     * Sets the name of the resource directory from which to load files of
+     * the project to be created.
      */
-    public GradleProjectSetup setOrigin(String name) {
-        this.origin = checkNotNull(name);
-        return this;
-    }
-
-    /**
-     * Sets the directory on the file system under which the project will be created.
-     */
-    public GradleProjectSetup setProjectDir(File dir) {
-        this.dir = checkNotNull(dir);
+    public GradleProjectSetup setOrigin(String origin) {
+        this.origin = checkNotNull(origin);
         return this;
     }
 
@@ -201,20 +206,24 @@ public final class GradleProjectSetup {
     public GradleProjectSetup createProto(String fileName, Iterable<String> lines) {
         checkNotNull(fileName);
         checkNotNull(lines);
-        return createProto(main, lines, fileName);
+        return createProto(main, fileName, lines);
     }
 
     /**
      * Creates a {@code .proto} source file with the given name and content
-     * in the the specified source set of the project.
+     * in the specified source set of the project.
      *
      * @param fileName
      *         the name of the file relative to {@code src/SourceSetName/proto} directory
      * @param lines
      *         the content of the file
      */
-    public GradleProjectSetup createProto(SourceSetName ssn, Iterable<String> lines,
-                                          String fileName) {
+    public GradleProjectSetup createProto(SourceSetName ssn,
+                                          String fileName,
+                                          Iterable<String> lines) {
+        checkNotNull(ssn);
+        checkNotNull(fileName);
+        checkNotNull(lines);
         String path = protoDir(ssn) + fileName;
         return createFile(path, lines);
     }
@@ -271,12 +280,8 @@ public final class GradleProjectSetup {
 
     @NonNull
     private Path resolve(String path) {
-        checkNotNull(
-                dir,
-                "A project directory is not specified. Please call `setProjectDir(File)`."
-        );
-        Path sourcePath = dir.toPath()
-                             .resolve(path);
+        Path sourcePath = projectDir.toPath()
+                                    .resolve(path);
         return sourcePath;
     }
 
@@ -338,8 +343,6 @@ public final class GradleProjectSetup {
      */
     public GradleProject create() {
         try {
-            checkNotNull(origin, "Project name");
-            checkNotNull(dir, "Project folder");
             GradleProject result = new GradleProject(this);
             return result;
         } catch (IOException e) {
@@ -369,8 +372,8 @@ public final class GradleProjectSetup {
         return javaFileNames;
     }
 
-    File dir() {
-        return dir;
+    File projectDir() {
+        return projectDir;
     }
 
     boolean debug() {

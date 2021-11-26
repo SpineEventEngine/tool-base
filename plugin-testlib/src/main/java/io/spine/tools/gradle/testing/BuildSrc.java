@@ -49,8 +49,8 @@ final class BuildSrc {
      * the specified directory.
      */
     static void writeTo(Path targetDir) throws IOException {
-        Path projectRoot = RootProject.path();
-        Path buildSrc = projectRoot.resolve("buildSrc");
+        Path rootPath = RootProject.path();
+        Path buildSrc = rootPath.resolve("buildSrc");
         copyDir(buildSrc, targetDir, new SkipNonSrcDirs());
     }
 

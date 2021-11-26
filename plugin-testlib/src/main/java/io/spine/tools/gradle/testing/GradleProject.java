@@ -31,7 +31,10 @@ import io.spine.tools.gradle.task.TaskName;
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
 
+import java.io.File;
 import java.io.IOException;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Allows to configure a Gradle project for testing needs.
@@ -44,10 +47,15 @@ public final class GradleProject {
     private final RunnerArguments arguments;
 
     /**
-     * Creates new builder for the project.
+     * Starts creation of a new the project.
+     *
+     * @param projectDir
+     *         the name of the directory on the file system under which the project
+     *         will be created
      */
-    public static GradleProjectSetup fromResources() {
-        return new GradleProjectSetup();
+    public static GradleProjectSetup setup(File projectDir) {
+        checkNotNull(projectDir);
+        return new GradleProjectSetup(projectDir);
     }
 
     /**
@@ -60,7 +68,7 @@ public final class GradleProject {
     GradleProject(GradleProjectSetup setup) throws IOException {
         this.arguments = setup.arguments();
         this.runner = GradleRunner.create()
-                .withProjectDir(setup.dir())
+                .withProjectDir(setup.projectDir())
                 .withDebug(setup.debug());
         if (setup.addPluginUnderTestClasspath()) {
             runner.withPluginClasspath();

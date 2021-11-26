@@ -66,7 +66,7 @@ final class Sources {
     }
 
     private Path projectDir() {
-        return setup.dir().toPath();
+        return setup.projectDir().toPath();
     }
 
     private void writeGradleScripts() throws IOException {

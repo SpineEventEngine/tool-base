@@ -46,15 +46,14 @@ class `'GradleProject' should` {
         private const val resourceDir = "gradle_project_test"
     }
 
-    private lateinit var temporaryFolder: File
+    private lateinit var projectDir: File
     private lateinit var setup: GradleProjectSetup
 
     @BeforeEach
-    fun setUp(@TempDir tempDirPath: Path) {
-        temporaryFolder = tempDirPath.toFile()
-        setup = GradleProject.fromResources()
+    fun setUp(@TempDir tempDir: Path) {
+        projectDir = tempDir.toFile()
+        setup = GradleProject.setup(projectDir)
             .setOrigin(resourceDir)
-            .setProjectDir(temporaryFolder)
     }
 
     @Test
@@ -68,7 +67,7 @@ class `'GradleProject' should` {
         val files = arrayOf("Foo.java", "Bar.java")
         setup.addJavaFiles(*files)
             .create()
-        val root = temporaryFolder.toPath()
+        val root = projectDir.toPath()
             .resolve("src")
             .resolve("main")
             .resolve("java")

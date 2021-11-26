@@ -28,13 +28,15 @@ package io.spine.tools.gragle.testing
 
 import com.google.common.testing.NullPointerTester
 import io.spine.tools.gradle.testing.GradleProject
+import java.io.File
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 
 class `'GradleProjectSetup' should` {
 
     @Test
-    fun `not accept 'null' arguments`() {
-        val instance = GradleProject.fromResources()
+    fun `not accept 'null' arguments`(@TempDir tmpDir: File) {
+        val instance = GradleProject.setup(tmpDir)
         NullPointerTester().testAllPublicInstanceMethods(instance)
     }
 }
