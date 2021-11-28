@@ -27,20 +27,19 @@
 package io.spine.tools.gradle.testing;
 
 import com.google.common.base.Charsets;
-import com.google.common.collect.ImmutableList;
 import io.spine.io.ResourceDirectory;
 import io.spine.tools.gradle.SourceSetName;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static io.spine.util.Exceptions.illegalStateWithCauseOf;
 import static java.lang.String.format;
 import static java.nio.file.Files.createDirectories;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Handles writing all source code for a new {@link GradleProject}.
@@ -53,20 +52,26 @@ final class Sources {
         this.setup = checkNotNull(setup);
     }
 
-    /**
-     * Creates source code files for a new {@link GradleProject}.
-     */
+    private Path projectDir() {
+        return setup.projectDir().toPath();
+    }
+
+    static String protoDir(SourceSetName ssn) {
+        return format("src/%s/proto/", ssn);
+    }
+
+    /** Creates source code files for a new {@link GradleProject}. */
     void write() throws IOException {
+        copyBuildSrc();
+        createTestEnv();
+        copyFromResources();
+        createFiles();
+    }
+
+    private void copyBuildSrc() throws IOException {
         if (setup.needsBuildSrc()) {
             BuildSrc.writeTo(projectDir());
         }
-        createTestEnv();
-        copyFromResources();
-        createFiles(setup.filesToCreate());
-    }
-
-    private Path projectDir() {
-        return setup.projectDir().toPath();
     }
 
     private void createTestEnv() throws IOException {
@@ -75,27 +80,29 @@ final class Sources {
         testEnvGradle.createFile();
     }
 
-    static String protoDir(SourceSetName ssn) {
-        return format("src/%s/proto/", ssn);
+    private void copyFromResources() throws IOException {
+        if (resourceDirSet()) {
+            ClassLoader classLoader = getClass().getClassLoader();
+            ResourceDirectory directory = ResourceDirectory.get(origin(), classLoader);
+            directory.copyContentTo(projectDir(), setup.matching());
+        }
     }
 
-    private void copyFromResources() throws IOException {
-        ClassLoader classLoader = getClass().getClassLoader();
-        ResourceDirectory directory = ResourceDirectory.get(origin(), classLoader);
-        directory.copyContentTo(projectDir(), setup.matching());
+    private boolean resourceDirSet() {
+        return setup.resourceDir() != null;
     }
 
     private String origin() {
-        String resourceDir = setup.resourceDir();
-        checkState(resourceDir != null,
+        checkState(resourceDirSet(),
                    "The project is not configured to load files from resources." +
                            " Please call `%s.setOrigin(String)`.",
                    GradleProjectSetup.class.getSimpleName());
-        return resourceDir;
+        return requireNonNull(setup.resourceDir());
     }
 
-    private void createFiles(Map<String, ImmutableList<String>> files) {
-        files.forEach(this::createFile);
+    private void createFiles() {
+        setup.filesToCreate()
+             .forEach(this::createFile);
     }
 
     private void createFile(String path, Iterable<String> lines) {

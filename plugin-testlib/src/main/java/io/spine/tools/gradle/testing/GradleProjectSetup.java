@@ -429,6 +429,14 @@ public final class GradleProjectSetup {
         return javaFileNames;
     }
 
+    /**
+     * Provides mapping from file paths to their content.
+     *
+     * <p>Keys of the returned map are file paths relative the directory
+     * of the project to be created.
+     *
+     * <p>Values of the returned map are lines of the files to be created.
+     */
     @SuppressWarnings("AssignmentOrReturnOfFieldWithMutableType") // OK in this builder arrangement.
     Map<String, ImmutableList<String>> filesToCreate() {
         return filesToCreate;
