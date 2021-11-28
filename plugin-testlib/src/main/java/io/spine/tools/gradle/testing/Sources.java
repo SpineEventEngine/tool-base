@@ -28,11 +28,10 @@ package io.spine.tools.gradle.testing;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Multimap;
+import io.spine.io.ResourceDirectory;
 import io.spine.tools.gradle.SourceSetName;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
@@ -41,7 +40,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static io.spine.util.Exceptions.illegalStateWithCauseOf;
 import static java.lang.String.format;
-import static java.nio.file.Files.copy;
 import static java.nio.file.Files.createDirectories;
 
 /**
@@ -60,88 +58,40 @@ final class Sources {
      */
     void write() throws IOException {
         if (setup.needsBuildSrc()) {
-            copyBuildSrc();
+            BuildSrc.writeTo(projectDir());
         }
-        writeGradleScripts();
-        writeProtoFiles(setup.protoFileNames());
-        writeJavaFiles(setup.javaFileNames());
+        createTestEnv();
+        copyFromResources();
         createFiles(setup.filesToCreate());
-    }
-
-    private String origin() {
-        String origin = setup.resourceDir();
-        checkState(origin != null,
-                   "The project is not configured to load files from resources." +
-                           " Please call `%s.setOrigin(String)`.",
-                   GradleProjectSetup.class.getSimpleName());
-        return origin;
     }
 
     private Path projectDir() {
         return setup.projectDir().toPath();
     }
 
-    private Path resolve(String path) {
-        Path sourcePath = projectDir().resolve(path);
-        return sourcePath;
-    }
-
-    private void writeGradleScripts() throws IOException {
+    private void createTestEnv() throws IOException {
         Path projectDir = projectDir();
-        BuildGradle buildGradle = new BuildGradle(origin(), projectDir);
-        buildGradle.createFile();
-
         TestEnvGradle testEnvGradle = new TestEnvGradle(projectDir);
         testEnvGradle.createFile();
-    }
-
-    private void copyBuildSrc() throws IOException {
-        BuildSrc.writeTo(projectDir());
-    }
-
-    private void writeProtoFiles(Multimap<SourceSetName, String> fileNames) throws IOException {
-        for (Map.Entry<SourceSetName, String> protoFile : fileNames.entries()) {
-            writeProto(protoFile.getKey(), protoFile.getValue());
-        }
-    }
-
-    private void writeJavaFiles(Multimap<SourceSetName, String> fileNames) throws IOException {
-        for (Map.Entry<SourceSetName, String> javaFile : fileNames.entries()) {
-            writeJava(javaFile.getKey(), javaFile.getValue());
-        }
-    }
-
-    private void writeProto(SourceSetName ssn, String fileName) throws IOException {
-        writeFile(fileName, protoDir(ssn));
     }
 
     static String protoDir(SourceSetName ssn) {
         return format("src/%s/proto/", ssn);
     }
 
-    private void writeJava(SourceSetName ssn, String fileName) throws IOException {
-        writeFile(fileName, javaDir(ssn));
+    private void copyFromResources() throws IOException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        ResourceDirectory directory = ResourceDirectory.get(origin(), classLoader);
+        directory.copyContentTo(projectDir());
     }
 
-    private static String javaDir(SourceSetName ssn) {
-        return format("src/%s/java/", ssn);
-    }
-
-    private void writeFile(String fileName, String dir) throws IOException {
-        String filePath = dir + fileName;
-        String resourcePath = origin() + '/' + filePath;
-        try (InputStream fileContent = openResource(resourcePath)) {
-            Path fileSystemPath = resolve(filePath);
-            createDirectories(fileSystemPath.getParent());
-            copy(fileContent, fileSystemPath);
-        }
-    }
-
-    private InputStream openResource(String fullPath) {
-        InputStream stream = getClass().getClassLoader()
-                                       .getResourceAsStream(fullPath);
-        checkState(stream != null, "Unable to locate resource: `%s`.", fullPath);
-        return stream;
+    private String origin() {
+        String resourceDir = setup.resourceDir();
+        checkState(resourceDir != null,
+                   "The project is not configured to load files from resources." +
+                           " Please call `%s.setOrigin(String)`.",
+                   GradleProjectSetup.class.getSimpleName());
+        return resourceDir;
     }
 
     private void createFiles(Map<String, ImmutableList<String>> files) {
@@ -156,5 +106,10 @@ final class Sources {
         } catch (IOException e) {
             throw illegalStateWithCauseOf(e);
         }
+    }
+
+    private Path resolve(String path) {
+        Path sourcePath = projectDir().resolve(path);
+        return sourcePath;
     }
 }
