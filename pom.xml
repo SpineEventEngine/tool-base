@@ -149,7 +149,7 @@ all modules and does not describe the project structure per-subproject.
   <dependency>
     <groupId>com.puppycrawl.tools</groupId>
     <artifactId>checkstyle</artifactId>
-    <version>8.29</version>
+    <version>9.1</version>
   </dependency>
   <dependency>
     <groupId>net.sourceforge.pmd</groupId>
