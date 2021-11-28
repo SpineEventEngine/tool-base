@@ -82,7 +82,7 @@ final class Sources {
     private void copyFromResources() throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
         ResourceDirectory directory = ResourceDirectory.get(origin(), classLoader);
-        directory.copyContentTo(projectDir());
+        directory.copyContentTo(projectDir(), setup.matching());
     }
 
     private String origin() {

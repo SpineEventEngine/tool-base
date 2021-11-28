@@ -41,6 +41,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static io.spine.tools.gradle.SourceSetName.main;
@@ -90,6 +91,11 @@ public final class GradleProjectSetup {
      */
     private @MonotonicNonNull String resourceDir;
 
+    /**
+     * The predicate to accept resources from the {@link #resourceDir()}.
+     */
+    private Predicate<Path> matching = path -> true;
+
     private @Nullable ImmutableMap<String, String> environment;
 
     private RunnerArguments arguments = new RunnerArguments();
@@ -130,7 +136,20 @@ public final class GradleProjectSetup {
      * the project to be created.
      */
     public GradleProjectSetup fromResources(String resourceDir) {
+        return fromResources(resourceDir, path -> true);
+    }
+
+    /**
+     * Sets the name of the resource directory and the predicate which accepts the files
+     * from the specified directory for copying to the project to be created.
+     *
+     * <p>Only files and directories that belong to the {@code resourceDir} would be passed to
+     * the {@code matching} predicate when creating the project in response to
+     * the {@link #create()} method is call.
+     */
+    public GradleProjectSetup fromResources(String resourceDir, Predicate<Path> matching) {
         this.resourceDir = checkNotNull(resourceDir);
+        this.matching = checkNotNull(matching);
         return this;
     }
 
@@ -376,6 +395,10 @@ public final class GradleProjectSetup {
 
     File projectDir() {
         return projectDir;
+    }
+
+    Predicate<Path> matching() {
+        return matching;
     }
 
     boolean debug() {
