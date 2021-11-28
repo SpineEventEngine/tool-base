@@ -26,6 +26,7 @@
 
 package io.spine.tools.gradle.testing;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
@@ -411,6 +412,11 @@ public final class GradleProjectSetup {
 
     boolean addPluginUnderTestClasspath() {
         return addPluginUnderTestClasspath;
+    }
+
+    @VisibleForTesting
+    public Path testEnvPath() {
+        return new TestEnvGradle(projectDir.toPath()).path();
     }
 
     @SuppressWarnings("AssignmentOrReturnOfFieldWithMutableType") // OK in this builder arrangement.

@@ -26,6 +26,7 @@
 
 package io.spine.tools.gradle.testing;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 
 import java.io.IOException;
@@ -44,25 +45,30 @@ import static java.lang.String.format;
 final class TestEnvGradle {
 
     private static final String VAR_NAME = "enclosingRootDir";
-    private static final String FILE_NAME = "test-env.gradle";
+    @VisibleForTesting
+    static final String FILE_NAME = "test-env.gradle";
 
-    private final Path projectRoot;
-    private final Path testProjectRoot;
+    private final Path rootProjectDir;
+    private final Path projectDir;
 
-    TestEnvGradle(Path testProjectRoot) {
-        this.projectRoot = RootProject.path();
-        this.testProjectRoot = testProjectRoot;
+    TestEnvGradle(Path projectDir) {
+        this.rootProjectDir = RootProject.path();
+        this.projectDir = projectDir;
     }
 
     void createFile() throws IOException {
-        Path testEnvFile = testProjectRoot.resolve(FILE_NAME);
+        Path testEnvFile = path();
         List<String> lines = content();
         Files.write(testEnvFile, lines);
     }
 
+    Path path() {
+        return projectDir.resolve(FILE_NAME);
+    }
+
     private List<String> content() {
-        String unixLikeRootPath = projectRoot.toString()
-                                             .replace('\\', '/');
+        String unixLikeRootPath = rootProjectDir.toString()
+                                                .replace('\\', '/');
         List<String> lines = ImmutableList.of(
                 "ext {",
                 format("    %s = '%s'", VAR_NAME, unixLikeRootPath),
