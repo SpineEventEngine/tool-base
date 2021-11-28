@@ -28,15 +28,83 @@ package io.spine.tools.gragle.testing
 
 import com.google.common.testing.NullPointerTester
 import io.spine.tools.gradle.testing.GradleProject
+import io.spine.tools.gradle.testing.GradleProjectSetup
 import java.io.File
+import java.nio.file.Files.exists
+import java.nio.file.Path
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
 class `'GradleProjectSetup' should` {
 
+    companion object {
+        private const val origin = "sources_test"
+    }
+
+    private lateinit var projectDir: File
+    private lateinit var setup: GradleProjectSetup
+
+    @BeforeEach
+    fun setUp(@TempDir tempDir: Path) {
+        projectDir = tempDir.toFile()
+        setup = GradleProject.setupAt(projectDir)
+    }
+
+    private fun resolve(path: String): Path = projectDir.toPath().resolve(path)
+    private fun mainProto() = resolve("src/main/proto")
+    private fun mainJava() = resolve("src/main/java")
+
     @Test
     fun `not accept 'null' arguments`(@TempDir tmpDir: File) {
         val instance = GradleProject.setupAt(tmpDir)
         NullPointerTester().testAllPublicInstanceMethods(instance)
+    }
+
+    @Test
+    fun `create a Gradle file with test environment variables`() {
+        setup.create()
+        assertExists(setup.testEnvPath())
+    }
+
+    @Nested
+    inner class `load files from resources` {
+
+        @BeforeEach
+        fun setOrigin() {
+            setup.fromResources(origin)
+        }
+
+        @Test
+        fun `by Java file names`() {
+            val files = arrayOf("Foo.java", "Bar.java")
+            setup.addJavaFiles(*files)
+                .create()
+            val mainJava = mainJava()
+            for (fileName in files) {
+                val file = mainJava.resolve(fileName)
+                assertExists(file)
+            }
+        }
+
+        @Test
+        fun `by Protobuf file names`() {
+            val protoFile = "prod/code/empty.proto"
+            setup.addProtoFile(protoFile)
+                .create()
+            val mainProto = mainProto()
+            assertExists(mainProto.resolve(protoFile))
+        }
+    }
+
+    private fun assertExists(file: Path) {
+        assertTrue(exists(file), "`${file}` does not exist.")
+    }
+
+    private fun assertExists(file: String) {
+        val resolved: Path = resolve(file)
+        assertExists(resolved)
     }
 }
