@@ -23,21 +23,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package io.spine.tools.gradle.testing
 
-package io.spine.tools.gradle.testing;
+import com.google.common.truth.Truth.assertThat
+import org.junit.jupiter.api.Test
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-import static com.google.common.truth.Truth.assertThat;
-
-@DisplayName("`ProjectRoot` utility should")
-class RootProjectTest {
+class `'RootProject' should` {
 
     @Test
-    @DisplayName("locate the project root")
-    void find() {
+    fun `locate the project root`() {
         assertThat(RootProject.dir().exists())
-                .isTrue();
+            .isTrue()
     }
 }
