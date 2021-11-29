@@ -23,70 +23,61 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package io.spine.tools.gradle.testing
 
-package io.spine.tools.gradle.testing;
-
-import org.checkerframework.checker.nullness.qual.Nullable;
-
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import static com.google.common.base.Preconditions.checkState;
-import static java.nio.file.Files.exists;
-import static java.util.Objects.requireNonNull;
+import java.io.File
+import java.nio.file.Files.exists
+import java.nio.file.Path
+import java.nio.file.Paths
 
 /**
- * Utilities for obtaining properties of a project which runs {@link GradleProject} in its tests.
+ * Utilities for obtaining properties of a project which runs [GradleProject] in its tests.
  */
-final class RootProject {
+internal object RootProject {
 
-    private static final String VERSION_GRADLE = "version.gradle";
-    private static final String VERSION_GRADLE_KTS = "version.gradle.kts";
-
-    /** Prevents instantiation of this utility class. */
-    private RootProject() {
-    }
+    private const val VERSION_GRADLE = "version.gradle"
+    private const val VERSION_GRADLE_KTS = "version.gradle.kts"
 
     /**
-     * Finds a root of a project by presence of the {@link #VERSION_GRADLE version.gradle} or
-     * {@link #VERSION_GRADLE_KTS version.gradle.kts} file.
+     * Finds a root of a project by presence of the [version.gradle][VERSION_GRADLE] or
+     * [version.gradle.kts][VERSION_GRADLE_KTS] file.
      *
-     * <p>Starts from the current directory, climbing up, until the file is found. By convention
+     * Starts from the current directory, climbing up, until the file is found. By convention
      * a project should have only one version file, which is placed in the root directory of
      * the project.
      *
      * @throws IllegalStateException
-     *         if the {@link #VERSION_GRADLE version.gradle.kts} file is not found
+     *          if the [version.gradle.kts][VERSION_GRADLE] file is not found
      */
-    static Path path() {
-        Path workingFolderPath = Paths.get(".")
-                                      .toAbsolutePath();
-        @Nullable Path extGradleDirPath = workingFolderPath;
+    @JvmStatic
+    fun path(): Path {
+        val workingFolderPath = Paths.get(".").toAbsolutePath()
+        var extGradleDirPath: Path? = workingFolderPath
         while (extGradleDirPath != null && !hasVersionGradle(extGradleDirPath)) {
-            extGradleDirPath = extGradleDirPath.getParent();
+            extGradleDirPath = extGradleDirPath.parent
         }
-        checkState(extGradleDirPath != null,
-                   "Neither `%s` nor `%s` found in `%s` or parent directories.",
-                   VERSION_GRADLE,
-                   VERSION_GRADLE_KTS,
-                   workingFolderPath);
-        return requireNonNull(extGradleDirPath);
+        check(extGradleDirPath != null) {
+            "Neither `${VERSION_GRADLE}` nor `${VERSION_GRADLE_KTS}` found in" +
+                    " `${workingFolderPath}` or parent directories."
+        }
+        return extGradleDirPath
     }
 
-    private static boolean hasVersionGradle(Path directory) {
-        return exists(directory.resolve(VERSION_GRADLE)) ||
-               exists(directory.resolve(VERSION_GRADLE_KTS));
+    private fun hasVersionGradle(directory: Path): Boolean {
+        val groovyScript = directory.resolve(VERSION_GRADLE)
+        val kotlinScript = directory.resolve(VERSION_GRADLE_KTS)
+        return exists(groovyScript) || exists(kotlinScript)
     }
 
     /**
-     * Same as {@link #path()}, but returning {@code File} instance.
+     * Same as [.path], but returning `File` instance.
      *
      * @throws IllegalStateException
-     *         if the {@link #VERSION_GRADLE version.gradle.kts} file is not found
-     * @see #path()
+     * if the [version.gradle.kts][.VERSION_GRADLE] file is not found
+     * @see .path
      */
-    static File dir() {
-        return path().toFile();
+    @JvmStatic
+    fun dir(): File {
+        return path().toFile()
     }
 }
