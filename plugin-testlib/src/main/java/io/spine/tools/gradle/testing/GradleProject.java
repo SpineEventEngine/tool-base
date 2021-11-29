@@ -87,9 +87,15 @@ public final class GradleProject {
     /**
      * Expose {@link GradleRunner} used by this Gradle project for finer tuning.
      */
-    @SuppressWarnings("unused")
     public GradleRunner runner() {
         return runner;
+    }
+
+    /**
+     * Obtains the directory of this project.
+     */
+    public File projectDir() {
+        return runner().getProjectDir();
     }
 
     @CanIgnoreReturnValue

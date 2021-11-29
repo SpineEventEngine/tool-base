@@ -34,7 +34,6 @@ import java.nio.file.Path
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
@@ -50,18 +49,20 @@ class `'GradleProject' should` {
     @BeforeEach
     fun setUp(@TempDir tempDir: Path) {
         projectDir = tempDir.toFile()
-        setup = GradleProject.setupAt(projectDir).fromResources(origin)
+        setup = GradleProject.setupAt(projectDir)
     }
 
     @Test
-    fun `be created by resource dir and project dir`() {
+    fun `be created with only project directory specified`() {
         val project = setup.create()
-        assertNotNull(project)
+
+        assertThat(project.projectDir())
+            .isEqualTo(projectDir)
     }
 
-   @Test
-    @DisplayName("execute faulty build")
-    fun executeFaultyBuild() {
+    @Test
+    fun `execute faulty build`() {
+        setup.fromResources(origin)
         val project = setup.addJavaFiles("Faulty.java").create()
 
         val buildResult = project.executeAndFail(compileJava)
