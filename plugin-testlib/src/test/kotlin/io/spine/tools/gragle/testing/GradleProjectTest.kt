@@ -62,8 +62,11 @@ class `'GradleProject' should` {
 
     @Test
     fun `execute faulty build`() {
-        setup.fromResources(origin)
-        val project = setup.addJavaFiles("Faulty.java").create()
+        setup.fromResources(origin) { path ->
+            val name = path.toString()
+            name.contains("Faulty.java") || name.contains("build.gradle")
+        }
+        val project = setup.create()
 
         val buildResult = project.executeAndFail(compileJava)
         assertNotNull(buildResult)

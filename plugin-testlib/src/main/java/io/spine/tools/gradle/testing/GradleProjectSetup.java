@@ -29,9 +29,6 @@ package io.spine.tools.gradle.testing;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.MultimapBuilder;
-import io.spine.tools.gradle.SourceSetName;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.gradle.testkit.runner.GradleRunner;
@@ -39,17 +36,13 @@ import org.gradle.testkit.runner.GradleRunner;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static io.spine.tools.gradle.SourceSetName.main;
-import static io.spine.tools.gradle.testing.Sources.protoDir;
 import static io.spine.util.Exceptions.illegalStateWithCauseOf;
 import static io.spine.util.Preconditions2.checkNotEmptyOrBlank;
-import static java.util.Arrays.asList;
 
 /**
  * Customizes a new {@code GradleProject}.
@@ -60,27 +53,10 @@ import static java.util.Arrays.asList;
  *         {@linkplain GradleProject#runner() exposed} by {@code GradleProject} — does have
  *         the {@link GradleRunner#build() build()} method which executes a Gradle build.
  */
-@SuppressWarnings({
-        "unused"  /* Some methods are used only in downstream repositories, e.g. `mc-java`.
-         This suppression should be removed after the split of modules from the `base`
-         is finished, and we have Model Compiler and related artifacts originated from `base`
-          settled in their new repositories. */,
-        "ClassWithTooManyMethods"}
-)
 public final class GradleProjectSetup {
 
     /** Path on the file system under which the project will be created. */
     private final File projectDir;
-
-    private final Multimap<SourceSetName, String> protoFileNames =
-            MultimapBuilder.hashKeys()
-                           .arrayListValues()
-                           .build();
-
-    private final Multimap<SourceSetName, String> javaFileNames =
-            MultimapBuilder.hashKeys()
-                           .arrayListValues()
-                           .build();
 
     /** Maps a relative name of a file to its content. */
     private final Map<String, ImmutableList<String>> filesToCreate = new HashMap<>();
@@ -151,134 +127,6 @@ public final class GradleProjectSetup {
     public GradleProjectSetup fromResources(String resourceDir, Predicate<Path> matching) {
         this.resourceDir = checkNotNull(resourceDir);
         this.matching = checkNotNull(matching);
-        return this;
-    }
-
-    /**
-     * Adds a {@code .proto} file to the {@link SourceSetName#main main} source set of
-     * the project to be created.
-     *
-     * @param fileName
-     *         a name of the proto file relative to {@code src/main/proto} subdirectory
-     *         under the one specified in {@link #fromResources(String)}
-     */
-    public GradleProjectSetup addProtoFile(String fileName) {
-        checkNotNull(fileName);
-        checkNotEmptyOrBlank(fileName);
-        return addProtoFile(main, fileName);
-    }
-
-    /**
-     * Adds a {@code .proto} file to the specified source set of the project to be created.
-     *
-     * @param ssn
-     *         the name of the source set
-     * @param fileName
-     *         a name of the proto file relative to {@code src/SourceSetName/proto}
-     *         subdirectory under the one specified in {@link #fromResources(String)}
-     */
-    public GradleProjectSetup addProtoFile(SourceSetName ssn, String fileName) {
-        checkNotNull(ssn);
-        checkNotNull(fileName);
-        checkNotEmptyOrBlank(fileName);
-        protoFileNames.put(ssn, fileName);
-        return this;
-    }
-
-    /**
-     * Adds a collection of {@code .proto} files to the {@link SourceSetName#main main}
-     * source set of the project to be created.
-     *
-     * @see #addProtoFile(String)
-     */
-    public GradleProjectSetup addProtoFiles(Collection<String> fileNames) {
-        checkNotNull(fileNames);
-        return addProtoFiles(main, fileNames);
-    }
-
-    /**
-     * Adds a collection of {@code .proto} files to the specified source set of
-     * the project to be created.
-     *
-     * @see #addProtoFile(String)
-     */
-    public GradleProjectSetup addProtoFiles(SourceSetName ssn, Collection<String> fileNames) {
-        checkNotNull(ssn);
-        checkNotNull(fileNames);
-        fileNames.forEach(fileName -> addProtoFile(ssn, fileName));
-        return this;
-    }
-
-    /**
-     * Adds multiple {@code .proto} files to the project to be created.
-     *
-     * @see #addProtoFile(String)
-     */
-    public GradleProjectSetup addProtoFiles(String... fileNames) {
-        checkNotNull(fileNames);
-        return addProtoFiles(ImmutableList.copyOf(fileNames));
-    }
-
-    /**
-     * Creates a {@code .proto} source file with the given name and content
-     * in the the {@link SourceSetName#main main} source set of the project.
-     *
-     * @param fileName
-     *         the name of the file relative to {@code src/main/proto} directory
-     * @param lines
-     *         the content of the file
-     */
-    public GradleProjectSetup addProto(String fileName, Iterable<String> lines) {
-        checkNotNull(fileName);
-        checkNotNull(lines);
-        return addProto(main, fileName, lines);
-    }
-
-    /**
-     * Creates a {@code .proto} source file with the given name and content
-     * in the specified source set of the project.
-     *
-     * @param fileName
-     *         the name of the file relative to {@code src/SourceSetName/proto} directory
-     * @param lines
-     *         the content of the file
-     */
-    public GradleProjectSetup addProto(SourceSetName ssn,
-                                       String fileName,
-                                       Iterable<String> lines) {
-        checkNotNull(ssn);
-        checkNotNull(fileName);
-        checkNotNull(lines);
-        String path = protoDir(ssn) + fileName;
-        return addFile(path, lines);
-    }
-
-    /**
-     * Adds {@code .java} files to the {@link SourceSetName#main main}
-     * source set of the project to be created.
-     *
-     * @param fileNames
-     *         names of the Java files relative to {@code src/main/java} subdirectory
-     *         under the one specified in {@link #fromResources(String)}
-     */
-    public GradleProjectSetup addJavaFiles(String... fileNames) {
-        checkNotNull(fileNames);
-        return addJavaFiles(main, asList(fileNames));
-    }
-
-    /**
-     * Adds {@code .java} files to the specified source set of the project to be created.
-     *
-     * @param ssn
-     *         the name of the source set
-     * @param fileNames
-     *         names of the Java files relative to {@code src/main/java} subdirectory
-     *         under the one specified in {@link #fromResources(String)}
-     */
-    public GradleProjectSetup addJavaFiles(SourceSetName ssn, Iterable<String> fileNames) {
-        checkNotNull(ssn);
-        checkNotNull(fileNames);
-        javaFileNames.putAll(ssn, fileNames);
         return this;
     }
 
@@ -417,16 +265,6 @@ public final class GradleProjectSetup {
     @VisibleForTesting
     public Path testEnvPath() {
         return new TestEnvGradle(projectDir.toPath()).path();
-    }
-
-    @SuppressWarnings("AssignmentOrReturnOfFieldWithMutableType") // OK in this builder arrangement.
-    Multimap<SourceSetName, String> protoFileNames() {
-        return protoFileNames;
-    }
-
-    @SuppressWarnings("AssignmentOrReturnOfFieldWithMutableType") // OK in this builder arrangement.
-    Multimap<SourceSetName, String> javaFileNames() {
-        return javaFileNames;
     }
 
     /**
