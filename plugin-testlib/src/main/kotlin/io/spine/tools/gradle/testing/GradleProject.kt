@@ -61,6 +61,9 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
 
     public companion object {
 
+        /** The ID of a Java Gradle plugin. */
+        public const val javaPlugin: String = "java"
+
         /**
          * Starts creation of a new the project.
          *
