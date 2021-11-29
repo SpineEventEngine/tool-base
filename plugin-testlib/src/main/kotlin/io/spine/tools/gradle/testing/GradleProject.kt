@@ -119,6 +119,6 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
 
     private fun prepareRun(taskName: TaskName): GradleRunner {
         val args = arguments.forTask(taskName)
-        return runner.withArguments(*args)
+        return runner.withArguments(args)
     }
 }

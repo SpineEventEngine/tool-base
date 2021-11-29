@@ -102,12 +102,12 @@ internal class RunnerArguments internal constructor(
      * Adds the passed properties to those that may be already applied and returns
      * resulting array of command line arguments.
      */
-    fun forTask(task: TaskName): Array<String> {
+    fun forTask(task: TaskName): List<String> {
         val args: MutableList<String> = taskWithOptions(task)
         properties.forEach { entry ->
             args.add(CliProperty(entry).argument())
         }
-        return args.toTypedArray()
+        return args.toList()
     }
 
     private fun taskWithOptions(task: TaskName): MutableList<String> {
