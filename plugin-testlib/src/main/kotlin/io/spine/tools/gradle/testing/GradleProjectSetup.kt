@@ -26,7 +26,6 @@
 package io.spine.tools.gradle.testing
 
 import com.google.common.annotations.VisibleForTesting
-import com.google.common.base.Preconditions.checkNotNull
 import java.io.File
 import java.nio.file.Path
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull
@@ -107,14 +106,8 @@ public class GradleProjectSetup internal constructor(
      * Sets the name of the resource directory and the predicate which accepts the files
      * from the specified directory for copying to the project to be created.
      *
-     * Only files and directories that belong to the `resourceDir` would be passed to
-     * the `matching` predicate when creating the project in response to
-     * the [create] method is call.
-     */
-
-    /**
-     * Sets the name of the resource directory from which to load files of
-     * the project to be created.
+     * Only files and directories that belong to the [resourceDir] would be passed to
+     * the [matching] predicate when creating the project when the [create] method is called.
      */
     @JvmOverloads
     public fun fromResources(
@@ -130,13 +123,11 @@ public class GradleProjectSetup internal constructor(
      * Creates a source code file with the given content.
      *
      * @param path
-     * the path to the file relative to the project root directory
+     *          the path to the file relative to the project root directory
      * @param lines
-     * the content of the file
+     *          the content of the file
      */
     public fun addFile(path: String, lines: Iterable<String>): GradleProjectSetup {
-        checkNotNull(path)
-        checkNotNull(lines)
         filesToCreate[path] = lines.toList()
         return this
     }
@@ -146,7 +137,7 @@ public class GradleProjectSetup internal constructor(
      *
      * Affects the code executed during a [Gradle task][GradleProject.executeTask].
      * When turned on, all code is executed in a single JVM.
-     * This leads to a high consumption of a memory.
+     * This leads to a high memory consumption.
      *
      * Use this mode only for temporary debug purposes. E.g. it should never get to e.g. CI server.
      */
