@@ -25,7 +25,6 @@
  */
 package io.spine.tools.gradle.testing
 
-import com.google.common.base.Preconditions
 import com.google.errorprone.annotations.CanIgnoreReturnValue
 import io.spine.tools.gradle.task.TaskName
 import java.io.File
@@ -72,7 +71,6 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
          */
         @JvmStatic
         public fun setupAt(projectDir: File): GradleProjectSetup {
-            Preconditions.checkNotNull(projectDir)
             return GradleProjectSetup(projectDir)
         }
 
