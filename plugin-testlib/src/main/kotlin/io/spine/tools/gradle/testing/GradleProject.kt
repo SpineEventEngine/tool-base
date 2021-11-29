@@ -23,93 +23,104 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package io.spine.tools.gradle.testing
 
-package io.spine.tools.gradle.testing;
-
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import io.spine.tools.gradle.task.TaskName;
-import org.gradle.testkit.runner.BuildResult;
-import org.gradle.testkit.runner.GradleRunner;
-
-import java.io.File;
-import java.io.IOException;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Preconditions
+import com.google.errorprone.annotations.CanIgnoreReturnValue
+import io.spine.tools.gradle.task.TaskName
+import java.io.File
+import java.io.IOException
+import org.gradle.testkit.runner.BuildResult
+import org.gradle.testkit.runner.GradleRunner
 
 /**
  * Allows to configure a Gradle project for testing needs.
  *
- * <p>The project operates in the given test project directory and allows executing Gradle tasks.
+ * The project operates in the given directory and allows executing Gradle tasks.
  */
-public final class GradleProject {
+public class GradleProject internal constructor(setup: GradleProjectSetup) {
 
-    private final GradleRunner runner;
-    private final RunnerArguments arguments;
+    /** The arguments passed to [runner]. */
+    private val arguments: RunnerArguments
 
-    /**
-     * Starts creation of a new the project.
-     *
-     * @param projectDir
-     *         the name of the directory on the file system under which the project
-     *         will be created
-     */
-    public static GradleProjectSetup setupAt(File projectDir) {
-        checkNotNull(projectDir);
-        return new GradleProjectSetup(projectDir);
-    }
+    /** The runner for executing tasks. */
+    private val runner: GradleRunner
 
-    /**
-     * Obtains the name of the Java Gradle plugin.
-     */
-    public static String javaPlugin() {
-        return "java";
-    }
-
-    GradleProject(GradleProjectSetup setup) throws IOException {
-        this.arguments = setup.arguments();
-        this.runner = GradleRunner.create()
-                .withProjectDir(setup.projectDir())
-                .withDebug(setup.debug());
+    init {
+        arguments = setup.arguments()
+        runner = GradleRunner.create()
+            .withProjectDir(setup.projectDir)
+            .withDebug(setup.debug())
         if (setup.addPluginUnderTestClasspath()) {
-            runner.withPluginClasspath();
+            runner.withPluginClasspath()
         }
         if (setup.environment() != null) {
-            runner.withEnvironment(setup.environment());
+            runner.withEnvironment(setup.environment())
         }
-        writeSources(setup);
+        writeSources(setup)
     }
 
-    private static void writeSources(GradleProjectSetup setup) throws IOException {
-        Sources sources = new Sources(setup);
-        sources.write();
+    public companion object {
+
+        /**
+         * Starts creation of a new the project.
+         *
+         * @param projectDir
+         *          file system directory under which the project will be created
+         */
+        @JvmStatic
+        public fun setupAt(projectDir: File): GradleProjectSetup {
+            Preconditions.checkNotNull(projectDir)
+            return GradleProjectSetup(projectDir)
+        }
+
+        /**
+         * Obtains the name of the Java Gradle plugin.
+         */
+        @JvmStatic
+        public fun javaPlugin(): String {
+            return "java"
+        }
+
+        @Throws(IOException::class)
+        private fun writeSources(setup: GradleProjectSetup) {
+            val sources = Sources(setup)
+            sources.write()
+        }
     }
 
     /**
-     * Expose {@link GradleRunner} used by this Gradle project for finer tuning.
+     * Expose [GradleRunner] used by this Gradle project for finer tuning.
      */
-    public GradleRunner runner() {
-        return runner;
+    public fun runner(): GradleRunner {
+        return runner
     }
 
     /**
      * Obtains the directory of this project.
      */
-    public File projectDir() {
-        return runner().getProjectDir();
+    public fun projectDir(): File {
+        return runner().projectDir
     }
 
+    /**
+     * Executes the task with the given name.
+     */
     @CanIgnoreReturnValue
-    public BuildResult executeTask(TaskName taskName) {
-        return prepareRun(taskName).build();
+    public fun executeTask(task: TaskName): BuildResult {
+        return prepareRun(task).build()
     }
 
+    /**
+     * Executes the task with the given name and returns failed build result.
+     */
     @CanIgnoreReturnValue
-    public BuildResult executeAndFail(TaskName taskName) {
-        return prepareRun(taskName).buildAndFail();
+    public fun executeAndFail(task: TaskName): BuildResult {
+        return prepareRun(task).buildAndFail()
     }
 
-    private GradleRunner prepareRun(TaskName taskName) {
-        String[] args = arguments.forTask(taskName);
-        return runner.withArguments(args);
+    private fun prepareRun(taskName: TaskName): GradleRunner {
+        val args = arguments.forTask(taskName)
+        return runner.withArguments(*args)
     }
 }

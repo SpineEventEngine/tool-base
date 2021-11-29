@@ -30,7 +30,6 @@ import com.google.common.testing.NullPointerTester
 import com.google.common.truth.Truth.assertThat
 import io.spine.tools.gradle.testing.GradleProject
 import io.spine.tools.gradle.testing.GradleProjectSetup
-import io.spine.tools.gradle.testing.KGradleProjectSetup
 import java.io.File
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -39,24 +38,22 @@ import org.junit.jupiter.api.io.TempDir
 class `'GradleProjectSetup' should` {
 
     private lateinit var projectDir: File
-    private lateinit var instance: GradleProjectSetup
-    private lateinit var setup: KGradleProjectSetup
+    private lateinit var setup: GradleProjectSetup
 
     @BeforeEach
     fun setup(@TempDir projectDir: File) {
         this.projectDir = projectDir
-        instance = GradleProject.setupAt(projectDir)
-        setup = KGradleProjectSetup(instance)
+        setup = GradleProject.setupAt(projectDir)
     }
 
     @Test
     fun `not accept 'null' arguments`() {
-        NullPointerTester().testAllPublicInstanceMethods(instance)
+        NullPointerTester().testAllPublicInstanceMethods(setup)
     }
 
     @Test
     fun `provide project directory`() {
-        assertThat(setup.projectDir())
+        assertThat(setup.projectDir)
             .isEqualTo(projectDir)
     }
 
@@ -74,14 +71,14 @@ class `'GradleProjectSetup' should` {
 
     @Test
     fun `enable debug mode`() {
-        instance.enableDebug()
+        setup.enableDebug()
         assertThat(setup.debug())
             .isTrue()
     }
 
     @Test
     fun `add plugin under test classpath`() {
-        instance.withPluginClasspath()
+        setup.withPluginClasspath()
         assertThat(setup.addPluginUnderTestClasspath())
             .isTrue()
     }
