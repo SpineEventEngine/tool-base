@@ -32,7 +32,9 @@ import io.spine.tools.gradle.testing.GradleProject
 import io.spine.tools.gradle.testing.GradleProjectSetup
 import java.io.File
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.io.TempDir
 
 class `'GradleProjectSetup' should` {
@@ -81,5 +83,27 @@ class `'GradleProjectSetup' should` {
         setup.withPluginClasspath()
         assertThat(setup.addPluginUnderTestClasspath)
             .isTrue()
+    }
+
+    @Nested
+    inner class `not allow setting both 'debug' mode and environment variables` {
+
+        @Test
+        fun `when 'debug' already set`() {
+            setup.enableDebug()
+
+            assertThrows<IllegalStateException> {
+                setup.withEnvironment(mapOf( "foo" to "bar"))
+            }
+        }
+
+        @Test
+        fun `when environment vars already set`() {
+            setup.withEnvironment(mapOf("fiz" to "baz"))
+
+            assertThrows<IllegalStateException> {
+                setup.enableDebug()
+            }
+        }
     }
 }

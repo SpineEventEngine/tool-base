@@ -132,6 +132,13 @@ public class GradleProjectSetup internal constructor(
         return this
     }
 
+    private companion object {
+        const val debugModeErrorMsg =
+            "Cannot use environment variables in the `debug` mode. Please see the documentation" +
+                    " of `org.gradle.testkit.runner.GradleRunner.isDebug()`" +
+                    " for more details on this."
+    }
+
     /**
      * Enables the debug mode of the GradleRunner.
      *
@@ -140,8 +147,12 @@ public class GradleProjectSetup internal constructor(
      * This leads to a high memory consumption.
      *
      * Use this mode only for temporary debug purposes. E.g. it should never get to e.g. CI server.
+     *
+     * This call is mutually exclusive with [enableDebug]. For more information on this please
+     * see [org.gradle.testkit.runner.GradleRunner.isDebug].
      */
     public fun enableDebug(): GradleProjectSetup {
+        check(environment == null) { debugModeErrorMsg }
         //TODO:2021-11-29:alexander.yevsyukov: Do we need both?
         debug = true
         arguments = arguments.withDebug()
@@ -186,10 +197,13 @@ public class GradleProjectSetup internal constructor(
     /**
      * Configures the environment variables available to the build.
      *
-     *
      * If not set, the variables are inherited.
+     *
+     * This method cannot be called if [enableDebug] was called before. For more information on this
+     * please see [org.gradle.testkit.runner.GradleRunner.isDebug].
      */
     public fun withEnvironment(environment: Map<String, String>): GradleProjectSetup {
+        check(!debug) { debugModeErrorMsg }
         this.environment = environment
         return this
     }

@@ -39,7 +39,7 @@ class `'RunnerArguments' should` {
     @Test
     fun `contain task name`() {
         val args = RunnerArguments().forTask(compileJava)
-        assertArgs(args).containsExactly(
+        assertThat(args).containsExactly(
             compileJava.name(),
             stacktrace.argument()
         )
@@ -48,7 +48,7 @@ class `'RunnerArguments' should` {
     @Test
     fun `contain debug flag`() {
         val args = RunnerArguments().withDebug().forTask(compileJava)
-        assertArgs(args).containsExactly(
+        assertThat(args).containsExactly(
             compileJava.name(),
             stacktrace.argument(),
             debug.argument()
@@ -64,7 +64,7 @@ class `'RunnerArguments' should` {
             )
         ).forTask(compileJava)
 
-        assertArgs(args).containsExactly(
+        assertThat(args).containsExactly(
             compileJava.name(),
             stacktrace.argument(),
             CliProperty("foo1", "bar1").argument(),
@@ -75,14 +75,12 @@ class `'RunnerArguments' should` {
     @Test
     fun `turn off stacktrace output`() {
         val args = RunnerArguments().noStacktrace().forTask(compileJava)
-        assertArgs(args).doesNotContain(stacktrace.argument())
+        assertThat(args).doesNotContain(stacktrace.argument())
     }
 
     @Test
     fun `turn off daemons mode`() {
         val args = RunnerArguments().noDaemon().forTask(compileJava)
-        assertArgs(args).contains(noDaemon.argument())
+        assertThat(args).contains(noDaemon.argument())
     }
-
-    private fun assertArgs(args: Array<String>) = assertThat(args).asList()
 }
