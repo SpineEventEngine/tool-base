@@ -76,14 +76,6 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
             return GradleProjectSetup(projectDir)
         }
 
-        /**
-         * Obtains the name of the Java Gradle plugin.
-         */
-        @JvmStatic
-        public fun javaPlugin(): String {
-            return "java"
-        }
-
         private fun writeSources(setup: GradleProjectSetup) {
             val sources = Sources(setup)
             sources.write()
