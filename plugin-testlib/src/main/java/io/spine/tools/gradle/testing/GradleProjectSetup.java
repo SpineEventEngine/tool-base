@@ -145,12 +145,6 @@ public final class GradleProjectSetup {
         return this;
     }
 
-    private Path resolve(String path) {
-        Path sourcePath = projectDir.toPath()
-                                    .resolve(path);
-        return sourcePath;
-    }
-
     /**
      * Enables the debug mode of the GradleRunner.
      *
@@ -162,6 +156,8 @@ public final class GradleProjectSetup {
      * E.g. it should never get to e.g. CI server.
      */
     public GradleProjectSetup enableDebug() {
+        //TODO:2021-11-29:alexander.yevsyukov: Do we need both?
+        this.debug = true;
         this.arguments = arguments.withDebug();
         return this;
     }

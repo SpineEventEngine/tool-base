@@ -71,4 +71,18 @@ class `'GradleProjectSetup' should` {
         assertThat(setup.needsBuildSrc())
             .isFalse()
     }
+
+    @Test
+    fun `enable debug mode`() {
+        instance.enableDebug()
+        assertThat(setup.debug())
+            .isTrue()
+    }
+
+    @Test
+    fun `add plugin under test classpath`() {
+        instance.withPluginClasspath()
+        assertThat(setup.addPluginUnderTestClasspath())
+            .isTrue()
+    }
 }
