@@ -59,27 +59,27 @@ class `'GradleProjectSetup' should` {
 
     @Test
     fun `have 'debug' turned off by default`() {
-        assertThat(setup.debug())
+        assertThat(setup.debug)
             .isFalse()
     }
 
     @Test
     fun `do not require 'buildSrc' directory by default`() {
-        assertThat(setup.needsBuildSrc())
+        assertThat(setup.needsBuildSrc)
             .isFalse()
     }
 
     @Test
     fun `enable debug mode`() {
         setup.enableDebug()
-        assertThat(setup.debug())
+        assertThat(setup.debug)
             .isTrue()
     }
 
     @Test
     fun `add plugin under test classpath`() {
         setup.withPluginClasspath()
-        assertThat(setup.addPluginUnderTestClasspath())
+        assertThat(setup.addPluginUnderTestClasspath)
             .isTrue()
     }
 }

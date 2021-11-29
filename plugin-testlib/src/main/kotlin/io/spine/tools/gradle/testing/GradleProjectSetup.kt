@@ -27,19 +27,16 @@ package io.spine.tools.gradle.testing
 
 import com.google.common.annotations.VisibleForTesting
 import com.google.common.base.Preconditions.checkNotNull
-import com.google.common.collect.ImmutableMap
-import io.spine.util.Exceptions
-import io.spine.util.Preconditions2
 import java.io.File
-import java.io.IOException
 import java.nio.file.Path
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull
 
 /**
- * Customizes a new `GradleProject`.
+ * Customizes creation of a new [GradleProject].
  *
  * @apiNote We avoid builder pattern naming around this class to avoid the confusion associated with
  * having a `build()` method in association with [GradleProject].
+ *
  * This is caused by the fact that [GradleRunner][org.gradle.testkit.runner.GradleRunner] —
  * which is used and [exposed][GradleProject.runner] by `GradleProject` — does have
  * the [build()][org.gradle.testkit.runner.GradleRunner.build] method which executes a Gradle build.
@@ -49,8 +46,15 @@ public class GradleProjectSetup internal constructor(
     internal val projectDir: File
 ) {
 
-    /** Maps a relative name of a file to its content.  */
-    private val filesToCreate: MutableMap<String, List<String>> = HashMap()
+    /**
+     * Provides mapping from file paths to their content.
+     *
+     * Keys of the returned map are file paths relative the directory
+     * of the project to be created.
+     *
+     * Values of the returned map are lines of the files to be created.
+     */
+    internal val filesToCreate: MutableMap<String, List<String>> = HashMap()
 
     /**
      * The name of the directory under `resources` for loading files of the project.
@@ -63,35 +67,41 @@ public class GradleProjectSetup internal constructor(
     /**
      * The predicate to accept resources (both files and directories) placed in the [resourceDir].
      */
-    private var matching: (Path) -> Boolean = { true }
-    private var environment: Map<String, String>? = null
-    private var arguments = RunnerArguments()
+    internal var matching: (Path) -> Boolean = { true }
+        private set
+
+    internal var environment: Map<String, String>? = null
+        private set
+
+    internal var arguments = RunnerArguments()
+        private set
 
     /**
      * If set, the `buildSrc` directory will be copied from the root project
      * into the directory of the project to be created.
      */
-    private var needsBuildSrc = false
+    internal var needsBuildSrc = false
+        private set
 
     /** The flag to be passed to [org.gradle.testkit.runner.GradleRunner.withDebug].  */
-    private var debug = false
+    internal var debug = false
+        private set
 
     /**
      * Determines whether the plugin under test classpath is defined and should be added to
      * the Gradle execution classpath.
      *
-     *
      * The `plugin-under-test-metadata.properties` resource must be present in
      * the current classpath. The file defines the `implementation-classpath` property,
      * which contains the classpath to be added to the Gradle run.
-     *
      *
      * Whenever the added classpath contains a Gradle plugin, the executed Gradle scripts may
      * apply it via the `plugins` block.
      *
      * @see org.gradle.testkit.runner.GradleRunner.withPluginClasspath
      */
-    private var addPluginUnderTestClasspath = false
+    internal var addPluginUnderTestClasspath = false
+        private set
 
     /**
      * Sets the name of the resource directory and the predicate which accepts the files
@@ -99,7 +109,7 @@ public class GradleProjectSetup internal constructor(
      *
      * Only files and directories that belong to the `resourceDir` would be passed to
      * the `matching` predicate when creating the project in response to
-     * the [.create] method is call.
+     * the [create] method is call.
      */
 
     /**
@@ -134,14 +144,11 @@ public class GradleProjectSetup internal constructor(
     /**
      * Enables the debug mode of the GradleRunner.
      *
-     *
      * Affects the code executed during a [Gradle task][GradleProject.executeTask].
      * When turned on, all code is executed in a single JVM.
      * This leads to a high consumption of a memory.
      *
-     *
-     * Use this mode only for temporary debug purposes.
-     * E.g. it should never get to e.g. CI server.
+     * Use this mode only for temporary debug purposes. E.g. it should never get to e.g. CI server.
      */
     public fun enableDebug(): GradleProjectSetup {
         //TODO:2021-11-29:alexander.yevsyukov: Do we need both?
@@ -174,14 +181,13 @@ public class GradleProjectSetup internal constructor(
      * the `"-P${name}=${value}"` command line option.
      *
      * @param name
-     * name of the property
+     *          name of the property
      * @param value
-     * value of the property
+     *          value of the property
      */
     public fun withProperty(name: String, value: String): GradleProjectSetup {
-        checkNotNull(name)
-        checkNotNull(value)
-        Preconditions2.checkNotEmptyOrBlank(name)
+        require(name.isNotEmpty())
+        require(name.isNotBlank())
         arguments = arguments.withProperty(name, value)
         return this
     }
@@ -192,8 +198,7 @@ public class GradleProjectSetup internal constructor(
      *
      * If not set, the variables are inherited.
      */
-    public fun withEnvironment(environment: ImmutableMap<String, String>): GradleProjectSetup {
-        checkNotNull(environment)
+    public fun withEnvironment(environment: Map<String, String>): GradleProjectSetup {
         this.environment = environment
         return this
     }
@@ -201,63 +206,8 @@ public class GradleProjectSetup internal constructor(
     /**
      * Creates a new project on the file system.
      */
-    public fun create(): GradleProject {
-        return try {
-            GradleProject(this)
-        } catch (e: IOException) {
-            throw Exceptions.illegalStateWithCauseOf(e)
-        }
-    }
-
-//    /**
-//     * Obtains the previously configured resource origin.
-//     *
-//     * @return the origin or `null` if [fromResources] was never called
-//     */
-//    internal fun resourceDir(): String? {
-//        return resourceDir
-//    }
-
-    internal fun environment(): Map<String, String>? {
-        return environment
-    }
-
-    internal fun arguments(): RunnerArguments {
-        return arguments
-    }
-
-    internal fun matching(): (Path) -> Boolean {
-        return matching
-    }
-
-    internal fun debug(): Boolean {
-        return debug
-    }
-
-    internal fun needsBuildSrc(): Boolean {
-        return needsBuildSrc
-    }
-
-    internal fun addPluginUnderTestClasspath(): Boolean {
-        return addPluginUnderTestClasspath
-    }
+    public fun create(): GradleProject = GradleProject(this)
 
     @VisibleForTesting
-    internal fun testEnvPath(): Path {
-        return TestEnvGradle(projectDir.toPath()).path()
-    }
-
-    /**
-     * Provides mapping from file paths to their content.
-     *
-     *
-     * Keys of the returned map are file paths relative the directory
-     * of the project to be created.
-     *
-     *
-     * Values of the returned map are lines of the files to be created.
-     */
-    internal fun filesToCreate(): MutableMap<String, List<String>> {
-        return this.filesToCreate
-    }
+    internal fun testEnvPath(): Path = TestEnvGradle(projectDir.toPath()).path()
 }

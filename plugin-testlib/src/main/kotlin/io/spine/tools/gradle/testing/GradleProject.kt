@@ -29,7 +29,6 @@ import com.google.common.base.Preconditions
 import com.google.errorprone.annotations.CanIgnoreReturnValue
 import io.spine.tools.gradle.task.TaskName
 import java.io.File
-import java.io.IOException
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 
@@ -47,15 +46,15 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
     private val runner: GradleRunner
 
     init {
-        arguments = setup.arguments()
+        arguments = setup.arguments
         runner = GradleRunner.create()
             .withProjectDir(setup.projectDir)
-            .withDebug(setup.debug())
-        if (setup.addPluginUnderTestClasspath()) {
+            .withDebug(setup.debug)
+        if (setup.addPluginUnderTestClasspath) {
             runner.withPluginClasspath()
         }
-        if (setup.environment() != null) {
-            runner.withEnvironment(setup.environment())
+        if (setup.environment != null) {
+            runner.withEnvironment(setup.environment)
         }
         writeSources(setup)
     }
@@ -82,7 +81,6 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
             return "java"
         }
 
-        @Throws(IOException::class)
         private fun writeSources(setup: GradleProjectSetup) {
             val sources = Sources(setup)
             sources.write()

@@ -49,7 +49,7 @@ internal class Sources(private val setup: GradleProjectSetup) {
     }
 
     private fun copyBuildSrc() {
-        if (setup.needsBuildSrc()) {
+        if (setup.needsBuildSrc) {
             BuildSrc.writeTo(projectDir)
         }
     }
@@ -63,7 +63,7 @@ internal class Sources(private val setup: GradleProjectSetup) {
         if (resourceOriginAssigned()) {
             val classLoader = javaClass.classLoader
             val directory = ResourceDirectory.get(origin(), classLoader)
-            directory.copyContentTo(projectDir, setup.matching())
+            directory.copyContentTo(projectDir, setup.matching)
         }
     }
 
@@ -80,7 +80,7 @@ internal class Sources(private val setup: GradleProjectSetup) {
     }
 
     private fun createFiles() {
-        setup.filesToCreate()
+        setup.filesToCreate
             .forEach { (path: String, lines: Iterable<String>) -> createFile(path, lines) }
     }
 

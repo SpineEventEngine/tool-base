@@ -23,57 +23,42 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package io.spine.tools.gradle.testing
 
-package io.spine.tools.gradle.testing;
-
-import io.spine.tools.fs.DirectoryName;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.function.Predicate;
-
-import static io.spine.io.Copy.copyDir;
+import io.spine.io.Copy.copyDir
+import io.spine.tools.fs.DirectoryName.build
+import java.io.File
+import java.nio.file.Path
 
 /**
- * Utilities for working with the {@code buildScr} directory of a Gradle project.
+ * Utilities for working with the `buildScr` directory of a Gradle project.
  */
-final class BuildSrc {
+internal object BuildSrc {
 
-    /** Prevents instantiation of this utility class. */
-    private BuildSrc() {
-    }
-
-    /**
-     * Copies the {@code buildSrc} directory from the {@link RootProject} into
-     * the specified directory.
-     */
-    static void writeTo(Path targetDir) throws IOException {
-        Path rootPath = RootProject.path();
-        Path buildSrc = rootPath.resolve("buildSrc");
-        copyDir(buildSrc, targetDir, new SkipNonSrcDirs());
+    /** Copies the `buildSrc` directory from the [RootProject] into the specified directory. */
+    fun writeTo(targetDir: Path) {
+        val rootPath = RootProject.path()
+        val buildSrc = rootPath.resolve("buildSrc")
+        copyDir(buildSrc, targetDir) { path -> skipNonSrcDirs(path) }
     }
 
     /**
      * The predicate to prevent copying unnecessary files when copying
-     * the {@code buildSrc} directory from the parent project.
+     * the `buildSrc` directory from the parent project.
      *
-     * <p>The predicate 1) saves on unnecessary copying, 2) prevents file locking issue
-     * under Windows, which fails the build because locked under the {@code .gradle}
-     * directory could not be copied.
+     * The predicate:
+     *  1) saves on unnecessary copying,
+     *  2) prevents file locking issue under Windows, which fails the build because a file
+     *     locked under the `.gradle` directory could not be copied.
      */
-    private static class SkipNonSrcDirs implements Predicate<Path> {
+    private fun skipNonSrcDirs(path: Path): Boolean {
+        val str = path.toString()
+        val slash = File.separator
+        // Use leading slash to accept `.gradle` files, but filter out the Gradle cache dir.
+        val isGradleCache = str.contains("$slash.gradle")
 
-        @Override
-        public boolean test(Path path) {
-            String str = path.toString();
-            String slash = File.separator;
-            // Use leading slash to accept `.gradle` files, but filter out the Gradle cache dir.
-            boolean isGradleCache = str.contains(slash + ".gradle");
-
-            // Use two slashes to accept `build.gradle.kts`, but filter out the `build` dir.
-            boolean isBuildDir = str.contains(slash + DirectoryName.build.value() + slash);
-            return !isGradleCache && !isBuildDir;
-        }
+        // Use two slashes to accept `build.gradle.kts`, but filter out the `build` dir.
+        val isBuildDir = str.contains(slash + build + slash)
+        return !isGradleCache && !isBuildDir
     }
 }
