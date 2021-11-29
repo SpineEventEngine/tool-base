@@ -148,14 +148,20 @@ public class GradleProjectSetup internal constructor(
      *
      * Use this mode only for temporary debug purposes. E.g. it should never get to e.g. CI server.
      *
-     * This call is mutually exclusive with [enableDebug]. For more information on this please
-     * see [org.gradle.testkit.runner.GradleRunner.isDebug].
+     * This method cannot be called if [withEnvironment] was called before.
+     * For more information on this please see [org.gradle.testkit.runner.GradleRunner.isDebug].
      */
-    public fun enableDebug(): GradleProjectSetup {
+    public fun enableRunnerDebug(): GradleProjectSetup {
         check(environment == null) { debugModeErrorMsg }
-        //TODO:2021-11-29:alexander.yevsyukov: Do we need both?
         debug = true
-        arguments = arguments.withDebug()
+        return this
+    }
+
+    /**
+     * Adds `--debug` command line option to the Gradle process.
+     */
+    public fun debugLogging(): GradleProjectSetup  {
+        arguments = arguments.withDebugLogging()
         return this
     }
 
@@ -199,8 +205,8 @@ public class GradleProjectSetup internal constructor(
      *
      * If not set, the variables are inherited.
      *
-     * This method cannot be called if [enableDebug] was called before. For more information on this
-     * please see [org.gradle.testkit.runner.GradleRunner.isDebug].
+     * This method cannot be called if [enableRunnerDebug] was called before.
+     * For more information on this please see [org.gradle.testkit.runner.GradleRunner.isDebug].
      */
     public fun withEnvironment(environment: Map<String, String>): GradleProjectSetup {
         check(!debug) { debugModeErrorMsg }

@@ -28,6 +28,7 @@ package io.spine.tools.gragle.testing
 
 import com.google.common.testing.NullPointerTester
 import com.google.common.truth.Truth.assertThat
+import io.spine.tools.gradle.task.JavaTaskName.Companion.compileJava
 import io.spine.tools.gradle.testing.GradleProject
 import io.spine.tools.gradle.testing.GradleProjectSetup
 import java.io.File
@@ -73,7 +74,7 @@ class `'GradleProjectSetup' should` {
 
     @Test
     fun `enable debug mode`() {
-        setup.enableDebug()
+        setup.enableRunnerDebug()
         assertThat(setup.debug)
             .isTrue()
     }
@@ -90,8 +91,7 @@ class `'GradleProjectSetup' should` {
 
         @Test
         fun `when 'debug' already set`() {
-            setup.enableDebug()
-
+            setup.enableRunnerDebug()
             assertThrows<IllegalStateException> {
                 setup.withEnvironment(mapOf( "foo" to "bar"))
             }
@@ -100,10 +100,42 @@ class `'GradleProjectSetup' should` {
         @Test
         fun `when environment vars already set`() {
             setup.withEnvironment(mapOf("fiz" to "baz"))
-
             assertThrows<IllegalStateException> {
-                setup.enableDebug()
+                setup.enableRunnerDebug()
             }
+        }
+    }
+
+    @Test
+    fun `allow passing properties`() {
+        val name = "cowboy"
+        val value = "bebop"
+        setup.withProperty(name, value)
+        
+        val args = commandLineArgs()
+        val assertArgs = assertThat(args)
+        assertArgs.contains(name)
+        assertArgs.contains(value)
+    }
+
+    private fun commandLineArgs() = setup.arguments.forTask(compileJava).toString()
+
+    @Nested
+    inner class `turn debug logging level` {
+
+        private val debugOption = "--debug"
+
+        @Test
+        fun `having it off by default`() {
+            val args = commandLineArgs()
+            assertThat(args).doesNotContain(debugOption)
+        }
+
+        @Test
+        fun `when instructed`() {
+            setup.debugLogging()
+            val args = commandLineArgs()
+            assertThat(args).contains(debugOption)
         }
     }
 }

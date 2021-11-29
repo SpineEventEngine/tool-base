@@ -46,7 +46,7 @@ internal class RunnerArguments internal constructor(
 ) {
 
     /** Turns on the debug flag. */
-    fun withDebug(): RunnerArguments {
+    fun withDebugLogging(): RunnerArguments {
         return RunnerArguments(
             debug = true,
             stacktrace = this.stacktrace,

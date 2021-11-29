@@ -47,7 +47,7 @@ class `'RunnerArguments' should` {
 
     @Test
     fun `contain debug flag`() {
-        val args = RunnerArguments().withDebug().forTask(compileJava)
+        val args = RunnerArguments().withDebugLogging().forTask(compileJava)
         assertThat(args).containsExactly(
             compileJava.name(),
             stacktrace.argument(),
