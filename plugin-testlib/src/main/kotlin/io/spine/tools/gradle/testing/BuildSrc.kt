@@ -31,7 +31,7 @@ import java.io.File
 import java.nio.file.Path
 
 /**
- * Utilities for working with the `buildScr` directory of a Gradle project.
+ * Utilities for working with the `buildSrc` directory of a Gradle project.
  */
 internal object BuildSrc {
 
