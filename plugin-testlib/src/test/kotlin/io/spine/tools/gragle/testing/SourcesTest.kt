@@ -26,6 +26,7 @@
 
 package io.spine.tools.gragle.testing
 
+import com.google.common.truth.Truth.assertThat
 import io.spine.tools.gradle.testing.GradleProject
 import io.spine.tools.gradle.testing.GradleProjectSetup
 import java.io.File
@@ -139,5 +140,17 @@ class `'Sources' should` {
     private fun assertNotExists(path: String) {
         val resolved = resolve(path)
         assertNotExists(resolved)
+    }
+
+    @Test
+    fun `add files specified by name and content`() {
+        val fileName = "foo.bar"
+        val content = listOf( "fiz", "baz" )
+        setup.addFile(fileName, content)
+        setup.create()
+
+        assertExists(fileName)
+        val lines = resolve(fileName).toFile().readLines()
+        assertThat(lines).containsExactlyElementsIn(content)
     }
 }
