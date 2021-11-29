@@ -36,7 +36,6 @@ import org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME
 public data class SourceSetName(val value: String) {
 
     init {
-        require(value.isNotEmpty())
         require(value.isNotBlank())
     }
 

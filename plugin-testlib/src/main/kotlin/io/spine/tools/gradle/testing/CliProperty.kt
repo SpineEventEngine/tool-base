@@ -32,7 +32,6 @@ package io.spine.tools.gradle.testing
 internal data class CliProperty(val name: String, val value: String) {
 
     init {
-        require(name.isNotEmpty())
         require(name.isNotBlank())
     }
 

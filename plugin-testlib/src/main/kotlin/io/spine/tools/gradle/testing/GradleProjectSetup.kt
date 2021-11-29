@@ -194,8 +194,8 @@ public class GradleProjectSetup internal constructor(
      *          value of the property
      */
     public fun withProperty(name: String, value: String): GradleProjectSetup {
-        require(name.isNotEmpty())
         require(name.isNotBlank())
+        require(value.isNotBlank())
         arguments = arguments.withProperty(name, value)
         return this
     }

@@ -77,7 +77,6 @@ internal class RunnerArguments internal constructor(
 
     /** Adds a Gradle property entry to the command line arguments. */
     fun withProperty(name: String, value: String): RunnerArguments {
-        require(name.isNotEmpty())
         require(name.isNotBlank())
         require(value.isNotBlank())
         return RunnerArguments(
