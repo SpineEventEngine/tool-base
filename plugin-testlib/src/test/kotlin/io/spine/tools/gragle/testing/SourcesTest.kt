@@ -31,6 +31,7 @@ import io.spine.tools.gradle.testing.GradleProjectSetup
 import java.io.File
 import java.nio.file.Files.exists
 import java.nio.file.Path
+import java.nio.file.Paths
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -102,11 +103,22 @@ class `'Sources' should` {
         }
 
         @Test
-        fun `only when resource directory is secified`() {
+        fun `only when resource directory is specified`() {
             setup.create()
             for (fileName in files) {
                 assertNotExists(fileName)
             }
+        }
+
+        @Test
+        fun `selecting files by given predicate`() {
+            val predicate: (p: Path) -> Boolean = { path -> path.toString().contains(".java") }
+            setup.fromResources(resourceDir, predicate)
+            setup.create()
+            files.filter { f -> predicate.invoke(Paths.get(f)) }
+                .forEach(::assertExists)
+            files.filter { f -> !(predicate.invoke(Paths.get(f))) }
+                .forEach(::assertNotExists)
         }
     }
 
