@@ -23,38 +23,47 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package io.spine.tools.gradle.testing
 
-import com.google.common.annotations.VisibleForTesting
-import io.spine.io.Copy.copyDir
-import java.nio.file.Path
-import kotlin.io.path.name
+package io.spine.tools.gragle.testing
 
-/**
- * Utilities for working with the `buildSrc` directory of a Gradle project.
- */
-internal object BuildSrc {
+import io.spine.tools.gradle.testing.BuildSrc
+import java.nio.file.Paths
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
 
-    /** Copies the `buildSrc` directory from the [RootProject] into the specified directory. */
-    fun writeTo(targetDir: Path) {
-        val rootPath = RootProject.path()
-        val buildSrc = rootPath.resolve("buildSrc")
-        copyDir(buildSrc, targetDir) { path -> isSourceCode(path) }
+class `'BuildSrc' should` {
+
+    @Test
+    fun `copy only directories with source code`() {
+        listOf(
+            "aus.weis",
+            "src/main/kotlin",
+            "src/main/kotlin/force-jacoco.gradle.kts",
+            "src/main/groovy/checkstyle.gradle",
+            "build.gradle.kts",
+            "build.gradle"
+        ).forEach(this::assertIsSourceCode)
+        
+        listOf(
+            "build",
+            "build/classes",
+            ".gradle",
+            ".gradle/file-system.probe"
+        ).forEach(this::assertIsNotSourceCode)
     }
 
-    /**
-     * The predicate to prevent copying unnecessary files when copying
-     * the `buildSrc` directory from the parent project.
-     *
-     * The predicate:
-     *  1) saves on unnecessary copying,
-     *  2) prevents file locking issue under Windows, which fails the build because a file
-     *     locked under the `.gradle` directory could not be copied.
-     */
-    @VisibleForTesting
-    fun isSourceCode(path: Path): Boolean {
-        val nonSrcDir = listOf(".gradle", "build")
-        val topDir = path.getName(0)
-        return !nonSrcDir.contains(topDir.name)
+    private fun assertIsSourceCode(path: String) {
+        val p = Paths.get(path)
+        assertTrue(BuildSrc.isSourceCode(p)) {
+            "The path `${p}` is expected to be source code."
+        }
+    }
+
+    private fun assertIsNotSourceCode(path: String) {
+        val p = Paths.get(path)
+        assertFalse(BuildSrc.isSourceCode(p)) {
+            "The path `${p}` is expected to be NOT source code."
+        }
     }
 }
