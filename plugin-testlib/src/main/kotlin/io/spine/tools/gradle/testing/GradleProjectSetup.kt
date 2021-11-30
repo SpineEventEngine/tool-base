@@ -140,7 +140,7 @@ public class GradleProjectSetup internal constructor(
     }
 
     /**
-     * Enables the debug mode of the GradleRunner.
+     * Enables the debug mode of the [GradleRunner][GradleProject.runner].
      *
      * Affects the code executed during a [Gradle task][GradleProject.executeTask].
      * When turned on, all code is executed in a single JVM.
@@ -149,7 +149,8 @@ public class GradleProjectSetup internal constructor(
      * Use this mode only for temporary debug purposes. E.g. it should never get to e.g. CI server.
      *
      * This method cannot be called if [withEnvironment] was called before.
-     * For more information on this please see [org.gradle.testkit.runner.GradleRunner.isDebug].
+     * For more information on this please see
+     * [GradleRunner.isDebug][org.gradle.testkit.runner.GradleRunner.isDebug].
      */
     public fun enableRunnerDebug(): GradleProjectSetup {
         check(environment == null) { debugModeErrorMsg }
