@@ -33,7 +33,7 @@ import io.spine.tools.gradle.task.TaskName
 internal class RunnerArguments internal constructor(
 
     /** If `true`, [CliOption.debug] will be passed to the runner.  */
-    private val debug: Boolean = false,
+    private val debugLog: Boolean = false,
 
     /** If `true`, [CliOption.stacktrace] will be passed to the runner. */
     private val stacktrace: Boolean = true,
@@ -48,7 +48,7 @@ internal class RunnerArguments internal constructor(
     /** Turns on the debug flag. */
     fun withDebugLogging(): RunnerArguments {
         return RunnerArguments(
-            debug = true,
+            debugLog = true,
             stacktrace = this.stacktrace,
             noDaemon = this.noDaemon,
             properties = this.properties
@@ -58,7 +58,7 @@ internal class RunnerArguments internal constructor(
     /** Turns off the stacktrace output. */
     fun noStacktrace(): RunnerArguments {
         return RunnerArguments(
-            debug = this.debug,
+            debugLog = this.debugLog,
             stacktrace = false,
             noDaemon = this.noDaemon,
             properties = this.properties
@@ -68,7 +68,7 @@ internal class RunnerArguments internal constructor(
     /** Turns on the `--no-daemon` flag. */
     fun noDaemon(): RunnerArguments {
         return RunnerArguments(
-            debug = this.debug,
+            debugLog = this.debugLog,
             stacktrace = this.stacktrace,
             noDaemon = true,
             properties = this.properties
@@ -80,7 +80,7 @@ internal class RunnerArguments internal constructor(
         require(name.isNotBlank())
         require(value.isNotBlank())
         return RunnerArguments(
-            debug = this.debug,
+            debugLog = this.debugLog,
             stacktrace = this.stacktrace,
             noDaemon = this.noDaemon,
             properties = this.properties + Pair(name, value)
@@ -90,7 +90,7 @@ internal class RunnerArguments internal constructor(
     /** Adds passed properties to the arguments. */
     fun withProperties(properties: Map<String, String>): RunnerArguments{
         return RunnerArguments(
-            debug = this.debug,
+            debugLog = this.debugLog,
             stacktrace = this.stacktrace,
             noDaemon = this.noDaemon,
             properties = this.properties + properties
@@ -111,7 +111,7 @@ internal class RunnerArguments internal constructor(
 
     private fun taskWithOptions(task: TaskName): MutableList<String> {
         val args: MutableList<String> = mutableListOf(task.name())
-        if (debug) {
+        if (debugLog) {
             args.add(CliOption.debug.argument())
         }
         if (stacktrace) {
