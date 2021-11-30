@@ -216,6 +216,22 @@ public class GradleProjectSetup internal constructor(
     }
 
     /**
+     * Adds command line options to be passed to the Gradle build.
+     */
+    public fun withOptions(vararg options: String): GradleProjectSetup {
+        val list = options.toList()
+        return withOptions(list)
+    }
+
+    /**
+     * Adds command line options to be passed to the Gradle build.
+     */
+    public fun withOptions(list: Iterable<String>): GradleProjectSetup {
+        this.arguments = arguments.withOptions(list)
+        return this
+    }
+
+    /**
      * Creates a new project on the file system.
      */
     public fun create(): GradleProject = GradleProject(this)

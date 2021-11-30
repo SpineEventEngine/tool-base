@@ -112,13 +112,13 @@ class `'GradleProjectSetup' should` {
         val value = "bebop"
         setup.withProperty(name, value)
         
-        val args = commandLineArgs()
-        val assertArgs = assertThat(args)
+        val assertArgs = assertCommandLineArgs()
         assertArgs.contains(name)
         assertArgs.contains(value)
     }
 
     private fun commandLineArgs() = setup.arguments.forTask(compileJava).toString()
+    private fun assertCommandLineArgs() = assertThat(commandLineArgs())
 
     @Nested
     inner class `turn debug logging level` {
@@ -127,15 +127,35 @@ class `'GradleProjectSetup' should` {
 
         @Test
         fun `having it off by default`() {
-            val args = commandLineArgs()
-            assertThat(args).doesNotContain(debugOption)
+            assertCommandLineArgs().doesNotContain(debugOption)
         }
 
         @Test
         fun `when instructed`() {
             setup.debugLogging()
-            val args = commandLineArgs()
-            assertThat(args).contains(debugOption)
+            assertCommandLineArgs().contains(debugOption)
+        }
+    }
+
+    @Nested
+    inner class `pass custom command line options` {
+
+        private val options = listOf(
+            "--console=plain",
+            "-Dorg.gradle.daemon.debug=true"
+        )
+
+        @Test
+        fun `passed as 'vararg'`() {
+            setup.withOptions(options[0], options[1])
+            assertCommandLineArgs().contains(options[0])
+            assertCommandLineArgs().contains(options[1])
+        }
+
+        @Test
+        fun `pass as 'Iterable'`() {
+            setup.withOptions(options)
+            options.forEach { assertCommandLineArgs().contains(it) }
         }
     }
 }

@@ -42,7 +42,10 @@ internal class RunnerArguments internal constructor(
     private val noDaemon: Boolean = false,
 
     /** Properties passed to the runner. */
-    private val properties: Map<String, String> = mapOf()
+    private val properties: Map<String, String> = mapOf(),
+
+    /** Options passed to the runner. */
+    private val options: List<String> = listOf()
 ) {
 
     /** Turns on the debug flag. */
@@ -51,7 +54,8 @@ internal class RunnerArguments internal constructor(
             debugLog = true,
             stacktrace = this.stacktrace,
             noDaemon = this.noDaemon,
-            properties = this.properties
+            properties = this.properties,
+            options = this.options
         )
     }
 
@@ -61,7 +65,8 @@ internal class RunnerArguments internal constructor(
             debugLog = this.debugLog,
             stacktrace = false,
             noDaemon = this.noDaemon,
-            properties = this.properties
+            properties = this.properties,
+            options = this.options
         )
     }
 
@@ -71,7 +76,8 @@ internal class RunnerArguments internal constructor(
             debugLog = this.debugLog,
             stacktrace = this.stacktrace,
             noDaemon = true,
-            properties = this.properties
+            properties = this.properties,
+            options = this.options
         )
     }
 
@@ -83,17 +89,30 @@ internal class RunnerArguments internal constructor(
             debugLog = this.debugLog,
             stacktrace = this.stacktrace,
             noDaemon = this.noDaemon,
-            properties = this.properties + Pair(name, value)
+            properties = this.properties + Pair(name, value),
+            options = this.options
         )
     }
 
     /** Adds passed properties to the arguments. */
-    fun withProperties(properties: Map<String, String>): RunnerArguments{
+    fun withProperties(properties: Map<String, String>): RunnerArguments {
         return RunnerArguments(
             debugLog = this.debugLog,
             stacktrace = this.stacktrace,
             noDaemon = this.noDaemon,
-            properties = this.properties + properties
+            properties = this.properties + properties,
+            options = this.options
+        )
+    }
+
+    /** Adds passed options to the command line arguments. */
+    fun withOptions(options: Iterable<String>): RunnerArguments {
+        return RunnerArguments(
+            debugLog = this.debugLog,
+            stacktrace = this.stacktrace,
+            noDaemon = this.noDaemon,
+            properties = this.properties,
+            options = this.options + options
         )
     }
 
@@ -120,6 +139,7 @@ internal class RunnerArguments internal constructor(
         if (noDaemon) {
             args.add(CliOption.noDaemon.argument())
         }
+        args.addAll(options)
         return args
     }
 }
