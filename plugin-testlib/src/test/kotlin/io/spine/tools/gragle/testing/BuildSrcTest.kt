@@ -49,7 +49,8 @@ class `'BuildSrc' should` {
             "build",
             "build/classes",
             ".gradle",
-            ".gradle/file-system.probe"
+            ".gradle/file-system.probe",
+            "buildSrc/.gradle/7.3/executionHistory/executionHistory.lock"
         ).forEach(this::assertIsNotSourceCode)
     }
 
