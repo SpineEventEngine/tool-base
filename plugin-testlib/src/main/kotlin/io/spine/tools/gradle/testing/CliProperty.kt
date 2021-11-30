@@ -24,57 +24,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle
-
-import io.spine.tools.titlecaseFirstChar
-import org.gradle.api.tasks.SourceSet.MAIN_SOURCE_SET_NAME
-import org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME
+package io.spine.tools.gradle.testing
 
 /**
- * A name of a Gradle project source set.
+ * A command line argument for properties passed to Gradle runner.
  */
-public data class SourceSetName(val value: String) {
+internal data class CliProperty(val name: String, val value: String) {
 
     init {
-        require(value.isNotBlank())
-    }
-
-    public companion object {
-        @JvmField
-        public val main: SourceSetName = SourceSetName(MAIN_SOURCE_SET_NAME)
-
-        @JvmField
-        public val test: SourceSetName = SourceSetName(TEST_SOURCE_SET_NAME)
-
-        @JvmField
-        public val proto: SourceSetName = SourceSetName("proto")
-    }
-
-    /** Returns the [value] of the source set name. */
-    override fun toString(): String {
-        return value
+        require(name.isNotBlank())
     }
 
     /**
-     * Obtains the name of the source set with the first character capitalized, if
-     * it is not [main].
-     *
-     * For [main], an empty string is returned.
+     * Creates a property from a map entry.
      */
-    public fun toInfix(): String {
-        if (this == main) {
-            return ""
-        }
-        return value.titlecaseFirstChar()
-    }
+    constructor(entry: Map.Entry<String, String>): this(entry.key, entry.value)
 
     /**
-     * If this name is not [main], returns its value. For [main], returns an empty string.
+     * Obtains the value passed as command line argument using the format `"-P${name}=${value}"`
      */
-    public fun toPrefix(): String {
-        if (this == main) {
-            return ""
-        }
-        return value
-    }
+    fun argument(): String = "-P${name}=${value}"
 }

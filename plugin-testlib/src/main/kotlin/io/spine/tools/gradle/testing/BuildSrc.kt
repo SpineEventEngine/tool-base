@@ -23,58 +23,37 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package io.spine.tools.gradle.testing
 
-package io.spine.tools.gradle
-
-import io.spine.tools.titlecaseFirstChar
-import org.gradle.api.tasks.SourceSet.MAIN_SOURCE_SET_NAME
-import org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME
+import com.google.common.annotations.VisibleForTesting
+import io.spine.io.Copy.copyDir
+import java.nio.file.Path
+import kotlin.io.path.name
 
 /**
- * A name of a Gradle project source set.
+ * Utilities for working with the `buildSrc` directory of a Gradle project.
  */
-public data class SourceSetName(val value: String) {
+internal object BuildSrc {
 
-    init {
-        require(value.isNotBlank())
-    }
-
-    public companion object {
-        @JvmField
-        public val main: SourceSetName = SourceSetName(MAIN_SOURCE_SET_NAME)
-
-        @JvmField
-        public val test: SourceSetName = SourceSetName(TEST_SOURCE_SET_NAME)
-
-        @JvmField
-        public val proto: SourceSetName = SourceSetName("proto")
-    }
-
-    /** Returns the [value] of the source set name. */
-    override fun toString(): String {
-        return value
+    /** Copies the `buildSrc` directory from the [RootProject] into the specified directory. */
+    fun writeTo(targetDir: Path) {
+        val rootPath = RootProject.path()
+        val buildSrc = rootPath.resolve("buildSrc")
+        copyDir(buildSrc, targetDir) { path -> isSourceCode(path) }
     }
 
     /**
-     * Obtains the name of the source set with the first character capitalized, if
-     * it is not [main].
+     * The predicate to prevent copying unnecessary files when copying
+     * the `buildSrc` directory from the parent project.
      *
-     * For [main], an empty string is returned.
+     * The predicate:
+     *  1) saves on unnecessary copying,
+     *  2) prevents file locking issue under Windows, which fails the build because a file
+     *     locked under the `.gradle` directory could not be copied.
      */
-    public fun toInfix(): String {
-        if (this == main) {
-            return ""
-        }
-        return value.titlecaseFirstChar()
-    }
-
-    /**
-     * If this name is not [main], returns its value. For [main], returns an empty string.
-     */
-    public fun toPrefix(): String {
-        if (this == main) {
-            return ""
-        }
-        return value
+    @VisibleForTesting
+    fun isSourceCode(path: Path): Boolean {
+        val nonSrcDir = listOf(".gradle", "build")
+        return path.any { nonSrcDir.contains(it.name) }.not()
     }
 }

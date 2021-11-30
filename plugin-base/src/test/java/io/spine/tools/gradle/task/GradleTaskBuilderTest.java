@@ -71,7 +71,7 @@ class GradleTaskBuilderTest {
         project = ProjectBuilder.builder()
                                 .build();
         project.getPluginManager()
-               .apply(javaPlugin());
+               .apply(javaPlugin);
     }
 
     @Test
@@ -81,7 +81,7 @@ class GradleTaskBuilderTest {
                 .withParent(project)
                 .build();
         subProject.getPluginManager()
-                  .apply(javaPlugin());
+                  .apply(javaPlugin);
         GradleTask task = GradleTask.newBuilder(annotateProto, NoOp.action())
                 .insertAfterAllTasks(compileJava)
                 .applyNowTo(subProject);

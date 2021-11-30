@@ -24,57 +24,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle
-
-import io.spine.tools.titlecaseFirstChar
-import org.gradle.api.tasks.SourceSet.MAIN_SOURCE_SET_NAME
-import org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME
+package io.spine.tools.gradle.testing
 
 /**
- * A name of a Gradle project source set.
+ * A command line option passed to a Gradle runner.
  */
-public data class SourceSetName(val value: String) {
+internal data class CliOption(val name: String) {
 
     init {
-        require(value.isNotBlank())
+        require(name.isNotBlank())
     }
 
-    public companion object {
-        @JvmField
-        public val main: SourceSetName = SourceSetName(MAIN_SOURCE_SET_NAME)
+    companion object {
+
+        internal const val prefix = "--"
 
         @JvmField
-        public val test: SourceSetName = SourceSetName(TEST_SOURCE_SET_NAME)
+        val stacktrace: CliOption = CliOption("stacktrace")
 
         @JvmField
-        public val proto: SourceSetName = SourceSetName("proto")
-    }
+        val debug: CliOption = CliOption("debug")
 
-    /** Returns the [value] of the source set name. */
-    override fun toString(): String {
-        return value
+        @JvmField
+        val noDaemon: CliOption = CliOption("no-daemon")
     }
 
     /**
-     * Obtains the name of the source set with the first character capitalized, if
-     * it is not [main].
+     * Obtains the name of this option prefixed with `--` to be used as command line argument.
+     */
+    fun argument(): String = prefix + name
+
+    /**
+     * Obtains the value for passing in a command line.
      *
-     * For [main], an empty string is returned.
+     * @see [argument]
      */
-    public fun toInfix(): String {
-        if (this == main) {
-            return ""
-        }
-        return value.titlecaseFirstChar()
-    }
-
-    /**
-     * If this name is not [main], returns its value. For [main], returns an empty string.
-     */
-    public fun toPrefix(): String {
-        if (this == main) {
-            return ""
-        }
-        return value
-    }
+    override fun toString(): String = argument()
 }

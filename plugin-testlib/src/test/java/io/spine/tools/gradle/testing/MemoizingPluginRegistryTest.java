@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.google.common.truth.Truth.assertThat;
 
-@DisplayName("MemoizingPluginRegistry should")
+@DisplayName("`MemoizingPluginRegistry` should")
 class MemoizingPluginRegistryTest {
 
     @Test
@@ -52,7 +52,7 @@ class MemoizingPluginRegistryTest {
     @Test
     @DisplayName("memoize the given plugin script")
     void memoizePluginScript() {
-        Resource resource = Resource.file(BuildGradle.BUILD_GRADLE, getClass().getClassLoader());
+        Resource resource = Resource.file("build.gradle", getClass().getClassLoader());
         PluginScript script = PluginScript.declaredIn(resource);
         MemoizingPluginRegistry registry = new MemoizingPluginRegistry();
         registry.apply(script);

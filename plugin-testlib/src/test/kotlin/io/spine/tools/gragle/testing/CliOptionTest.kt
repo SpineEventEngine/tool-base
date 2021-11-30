@@ -1,5 +1,5 @@
 /*
- * Copyright 2020, TeamDev. All rights reserved.
+ * Copyright 2021, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,5 +24,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val spineBaseVersion: String by extra("2.0.0-SNAPSHOT.77")
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.81")
+package io.spine.tools.gragle.testing
+
+import com.google.common.truth.Truth.assertThat
+import io.spine.tools.gradle.testing.CliOption
+import io.spine.tools.gradle.testing.CliOption.Companion.prefix
+import io.spine.tools.gradle.testing.CliOption.Companion.stacktrace
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+
+class `'CliOption' should` {
+
+    @Test
+    fun `prohibit empty or blank values`() {
+        assertThrows<IllegalArgumentException> {  CliOption("") }
+        assertThrows<IllegalArgumentException> {  CliOption(" ") }
+    }
+
+    @Test
+    fun `have prefix in string form`() {
+        assertThat(stacktrace.toString()).startsWith(prefix)
+    }
+
+}

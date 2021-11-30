@@ -1,5 +1,5 @@
 /*
- * Copyright 2020, TeamDev. All rights reserved.
+ * Copyright 2021, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,5 +24,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val spineBaseVersion: String by extra("2.0.0-SNAPSHOT.77")
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.81")
+package io.spine.tools.gragle.testing
+
+import com.google.common.truth.Truth.assertThat
+import io.spine.tools.gradle.testing.CliProperty
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+
+class `'CliProperty' should` {
+
+    @Nested
+    inner class `prohibit illegal arguments` {
+
+        @Test
+        fun `empty name`() {
+            assertThrows<IllegalArgumentException> { CliProperty("", "value")  }
+        }
+
+        @Test
+        fun `blank name`() {
+            assertThrows<IllegalArgumentException> { CliProperty(" ", "fiz")  }
+        }
+    }
+
+    @Test
+    fun `provide prefixed command like argument`() {
+        assertThat(CliProperty("foo", "bar").argument())
+            .isEqualTo("-Pfoo=bar")
+    }
+}
