@@ -54,6 +54,6 @@ internal object BuildSrc {
     @VisibleForTesting
     fun isSourceCode(path: Path): Boolean {
         val nonSrcDir = listOf(".gradle", "build")
-        return path.any { nonSrcDir.contains(it.name) }
+        return path.any { nonSrcDir.contains(it.name) }.not()
     }
 }
