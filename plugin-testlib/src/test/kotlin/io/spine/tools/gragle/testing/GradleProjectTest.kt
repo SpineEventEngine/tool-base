@@ -56,7 +56,7 @@ class `'GradleProject' should` {
     fun `be created with only project directory specified`() {
         val project = setup.create()
 
-        assertThat(project.projectDir())
+        assertThat(project.projectDir)
             .isEqualTo(projectDir)
     }
 

@@ -42,7 +42,7 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
     private val arguments: RunnerArguments
 
     /** The runner for executing tasks. */
-    private val runner: GradleRunner
+    public val runner: GradleRunner
 
     init {
         arguments = setup.arguments
@@ -80,19 +80,8 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
         }
     }
 
-    /**
-     * Expose [GradleRunner] used by this Gradle project for finer tuning.
-     */
-    public fun runner(): GradleRunner {
-        return runner
-    }
-
-    /**
-     * Obtains the directory of this project.
-     */
-    public fun projectDir(): File {
-        return runner().projectDir
-    }
+    /** The directory of this project. */
+    public val projectDir: File = runner.projectDir
 
     /**
      * Executes the task with the given name.
