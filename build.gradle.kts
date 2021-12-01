@@ -132,8 +132,9 @@ subprojects {
         excludeProtobufLite()
     }
 
+    val javaVersion = 8
     kotlin {
-        applyJvmToolchain(11)
+        applyJvmToolchain(javaVersion)
         explicitApi()
     }
 
@@ -146,6 +147,7 @@ subprojects {
     JavadocConfig.applyTo(project)
 
     tasks.withType<KotlinCompile>().configureEach {
+        kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
         setFreeCompilerArgs()
     }
 
