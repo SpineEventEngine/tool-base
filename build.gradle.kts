@@ -155,7 +155,8 @@ subprojects {
             freeCompilerArgs = listOf(
                 "-Xskip-prerelease-check",
                 "-Xjvm-default=all",
-                "-Xopt-in=kotlin.contracts.ExperimentalContracts"
+                "-Xopt-in=kotlin.contracts.ExperimentalContracts",
+                "-Xopt-in=kotlin.ExperimentalStdlibApi"
             )
         }
     }
