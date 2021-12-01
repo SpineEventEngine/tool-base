@@ -134,7 +134,7 @@ subprojects {
 
     // See: https://kotlinlang.org/docs/gradle.html#gradle-java-toolchains-support
     kotlin {
-        applyJvmToolchain("11")
+        applyJvmToolchain(11)
         explicitApi()
     }
 
