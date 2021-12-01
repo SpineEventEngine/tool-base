@@ -29,8 +29,8 @@
  * currently there is no way to define a constant _before_ a build script of `buildSrc`.
  * We cannot use imports or do something else before the `buildscript` or `plugin` clauses.
  *
- * Therefore, when a version of [io.spine.internal.dependency.LicenseReport] changes, it should be
- * changed in the Kotlin object _and_ in this file below twice.
+ * Therefore, when a version of [io.spine.internal.dependency.LicenseReport] changes,
+ * it should be changed in the Kotlin object _and_ in this file below twice.
  */
 
 plugins {
@@ -61,6 +61,14 @@ val licenseReportVersion = "2.0"
 val grGitVersion = "3.1.1"
 
 /**
+ * The version of the Kotlin Gradle plugin.
+ *
+ * Please check that this value matches one defined in
+ *  `io.spine.internal.dependency.Kotlin.version`.
+ */
+val kotlinVersion = "1.6.0"
+
+/**
  * The version of Guava used in `buildSrc`.
  *
  * Always use the same version as the one specified in `io.spine.internal.dependency.Guava`.
@@ -87,4 +95,5 @@ dependencies {
     api("com.github.jk1:gradle-license-report:$licenseReportVersion")
     implementation("org.ajoberstar.grgit:grgit-core:${grGitVersion}")
     implementation("net.ltgt.gradle:gradle-errorprone-plugin:${errorProneVersion}")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
 }
