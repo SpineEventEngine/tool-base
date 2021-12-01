@@ -114,7 +114,7 @@ public fun Project.artifact(ssn: SourceSetName): Artifact {
  */
 public fun Project.protoDirectorySet(ssn: SourceSetName): SourceDirectorySet? {
     val sourceSet: SourceSet = sourceSet(ssn)
-    val found = sourceSet.extensions.findByName(sourceSetExtensionName()) as SourceDirectorySet?
+    val found = sourceSet.extensions.findByName(sourceSetExtensionName) as SourceDirectorySet?
     return found
 }
 

@@ -58,7 +58,7 @@ class `'generatedDir' property of 'Project' should` {
             .build()
         val pluginManager = project.getPluginManager()
         pluginManager.apply(JavaPlugin::class.java)
-        pluginManager.apply(gradlePlugin().value())
+        pluginManager.apply(gradlePlugin.id)
         project.group = "io.spine.testing"
         project.version = "3.2.1"
     }

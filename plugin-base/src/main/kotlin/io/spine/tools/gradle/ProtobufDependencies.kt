@@ -23,50 +23,33 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package io.spine.tools.gradle
 
-package io.spine.tools.gradle;
-
-import io.spine.tools.proto.fs.Directory;
+import io.spine.tools.proto.fs.Directory
 
 /**
  * A factory of Protobuf-related artifact specs.
  */
-public final class ProtobufDependencies {
+public object ProtobufDependencies {
 
-    private static final String GROUP_ID = "com.google.protobuf";
-    private static final String SOURCE_SET_EXTENSION = Directory.rootName();
-    private static final String PROTOBUF_LITE = "protobuf-lite";
-    private static final String PROTOC = "protoc";
-    private static final PluginId PROTOBUF_PLUGIN_ID = new PluginId(GROUP_ID);
+    private const val MAVEN_GROUP = "com.google.protobuf"
 
-    /**
-     * Prevents the utility class instantiation.
-     */
-    private ProtobufDependencies() {
-    }
+    /** The ID of the Protobuf Gradle plugin. */
+    @JvmField
+    public val gradlePlugin: PluginId = PluginId("com.google.protobuf")
 
-    /**
-     * Obtains the ID of the Protobuf Gradle plugin.
-     */
-    public static PluginId gradlePlugin() {
-        return PROTOBUF_PLUGIN_ID;
-    }
+    /** The name of the `SourceSet` extension installed by the Protobuf Gradle plugin. */
+    @JvmField
+    public val sourceSetExtensionName: String = Directory.rootName()
 
-    /**
-     * Obtains the name of the {@code SourceSet} extension installed by the Protobuf Gradle plugin.
-     */
-    public static String sourceSetExtensionName() {
-        return SOURCE_SET_EXTENSION;
-    }
+    /** The Protobuf Lite Java runtime library dependency. */
+    @JvmField
+    @Suppress("unused")
+    public val protobufLite: ThirdPartyDependency =
+        ThirdPartyDependency(MAVEN_GROUP, "protobuf-lite")
 
-    /**
-     * Obtains the {@link ThirdPartyDependency} on the Protobuf Lite Java runtime library.
-     */
-    public static ThirdPartyDependency protobufLite() {
-        return new ThirdPartyDependency(GROUP_ID, PROTOBUF_LITE);
-    }
-
-    public static ThirdPartyDependency protobufCompiler() {
-        return new ThirdPartyDependency(GROUP_ID, PROTOC);
-    }
+    /** The dependency on Protobuf Compiler. */
+    @JvmField
+    public val protobufCompiler: ThirdPartyDependency =
+        ThirdPartyDependency(MAVEN_GROUP, "protoc")
 }
