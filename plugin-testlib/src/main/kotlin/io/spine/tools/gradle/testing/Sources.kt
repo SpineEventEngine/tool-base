@@ -49,9 +49,7 @@ internal class Sources(private val setup: GradleProjectSetup) {
     }
 
     private fun copyBuildSrc() {
-        if (setup.needsBuildSrc) {
-            BuildSrc.writeTo(projectDir)
-        }
+        setup.buildSrcCopy?.writeTo(projectDir)
     }
 
     private fun createTestEnv() {

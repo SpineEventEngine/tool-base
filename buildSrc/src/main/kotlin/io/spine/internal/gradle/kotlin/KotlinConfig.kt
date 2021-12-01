@@ -23,37 +23,34 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package io.spine.tools.gradle.testing
 
-import com.google.common.annotations.VisibleForTesting
-import io.spine.io.Copy.copyDir
-import java.nio.file.Path
-import kotlin.io.path.name
+package io.spine.internal.gradle.kotlin
+
+import org.gradle.jvm.toolchain.JavaLanguageVersion
+import org.gradle.jvm.toolchain.JavaToolchainSpec
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 /**
- * Utilities for working with the `buildSrc` directory of a Gradle project.
+ * Sets [Java toolchain](https://kotlinlang.org/docs/gradle.html#gradle-java-toolchains-support)
+ * to the specified version (e.g. "11" or "8").
  */
-internal object BuildSrc {
-
-    /** Copies the `buildSrc` directory from the [RootProject] into the specified directory. */
-    fun writeTo(targetDir: Path) {
-        val rootPath = RootProject.path()
-        val buildSrc = rootPath.resolve("buildSrc")
-        copyDir(buildSrc, targetDir) { path -> isSourceCode(path) }
+fun KotlinJvmProjectExtension.applyJvmToolchain(version: Int) {
+    jvmToolchain {
+        (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(version))
     }
+}
 
-    /**
-     * The predicate to prevent copying unnecessary files when copying
-     * the `buildSrc` directory from the parent project.
-     *
-     * The predicate:
-     *  1) saves on unnecessary copying,
-     *  2) prevents file locking issue under Windows, which fails the build because a file
-     *     locked under the `.gradle` directory could not be copied.
-     */
-    @VisibleForTesting
-    fun isSourceCode(path: Path): Boolean {
-        val nonSrcDir = listOf(".gradle", "build")
-        return path.any { nonSrcDir.contains(it.name) }.not()
+/**
+ * Opts-in to experimental features that we use in our codebase.
+ */
+fun KotlinCompile.setFreeCompilerArgs() {
+    kotlinOptions {
+        freeCompilerArgs = listOf(
+            "-Xskip-prerelease-check",
+            "-Xjvm-default=all",
+            "-Xopt-in=kotlin.contracts.ExperimentalContracts",
+            "-Xopt-in=kotlin.ExperimentalStdlibApi"
+        )
     }
 }

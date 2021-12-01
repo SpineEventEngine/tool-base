@@ -44,8 +44,7 @@ class PluginBaseDependencyVersionsTest {
     @DisplayName("contain the version of Protobuf compiler")
     void containProtoc() {
         DependencyVersions versions = ProtocConfigurationPlugin.versions;
-        Dependency protoc = protobufCompiler();
-        Optional<String> version = versions.versionOf(protoc);
+        Optional<String> version = versions.versionOf(protobufCompiler);
         assertThat(version)
                 .isPresent();
         assertThat(version.get())

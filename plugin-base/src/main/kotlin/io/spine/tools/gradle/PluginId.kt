@@ -23,19 +23,9 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-package io.spine.tools.gradle;
-
-import io.spine.value.StringTypeValue;
+package io.spine.tools.gradle
 
 /**
  * An identifier of a Gradle plugin.
  */
-public final class PluginId extends StringTypeValue {
-
-    private static final long serialVersionUID = 0L;
-
-    public PluginId(String value) {
-        super(value);
-    }
-}
+public data class PluginId(@JvmField public val id: String)

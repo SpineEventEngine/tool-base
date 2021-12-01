@@ -45,9 +45,6 @@ public data class SourceSetName(val value: String) {
 
         @JvmField
         public val test: SourceSetName = SourceSetName(TEST_SOURCE_SET_NAME)
-
-        @JvmField
-        public val proto: SourceSetName = SourceSetName("proto")
     }
 
     /** Returns the [value] of the source set name. */

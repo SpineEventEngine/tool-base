@@ -26,16 +26,20 @@
 
 package io.spine.tools.gragle.testing
 
-import io.spine.tools.gradle.testing.BuildSrc
+import com.google.common.truth.Truth.assertThat
+import io.spine.tools.gradle.testing.BuildSrcCopy
 import java.nio.file.Paths
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
-class `'BuildSrc' should` {
+class `'BuildSrcCopy' should` {
+
+    private lateinit var buildSrcCopy: BuildSrcCopy
 
     @Test
-    fun `copy only directories with source code`() {
+    fun `copy directories with source code`() {
+        buildSrcCopy = BuildSrcCopy(false)
         listOf(
             "aus.weis",
             "src/main/kotlin",
@@ -54,16 +58,38 @@ class `'BuildSrc' should` {
         ).forEach(this::assertIsNotSourceCode)
     }
 
+    @Test
+    fun `include 'build' directory if instructed`() {
+        buildSrcCopy = BuildSrcCopy(true)
+
+        listOf(
+            "build",
+            "build/classes",
+        ).forEach(this::assertIsSourceCode)
+
+        listOf(
+            ".gradle",
+            ".gradle/file-system.probe",
+            "buildSrc/.gradle/7.3/executionHistory/executionHistory.lock"
+        ).forEach(this::assertIsNotSourceCode)
+    }
+
+    @Test
+    fun `copy 'build' dir by default`() {
+        assertThat(BuildSrcCopy().includeBuildDir)
+            .isTrue()
+    }
+
     private fun assertIsSourceCode(path: String) {
         val p = Paths.get(path)
-        assertTrue(BuildSrc.isSourceCode(p)) {
+        assertTrue(buildSrcCopy.test(p)) {
             "The path `${p}` is expected to be source code."
         }
     }
 
     private fun assertIsNotSourceCode(path: String) {
         val p = Paths.get(path)
-        assertFalse(BuildSrc.isSourceCode(p)) {
+        assertFalse(buildSrcCopy.test(p)) {
             "The path `${p}` is expected to be NOT source code."
         }
     }

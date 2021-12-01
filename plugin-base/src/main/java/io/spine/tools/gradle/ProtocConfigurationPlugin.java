@@ -86,7 +86,7 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
     @Override
     public void apply(Project project) {
         project.getPluginManager()
-               .withPlugin(gradlePlugin().value(), plugin -> applyTo(project));
+               .withPlugin(gradlePlugin.id, plugin -> applyTo(project));
     }
 
     private void applyTo(Project project) {
@@ -150,10 +150,9 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
         }
 
         private void setProtocArtifact() {
-            ThirdPartyDependency protoc = protobufCompiler();
             String protocArtifact =
-                    protoc.withVersionFrom(versions)
-                          .notation();
+                    protobufCompiler.withVersionFrom(versions)
+                                    .notation();
             protobuf.protoc(closure(
                     (ExecutableLocator locator) -> locator.setArtifact(protocArtifact)
             ));

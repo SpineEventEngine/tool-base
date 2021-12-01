@@ -126,7 +126,7 @@ class `'ProjectExtensions' should` {
 
         @Test
         fun `from the 'proto' extension`() {
-            project.plugins.apply(ProtobufDependencies.gradlePlugin().value())
+            project.plugins.apply(ProtobufDependencies.gradlePlugin.id)
 
             assertDirectorySet().isNotNull()
         }
