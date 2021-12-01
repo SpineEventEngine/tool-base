@@ -68,8 +68,8 @@ class `'GradleProjectSetup' should` {
 
     @Test
     fun `do not require 'buildSrc' directory by default`() {
-        assertThat(setup.needsBuildSrc)
-            .isFalse()
+        assertThat(setup.buildSrcCopy)
+            .isNull()
     }
 
     @Test

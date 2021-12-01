@@ -79,7 +79,7 @@ public class GradleProjectSetup internal constructor(
      * If set, the `buildSrc` directory will be copied from the root project
      * into the directory of the project to be created.
      */
-    internal var needsBuildSrc = false
+    internal var buildSrcCopy: BuildSrcCopy? = null
         private set
 
     /** The flag to be passed to [org.gradle.testkit.runner.GradleRunner.withDebug].  */
@@ -170,8 +170,9 @@ public class GradleProjectSetup internal constructor(
      * Instructs to copy the `buildSrc` directory from the parent project
      * into the directory of the project to be created.
      */
-    public fun copyBuildSrc(): GradleProjectSetup {
-        needsBuildSrc = true
+    @JvmOverloads
+    public fun copyBuildSrc(withBuildDir: Boolean = true): GradleProjectSetup {
+        buildSrcCopy = BuildSrcCopy(withBuildDir)
         return this
     }
 

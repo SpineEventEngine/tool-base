@@ -25,35 +25,48 @@
  */
 package io.spine.tools.gradle.testing
 
-import com.google.common.annotations.VisibleForTesting
 import io.spine.io.Copy.copyDir
 import java.nio.file.Path
+import java.util.function.Predicate
 import kotlin.io.path.name
 
 /**
- * Utilities for working with the `buildSrc` directory of a Gradle project.
+ * The predicate to prevent copying unnecessary files when copying
+ * the `buildSrc` directory from the parent project.
+ *
+ * The predicate:
+ *  1) saves on unnecessary copying,
+ *  2) prevents file locking issue under Windows, which fails the build because a file
+ *     locked under the `.gradle` directory could not be copied.
  */
-internal object BuildSrc {
+internal data class BuildSrcCopy(
+    /**
+     * If `true`, `buildSrc/build` directory will be copied.
+     *
+     * Such an arrangement is needed for test projects that refer to
+     * the `io.spine.internal.dependency` package in their build scripts.
+     * Such references are resoled if classes under `buildSrc/build/classes` are available
+     * for the Gradle runner.
+     */
+    val includeBuildDir: Boolean = true
+): Predicate<Path> {
+
+    private val doNotCopy: List<String> = buildList(2) {
+        add(".gradle")
+        if (!includeBuildDir) {
+            add("build")
+        }
+    }
 
     /** Copies the `buildSrc` directory from the [RootProject] into the specified directory. */
     fun writeTo(targetDir: Path) {
         val rootPath = RootProject.path()
         val buildSrc = rootPath.resolve("buildSrc")
-        copyDir(buildSrc, targetDir) { path -> isSourceCode(path) }
+        copyDir(buildSrc, targetDir) { path -> test(path) }
     }
 
-    /**
-     * The predicate to prevent copying unnecessary files when copying
-     * the `buildSrc` directory from the parent project.
-     *
-     * The predicate:
-     *  1) saves on unnecessary copying,
-     *  2) prevents file locking issue under Windows, which fails the build because a file
-     *     locked under the `.gradle` directory could not be copied.
-     */
-    @VisibleForTesting
-    fun isSourceCode(path: Path): Boolean {
-        val nonSrcDir = listOf(".gradle", "build")
-        return path.any { nonSrcDir.contains(it.name) }.not()
+    /** Tests if the given path should be copied. */
+    override fun test(path: Path): Boolean {
+        return path.any { doNotCopy.contains(it.name) }.not()
     }
 }
