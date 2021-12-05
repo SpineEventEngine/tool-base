@@ -31,7 +31,6 @@ import io.spine.annotation.Internal;
 import io.spine.io.Resource;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
@@ -64,10 +63,10 @@ public final class DependencyVersions {
      */
     public static DependencyVersions loadFor(String artifactName) {
         checkNotNull(artifactName);
-        String fileName = format("versions-%s.properties", artifactName);
-        Resource resource = Resource.file(fileName, DependencyVersions.class.getClassLoader());
-        try (Reader reader = resource.openAsText()) {
-            Properties properties = new Properties();
+        var fileName = format("versions-%s.properties", artifactName);
+        var resource = Resource.file(fileName, DependencyVersions.class.getClassLoader());
+        try (var reader = resource.openAsText()) {
+            var properties = new Properties();
             properties.load(reader);
             return loadFrom(properties);
         } catch (IOException e) {
@@ -91,7 +90,7 @@ public final class DependencyVersions {
      */
     public Optional<String> versionOf(Dependency dependency) {
         checkNotNull(dependency);
-        String key = dependency.fileSafeId();
+        var key = dependency.fileSafeId();
         if (versions.containsKey(key)) {
             return Optional.of(versions.get(key));
         } else {

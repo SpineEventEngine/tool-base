@@ -29,7 +29,6 @@ package io.spine.tools.gradle;
 import io.spine.code.proto.FileSet;
 import io.spine.tools.gradle.project.Projects;
 import io.spine.tools.type.FileDescriptorSuperset;
-import io.spine.tools.type.MergedDescriptorSet;
 import io.spine.tools.type.MoreKnownTypes;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
@@ -62,8 +61,8 @@ public final class ProtoFiles {
         checkNotNull(project);
         checkNotNull(ssn);
         Supplier<File> descriptorSetFile = () -> Projects.descriptorSetFile(project, ssn);
-        ConfigurationName cn = JavaConfigurationName.runtimeClasspath(ssn);
-        Configuration configuration = configuration(project, cn);
+        var cn = JavaConfigurationName.runtimeClasspath(ssn);
+        var configuration = configuration(project, cn);
         return collect(descriptorSetFile, configuration);
     }
 
@@ -81,13 +80,13 @@ public final class ProtoFiles {
     private static Supplier<FileSet> collect(Supplier<File> descriptorSetFile,
                                              Configuration configuration) {
         return () -> {
-            FileDescriptorSuperset superset = new FileDescriptorSuperset();
+            var superset = new FileDescriptorSuperset();
             configuration.forEach(superset::addFromDependency);
-            File suppliedDescriptorSet = descriptorSetFile.get();
+            var suppliedDescriptorSet = descriptorSetFile.get();
             if (suppliedDescriptorSet.exists()) {
                 superset.addFromDependency(suppliedDescriptorSet);
             }
-            MergedDescriptorSet mergedSet = superset.merge();
+            var mergedSet = superset.merge();
             mergedSet.loadIntoKnownTypes();
             return mergedSet.fileSet();
         };

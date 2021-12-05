@@ -27,7 +27,6 @@
 package io.spine.tools.gradle;
 
 import com.google.common.base.Objects;
-import io.spine.annotation.Internal;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.gradle.api.artifacts.Dependency;
 
@@ -131,12 +130,12 @@ public final class Artifact {
      * Obtains a descriptor set file of this artifact.
      */
     public File descriptorSetFile() {
-        File result = new File(fileSafeId() + DESC_EXTENSION);
+        var result = new File(fileSafeId() + DESC_EXTENSION);
         return result;
     }
 
     private String buildId(char primarySeparator, char secondarySeparator) {
-        StringBuilder result = new StringBuilder(group)
+        var result = new StringBuilder(group)
                 .append(primarySeparator)
                 .append(name)
                 .append(primarySeparator)
@@ -165,7 +164,7 @@ public final class Artifact {
         if (!(o instanceof Artifact)) {
             return false;
         }
-        Artifact artifact = (Artifact) o;
+        var artifact = (Artifact) o;
         return Objects.equal(group, artifact.group) &&
                 Objects.equal(name, artifact.name) &&
                 Objects.equal(version, artifact.version) &&

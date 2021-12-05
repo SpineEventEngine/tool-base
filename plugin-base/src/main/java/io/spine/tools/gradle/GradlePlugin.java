@@ -85,7 +85,7 @@ public final class GradlePlugin<P extends Plugin<? extends Project>> {
         if (!(o instanceof GradlePlugin)) {
             return false;
         }
-        GradlePlugin<?> plugin = (GradlePlugin<?>) o;
+        var plugin = (GradlePlugin<?>) o;
         return Objects.equal(implementationClass, plugin.implementationClass);
     }
 
