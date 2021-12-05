@@ -113,7 +113,6 @@ subprojects {
 
     dependencies {
         errorprone(ErrorProne.core)
-        errorproneJavac(ErrorProne.javacPlugin)
 
         compileOnlyApi(FindBugs.annotations)
         compileOnlyApi(CheckerFramework.annotations)
@@ -132,7 +131,7 @@ subprojects {
         excludeProtobufLite()
     }
 
-    val javaVersion = 8
+    val javaVersion = 11
     kotlin {
         applyJvmToolchain(javaVersion)
         explicitApi()
@@ -147,7 +146,7 @@ subprojects {
     JavadocConfig.applyTo(project)
 
     tasks.withType<KotlinCompile>().configureEach {
-        kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
+        kotlinOptions.jvmTarget = JavaVersion.VERSION_11.toString()
         setFreeCompilerArgs()
     }
 
