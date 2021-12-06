@@ -27,15 +27,12 @@
 package io.spine.tools.gradle.project;
 
 import com.google.common.base.Function;
-import com.google.common.truth.Correspondence;
 import io.spine.tools.gradle.Artifact;
 import io.spine.tools.gradle.ConfigurationName;
 import io.spine.tools.gradle.Dependency;
 import io.spine.tools.gradle.ThirdPartyDependency;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
-import org.gradle.api.artifacts.ConfigurationContainer;
-import org.gradle.api.artifacts.DependencySet;
 import org.gradle.api.artifacts.ExcludeRule;
 import org.gradle.api.artifacts.ModuleVersionSelector;
 import org.gradle.api.internal.artifacts.DefaultExcludeRule;
@@ -48,7 +45,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.nio.file.Path;
-import java.util.Set;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.truth.Correspondence.transforming;
@@ -78,7 +74,7 @@ class DependantProjectTest {
     @Test
     @DisplayName("add a given dependency")
     void addDependency() {
-        Artifact dependency = artifact();
+        var dependency = artifact();
         dependant.depend(implementation, dependency);
 
         checkDependency(implementation, dependency);
@@ -87,7 +83,7 @@ class DependantProjectTest {
     @Test
     @DisplayName("add an implementation dependency")
     void implementation() {
-        Artifact dependency = artifact();
+        var dependency = artifact();
         dependant.implementation(dependency.notation());
 
         checkDependency(implementation, dependency);
@@ -96,7 +92,7 @@ class DependantProjectTest {
     @Test
     @DisplayName("exclude dependencies")
     void excludeDependencies() {
-        Dependency unwanted = dependency();
+        var unwanted = dependency();
         dependant.exclude(unwanted);
 
         checkExcluded(runtimeClasspath, unwanted);
@@ -129,16 +125,14 @@ class DependantProjectTest {
         }
 
         private void checkForced() {
-            ConfigurationContainer configurations = project.getConfigurations();
+            var configurations = project.getConfigurations();
             configurations.forEach(this::checkForced);
         }
 
         private void checkForced(Configuration config) {
-            Set<ModuleVersionSelector> forcedModules =
-                    config.getResolutionStrategy()
-                          .getForcedModules();
-            String description = "in string form equals to";
-            Correspondence<ModuleVersionSelector, String> correspondence =
+            var forcedModules = config.getResolutionStrategy().getForcedModules();
+            var description = "in string form equals to";
+            var correspondence =
                     transforming(new SelectorToNotation(), description);
             assertThat(forcedModules)
                     .comparingElementsUsing(correspondence)
@@ -156,7 +150,7 @@ class DependantProjectTest {
         @BeforeEach
         void forceDependency() {
             dependency = dependency();
-            String version = version();
+            var version = version();
             notation = dependency.ofVersion(version)
                                         .notation();
             project.getConfigurations()
@@ -187,24 +181,20 @@ class DependantProjectTest {
     }
 
     private void checkDependency(ConfigurationName configuration, Artifact dependency) {
-        DependencySet dependencies = configuration(project, configuration).getDependencies();
+        var dependencies = configuration(project, configuration).getDependencies();
         assertThat(dependencies).hasSize(1);
-        Artifact actualDependency = Artifact.from(getOnlyElement(dependencies));
+        var actualDependency = Artifact.from(getOnlyElement(dependencies));
         assertThat(actualDependency).isEqualTo(dependency);
     }
 
     private void checkExcluded(ConfigurationName fromConfiguration, Dependency unwanted) {
-        Set<ExcludeRule> runtimeExclusionRules =
-                configuration(project, fromConfiguration)
-                        .getExcludeRules();
+        var runtimeExclusionRules = configuration(project, fromConfiguration).getExcludeRules();
         ExcludeRule excludeRule = new DefaultExcludeRule(unwanted.groupId(), unwanted.name());
         assertThat(runtimeExclusionRules).containsExactly(excludeRule);
     }
 
     private static void checkForcedModulesEmpty(Configuration config) {
-        Set<ModuleVersionSelector> forcedModules =
-                config.getResolutionStrategy()
-                      .getForcedModules();
+        var forcedModules = config.getResolutionStrategy().getForcedModules();
         assertThat(forcedModules).isEmpty();
     }
 
@@ -214,12 +204,12 @@ class DependantProjectTest {
     }
 
     private static String version() {
-        String version = "1.15.12";
+        var version = "1.15.12";
         return version;
     }
 
     private static Artifact artifact() {
-        Artifact artifact = Artifact.newBuilder()
+        var artifact = Artifact.newBuilder()
                 .useSpineToolsGroup()
                 .setName("test-artifact")
                 .setVersion("42.0")
@@ -235,7 +225,7 @@ class DependantProjectTest {
 
         @Override
         public String apply(ModuleVersionSelector selector) {
-            String notation = format(
+            var notation = format(
                     "%s:%s:%s", selector.getGroup(), selector.getName(), selector.getVersion()
             );
             return notation;

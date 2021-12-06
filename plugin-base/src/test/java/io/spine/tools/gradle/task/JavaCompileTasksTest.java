@@ -48,8 +48,8 @@ class JavaCompileTasksTest {
     @Test
     @DisplayName("add arguments to Java compile tasks")
     void someArgs() {
-        String firstArg = "firstArg";
-        String secondArg = "secondArg";
+        var firstArg = "firstArg";
+        var secondArg = "secondArg";
         JavaCompileTasks.of(project).addArgs(firstArg, secondArg);
         assertCompileTasksContain(project, firstArg, secondArg);
     }

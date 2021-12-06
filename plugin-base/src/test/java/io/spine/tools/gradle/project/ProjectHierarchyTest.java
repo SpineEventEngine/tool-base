@@ -60,18 +60,18 @@ class ProjectHierarchyTest extends UtilityClassTest<ProjectHierarchy> {
     @Test
     @DisplayName("traverse hierarchy in bf ordering")
     void traverseHierarchyInBfOrdering() {
-        Project root = newProject("root");
+        var root = newProject("root");
 
-        Project sub1 = withParent(root, "sub1");
-        Project sub2 = withParent(root, "sub2");
+        var sub1 = withParent(root, "sub1");
+        var sub2 = withParent(root, "sub2");
 
-        Project subsub1 = withParent(sub1, "subsub1");
-        Project subsub2 = withParent(sub1, "subsub2");
+        var subsub1 = withParent(sub1, "subsub1");
+        var subsub2 = withParent(sub1, "subsub2");
 
         Set<Project> visited = newHashSet();
         ProjectHierarchy.applyToAll(root, project -> {
             assertThat(visited).doesNotContain(project);
-            for (Project child : project.getSubprojects()) {
+            for (var child : project.getSubprojects()) {
                 assertThat(visited).doesNotContain(child);
             }
             visited.add(project);
@@ -84,21 +84,21 @@ class ProjectHierarchyTest extends UtilityClassTest<ProjectHierarchy> {
     @Test
     @DisplayName("not accept non root projects")
     void notAcceptNonRootProjects() {
-        Project project = newProject("root");
-        Project sub = withParent(project, "sub");
+        var project = newProject("root");
+        var sub = withParent(project, "sub");
         assertIllegalArgument(() -> applyToAll(sub, action()));
     }
 
     private static Project newProject(String name) {
         return ProjectBuilder.builder()
-                             .withName(name)
-                             .build();
+                .withName(name)
+                .build();
     }
 
     private static Project withParent(Project parent, String name) {
         return ProjectBuilder.builder()
-                             .withName(name)
-                             .withParent(parent)
-                             .build();
+                .withName(name)
+                .withParent(parent)
+                .build();
     }
 }

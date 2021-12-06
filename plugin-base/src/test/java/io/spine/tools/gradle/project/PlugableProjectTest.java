@@ -30,7 +30,6 @@ import com.google.common.testing.NullPointerTester;
 import io.spine.io.Resource;
 import io.spine.logging.Logging;
 import io.spine.testing.TempDir;
-import io.spine.testing.logging.LogRecordSubject;
 import io.spine.testing.logging.LoggingTest;
 import io.spine.tools.gradle.GradlePlugin;
 import io.spine.tools.gradle.PluginScript;
@@ -44,7 +43,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.google.common.testing.NullPointerTester.Visibility.PACKAGE;
@@ -61,7 +59,7 @@ class PlugableProjectTest {
 
     @BeforeEach
     void setUp() {
-        File tempDir = TempDir.forClass(getClass());
+        var tempDir = TempDir.forClass(getClass());
         project = ProjectBuilder.builder()
                 .withName(PlugableProjectTest.class.getSimpleName())
                 .withProjectDir(tempDir)
@@ -72,7 +70,7 @@ class PlugableProjectTest {
     @Test
     @DisplayName("not accept `null` arguments")
     void notAcceptNulls() {
-        NullPointerTester tester = new NullPointerTester()
+        var tester = new NullPointerTester()
                 .setDefault(GradlePlugin.class, implementedIn(JavaPlugin.class));
         tester.testAllPublicInstanceMethods(plugableProject);
         tester.testConstructors(PlugableProject.class, PACKAGE);
@@ -125,7 +123,7 @@ class PlugableProjectTest {
             plugableProject.apply(plugin);
             assertTrue(plugableProject.isApplied(plugin));
 
-            LogRecordSubject assertLogRecord = assertLog().record();
+            var assertLogRecord = assertLog().record();
             assertLogRecord.isDebug();
             assertLogRecord.hasMessageThat()
                            .contains(plugin.className()
@@ -136,20 +134,20 @@ class PlugableProjectTest {
     @Test
     @DisplayName("apply Gradle scripts from classpath")
     void applyPluginScript() {
-        Resource resource = Resource.file("test-script.gradle", getClass().getClassLoader());
+        var resource = Resource.file("test-script.gradle", getClass().getClassLoader());
         plugableProject.apply(PluginScript.declaredIn(resource));
-        Object success = project.getExtensions()
-                                .getExtraProperties()
-                                .get("success");
+        var success = project.getExtensions()
+                             .getExtraProperties()
+                             .get("success");
         assertThat(success).isEqualTo(true);
     }
 
     @Test
     @DisplayName("execute a given action if a plugin is present")
     void runIfPresent() {
-        GradlePlugin<IdeaPlugin> plugin = implementedIn(IdeaPlugin.class);
+        var plugin = implementedIn(IdeaPlugin.class);
         plugableProject.apply(plugin);
-        AtomicBoolean run = new AtomicBoolean(false);
+        var run = new AtomicBoolean(false);
         plugableProject.with(plugin, idea -> {
             assertThat(idea)
                     .isNotNull();
@@ -162,8 +160,8 @@ class PlugableProjectTest {
     @Test
     @DisplayName("execute a given action after a plugin is applied")
     void runWhenPresent() {
-        GradlePlugin<IdeaPlugin> plugin = implementedIn(IdeaPlugin.class);
-        AtomicBoolean run = new AtomicBoolean(false);
+        var plugin = implementedIn(IdeaPlugin.class);
+        var run = new AtomicBoolean(false);
         plugableProject.with(plugin, idea -> {
             assertThat(idea)
                     .isNotNull();

@@ -26,7 +26,6 @@
 
 package io.spine.tools.gradle;
 
-import org.gradle.api.Project;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -45,7 +44,7 @@ import static io.spine.tools.gradle.GeneratedSourceSet.JAVA;
 import static io.spine.tools.gradle.GeneratedSourceSet.RESOURCES;
 import static io.spine.tools.gradle.GeneratedSourceSet.SPINE;
 
-@DisplayName("GeneratedSourceRoot should")
+@DisplayName("`GeneratedSourceRoot` should")
 class GeneratedSourceRootTest {
 
     private Path projectDir;
@@ -53,32 +52,31 @@ class GeneratedSourceRootTest {
 
     @BeforeEach
     void setUp(@TempDir Path dir) throws IOException {
-        dir = dir.toRealPath();
-        Project project = ProjectBuilder
-                .builder()
-                .withProjectDir(dir.toFile())
+        var realPath = dir.toRealPath();
+        var project = ProjectBuilder.builder()
+                .withProjectDir(realPath.toFile())
                 .build();
-        projectDir = dir;
+        projectDir = realPath;
         sourceRoot = GeneratedSourceRoot.of(project);
     }
 
     @Test
     @DisplayName("resolve '$projectDir/generated'")
     void resolveToGenerated() {
-        Path generated = projectDir.resolve(GENERATED);
-        Path absoluteActual = sourceRoot.path();
+        var generated = projectDir.resolve(GENERATED);
+        var absoluteActual = sourceRoot.path();
         assertThat((Object) absoluteActual).isEqualTo(generated);
     }
 
     @Test
     @DisplayName("obtain a source set subdirectory")
     void obtainSourceSet() {
-        String sourceSetName = "dysfunctional-test";
-        GeneratedSourceSet sourceSet = sourceRoot.sourceSet(sourceSetName);
+        var sourceSetName = "dysfunctional-test";
+        var sourceSet = sourceRoot.sourceSet(sourceSetName);
         assertThat(sourceSet).isNotNull();
-        Path subdirectory = sourceSet.path();
-        Path expectedSubdirectory = projectDir.resolve(GENERATED)
-                                              .resolve(sourceSetName);
+        var subdirectory = sourceSet.path();
+        var expectedSubdirectory = projectDir.resolve(GENERATED)
+                                             .resolve(sourceSetName);
         assertThat((Object) subdirectory).isEqualTo(expectedSubdirectory);
     }
 
@@ -118,7 +116,7 @@ class GeneratedSourceRootTest {
         }
 
         private void testSubDir(String name, Supplier<Path> selector) {
-            Path javaSubdir = selector.get();
+            var javaSubdir = selector.get();
             assertThat((Object) javaSubdir).isEqualTo(sourceSet.path()
                                                                .resolve(name));
         }

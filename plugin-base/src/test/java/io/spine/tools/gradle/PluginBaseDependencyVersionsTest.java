@@ -29,8 +29,6 @@ package io.spine.tools.gradle;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
-
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
 import static io.spine.tools.gradle.Artifact.PLUGIN_BASE_ID;
@@ -43,8 +41,8 @@ class PluginBaseDependencyVersionsTest {
     @Test
     @DisplayName("contain the version of Protobuf compiler")
     void containProtoc() {
-        DependencyVersions versions = ProtocConfigurationPlugin.versions;
-        Optional<String> version = versions.versionOf(protobufCompiler);
+        var versions = ProtocConfigurationPlugin.versions;
+        var version = versions.versionOf(protobufCompiler);
         assertThat(version)
                 .isPresent();
         assertThat(version.get())
@@ -54,9 +52,9 @@ class PluginBaseDependencyVersionsTest {
     @Test
     @DisplayName("contain the version the module itself")
     void containOwnVersion() {
-        DependencyVersions versions = ProtocConfigurationPlugin.versions;
+        var versions = ProtocConfigurationPlugin.versions;
         Dependency protoc = new ThirdPartyDependency(SPINE_TOOLS_GROUP, PLUGIN_BASE_ID);
-        Optional<String> version = versions.versionOf(protoc);
+        var version = versions.versionOf(protoc);
         assertThat(version)
                 .isPresent();
         assertThat(version.get())
