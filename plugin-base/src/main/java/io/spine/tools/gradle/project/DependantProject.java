@@ -152,8 +152,7 @@ public final class DependantProject implements Dependant {
      */
     private static void
     removeForcedDependency(Configuration configuration, Predicate<ModuleVersionSelector> filter) {
-        Set<ModuleVersionSelector> forcedModules =
-                configuration.getResolutionStrategy().getForcedModules();
+        var forcedModules =configuration.getResolutionStrategy().getForcedModules();
         Collection<ModuleVersionSelector> newForcedModules = new HashSet<>(forcedModules);
         newForcedModules.removeIf(filter);
 

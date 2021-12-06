@@ -85,13 +85,13 @@ public final class Artifact {
      *         the Gradle dependency for which to create the artifact
      * @return new instance of {@code Artifact}
      * @throws IllegalArgumentException
-     *          if either {@code group}, {@code name}, or {@code version} of the passed
-     *          dependency is not defined
+     *         if either {@code group}, {@code name}, or {@code version} of the passed
+     *         dependency is not defined
      */
     public static Artifact from(Dependency d) {
-        String group = ensureProperty(d, d::getGroup, "group");
-        String name = ensureProperty(d, d::getName, "name");
-        String version = ensureProperty(d, d::getVersion, "version");
+        var group = ensureProperty(d, d::getGroup, "group");
+        var name = ensureProperty(d, d::getName, "name");
+        var version = ensureProperty(d, d::getVersion, "version");
         return newBuilder()
                 .setGroup(group)
                 .setName(name)

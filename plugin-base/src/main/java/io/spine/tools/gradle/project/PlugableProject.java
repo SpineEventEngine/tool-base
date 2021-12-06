@@ -62,8 +62,8 @@ public final class PlugableProject implements PluginTarget, Logging {
     }
 
     private <P extends Plugin<Project>> void accept(GradlePlugin<P> pluginType, Consumer<P> action) {
-        P plugin = project.getPlugins()
-                          .getAt(pluginType.implementationClass());
+        var plugin = project.getPlugins()
+                            .getAt(pluginType.implementationClass());
         action.accept(plugin);
     }
 

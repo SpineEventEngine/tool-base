@@ -183,7 +183,7 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
              *  Otherwise, a `ConcurrentModificationException` is thrown upon an attempt to
              *  insert a task into the Gradle lifecycle.
              */
-            ImmutableList<GenerateProtoTask> allTasks = ImmutableList.copyOf(tasksProxy);
+            var allTasks = ImmutableList.copyOf(tasksProxy);
             for (var task : allTasks) {
                 configureProtocTask(task);
             }

@@ -31,7 +31,6 @@ import org.gradle.api.tasks.TaskCollection;
 import org.gradle.api.tasks.compile.JavaCompile;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -62,7 +61,7 @@ public final class JavaCompileTasks {
         checkNotNull(arguments);
         for (var task : tasks) {
             var taskOptions = task.getOptions();
-            List<String> compilerArgs = taskOptions.getCompilerArgs();
+            var compilerArgs = taskOptions.getCompilerArgs();
             compilerArgs.addAll(Arrays.asList(arguments));
         }
     }

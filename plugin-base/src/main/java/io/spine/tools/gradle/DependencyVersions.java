@@ -75,9 +75,7 @@ public final class DependencyVersions {
     }
 
     private static DependencyVersions loadFrom(Map<?, ?> properties) {
-        ImmutableMap<String, String> versions = properties
-                .entrySet()
-                .stream()
+        var versions = properties.entrySet().stream()
                 .collect(toImmutableMap(e -> e.getKey().toString(),
                                         e -> e.getValue().toString()));
         return new DependencyVersions(versions);
