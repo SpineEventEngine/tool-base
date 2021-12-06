@@ -55,8 +55,8 @@ public final class TypeName extends StringTypeValue {
      */
     public static TypeName from(GenericDescriptor descriptor) {
         checkNotNull(descriptor);
-        String typeName = descriptor.getFullName();
-        String nameWithPrefix = PREFIX + typeName;
+        var typeName = descriptor.getFullName();
+        var nameWithPrefix = PREFIX + typeName;
         return new TypeName(nameWithPrefix);
     }
 
@@ -67,7 +67,7 @@ public final class TypeName extends StringTypeValue {
      */
     public static TypeName ofParser(Descriptor message) {
         checkNotNull(message);
-        TypeName messageType = from(message);
+        var messageType = from(message);
         return new TypeName(messageType + ".Parser");
     }
 }

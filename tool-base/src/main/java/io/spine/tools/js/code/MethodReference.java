@@ -48,7 +48,7 @@ public final class MethodReference extends StringTypeValue {
      * Obtains the reference to the instance method of the specified type.
      */
     public static MethodReference onType(TypeName typeName, String methodName) {
-        String value = format("%s.%s", typeName, methodName);
+        var value = format("%s.%s", typeName, methodName);
         return new MethodReference(value);
     }
 
@@ -56,7 +56,7 @@ public final class MethodReference extends StringTypeValue {
      * Obtains the reference to the static method of the specified type.
      */
     public static MethodReference onPrototype(TypeName typeName, String methodName) {
-        String value = format("%s.prototype.%s", typeName, methodName);
+        var value = format("%s.prototype.%s", typeName, methodName);
         return new MethodReference(value);
     }
 

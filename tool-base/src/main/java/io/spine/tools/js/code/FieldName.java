@@ -26,7 +26,6 @@
 
 package io.spine.tools.js.code;
 
-import com.google.protobuf.DescriptorProtos.FieldDescriptorProto;
 import com.google.protobuf.Descriptors.FieldDescriptor;
 import io.spine.value.StringTypeValue;
 
@@ -48,9 +47,9 @@ public final class FieldName extends StringTypeValue {
 
     public static FieldName from(FieldDescriptor fieldDescriptor) {
         checkNotNull(fieldDescriptor);
-        FieldDescriptorProto proto = fieldDescriptor.toProto();
-        String capitalizedName = io.spine.code.proto.FieldName.of(proto)
-                                                              .toCamelCase();
+        var proto = fieldDescriptor.toProto();
+        var capitalizedName = io.spine.code.proto.FieldName.of(proto)
+                                                           .toCamelCase();
         return new FieldName(capitalizedName);
     }
 }
