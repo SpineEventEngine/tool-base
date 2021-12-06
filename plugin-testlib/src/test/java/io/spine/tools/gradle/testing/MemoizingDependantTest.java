@@ -26,7 +26,6 @@
 
 package io.spine.tools.gradle.testing;
 
-import com.google.common.collect.ImmutableSet;
 import io.spine.tools.gradle.Artifact;
 import io.spine.tools.gradle.Dependency;
 import io.spine.tools.gradle.ThirdPartyDependency;
@@ -38,7 +37,7 @@ import org.junit.jupiter.api.Test;
 import static com.google.common.truth.Truth.assertThat;
 
 @SuppressWarnings("DuplicateStringLiteralInspection") // Test display names duplication.
-@DisplayName("MemoizingDependant should")
+@DisplayName("`MemoizingDependant` should")
 class MemoizingDependantTest {
 
     private MemoizingDependant container;
@@ -51,7 +50,7 @@ class MemoizingDependantTest {
     @Test
     @DisplayName("memoize a given dependency")
     void addDependency() {
-        Artifact dependency = artifact();
+        var dependency = artifact();
         container.implementation(dependency.notation());
 
         checkDependency(dependency);
@@ -60,7 +59,7 @@ class MemoizingDependantTest {
     @Test
     @DisplayName("memoize a given exclusion rule")
     void addExclusion() {
-        Dependency unwanted = dependency();
+        var unwanted = dependency();
         container.exclude(unwanted);
 
         checkExcluded(unwanted);
@@ -73,7 +72,7 @@ class MemoizingDependantTest {
         @Test
         @DisplayName("represented as `Artifact`")
         void representedAsArtifact() {
-            Artifact artifact = artifact();
+            var artifact = artifact();
             container.force(artifact);
 
             checkForced(artifact);
@@ -82,16 +81,16 @@ class MemoizingDependantTest {
         @Test
         @DisplayName("represented as `String` notation")
         void representedAsString() {
-            Artifact artifact = artifact();
-            String notation = artifact.notation();
+            var artifact = artifact();
+            var notation = artifact.notation();
             container.force(notation);
 
             checkForced(artifact);
         }
 
         private void checkForced(Artifact artifact) {
-            ImmutableSet<String> forcedDependencies = container.forcedDependencies();
-            String notation = artifact.notation();
+            var forcedDependencies = container.forcedDependencies();
+            var notation = artifact.notation();
             assertThat(forcedDependencies).contains(notation);
         }
     }
@@ -105,7 +104,7 @@ class MemoizingDependantTest {
         void representedAsDependency() {
             container.force(artifact());
 
-            Dependency dependency = dependency();
+            var dependency = dependency();
             container.removeForcedDependency(dependency);
 
             assertThat(container.forcedDependencies()).isEmpty();
@@ -116,7 +115,7 @@ class MemoizingDependantTest {
         void representedAsString() {
             container.force(artifact());
 
-            String notation = artifact().notation();
+            var notation = artifact().notation();
             container.removeForcedDependency(notation);
 
             assertThat(container.forcedDependencies()).isEmpty();
@@ -124,12 +123,12 @@ class MemoizingDependantTest {
     }
 
     private void checkDependency(Artifact dependency) {
-        ImmutableSet<String> dependencies = container.dependencies();
+        var dependencies = container.dependencies();
         assertThat(dependencies).contains(dependency.notation());
     }
 
     private void checkExcluded(Dependency unwanted) {
-        ImmutableSet<Dependency> exclusions = container.exclusions();
+        var exclusions = container.exclusions();
         assertThat(exclusions).contains(unwanted);
     }
 

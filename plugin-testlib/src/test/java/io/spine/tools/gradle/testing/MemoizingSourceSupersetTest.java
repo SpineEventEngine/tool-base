@@ -38,15 +38,14 @@ import java.io.File;
 
 import static com.google.common.truth.Truth.assertThat;
 
-@DisplayName("MemoizingSourceSuperset should")
+@DisplayName("`MemoizingSourceSuperset` should")
 class MemoizingSourceSupersetTest {
 
     private Project project;
 
     @BeforeEach
     void setUp(@TempDir File projectDir) {
-        project = ProjectBuilder
-                .builder()
+        project = ProjectBuilder.builder()
                 .withProjectDir(projectDir)
                 .build();
     }
@@ -54,8 +53,8 @@ class MemoizingSourceSupersetTest {
     @Test
     @DisplayName("memoize given directory")
     void memoizeDirs() {
-        MemoizingSourceSuperset structure = new MemoizingSourceSuperset();
-        GeneratedSourceRoot sourceRoot = GeneratedSourceRoot.of(project);
+        var structure = new MemoizingSourceSuperset();
+        var sourceRoot = GeneratedSourceRoot.of(project);
         structure.register(sourceRoot);
 
         assertThat(structure.javaSourceDirs()).contains(sourceRoot.path());

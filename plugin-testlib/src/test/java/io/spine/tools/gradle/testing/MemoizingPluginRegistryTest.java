@@ -42,7 +42,7 @@ class MemoizingPluginRegistryTest {
     @DisplayName("memoize the given plugin")
     void memoizePlugin() {
         GradlePlugin<?> plugin = GradlePlugin.implementedIn(JavaPlugin.class);
-        MemoizingPluginRegistry registry = new MemoizingPluginRegistry();
+        var registry = new MemoizingPluginRegistry();
         registry.apply(plugin);
         assertThat(registry.isApplied(plugin)).isTrue();
         assertThat(registry.plugins()).containsExactly(plugin);
@@ -52,9 +52,9 @@ class MemoizingPluginRegistryTest {
     @Test
     @DisplayName("memoize the given plugin script")
     void memoizePluginScript() {
-        Resource resource = Resource.file("build.gradle", getClass().getClassLoader());
-        PluginScript script = PluginScript.declaredIn(resource);
-        MemoizingPluginRegistry registry = new MemoizingPluginRegistry();
+        var resource = Resource.file("build.gradle", getClass().getClassLoader());
+        var script = PluginScript.declaredIn(resource);
+        var registry = new MemoizingPluginRegistry();
         registry.apply(script);
         assertThat(registry.pluginScripts()).containsExactly(script);
         assertThat(registry.plugins()).isEmpty();
