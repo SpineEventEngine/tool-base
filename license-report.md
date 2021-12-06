@@ -1,6 +1,6 @@
 
 
-# Dependencies of `io.spine.tools:spine-plugin-base:2.0.0-SNAPSHOT.82`
+# Dependencies of `io.spine.tools:spine-plugin-base:2.0.0-SNAPSHOT.83`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -151,10 +151,6 @@
 
 1.  **Group** : com.google.errorprone. **Name** : error_prone_type_annotations. **Version** : 2.8.0.
      * **License:** [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-
-1.  **Group** : com.google.errorprone. **Name** : javac. **Version** : 9+181-r4173-1.
-     * **Project URL:** [https://github.com/google/error-prone-javac](https://github.com/google/error-prone-javac)
-     * **License:** [GNU General Public License, version 2, with the Classpath Exception](http://openjdk.java.net/legal/gplv2+ce.html)
 
 1.  **Group** : com.google.flogger. **Name** : flogger. **Version** : 0.6.
      * **Project URL:** [https://github.com/google/flogger](https://github.com/google/flogger)
@@ -448,12 +444,12 @@
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Wed Dec 01 20:48:54 EET 2021** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Sun Dec 05 15:31:46 EET 2021** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:spine-plugin-testlib:2.0.0-SNAPSHOT.82`
+# Dependencies of `io.spine.tools:spine-plugin-testlib:2.0.0-SNAPSHOT.83`
 
 ## Runtime
 1.  **Group** : com.google.auto.value. **Name** : auto-value-annotations. **Version** : 1.8.
@@ -656,10 +652,6 @@ This report was generated on **Wed Dec 01 20:48:54 EET 2021** using [Gradle-Lice
 
 1.  **Group** : com.google.errorprone. **Name** : error_prone_type_annotations. **Version** : 2.8.0.
      * **License:** [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-
-1.  **Group** : com.google.errorprone. **Name** : javac. **Version** : 9+181-r4173-1.
-     * **Project URL:** [https://github.com/google/error-prone-javac](https://github.com/google/error-prone-javac)
-     * **License:** [GNU General Public License, version 2, with the Classpath Exception](http://openjdk.java.net/legal/gplv2+ce.html)
 
 1.  **Group** : com.google.flogger. **Name** : flogger. **Version** : 0.6.
      * **Project URL:** [https://github.com/google/flogger](https://github.com/google/flogger)
@@ -953,12 +945,12 @@ This report was generated on **Wed Dec 01 20:48:54 EET 2021** using [Gradle-Lice
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Wed Dec 01 20:48:55 EET 2021** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Sun Dec 05 15:31:47 EET 2021** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:spine-tool-base:2.0.0-SNAPSHOT.82`
+# Dependencies of `io.spine.tools:spine-tool-base:2.0.0-SNAPSHOT.83`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -1093,10 +1085,6 @@ This report was generated on **Wed Dec 01 20:48:55 EET 2021** using [Gradle-Lice
 
 1.  **Group** : com.google.errorprone. **Name** : error_prone_type_annotations. **Version** : 2.8.0.
      * **License:** [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-
-1.  **Group** : com.google.errorprone. **Name** : javac. **Version** : 9+181-r4173-1.
-     * **Project URL:** [https://github.com/google/error-prone-javac](https://github.com/google/error-prone-javac)
-     * **License:** [GNU General Public License, version 2, with the Classpath Exception](http://openjdk.java.net/legal/gplv2+ce.html)
 
 1.  **Group** : com.google.flogger. **Name** : flogger. **Version** : 0.6.
      * **Project URL:** [https://github.com/google/flogger](https://github.com/google/flogger)
@@ -1374,4 +1362,4 @@ This report was generated on **Wed Dec 01 20:48:55 EET 2021** using [Gradle-Lice
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Wed Dec 01 20:48:56 EET 2021** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Sun Dec 05 15:31:47 EET 2021** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
