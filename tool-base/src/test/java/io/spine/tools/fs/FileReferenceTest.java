@@ -30,7 +30,6 @@ import com.google.common.testing.NullPointerTester;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -56,15 +55,15 @@ class FileReferenceTest {
     @Test
     @DisplayName("obtain file name skipping the path")
     void obtainFileName() {
-        FileReference fileReference = FileReference.of("./../../foo/nested.js");
-        String fileName = fileReference.fileName();
+        var fileReference = FileReference.of("./../../foo/nested.js");
+        var fileName = fileReference.fileName();
         assertThat(fileName).isEqualTo("nested.js");
     }
 
     @Test
     @DisplayName("obtain the directory skipping relative path")
     void directorySkipRelative() {
-        FileReference fileReference = FileReference.of("./../../foo/bar/f.js");
+        var fileReference = FileReference.of("./../../foo/bar/f.js");
         assertEquals("foo/bar", fileReference.directory()
                                              .value());
     }
@@ -72,8 +71,8 @@ class FileReferenceTest {
     @Test
     @DisplayName("obtain the empty directory path")
     void emptyDirectory() {
-        FileReference file = FileReference.of("./neighbour.txt");
-        DirectoryReference directory = file.directory();
+        var file = FileReference.of("./neighbour.txt");
+        var directory = file.directory();
         assertThat(directory.elements())
                 .containsExactly("");
     }
@@ -81,7 +80,7 @@ class FileReferenceTest {
     @Test
     @DisplayName("create an instance using `Path` instance")
     void fromPath() {
-        Path path = Paths.get("./../../fiz/baz/foo.dart");
+        var path = Paths.get("./../../fiz/baz/foo.dart");
         assertThat(FileReference.of(path).value())
                 .endsWith("foo.dart");
     }
@@ -89,8 +88,8 @@ class FileReferenceTest {
     @Test
     @DisplayName("compare")
     void comparison() {
-        FileReference first = FileReference.of(Paths.get("./f1"));
-        FileReference second = FileReference.of(Paths.get("./f2"));
+        var first = FileReference.of(Paths.get("./f1"));
+        var second = FileReference.of(Paths.get("./f2"));
         assertThat(first).isLessThan(second);
         assertThat(second).isGreaterThan(first);
         assertThat(first)

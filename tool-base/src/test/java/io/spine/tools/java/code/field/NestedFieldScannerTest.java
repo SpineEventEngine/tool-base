@@ -54,7 +54,7 @@ class NestedFieldScannerTest {
     @Test
     @DisplayName("collect types of all top-level and nested `Message`-typed fields of a type")
     void collectTypes() {
-        List<MessageType> result = scan(Magazine.getDescriptor());
+        var result = scan(Magazine.getDescriptor());
 
         assertThat(result)
                 .comparingElementsUsing(classCorrespondence())
@@ -65,7 +65,7 @@ class NestedFieldScannerTest {
     @Test
     @DisplayName("collect zero types if the message type doesn't have `Message`-typed fields")
     void collectZeroTypes() {
-        List<MessageType> result = scan(Volume.getDescriptor());
+        var result = scan(Volume.getDescriptor());
 
         assertThat(result).isEmpty();
     }
@@ -73,7 +73,7 @@ class NestedFieldScannerTest {
     @Test
     @DisplayName("collect uniquely-named message types")
     void collectUniquelyNamed() {
-        List<MessageType> result = scan(MagazineCover.getDescriptor());
+        var result = scan(MagazineCover.getDescriptor());
 
         assertThat(result)
                 .comparingElementsUsing(nameCorrespondence())
@@ -83,7 +83,7 @@ class NestedFieldScannerTest {
     @Test
     @DisplayName("collect a single instance of type in case of circular field references")
     void handleCircularReferences() {
-        List<MessageType> result = scan(Author.getDescriptor());
+        var result = scan(Author.getDescriptor());
         assertThat(result)
                 .comparingElementsUsing(classCorrespondence())
                 .containsExactly(AuthorName.class, Author.class);
@@ -92,7 +92,7 @@ class NestedFieldScannerTest {
     @Test
     @DisplayName("collect a single instance of type in case of two fields with the same type")
     void handleSameTypeFields() {
-        List<MessageType> result = scan(Article.getDescriptor());
+        var result = scan(Article.getDescriptor());
 
         assertThat(result)
                 .comparingElementsUsing(classCorrespondence())
@@ -100,8 +100,8 @@ class NestedFieldScannerTest {
     }
 
     private static List<MessageType> scan(Descriptor messageType) {
-        MessageType type = new MessageType(messageType);
-        NestedFieldScanner scanner = new NestedFieldScanner(type);
+        var type = new MessageType(messageType);
+        var scanner = new NestedFieldScanner(type);
         return scanner.scan();
     }
 
@@ -120,8 +120,7 @@ class NestedFieldScannerTest {
     }
 
     private static boolean nameEquals(MessageType type, String name) {
-        String typeName = type.simpleJavaClassName()
-                              .value();
+        var typeName = type.simpleJavaClassName().value();
         return name.equals(typeName);
     }
 }

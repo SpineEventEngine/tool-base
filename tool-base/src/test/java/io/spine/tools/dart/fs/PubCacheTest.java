@@ -28,7 +28,6 @@ package io.spine.tools.dart.fs;
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import io.spine.testing.UtilityClassTest;
-import io.spine.tools.dart.fs.PubCache;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledOnOs;
@@ -63,7 +62,7 @@ class PubCacheTest extends UtilityClassTest<PubCache> {
     @DisplayName("produce a path on Windows systems")
     @EnabledOnOs(WINDOWS)
     void win() {
-        Path path = checkPath();
+        var path = checkPath();
         List<Path> elements = newArrayList(path);
         assertThat(elements)
                 .contains(Paths.get("AppData"));
@@ -71,7 +70,7 @@ class PubCacheTest extends UtilityClassTest<PubCache> {
 
     @CanIgnoreReturnValue
     private static Path checkPath() {
-        Path bin = PubCache.bin();
+        var bin = PubCache.bin();
         assertThat(bin)
                 .isNotNull();
         assertThat(bin.endsWith(BIN))

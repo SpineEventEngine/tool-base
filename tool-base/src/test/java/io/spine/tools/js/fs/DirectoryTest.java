@@ -60,18 +60,18 @@ class DirectoryTest {
     @Test
     @DisplayName("resolve file name")
     void resolveFileName() {
-        String rawName = "tasks_pb.js";
-        FileName fileName = FileName.of(rawName);
-        Path resolved = directory.resolve(fileName);
-        Path expected = DIRECTORY_PATH.resolve(rawName);
+        var rawName = "tasks_pb.js";
+        var fileName = FileName.of(rawName);
+        var resolved = directory.resolve(fileName);
+        var expected = DIRECTORY_PATH.resolve(rawName);
         assertEquals(expected, resolved);
     }
 
     @Test
     @DisplayName("resolve LibraryFile")
     void resolveCommonFileName() {
-        Path resolved = directory.resolve(INDEX);
-        Path expected = DIRECTORY_PATH.resolve(INDEX.toString());
+        var resolved = directory.resolve(INDEX);
+        var expected = DIRECTORY_PATH.resolve(INDEX.toString());
         assertEquals(expected, resolved);
     }
 }

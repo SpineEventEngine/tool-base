@@ -52,14 +52,14 @@ class FileNameTest {
     @Test
     @DisplayName("construct from a descriptor")
     void appendSuffix() {
-        FileName fileName = FileName.relative(protoFile);
+        var fileName = FileName.relative(protoFile);
         assertThat(fileName.value()).isEqualTo(GENERATED_FILE);
     }
 
     @Test
     @DisplayName("construct from proto file name")
     void returnPathElements() {
-        FileName fileName = FileName.relative(protoFileName());
+        var fileName = FileName.relative(protoFileName());
         assertThat(fileName.value()).isEqualTo(GENERATED_FILE);
     }
    private static io.spine.code.proto.FileName protoFileName() {

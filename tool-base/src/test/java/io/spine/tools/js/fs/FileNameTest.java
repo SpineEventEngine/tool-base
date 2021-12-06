@@ -60,16 +60,16 @@ class FileNameTest {
     @Test
     @DisplayName("replace `.proto` extension with predefined suffix")
     void appendSuffix() {
-        FileName fileName = FileName.from(file);
-        String expected = "google/protobuf/any_pb.js";
+        var fileName = FileName.from(file);
+        var expected = "google/protobuf/any_pb.js";
         assertEquals(expected, fileName.value());
     }
 
     @Test
     @DisplayName("return path elements")
     void returnPathElements() {
-        FileName fileName = FileName.from(file);
-        List<String> pathElements = fileName.pathElements();
+        var fileName = FileName.from(file);
+        var pathElements = fileName.pathElements();
         assertThat(pathElements).contains("google");
         assertThat(pathElements).contains("protobuf");
         assertThat(pathElements).contains("any_pb.js");

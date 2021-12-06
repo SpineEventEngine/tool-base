@@ -42,7 +42,6 @@ import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.file.Path;
 
 import static com.google.protobuf.DescriptorProtos.FieldDescriptorProto.Type.TYPE_STRING;
@@ -66,35 +65,30 @@ class MoreKnownTypesTest extends UtilityClassTest<MoreKnownTypes> {
     void setUp(@TempDir Path tempdir) throws IOException {
         descriptorFile = tempdir.resolve("more_known_types.desc").toFile();
         descriptorFile.createNewFile();
-        FieldDescriptorProto field = FieldDescriptorProto
-                .newBuilder()
+        var field = FieldDescriptorProto.newBuilder()
                 .setType(TYPE_STRING)
                 .setName("string_value")
                 .setNumber(1)
                 .build();
-        DescriptorProto newMessageType = DescriptorProto
-                .newBuilder()
+        var newMessageType = DescriptorProto.newBuilder()
                 .setName("TestDynamicType")
                 .addField(field)
                 .build();
-        FileOptions options = FileOptions
-                .newBuilder()
+        var options = FileOptions.newBuilder()
                 .setExtension(OptionsProto.typeUrlPrefix, TypeUrl.Prefix.SPINE.value())
                 .setJavaMultipleFiles(true)
                 .build();
-        FileDescriptorProto newProtoFile = FileDescriptorProto
-                .newBuilder()
+        var newProtoFile = FileDescriptorProto.newBuilder()
                 .setName("test/test_dynamic_file.proto")
                 .setPackage("spine.test")
                 .addMessageType(newMessageType)
                 .setOptions(options)
                 .addDependency("spine/options.proto")
                 .build();
-        FileDescriptorSet set = FileDescriptorSet
-                .newBuilder()
+        var set = FileDescriptorSet.newBuilder()
                 .addFile(newProtoFile)
                 .build();
-        try (OutputStream stream = newOutputStream(descriptorFile.toPath())) {
+        try (var stream = newOutputStream(descriptorFile.toPath())) {
             set.writeTo(stream);
         }
     }
@@ -102,14 +96,14 @@ class MoreKnownTypesTest extends UtilityClassTest<MoreKnownTypes> {
     @Test
     @DisplayName("not allow non-existing files")
     void notAllowRandomFiles() {
-        File nonExistingFile = new File(randomString());
+        var nonExistingFile = new File(randomString());
         assertIllegalArgument(() -> extendWith(nonExistingFile));
     }
 
     @Test
     @DisplayName("extend known type set")
     void extendKnownTypes() {
-        TypeUrl dynamicType = TypeUrl.parse("type.spine.io/spine.test.TestDynamicType");
+        var dynamicType = TypeUrl.parse("type.spine.io/spine.test.TestDynamicType");
         assertFalse(KnownTypes.instance().contains(dynamicType));
         MoreKnownTypes.extendWith(descriptorFile);
         assertTrue(KnownTypes.instance().contains(dynamicType));

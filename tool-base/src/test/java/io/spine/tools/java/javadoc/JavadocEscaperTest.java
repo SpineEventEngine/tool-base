@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test;
 import static io.spine.tools.java.javadoc.JavadocEscaper.escape;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@DisplayName("JavadocEscaper utility class should")
+@DisplayName("`JavadocEscaper` utility class should")
 class JavadocEscaperTest extends UtilityClassTest<JavadocEscaper> {
 
     JavadocEscaperTest() {
@@ -54,7 +54,7 @@ class JavadocEscaperTest extends UtilityClassTest<JavadocEscaper> {
     @Test
     @DisplayName("escape slash in beginning")
     void escape_slash_in_beginning() {
-        String remainingJavadoc = "ABC";
+        var remainingJavadoc = "ABC";
         assertEquals("&#47;" + remainingJavadoc, escape('/' + remainingJavadoc));
     }
 

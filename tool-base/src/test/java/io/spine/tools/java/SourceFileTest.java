@@ -26,8 +26,6 @@
 
 package io.spine.tools.java;
 
-import com.google.protobuf.DescriptorProtos.DescriptorProto;
-import com.google.protobuf.DescriptorProtos.FileDescriptorProto;
 import com.google.protobuf.Descriptors.Descriptor;
 import io.spine.test.code.NoOuterClassnameSourceFileTest.NoOuterClassnameMessage;
 import io.spine.test.code.SourceFile.NestedMessage;
@@ -39,12 +37,11 @@ import org.junit.jupiter.api.Test;
 import spine.test.code.InheritAllSourceFileTest.InheritAllMessage;
 import spine.test.code.InheritPackage;
 
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@DisplayName("Java SourceFile should")
+@DisplayName("Java `SourceFile` should")
 @SuppressWarnings("InnerClassMayBeStatic") // Nested test suite.
 class SourceFileTest {
 
@@ -89,11 +86,11 @@ class SourceFileTest {
     }
 
     private static void checkPath(String expectedName, Descriptor descriptor) {
-        DescriptorProto message = descriptor.toProto();
+        var message = descriptor.toProto();
 
-        FileDescriptorProto file = descriptor.getFile().toProto();
-        SourceFile sourceFile = SourceFile.forMessage(message, file);
-        Path expectedPath = Paths.get(expectedName);
+        var file = descriptor.getFile().toProto();
+        var sourceFile = SourceFile.forMessage(message, file);
+        var expectedPath = Paths.get(expectedName);
         assertEquals(expectedPath, sourceFile.path());
     }
 }

@@ -46,7 +46,7 @@ class IndentTest {
     @Test
     @DisplayName("allow zero indent")
     void allowZeroIndent() {
-        Indent zeroIndent = Indent.of(0);
+        var zeroIndent = Indent.of(0);
         assertEquals(0, zeroIndent.size());
         assertTrue(zeroIndent.toString()
                              .isEmpty());
@@ -55,7 +55,7 @@ class IndentTest {
     @Test
     @DisplayName("allow custom size")
     void allowCustomSize() {
-        Indent ofThree = Indent.of(3);
+        var ofThree = Indent.of(3);
         assertEquals(3, ofThree.size());
         assertEquals("   ", ofThree.toString());
     }

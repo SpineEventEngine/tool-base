@@ -48,8 +48,8 @@ class NamesTest extends UtilityClassTest<Names> {
         @Test
         @DisplayName("class")
         void classRef() {
-            Class<NamesTest> cls = NamesTest.class;
-            JavaClassName className = className(cls);
+            var cls = NamesTest.class;
+            var className = className(cls);
 
             assertThat(className.getCanonical())
                     .isEqualTo(cls.getCanonicalName());
@@ -58,8 +58,8 @@ class NamesTest extends UtilityClassTest<Names> {
         @Test
         @DisplayName("given canonical class name")
         void canonicalName() {
-            String canonicalName = NamesTest.class.getCanonicalName();
-            JavaClassName className = className(canonicalName);
+            var canonicalName = NamesTest.class.getCanonicalName();
+            var className = className(canonicalName);
 
             assertThat(className.getCanonical())
                     .isEqualTo(canonicalName);

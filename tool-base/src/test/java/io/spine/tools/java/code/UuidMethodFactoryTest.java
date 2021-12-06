@@ -32,8 +32,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static com.google.common.truth.Truth.assertThat;
 import static io.spine.testing.Assertions.assertNpe;
 import static io.spine.testing.TestValues.nullRef;
@@ -57,9 +55,9 @@ final class UuidMethodFactoryTest {
         @Test
         @DisplayName("`generate` method")
         void generateMethod() {
-            MessageType uuidType = new MessageType(UuidMessage.getDescriptor());
-            List<Method> methods = factory.generateMethodsFor(uuidType);
-            Method generate = methods.get(0);
+            var uuidType = new MessageType(UuidMessage.getDescriptor());
+            var methods = factory.generateMethodsFor(uuidType);
+            var generate = methods.get(0);
             assertThat(generate.toString())
                     .isEqualTo("/**\n" +
                                        " * Creates a new instance with a random UUID value.\n" +
@@ -73,9 +71,9 @@ final class UuidMethodFactoryTest {
         @Test
         @DisplayName("`of` method")
         void ofMethod() {
-            MessageType uuidType = new MessageType(UuidMessage.getDescriptor());
-            List<Method> methods = factory.generateMethodsFor(uuidType);
-            Method of = methods.get(1);
+            var uuidType = new MessageType(UuidMessage.getDescriptor());
+            var methods = factory.generateMethodsFor(uuidType);
+            var of = methods.get(1);
             assertThat(of.toString())
                     .isEqualTo("/**\n" +
                                        " * Creates a new instance from the passed value.\n" +

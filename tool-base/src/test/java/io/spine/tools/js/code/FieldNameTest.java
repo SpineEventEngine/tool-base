@@ -28,14 +28,13 @@ package io.spine.tools.js.code;
 
 import com.google.common.testing.NullPointerTester;
 import com.google.protobuf.Any;
-import com.google.protobuf.Descriptors.FieldDescriptor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static io.spine.testing.DisplayNames.NOT_ACCEPT_NULLS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@DisplayName("FieldName should")
+@DisplayName("`FieldName` should")
 class FieldNameTest {
 
     @Test
@@ -44,13 +43,12 @@ class FieldNameTest {
         new NullPointerTester().testAllPublicStaticMethods(FieldName.class);
     }
 
-    @SuppressWarnings("DuplicateStringLiteralInspection") // Duplication with generated code.
     @Test
     @DisplayName("create CamelCase name from Protobuf field")
+    @SuppressWarnings("DuplicateStringLiteralInspection") // Duplication with generated code.
     void convertToCamelCase() {
-        FieldDescriptor typeUrlDescriptor = Any.getDescriptor()
-                                               .findFieldByName("type_url");
-        FieldName fieldName = FieldName.from(typeUrlDescriptor);
+        var typeUrlDescriptor = Any.getDescriptor().findFieldByName("type_url");
+        var fieldName = FieldName.from(typeUrlDescriptor);
         assertEquals("TypeUrl", fieldName.value());
     }
 }
