@@ -56,7 +56,7 @@ public final class NestedClassName extends StringTypeValue {
      * Creates a new instance by the fully-qualified name.
      */
     public static NestedClassName from(ClassName className) {
-        String nameWithOuter = className.withoutPackage();
+        var nameWithOuter = className.withoutPackage();
         return new NestedClassName(nameWithOuter);
     }
 
@@ -72,12 +72,11 @@ public final class NestedClassName extends StringTypeValue {
      * @return this name split into simple class names
      */
     public ImmutableList<SimpleClassName> split() {
-        String fullName = value();
-        ImmutableList<SimpleClassName> result =
-                nameSplitter.splitToList(fullName)
-                            .stream()
-                            .map(SimpleClassName::create)
-                            .collect(toImmutableList());
+        var fullName = value();
+        var split = nameSplitter.splitToList(fullName);
+        var result = split.stream()
+                .map(SimpleClassName::create)
+                .collect(toImmutableList());
         return result;
     }
 }

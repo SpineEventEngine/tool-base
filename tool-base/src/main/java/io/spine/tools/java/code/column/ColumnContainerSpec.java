@@ -122,9 +122,8 @@ public final class ColumnContainerSpec implements TypeSpec {
 
     @Override
     public com.squareup.javapoet.TypeSpec toPoet() {
-        ImmutableList<MethodSpec> columnMethods = columns();
-        com.squareup.javapoet.TypeSpec result = com.squareup.javapoet.TypeSpec
-                .classBuilder(CLASS_NAME)
+        var columnMethods = columns();
+        var result = com.squareup.javapoet.TypeSpec.classBuilder(CLASS_NAME)
                 .addJavadoc(classJavadoc().spec())
                 .addAnnotation(GeneratedBy.spineModelCompiler())
                 .addModifiers(PUBLIC, STATIC, FINAL)
@@ -136,15 +135,13 @@ public final class ColumnContainerSpec implements TypeSpec {
     }
 
     /**
-     * Generates the methods which return entity columns as {@link EntityColumn}
-     * instances.
+     * Generates the methods which return entity columns as {@link EntityColumn} instances.
      */
     private ImmutableList<MethodSpec> columns() {
-        ImmutableList<MethodSpec> result =
-                columns.stream()
-                       .map(ColumnAccessor::new)
-                       .map(ColumnAccessor::methodSpec)
-                       .collect(toImmutableList());
+        var result = columns.stream()
+                .map(ColumnAccessor::new)
+                .map(ColumnAccessor::methodSpec)
+                .collect(toImmutableList());
         return result;
     }
 
@@ -152,21 +149,20 @@ public final class ColumnContainerSpec implements TypeSpec {
      * Generates {@code definitions()} method which enumerates all the columns in this container.
      */
     private MethodSpec definitions(ImmutableList<MethodSpec> columns) {
-        MethodSpec.Builder builder = MethodSpec
-                .methodBuilder("definitions")
+        var builder = MethodSpec.methodBuilder("definitions")
                 .addJavadoc("Returns all the column definitions for this type.")
                 .addModifiers(PUBLIC, STATIC)
                 .returns(definitionsReturnType);
-        ClassName setName = ClassName.get(HashSet.class);
-        TypeName parameterizedSetName = columnHashSetOfType(messageType);
+        var setName = ClassName.get(HashSet.class);
+        var parameterizedSetName = columnHashSetOfType(messageType);
         builder.addStatement("$T result = new $T<>()",
                              parameterizedSetName, setName);
-        for (MethodSpec methodSpec : columns) {
+        for (var methodSpec : columns) {
             builder.addStatement("result.add($N())", methodSpec);
         }
         builder.addStatement("return $T.copyOf(result)", ClassName.get(ImmutableSet.class));
 
-        MethodSpec result = builder.build();
+        var result = builder.build();
         return result;
     }
 
@@ -179,13 +175,13 @@ public final class ColumnContainerSpec implements TypeSpec {
     }
 
     private static TypeName paramdColSetOf(MessageType type, ClassName setType) {
-        JavaPoetName entityColumnType = JavaPoetName.of(EntityColumn.class);
-        JavaPoetName messageTypeName = JavaPoetName.of(type);
-        ParameterizedTypeName parameterizedColumn =
+        var entityColumnType = JavaPoetName.of(EntityColumn.class);
+        var messageTypeName = JavaPoetName.of(type);
+        var parameterizedColumn =
                 ParameterizedTypeName.get(entityColumnType.className(),
                                           messageTypeName.className(),
                                           WildcardTypeName.subtypeOf(Object.class));
-        ParameterizedTypeName result = ParameterizedTypeName.get(setType, parameterizedColumn);
+        var result = ParameterizedTypeName.get(setType, parameterizedColumn);
         return result;
     }
 

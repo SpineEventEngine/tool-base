@@ -62,9 +62,8 @@ public class IdColumnSpec implements GeneratedMethodSpec {
 
     @Override
     public MethodSpec methodSpec() {
-        FieldName name = idName();
-        MethodSpec result = MethodSpec
-                .methodBuilder(name.javaCase())
+        var name = idName();
+        var result = MethodSpec.methodBuilder(name.javaCase())
                 .addJavadoc(javadoc().spec())
                 .addModifiers(PUBLIC)
                 .returns(idCriterion())
@@ -85,10 +84,9 @@ public class IdColumnSpec implements GeneratedMethodSpec {
      * Returns the name of the Java type of a column.
      */
     private ParameterizedTypeName idCriterion() {
-        JavaPoetName result = JavaPoetName.of(IdCriterion.class);
-        ParameterizedTypeName parameterizedResult =
-                ParameterizedTypeName.get(result.className(), idType, queryBuilderName);
-        return parameterizedResult;
+        var result = JavaPoetName.of(IdCriterion.class);
+        var parameterized = ParameterizedTypeName.get(result.className(), idType, queryBuilderName);
+        return parameterized;
     }
 
     /**

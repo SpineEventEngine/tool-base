@@ -63,7 +63,7 @@ public final class NestedClass extends StringTypeValue {
 
     private static String toCode(TypeSpec spec) {
         checkNotNull(spec);
-        com.squareup.javapoet.TypeSpec poet = spec.toPoet();
+        var poet = spec.toPoet();
         return poet.toString();
     }
 }

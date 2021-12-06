@@ -59,9 +59,8 @@ final class ColumnAccessor implements GeneratedMethodSpec {
 
     @Override
     public MethodSpec methodSpec() {
-        FieldName name = columnName();
-        MethodSpec result = MethodSpec
-                .methodBuilder(name.javaCase())
+        var name = columnName();
+        var result = MethodSpec.methodBuilder(name.javaCase())
                 .addJavadoc(javadoc().spec())
                 .addModifiers(PUBLIC, STATIC)
                 .returns(columnType())
@@ -81,10 +80,10 @@ final class ColumnAccessor implements GeneratedMethodSpec {
      * Returns the name of the Java type of a column.
      */
     private ParameterizedTypeName columnType() {
-        JavaPoetName result = JavaPoetName.of(EntityColumn.class);
-        ParameterizedTypeName parameterizedResult =
+        var result = JavaPoetName.of(EntityColumn.class);
+        var parameterized =
                 ParameterizedTypeName.get(result.className(), entityStateName, returningValueName);
-        return parameterizedResult;
+        return parameterized;
     }
 
     /**

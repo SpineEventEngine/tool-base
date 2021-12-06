@@ -41,12 +41,13 @@ import java.util.List;
  * <p>See {@link ColumnContainerSpec} for details.
  */
 @Immutable
+@SuppressWarnings("unused") /* Part of the public API. */
 public final class ColumnFactory implements NestedClassFactory {
 
     @Override
     public List<NestedClass> generateClassesFor(MessageType messageType) {
         TypeSpec columnContainer = ColumnContainerSpec.of(messageType);
-        NestedClass result = new NestedClass(columnContainer);
+        var result = new NestedClass(columnContainer);
         return ImmutableList.of(result);
     }
 }

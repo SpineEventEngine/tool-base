@@ -46,15 +46,15 @@ public final class EntityQueryFactory implements NestedClassFactory, MethodFacto
 
     @Override
     public List<NestedClass> generateClassesFor(MessageType type) {
-        NestedClass queryType = new NestedClass(new EntityQuerySpec(type));
-        NestedClass queryBuilderType = new NestedClass(new EntityQueryBuilderSpec(type));
+        var queryType = new NestedClass(new EntityQuerySpec(type));
+        var queryBuilderType = new NestedClass(new EntityQueryBuilderSpec(type));
         return ImmutableList.of(queryType, queryBuilderType);
     }
 
     @Override
     public List<Method> generateMethodsFor(MessageType type) {
-        EntityQuerySpec spec = new EntityQuerySpec(type);
-        Method method = new Method(spec.methodSpec());
+        var spec = new EntityQuerySpec(type);
+        var method = new Method(spec.methodSpec());
         return ImmutableList.of(method);
     }
 }

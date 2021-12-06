@@ -30,13 +30,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.concurrent.LazyInit;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
+import io.spine.code.java.ClassName;
+import io.spine.code.java.PackageName;
+import io.spine.code.proto.FieldDeclaration;
 import io.spine.tools.java.code.GeneratedBy;
 import io.spine.tools.java.code.GeneratedJavadoc;
 import io.spine.tools.java.code.TypeSpec;
-import io.spine.code.java.ClassName;
-import io.spine.code.java.PackageName;
 import io.spine.tools.java.javadoc.JavadocText;
-import io.spine.code.proto.FieldDeclaration;
 import io.spine.type.MessageType;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
@@ -153,8 +153,7 @@ public final class FieldContainerSpec implements TypeSpec {
 
     @Override
     public com.squareup.javapoet.TypeSpec toPoet() {
-        com.squareup.javapoet.TypeSpec result = com.squareup.javapoet.TypeSpec
-                .classBuilder(CLASS_NAME)
+        var result = com.squareup.javapoet.TypeSpec.classBuilder(CLASS_NAME)
                 .addJavadoc(javadoc().spec())
                 .addModifiers(PUBLIC, STATIC, FINAL)
                 .addAnnotation(GeneratedBy.spineModelCompiler())
@@ -169,11 +168,10 @@ public final class FieldContainerSpec implements TypeSpec {
      * Generates the {@code static} methods which expose the top-level message fields.
      */
     private ImmutableList<MethodSpec> fields() {
-        ImmutableList<MethodSpec> result =
-                fields.stream()
-                      .map(this::topLevelFieldSpec)
-                      .map(FieldAccessor::methodSpec)
-                      .collect(toImmutableList());
+        var result = fields.stream()
+                .map(this::topLevelFieldSpec)
+                .map(FieldAccessor::methodSpec)
+                .collect(toImmutableList());
         return result;
     }
 
@@ -187,7 +185,7 @@ public final class FieldContainerSpec implements TypeSpec {
      * @see MessageTypedField
      */
     private ImmutableList<com.squareup.javapoet.TypeSpec> messageTypeFields() {
-        ImmutableList<com.squareup.javapoet.TypeSpec> result =
+        var result =
                 nestedFieldTypes().stream()
                                   .map(type -> new MessageTypedField(type, fieldSupertype))
                                   .map(MessageTypedField::toPoet)
@@ -201,7 +199,7 @@ public final class FieldContainerSpec implements TypeSpec {
 
     private List<MessageType> nestedFieldTypes() {
         if (nestedFieldTypes == null) {
-            NestedFieldScanner scanner = new NestedFieldScanner(messageType);
+            var scanner = new NestedFieldScanner(messageType);
             nestedFieldTypes = scanner.scan();
         }
         return nestedFieldTypes;

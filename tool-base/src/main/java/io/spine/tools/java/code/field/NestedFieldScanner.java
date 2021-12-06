@@ -66,8 +66,8 @@ final class NestedFieldScanner {
         List<MessageType> resultTypes = newLinkedList();
         Queue<MessageType> typesToScan = newLinkedList(ImmutableList.of(messageType));
         while (!typesToScan.isEmpty()) {
-            MessageType type = typesToScan.poll();
-            ImmutableList<MessageType> messageTypes = uniqueMessageFields(type, resultTypes);
+            var type = typesToScan.poll();
+            var messageTypes = uniqueMessageFields(type, resultTypes);
             resultTypes.addAll(messageTypes);
             typesToScan.addAll(messageTypes);
         }
@@ -81,21 +81,20 @@ final class NestedFieldScanner {
     private static ImmutableList<MessageType> uniqueMessageFields(MessageType messageType,
                                                                   List<MessageType> resultTypes) {
         Set<SimpleClassName> distinctNames = newHashSet();
-        ImmutableList<MessageType> uniqueMessageTypes =
-                messageType.fields()
-                           .stream()
-                           .filter(FieldDeclaration::isSingularMessage)
-                           .map(FieldDeclaration::messageType)
-                           .filter(type -> distinctNames.add(type.simpleJavaClassName()))
-                           .filter(type -> !containsTypeWithSameName(resultTypes, type))
-                           .collect(toImmutableList());
+        var fields = messageType.fields();
+        var uniqueMessageTypes = fields.stream()
+                .filter(FieldDeclaration::isSingularMessage)
+                .map(FieldDeclaration::messageType)
+                .filter(type -> distinctNames.add(type.simpleJavaClassName()))
+                .filter(type -> !containsTypeWithSameName(resultTypes, type))
+                .collect(toImmutableList());
         return uniqueMessageTypes;
     }
 
     private static boolean containsTypeWithSameName(List<MessageType> result, MessageType type) {
-        boolean contains = result.stream()
-                                 .map(MessageType::simpleJavaClassName)
-                                 .anyMatch(name -> name.equals(type.simpleJavaClassName()));
+        var contains = result.stream()
+                .map(MessageType::simpleJavaClassName)
+                .anyMatch(name -> name.equals(type.simpleJavaClassName()));
         return contains;
     }
 }

@@ -54,10 +54,9 @@ public final class GeneratedJavadoc {
      * </pre>
      */
     public static GeneratedJavadoc singleParagraph(CodeBlock paragraph) {
-        JavadocText paragraphText = JavadocText.fromEscaped(paragraph.toString())
-                                               .withNewLine();
-        CodeBlock value = CodeBlock
-                .builder()
+        var paragraphText = JavadocText.fromEscaped(paragraph.toString())
+                                       .withNewLine();
+        var value = CodeBlock.builder()
                 .add(paragraphText.value())
                 .build();
         return new GeneratedJavadoc(value);
@@ -79,14 +78,13 @@ public final class GeneratedJavadoc {
      */
     public static GeneratedJavadoc twoParagraph(CodeBlock firstParagraph,
                                                 CodeBlock secondParagraph) {
-        JavadocText firstParagraphText = JavadocText.fromEscaped(firstParagraph.toString())
-                                                    .withNewLine()
-                                                    .withNewLine();
-        JavadocText secondParagraphText = JavadocText.fromEscaped(secondParagraph.toString())
-                                                     .withPTag()
-                                                     .withNewLine();
-        CodeBlock value = CodeBlock
-                .builder()
+        var firstParagraphText = JavadocText.fromEscaped(firstParagraph.toString())
+                                            .withNewLine()
+                                            .withNewLine();
+        var secondParagraphText = JavadocText.fromEscaped(secondParagraph.toString())
+                                             .withPTag()
+                                             .withNewLine();
+        var value = CodeBlock.builder()
                 .add(firstParagraphText.value())
                 .add(secondParagraphText.value())
                 .build();
@@ -111,17 +109,17 @@ public final class GeneratedJavadoc {
     public static GeneratedJavadoc threeParagraph(CodeBlock firstParagraph,
                                                   CodeBlock secondParagraph,
                                                   CodeBlock thirdParagraph) {
-        JavadocText firstParagraphText = JavadocText.fromEscaped(firstParagraph.toString())
-                                                    .withNewLine()
-                                                    .withNewLine();
-        JavadocText secondParagraphText = JavadocText.fromEscaped(secondParagraph.toString())
-                                                     .withPTag()
-                                                     .withNewLine()
-                                                     .withNewLine();
-        JavadocText thirdParagraphText = JavadocText.fromEscaped(thirdParagraph.toString())
-                                                    .withPTag()
-                                                    .withNewLine();
-        CodeBlock value = CodeBlock
+        var firstParagraphText = JavadocText.fromEscaped(firstParagraph.toString())
+                                            .withNewLine()
+                                            .withNewLine();
+        var secondParagraphText = JavadocText.fromEscaped(secondParagraph.toString())
+                                             .withPTag()
+                                             .withNewLine()
+                                             .withNewLine();
+        var thirdParagraphText = JavadocText.fromEscaped(thirdParagraph.toString())
+                                            .withPTag()
+                                            .withNewLine();
+        var value = CodeBlock
                 .builder()
                 .add(firstParagraphText.value())
                 .add(secondParagraphText.value())

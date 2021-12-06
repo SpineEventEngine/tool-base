@@ -50,11 +50,10 @@ public final class FieldFactory implements NestedClassFactory {
     }
 
     public List<NestedClass> createFor(MessageType messageType, ClassName fieldSupertype) {
-        String generatedCode =
-                new FieldContainerSpec(messageType, fieldSupertype)
-                        .toPoet()
-                        .toString();
-        NestedClass result = new NestedClass(generatedCode);
+        var generatedCode = new FieldContainerSpec(messageType, fieldSupertype)
+                .toPoet()
+                .toString();
+        var result = new NestedClass(generatedCode);
         return ImmutableList.of(result);
     }
 }

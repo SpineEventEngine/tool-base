@@ -33,13 +33,13 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
-import io.spine.tools.java.code.BuilderSpec;
-import io.spine.tools.java.code.GeneratedBy;
-import io.spine.tools.java.code.GeneratedJavadoc;
 import io.spine.code.proto.FieldDeclaration;
 import io.spine.query.EntityQuery;
 import io.spine.query.EntityQueryBuilder;
 import io.spine.query.IdCriterion;
+import io.spine.tools.java.code.BuilderSpec;
+import io.spine.tools.java.code.GeneratedBy;
+import io.spine.tools.java.code.GeneratedJavadoc;
 import io.spine.type.MessageType;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -64,8 +64,7 @@ public final class EntityQueryBuilderSpec extends AbstractEntityQuerySpec implem
 
     @Override
     public TypeSpec toPoet() {
-        TypeSpec result = TypeSpec
-                .classBuilder(queryBuilderType().className())
+        var result = TypeSpec.classBuilder(queryBuilderType().className())
                 .superclass(entityQueryBuilder())
                 .addAnnotation(GeneratedBy.spineModelCompiler())
                 .addModifiers(PUBLIC, STATIC, FINAL)
@@ -92,11 +91,9 @@ public final class EntityQueryBuilderSpec extends AbstractEntityQuerySpec implem
     /**
      * Generates {@code build()} method.
      */
-    @SuppressWarnings("DuplicateStringLiteralInspection")
     private static MethodSpec build() {
-        TypeName typeOfQuery = queryType().value();
-        return MethodSpec
-                .methodBuilder(BUILD_METHOD_NAME)
+        var typeOfQuery = queryType().value();
+        return MethodSpec.methodBuilder(BUILD_METHOD_NAME)
                 .addJavadoc(buildJavadoc().spec())
                 .addAnnotation(Override.class)
                 .addModifiers(PUBLIC)
@@ -122,8 +119,7 @@ public final class EntityQueryBuilderSpec extends AbstractEntityQuerySpec implem
      * Generates the constructor for this query builder.
      */
     private MethodSpec ctor() {
-        return MethodSpec
-                .constructorBuilder()
+        return MethodSpec.constructorBuilder()
                 .addJavadoc("Creates an instance of the builder.")
                 .addModifiers(PRIVATE)
                 .addStatement("super($L.class, $L.class)", idFieldType(), stateType())
@@ -143,11 +139,10 @@ public final class EntityQueryBuilderSpec extends AbstractEntityQuerySpec implem
      * to use in the {@link EntityQuery EntityQuery}.
      */
     private ImmutableList<MethodSpec> columns() {
-        ImmutableList<MethodSpec> result =
-                columns.stream()
-                       .map((c) -> new QueryColumnSpec(c, typeOfSelf()))
-                       .map(QueryColumnSpec::methodSpec)
-                       .collect(toImmutableList());
+        var result = columns.stream()
+                .map((c) -> new QueryColumnSpec(c, typeOfSelf()))
+                .map(QueryColumnSpec::methodSpec)
+                .collect(toImmutableList());
         return result;
     }
 
@@ -155,8 +150,7 @@ public final class EntityQueryBuilderSpec extends AbstractEntityQuerySpec implem
      * Generates {@code thisRef()} method.
      */
     private static MethodSpec thisRef() {
-        return MethodSpec
-                .methodBuilder("thisRef")
+        return MethodSpec.methodBuilder("thisRef")
                 .addAnnotation(Override.class)
                 .addModifiers(PROTECTED)
                 .addStatement(RETURN_STATEMENT)

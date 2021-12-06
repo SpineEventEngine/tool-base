@@ -56,11 +56,11 @@ public final class JavadocEscaper {
      */
     public static String escape(String javadocText) {
         checkNotNull(javadocText);
-        StringBuilder escapedJavadocBuilder = new StringBuilder(javadocText.length() * 2);
+        var escapedJavadocBuilder = new StringBuilder(javadocText.length() * 2);
 
-        StringBuilder unescapedPartBuilder = new StringBuilder('*' + javadocText);
+        var unescapedPartBuilder = new StringBuilder('*' + javadocText);
         while (unescapedPartBuilder.length() != 0) {
-            EscapeSequence escapedString = fromBeginningOf(unescapedPartBuilder.toString());
+            var escapedString = fromBeginningOf(unescapedPartBuilder.toString());
 
             if (escapedString != null) {
                 escapedJavadocBuilder.append(escapedString.getEscaped());
@@ -73,8 +73,7 @@ public final class JavadocEscaper {
         }
 
         // Remove added "*" in the beginning.
-        return escapedJavadocBuilder.toString()
-                                    .substring(1);
+        return escapedJavadocBuilder.substring(1);
     }
 
     /**
@@ -114,7 +113,7 @@ public final class JavadocEscaper {
         public static EscapeSequence fromBeginningOf(String javadocText) {
             checkNotNull(javadocText);
 
-            for (EscapeSequence escapedCharacter : values()) {
+            for (var escapedCharacter : values()) {
                 if (javadocText.startsWith(escapedCharacter.unescaped)) {
                     return escapedCharacter;
                 }

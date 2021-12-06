@@ -30,12 +30,11 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
-import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+import io.spine.query.EntityQuery;
 import io.spine.tools.java.code.GeneratedBy;
 import io.spine.tools.java.code.GeneratedJavadoc;
 import io.spine.tools.java.code.GeneratedMethodSpec;
-import io.spine.query.EntityQuery;
 import io.spine.type.MessageType;
 
 import static javax.lang.model.element.Modifier.FINAL;
@@ -60,8 +59,7 @@ public final class EntityQuerySpec extends AbstractEntityQuerySpec implements Ge
 
     @Override
     public TypeSpec toPoet() {
-        TypeSpec result = TypeSpec
-                .classBuilder(queryType().className())
+        var result = TypeSpec.classBuilder(queryType().className())
                 .superclass(entityQuery())
                 .addMethod(constructor())
                 .addAnnotation(GeneratedBy.spineModelCompiler())
@@ -72,9 +70,8 @@ public final class EntityQuerySpec extends AbstractEntityQuerySpec implements Ge
 
     @SuppressWarnings("DuplicateStringLiteralInspection")
     private static MethodSpec constructor() {
-        String paramName = "builder";
-        return MethodSpec
-                .constructorBuilder()
+        var paramName = "builder";
+        return MethodSpec.constructorBuilder()
                 .addModifiers(PROTECTED)
                 .addParameter(queryBuilderType().value(), paramName)
                 .addStatement("super($L)", paramName)
@@ -92,11 +89,9 @@ public final class EntityQuerySpec extends AbstractEntityQuerySpec implements Ge
      * Generates {@code query()} method.
      */
     @Override
-    @SuppressWarnings("DuplicateStringLiteralInspection")   // `query` is a common term.
     public MethodSpec methodSpec() {
-        TypeName typeOfBuilder = queryBuilderType().value();
-        return MethodSpec
-                .methodBuilder("query")
+        var typeOfBuilder = queryBuilderType().value();
+        return MethodSpec.methodBuilder("query")
                 .addJavadoc(queryJavadoc().spec())
                 .addModifiers(PUBLIC, STATIC)
                 .addStatement("return new $T()", typeOfBuilder)
