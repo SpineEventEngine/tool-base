@@ -77,7 +77,7 @@ public final class DirectoryReference
      * Obtains all directory names composing this reference.
      */
     public ImmutableList<String> elements() {
-        Iterable<String> elements = FileReference.splitter().split(value());
+        var elements = FileReference.splitter().split(value());
         return ImmutableList.copyOf(elements);
     }
 

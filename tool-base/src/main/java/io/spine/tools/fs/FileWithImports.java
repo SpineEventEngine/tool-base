@@ -44,12 +44,13 @@ public abstract class FileWithImports extends AbstractSourceFile {
     /**
      * Resolves the relative imports in the file into absolute ones with the given modules.
      */
+    @SuppressWarnings("unused") /* Part of the public API. */
     public void resolveImports(Path generatedRoot, ExternalModules modules) {
         load();
         ImmutableList.Builder<String> newLines = ImmutableList.builder();
-        for (String line : lines()) {
+        for (var line : lines()) {
             if (isImport(line)) {
-                String resolved = resolveImport(line, generatedRoot, modules);
+                var resolved = resolveImport(line, generatedRoot, modules);
                 newLines.add(resolved);
             } else {
                 newLines.add(line);

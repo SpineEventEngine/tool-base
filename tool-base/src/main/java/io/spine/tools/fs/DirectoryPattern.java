@@ -34,6 +34,7 @@ import com.google.errorprone.annotations.Immutable;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -83,17 +84,17 @@ public final class DirectoryPattern implements Comparable<DirectoryPattern> {
     public static DirectoryPattern of(String value) {
         checkNotEmptyOrBlank(value);
         ensureNoInfix(value);
-        boolean includeNested = value.endsWith(INCLUDE_NESTED);
+        var includeNested = value.endsWith(INCLUDE_NESTED);
         String directory;
         if (includeNested) {
-            int nameEndIndex = value.length() - INCLUDE_NESTED.length();
+            var nameEndIndex = value.length() - INCLUDE_NESTED.length();
             directory = value.substring(0, nameEndIndex);
         } else {
             directory = value.endsWith(separator())
                         ? value.substring(0, value.length() - separator().length())
                         : value;
         }
-        DirectoryReference reference = DirectoryReference.of(directory);
+        var reference = DirectoryReference.of(directory);
         return new DirectoryPattern(reference, includeNested);
     }
 
@@ -115,11 +116,9 @@ public final class DirectoryPattern implements Comparable<DirectoryPattern> {
      */
     public static ImmutableList<DirectoryPattern> listOf(String... values) {
         checkNotNull(values);
-        ImmutableList<DirectoryPattern> result =
-                ImmutableList.copyOf(values)
-                             .stream()
-                             .map(DirectoryPattern::of)
-                             .collect(toImmutableList());
+        var result = Stream.of(values)
+                           .map(DirectoryPattern::of)
+                           .collect(toImmutableList());
         return result;
     }
 
@@ -127,7 +126,7 @@ public final class DirectoryPattern implements Comparable<DirectoryPattern> {
      * Checks if the pattern matches the specified directory.
      */
     boolean matches(DirectoryReference target) {
-        Optional<Integer> firstElementMatch = firstMatchIndex(target);
+        var firstElementMatch = firstMatchIndex(target);
         return firstElementMatch.filter(index -> matches(target, index))
                                 .isPresent();
     }
@@ -145,40 +144,36 @@ public final class DirectoryPattern implements Comparable<DirectoryPattern> {
      */
     DirectoryReference transform(DirectoryReference origin) {
         checkState(matches(origin));
-        Optional<Integer> firstMatchIndex = firstMatchIndex(origin);
+        var firstMatchIndex = firstMatchIndex(origin);
         checkState(firstMatchIndex.isPresent());
-        List<String> missingElements =
-                directory.elements()
-                         .subList(0, firstMatchIndex.get());
-        List<String> resultElements = ImmutableList.<String>builder()
+        var index = firstMatchIndex.get();
+        var missingElements = directory.elements().subList(0, index);
+        var resultElements = ImmutableList.<String>builder()
                 .addAll(missingElements)
                 .addAll(origin.elements())
                 .build();
-        String result = joiner().join(resultElements);
+        var result = joiner().join(resultElements);
         return DirectoryReference.of(result);
     }
 
     private boolean matches(DirectoryReference target, int fromIndex) {
         List<String> patternElements = directory.elements();
-        List<String> relevantPattern =
-                patternElements.subList(fromIndex, patternElements.size());
-        List<String> targetElements = target.elements();
+        var relevantPattern = patternElements.subList(fromIndex, patternElements.size());
+        var targetElements = target.elements();
         if (relevantPattern.size() > targetElements.size()) {
             return false;
         }
-        int lastRelevantTarget =
-                includeNested
-                ? relevantPattern.size()
-                : targetElements.size();
-        List<String> relevantTarget = targetElements.subList(0, lastRelevantTarget);
+        var lastRelevantTarget = includeNested
+                                 ? relevantPattern.size()
+                                 : targetElements.size();
+        var relevantTarget = targetElements.subList(0, lastRelevantTarget);
         return relevantPattern.equals(relevantTarget);
     }
 
     private Optional<Integer> firstMatchIndex(DirectoryReference target) {
         List<String> patternElements = directory.elements();
-        String firstTargetElement = target.elements()
-                                          .get(0);
-        int index = patternElements.indexOf(firstTargetElement);
+        var firstTargetElement = target.elements().get(0);
+        var index = patternElements.indexOf(firstTargetElement);
         return index == -1
                ? Optional.empty()
                : Optional.of(index);
@@ -200,7 +195,7 @@ public final class DirectoryPattern implements Comparable<DirectoryPattern> {
         if (!(o instanceof DirectoryPattern)) {
             return false;
         }
-        DirectoryPattern pattern = (DirectoryPattern) o;
+        var pattern = (DirectoryPattern) o;
         return includeNested == pattern.includeNested &&
                 directory.equals(pattern.directory);
     }
@@ -212,7 +207,7 @@ public final class DirectoryPattern implements Comparable<DirectoryPattern> {
 
     @Override
     public int compareTo(DirectoryPattern o) {
-        int dirResult = directory.compareTo(o.directory);
+        var dirResult = directory.compareTo(o.directory);
         if (dirResult != 0) {
             return dirResult;
         }

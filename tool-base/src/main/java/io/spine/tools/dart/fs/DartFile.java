@@ -45,9 +45,10 @@ public final class DartFile extends FileWithImports {
     /**
      * Reads the file from the local file system.
      */
+    @SuppressWarnings("unused") /* Part of the public API. */
     public static DartFile read(Path path) {
         checkNotNull(path);
-        DartFile file = new DartFile(path);
+        var file = new DartFile(path);
         file.load();
         return file;
     }
@@ -59,8 +60,8 @@ public final class DartFile extends FileWithImports {
 
     @Override
     protected String resolveImport(String line, Path libPath, ExternalModules modules) {
-        ImportStatement statement = ImportStatement.in(this, line);
-        ImportStatement resolved = statement.resolve(libPath, modules);
+        var statement = ImportStatement.in(this, line);
+        var resolved = statement.resolve(libPath, modules);
         return resolved.text();
     }
 }

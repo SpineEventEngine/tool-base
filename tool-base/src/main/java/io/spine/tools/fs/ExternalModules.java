@@ -55,6 +55,7 @@ public final class ExternalModules {
     /**
      * Creates a new instance with the passed modules.
      */
+    @SuppressWarnings("unused") /* Part of the public API. */
     public ExternalModules(ExternalModule... modules) {
         this(ImmutableList.copyOf(modules));
     }
@@ -62,24 +63,23 @@ public final class ExternalModules {
     /**
      * Creates an instance from a raw representation from a Gradle extension.
      */
+    @SuppressWarnings("unused") /* Part of the public API. */
     public ExternalModules(Map<String, List<String>> modules) {
         this(convert(checkNotNull(modules)));
     }
 
     private static ImmutableList<ExternalModule> convert(Map<String, List<String>> modules) {
-        ImmutableList<ExternalModule> list =
-                modules.entrySet()
-                       .stream()
-                       .map(kv -> new ExternalModule(kv.getKey(), patterns(kv.getValue())))
-                       .collect(toImmutableList());
+        var list = modules.entrySet().stream()
+                .map(kv -> new ExternalModule(kv.getKey(), patterns(kv.getValue())))
+                .collect(toImmutableList());
         return list;
     }
 
     private static ImmutableList<DirectoryPattern> patterns(List<String> rawPatterns) {
         return rawPatterns.stream()
-                          .sorted()
-                          .map(DirectoryPattern::of)
-                          .collect(toImmutableList());
+                .sorted()
+                .map(DirectoryPattern::of)
+                .collect(toImmutableList());
     }
 
     /**
@@ -87,7 +87,7 @@ public final class ExternalModules {
      */
     public ExternalModules with(Iterable<ExternalModule> newModules) {
         checkNotNull(newModules);
-        ImmutableList<ExternalModule> combined = ImmutableList.<ExternalModule>builder()
+        var combined = ImmutableList.<ExternalModule>builder()
                 .addAll(this.modules)
                 .addAll(newModules)
                 .build();
@@ -109,7 +109,7 @@ public final class ExternalModules {
         if (!(o instanceof ExternalModules)) {
             return false;
         }
-        ExternalModules other = (ExternalModules) o;
+        var other = (ExternalModules) o;
         return modules.equals(other.modules);
     }
 

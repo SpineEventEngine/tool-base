@@ -26,7 +26,6 @@
 
 package io.spine.tools.dart.fs;
 
-import com.google.common.flogger.FluentLogger;
 import com.google.errorprone.annotations.Immutable;
 import io.spine.logging.Logging;
 import io.spine.tools.code.Element;
@@ -36,7 +35,6 @@ import io.spine.tools.fs.FileReference;
 import org.checkerframework.checker.regex.qual.Regex;
 
 import java.nio.file.Path;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -70,14 +68,14 @@ final class ImportStatement implements Element, Logging {
      */
     static ImportStatement in(DartFile sourceFile, String text) {
         checkNotEmptyOrBlank(text);
-        Path sourceCodeDir = requireNonNull(sourceFile.parent());
+        var sourceCodeDir = requireNonNull(sourceFile.parent());
         return new ImportStatement(sourceCodeDir, text);
     }
 
     private ImportStatement(Path sourceDirectory, String text) {
         this.sourceDirectory = sourceDirectory;
         this.text = text;
-        Matcher matcher = PATTERN.matcher(text);
+        var matcher = PATTERN.matcher(text);
         checkArgument(
                 matcher.matches(),
                 "The passed text is not recognized as an import statement (`%s`).", text
@@ -91,7 +89,7 @@ final class ImportStatement implements Element, Logging {
      */
     static boolean isDeclaredIn(String text) {
         checkNotNull(text);
-        Matcher matcher = PATTERN.matcher(text);
+        var matcher = PATTERN.matcher(text);
         return matcher.matches();
     }
 
@@ -114,9 +112,9 @@ final class ImportStatement implements Element, Logging {
      *         the {@code import} statement
      */
     public ImportStatement resolve(Path libPath, ExternalModules modules) {
-        Path relativePath = importRelativeTo(libPath);
-        FileReference reference = FileReference.of(relativePath);
-        for (ExternalModule module : modules.asList()) {
+        var relativePath = importRelativeTo(libPath);
+        var reference = FileReference.of(relativePath);
+        for (var module : modules.asList()) {
             if (module.provides(reference)) {
                 return resolve(module, relativePath);
             }
@@ -129,17 +127,17 @@ final class ImportStatement implements Element, Logging {
      * to the file of this source line.
      */
     private Path importRelativeTo(Path libPath) {
-        FluentLogger.Api debug = _debug();
+        var debug = _debug();
         debug.log("Import statement found in line: `%s`.", text);
-        Path absolutePath = sourceDirectory.resolve(importPathAsDeclared).normalize();
+        var absolutePath = sourceDirectory.resolve(importPathAsDeclared).normalize();
         debug.log("Resolved against this file: `%s`.", absolutePath);
-        Path relativePath = libPath.relativize(absolutePath);
+        var relativePath = libPath.relativize(absolutePath);
         debug.log("Relative path: `%s`.", relativePath);
         return relativePath;
     }
 
     private ImportStatement resolve(ExternalModule module, Path relativePath) {
-        String resolved = format(
+        var resolved = format(
                 "import 'package:%s/%s' as %s;",
                 module.name(), relativePath, importAlias
         );
@@ -165,7 +163,7 @@ final class ImportStatement implements Element, Logging {
         if (!(o instanceof ImportStatement)) {
             return false;
         }
-        ImportStatement other = (ImportStatement) o;
+        var other = (ImportStatement) o;
         return text.equals(other.text) && sourceDirectory.equals(other.sourceDirectory);
     }
 

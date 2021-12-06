@@ -55,7 +55,7 @@ public final class IndentedLine extends Line {
      * Creates a new instance with the specified indentation and code.
      */
     public static IndentedLine of(Indent indent, String code) {
-        Line pure = Line.of(code);
+        var pure = Line.of(code);
         return of(indent, pure);
     }
 
@@ -83,7 +83,7 @@ public final class IndentedLine extends Line {
         if (shift == 0) {
             return this;
         }
-        Indent newIndent = indent.shifted(shift);
+        var newIndent = indent.shifted(shift);
         return new IndentedLine(newIndent, code);
     }
 
@@ -95,9 +95,9 @@ public final class IndentedLine extends Line {
         if (!(o instanceof IndentedLine)) {
             return false;
         }
-        IndentedLine other = (IndentedLine) o;
-        boolean codeEquals = code.equals(other.code);
-        boolean indentEquals = indent.equals(other.indent);
+        var other = (IndentedLine) o;
+        var codeEquals = code.equals(other.code);
+        var indentEquals = indent.equals(other.indent);
         return codeEquals && indentEquals;
     }
 

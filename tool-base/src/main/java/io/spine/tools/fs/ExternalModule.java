@@ -72,13 +72,12 @@ public final class ExternalModule {
      *         if the file is not provided by the module
      */
     public FileReference fileInModule(FileReference file) {
-        Optional<DirectoryPattern> matchingDirectory = matchingDirectory(file);
+        var matchingDirectory = matchingDirectory(file);
         checkState(matchingDirectory.isPresent());
-        DirectoryReference directory =
-                matchingDirectory.get()
-                                 .transform(file.directory());
-        String fileName = file.fileName();
-        String path = joiner().join(name, directory, fileName);
+        var directory = matchingDirectory.get()
+                                         .transform(file.directory());
+        var fileName = file.fileName();
+        var path = joiner().join(name, directory, fileName);
         return FileReference.of(path);
     }
 
@@ -90,7 +89,7 @@ public final class ExternalModule {
      * @return {@code true} if the module provides the file
      */
     public boolean provides(FileReference file) {
-        boolean result = matchingDirectory(file).isPresent();
+        var result = matchingDirectory(file).isPresent();
         return result;
     }
 
@@ -102,8 +101,8 @@ public final class ExternalModule {
     }
 
     private Optional<DirectoryPattern> matchingDirectory(FileReference file) {
-        DirectoryReference directory = file.directory();
-        for (DirectoryPattern pattern : directories) {
+        var directory = file.directory();
+        for (var pattern : directories) {
             if (pattern.matches(directory)) {
                 return Optional.of(pattern);
             }
@@ -115,7 +114,7 @@ public final class ExternalModule {
      * <a href="https://github.com/SpineEventEngine/web">The Spine Web</a> module.
      */
     public static ExternalModule spineWeb() {
-        ImmutableList<DirectoryPattern> patterns = DirectoryPattern.listOf(
+        var patterns = DirectoryPattern.listOf(
                 // Directories with handcrafted JS files.
                 "client/parser",
                 // Directories with standard Protobuf files.
@@ -146,6 +145,7 @@ public final class ExternalModule {
     /**
      * All the modules in {@link #spineWeb()} and {@link #spineUsers()}.
      */
+    @SuppressWarnings("unused") /* Part of the public API. */
     public static ImmutableList<ExternalModule> predefinedModules() {
         return ImmutableList.of(spineWeb(), spineUsers());
     }
@@ -158,7 +158,7 @@ public final class ExternalModule {
         if (!(o instanceof ExternalModule)) {
             return false;
         }
-        ExternalModule module = (ExternalModule) o;
+        var module = (ExternalModule) o;
         return name.equals(module.name) &&
                 directories.equals(module.directories);
     }

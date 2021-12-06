@@ -51,7 +51,7 @@ public final class FileName extends AbstractFileName<FileName> {
      * @return new {@code FileName}, relative to the code generation root
      */
     public static FileName relative(io.spine.code.proto.FileName file) {
-        String relativePath = file.nameWithoutExtension() + GeneratedFileSuffix.OF_MESSAGE.value();
+        var relativePath = file.nameWithoutExtension() + GeneratedFileSuffix.OF_MESSAGE.value();
         return new FileName(relativePath);
     }
 
@@ -62,7 +62,7 @@ public final class FileName extends AbstractFileName<FileName> {
      * @return new {@code FileName}, relative to the code generation root
      */
     public static FileName relative(FileDescriptor file) {
-        io.spine.code.proto.FileName protoName = io.spine.code.proto.FileName.from(file);
+        var protoName = io.spine.code.proto.FileName.from(file);
         return relative(protoName);
     }
 

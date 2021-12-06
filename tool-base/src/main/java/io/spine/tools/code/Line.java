@@ -78,7 +78,7 @@ public class Line implements Element{
         if (!(o instanceof Line)) {
             return false;
         }
-        Line other = (Line) o;
+        var other = (Line) o;
         return text.equals(other.text);
     }
 

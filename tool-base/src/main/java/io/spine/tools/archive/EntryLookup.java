@@ -32,7 +32,6 @@ import com.google.common.flogger.FluentLogger;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -58,7 +57,7 @@ final class EntryLookup implements Closeable {
      */
     static EntryLookup open(ArchiveFile archiveFile) {
         checkNotNull(archiveFile);
-        ZipInputStream stream = new ZipInputStream(archiveFile.open());
+        var stream = new ZipInputStream(archiveFile.open());
         return new EntryLookup(stream);
     }
 
@@ -82,14 +81,14 @@ final class EntryLookup implements Closeable {
 
     private Collection<ArchiveEntry> doFindEntry(String fileExtension) throws IOException {
         ImmutableSet.Builder<ArchiveEntry> result = ImmutableSet.builder();
-        for (ZipEntry entry = stream.getNextEntry();
+        for (var entry = stream.getNextEntry();
              entry != null;
              entry = stream.getNextEntry()) {
-            String entryName = entry.getName();
+            var entryName = entry.getName();
             if (entryName.endsWith(fileExtension)) {
                 logger.atFinest()
                       .log("Reading ZIP entry `%s`.", entryName);
-                ArchiveEntry read = readEntry();
+                var read = readEntry();
                 result.add(read);
             }
         }
@@ -99,7 +98,7 @@ final class EntryLookup implements Closeable {
     private ArchiveEntry readEntry() throws IOException {
         // When being read, a `ZipStream` reports to be out of data when the *current entry* is
         // over, not when the whole archive is read.
-        byte[] bytes = toByteArray(stream);
+        var bytes = toByteArray(stream);
         return ArchiveEntry.of(bytes);
     }
 

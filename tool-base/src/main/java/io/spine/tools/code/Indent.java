@@ -127,6 +127,7 @@ public final class Indent implements Element, Serializable {
     /**
      * Obtains an instance shifted to the right by one level.
      */
+    @SuppressWarnings("unused") /* Part of the public API. */
     public Indent shiftedRight() {
         return new Indent(size, level + 1);
     }
@@ -137,6 +138,7 @@ public final class Indent implements Element, Serializable {
      * @throws IllegalStateException
      *          if this indentation is already at the zero column
      */
+    @SuppressWarnings("unused") /* Part of the public API. */
     public Indent shiftedLeft() {
         checkState(level > 0, "Already at zero. Cannot shift to the left more.");
         return new Indent(size, level - 1);
@@ -151,7 +153,7 @@ public final class Indent implements Element, Serializable {
         if (delta == 0) {
             return this;
         }
-        int requested = level + delta;
+        var requested = level + delta;
         checkArgument(requested >= 0,
                       "Cannot indent to the left more (`%s`)." +
                               " Current indentation: `%s`." +
@@ -167,7 +169,7 @@ public final class Indent implements Element, Serializable {
      */
     @Override
     public String text() {
-        String text = Strings.repeat(SPACE, size * level);
+        var text = Strings.repeat(SPACE, size * level);
         return text;
     }
 
@@ -185,7 +187,7 @@ public final class Indent implements Element, Serializable {
             return false;
         }
 
-        Indent other = (Indent) o;
+        var other = (Indent) o;
         if (size != other.size) {
             return false;
         }
@@ -194,7 +196,7 @@ public final class Indent implements Element, Serializable {
 
     @Override
     public int hashCode() {
-        int result = size;
+        var result = size;
         result = 31 * result + level;
         return result;
     }
