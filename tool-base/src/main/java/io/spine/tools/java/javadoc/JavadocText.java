@@ -49,6 +49,7 @@ public class JavadocText extends StringTypeValue {
         return new JavadocText(escapedText);
     }
 
+    @SuppressWarnings("unused") /* Part of the public API. */
     public static JavadocText fromUnescaped(String unescapedText) {
         return new JavadocText(JavadocEscaper.escape(unescapedText));
     }
@@ -58,8 +59,9 @@ public class JavadocText extends StringTypeValue {
      *
      * @return the text wrapped in the tags
      */
+    @SuppressWarnings("unused") /* Part of the public API. */
     public JavadocText inPreTags() {
-        String inTags = new StringBuilder(OPENING_PRE)
+        var inTags = new StringBuilder(OPENING_PRE)
                 .append(LINE_SEPARATOR)
                 .append(JavadocEscaper.escape(value()))
                 .append(CLOSING_PRE)

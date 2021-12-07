@@ -52,9 +52,8 @@ public final class GeneratedSourceRoot extends AbstractDirectory {
      */
     public static GeneratedSourceRoot of(Project project) {
         checkNotNull(project);
-        Path projectDir = project.getProjectDir()
-                                 .toPath();
-        Path generatedDir = projectDir.resolve(GENERATED);
+        var projectDir = project.getProjectDir().toPath();
+        var generatedDir = projectDir.resolve(GENERATED);
         return new GeneratedSourceRoot(generatedDir);
     }
 
@@ -63,7 +62,7 @@ public final class GeneratedSourceRoot extends AbstractDirectory {
      */
     public GeneratedSourceSet sourceSet(String name) {
         checkNotNull(name);
-        Path path = path().resolve(name);
+        var path = path().resolve(name);
         return new GeneratedSourceSet(path);
     }
 

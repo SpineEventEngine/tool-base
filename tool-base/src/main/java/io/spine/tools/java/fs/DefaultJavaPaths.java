@@ -67,7 +67,7 @@ public final class DefaultJavaPaths extends DefaultPaths {
 
     public static DefaultJavaPaths at(Path projectDir) {
         checkNotNull(projectDir);
-        DefaultJavaPaths result = new DefaultJavaPaths(projectDir);
+        var result = new DefaultJavaPaths(projectDir);
         return result;
     }
 
@@ -76,6 +76,7 @@ public final class DefaultJavaPaths extends DefaultPaths {
         return at(projectDir.toPath());
     }
 
+    @SuppressWarnings("unused") /* Part of the public API. */
     public HandmadeCodeRoot src() {
         return new HandmadeCodeRoot(projectDir(), src.value());
     }

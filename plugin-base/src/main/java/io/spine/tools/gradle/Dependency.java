@@ -59,10 +59,10 @@ public interface Dependency {
      */
     default Artifact withVersionFrom(DependencyVersions versions) {
         checkNotNull(versions);
-        String version = versions.versionOf(this)
-                                 .orElseThrow(() -> newIllegalStateException(
-                                         "No version found for `%s`.", this
-                                 ));
+        var version = versions.versionOf(this)
+                              .orElseThrow(() -> newIllegalStateException(
+                                      "No version found for `%s`.", this
+                              ));
         return ofVersion(version);
     }
 
@@ -74,8 +74,7 @@ public interface Dependency {
      */
     default Artifact ofVersion(String version) {
         checkNotNull(version);
-        return Artifact
-                .newBuilder()
+        return Artifact.newBuilder()
                 .setGroup(groupId())
                 .setName(name())
                 .setVersion(version)

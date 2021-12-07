@@ -44,16 +44,16 @@ class DirectoryReferenceTest {
     @Test
     @DisplayName("provide names it consists from")
     void provideDirectoryNames() {
-        DirectoryReference reference = DirectoryReference.of("a/b/c");
+        var reference = DirectoryReference.of("a/b/c");
         assertThat(reference.elements()).containsAtLeast("a", "b", "c");
     }
 
     @Test
     @DisplayName("compare instances alphabetically")
     void comparison() {
-        String ref1 = "a/b1";
-        DirectoryReference r1 = DirectoryReference.of(ref1);
-        DirectoryReference r2 = DirectoryReference.of("a/b2");
+        var ref1 = "a/b1";
+        var r1 = DirectoryReference.of(ref1);
+        var r2 = DirectoryReference.of("a/b2");
 
         assertThat(r1.compareTo(r2))
                 .isLessThan(0);

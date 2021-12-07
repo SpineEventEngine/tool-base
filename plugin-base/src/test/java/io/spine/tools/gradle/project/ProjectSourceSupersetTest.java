@@ -27,11 +27,8 @@
 package io.spine.tools.gradle.project;
 
 import io.spine.tools.gradle.GeneratedSourceRoot;
-import io.spine.tools.gradle.GeneratedSourceSet;
 import org.gradle.api.Project;
-import org.gradle.api.file.SourceDirectorySet;
 import org.gradle.api.plugins.JavaPlugin;
-import org.gradle.api.tasks.SourceSet;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -72,13 +69,13 @@ class ProjectSourceSupersetTest {
     }
 
     private void checkMarks(String sourceSetName) {
-        GeneratedSourceRoot root = GeneratedSourceRoot.of(project);
-        ProjectSourceSuperset structure = ProjectSourceSuperset.of(project);
+        var root = GeneratedSourceRoot.of(project);
+        var structure = ProjectSourceSuperset.of(project);
         structure.register(root);
 
-        SourceSet sourceSet = sourceSet(project, sourceSetName);
-        SourceDirectorySet javaDirs = sourceSet.getJava();
-        GeneratedSourceSet generatedSourceSet = root.sourceSet(sourceSetName);
+        var sourceSet = sourceSet(project, sourceSetName);
+        var javaDirs = sourceSet.getJava();
+        var generatedSourceSet = root.sourceSet(sourceSetName);
         assertThat(javaDirs.getSrcDirs()).containsAtLeast(generatedSourceSet.java().toFile(),
                                                           generatedSourceSet.grpc().toFile(),
                                                           generatedSourceSet.spine().toFile());

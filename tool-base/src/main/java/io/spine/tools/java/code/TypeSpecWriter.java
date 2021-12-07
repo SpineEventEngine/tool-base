@@ -27,8 +27,8 @@
 package io.spine.tools.java.code;
 
 import com.squareup.javapoet.JavaFile;
-import io.spine.tools.code.Indent;
 import io.spine.logging.Logging;
+import io.spine.tools.code.Indent;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -37,6 +37,7 @@ import java.nio.file.Path;
 /**
  * Writes the {@link TypeSpec} to a file.
  */
+@SuppressWarnings("unused") /* Part of the public API. */
 public final class TypeSpecWriter implements Logging {
 
     private final TypeSpec spec;
@@ -58,17 +59,15 @@ public final class TypeSpecWriter implements Logging {
             _debug().log("Creating the output directory `%s`.", outputDir);
             Files.createDirectories(outputDir);
 
-            com.squareup.javapoet.TypeSpec typeSpec = this.spec.toPoet();
-            String className = typeSpec.name;
+            var typeSpec = this.spec.toPoet();
+            var className = typeSpec.name;
             _debug().log("Writing `%s.java`.", className);
 
-            String packageName = this.spec.packageName()
-                                          .value();
-            JavaFile javaFile =
-                    JavaFile.builder(packageName, typeSpec)
-                            .skipJavaLangImports(true)
-                            .indent(indent.toString())
-                            .build();
+            var packageName = this.spec.packageName().value();
+            var javaFile = JavaFile.builder(packageName, typeSpec)
+                    .skipJavaLangImports(true)
+                    .indent(indent.toString())
+                    .build();
             javaFile.writeTo(outputDir);
             _debug().log("File `%s.java` written successfully.", className);
         } catch (IOException e) {

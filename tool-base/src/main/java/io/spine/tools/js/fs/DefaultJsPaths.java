@@ -74,6 +74,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * location is currently not standardized and thus is not described by this class.
  */
 @Immutable
+@SuppressWarnings("unused") /* Part of the public API. */
 public final class DefaultJsPaths extends DefaultPaths {
 
     private DefaultJsPaths(Path projectDir) {
@@ -82,7 +83,7 @@ public final class DefaultJsPaths extends DefaultPaths {
 
     public static DefaultJsPaths at(Path projectDir) {
         checkNotNull(projectDir);
-        DefaultJsPaths result = new DefaultJsPaths(projectDir);
+        var result = new DefaultJsPaths(projectDir);
         return result;
     }
 

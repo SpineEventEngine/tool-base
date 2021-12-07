@@ -67,8 +67,7 @@ public final class UuidMethodFactory implements MethodFactory {
         if (!messageType.isUuidValue()) {
             return ImmutableList.of();
         }
-        TypeName self = JavaPoetName.of(messageType)
-                                    .value();
+        var self = JavaPoetName.of(messageType).value();
         return ImmutableList.of(newGenerateMethodSpec(self), newOfMethodSpec(self));
     }
 
@@ -90,11 +89,8 @@ public final class UuidMethodFactory implements MethodFactory {
      * </pre>
      */
     private static Method newOfMethodSpec(TypeName self) {
-        ParameterSpec uuidParameter = ParameterSpec
-                .builder(String.class, "uuid")
-                .build();
-        MethodSpec spec = MethodSpec
-                .methodBuilder("of")
+        var uuidParameter = ParameterSpec.builder(String.class, "uuid").build();
+        var spec = MethodSpec.methodBuilder("of")
                 .returns(self)
                 .addParameter(uuidParameter)
                 .addStatement("$T.checkNotEmptyOrBlank($N)", Preconditions2.class, uuidParameter)
@@ -124,8 +120,7 @@ public final class UuidMethodFactory implements MethodFactory {
      * </pre>
      */
     private static Method newGenerateMethodSpec(TypeName self) {
-        MethodSpec spec = MethodSpec
-                .methodBuilder("generate")
+        var spec = MethodSpec.methodBuilder("generate")
                 .returns(self)
                 .addStatement("return newBuilder().setUuid($T.randomUUID().toString()).build()",
                               UUID.class)

@@ -62,7 +62,7 @@ public final class ArchiveEntry {
      * @throws java.lang.IllegalStateException if parsing fails
      */
     public FileDescriptorSet asDescriptorSet() {
-        FileDescriptorSet result = tryParse(bytes).orElseThrow(
+        var result = tryParse(bytes).orElseThrow(
                 () -> new IllegalStateException("Failed to parse a descriptor set.")
         );
         return result;

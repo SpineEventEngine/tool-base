@@ -27,8 +27,6 @@
 package io.spine.tools.archive;
 
 import java.io.File;
-import java.util.Optional;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -47,7 +45,7 @@ enum ArchiveExtension {
     private final Pattern pattern;
 
     ArchiveExtension(String extensionName) {
-        String regex = format("^.*\\.%s$", extensionName);
+        var regex = format("^.*\\.%s$", extensionName);
         this.pattern = compile(regex, CASE_INSENSITIVE);
     }
 
@@ -57,17 +55,16 @@ enum ArchiveExtension {
      * @return {@code true} if the file is a ZIP archive, {@code false} otherwise
      */
     static boolean anyMatch(File file) {
-        Optional<ArchiveExtension> matchingExtension =
-                Stream.of(values())
-                      .filter(ext -> ext.matchesFile(file))
-                      .findAny();
+        var matchingExtension = Stream.of(values())
+                                      .filter(ext -> ext.matchesFile(file))
+                                      .findAny();
         return matchingExtension.isPresent();
     }
 
     private boolean matchesFile(File file) {
-        String name = file.getName();
-        Matcher matcher = pattern.matcher(name);
-        boolean matches = matcher.matches();
+        var name = file.getName();
+        var matcher = pattern.matcher(name);
+        var matches = matcher.matches();
         return matches;
     }
 }

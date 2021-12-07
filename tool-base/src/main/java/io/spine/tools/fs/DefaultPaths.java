@@ -75,7 +75,7 @@ public class DefaultPaths extends AbstractDirectory {
      * <p>The directory is deleted on {@code :pre-clean"}.
      */
     public File tempArtifacts() {
-        File result = new File(path().toFile(), dotSpine.value());
+        var result = new File(path().toFile(), dotSpine.value());
         return result;
     }
 }

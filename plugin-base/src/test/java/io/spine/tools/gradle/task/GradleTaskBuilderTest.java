@@ -30,9 +30,6 @@ import com.google.common.collect.ImmutableList;
 import io.spine.tools.gradle.testing.NoOp;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.gradle.api.Project;
-import org.gradle.api.Task;
-import org.gradle.api.file.FileCollection;
-import org.gradle.api.tasks.TaskContainer;
 import org.gradle.api.tasks.TaskInputs;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,7 +46,6 @@ import static io.spine.tools.gradle.task.BaseTaskName.clean;
 import static io.spine.tools.gradle.task.GivenTaskName.annotateProto;
 import static io.spine.tools.gradle.task.GivenTaskName.preClean;
 import static io.spine.tools.gradle.task.GivenTaskName.verifyModel;
-import static io.spine.tools.gradle.task.GradleTask.Builder;
 import static io.spine.tools.gradle.task.JavaTaskName.classes;
 import static io.spine.tools.gradle.task.JavaTaskName.compileJava;
 import static io.spine.tools.gradle.task.ProtobufTaskName.generateProto;
@@ -77,16 +73,16 @@ class GradleTaskBuilderTest {
     @Test
     @DisplayName("create task dependant on all tasks of given name")
     void createTaskDependantOnAllTasksOfGivenName() {
-        Project subProject = ProjectBuilder.builder()
+        var subProject = ProjectBuilder.builder()
                 .withParent(project)
                 .build();
         subProject.getPluginManager()
                   .apply(javaPlugin);
-        GradleTask task = GradleTask.newBuilder(annotateProto, NoOp.action())
+        var task = GradleTask.newBuilder(annotateProto, NoOp.action())
                 .insertAfterAllTasks(compileJava)
                 .applyNowTo(subProject);
-        TaskContainer subProjectTasks = subProject.getTasks();
-        Task newTask = subProjectTasks.findByName(task.getName().name());
+        var subProjectTasks = subProject.getTasks();
+        var newTask = subProjectTasks.findByName(task.getName().name());
         assertThat(newTask)
                 .isNotNull();
         Collection<?> dependencies = newTask.getDependsOn();
@@ -105,13 +101,13 @@ class GradleTaskBuilderTest {
         GradleTask.newBuilder(verifyModel, NoOp.action())
               .insertBeforeTask(classes)
               .applyNowTo(project);
-        TaskContainer tasks = project.getTasks();
+        var tasks = project.getTasks();
 
-        Task classes = tasks.findByName(JavaTaskName.classes.name());
+        var classes = tasks.findByName(JavaTaskName.classes.name());
         assertThat(classes)
                 .isNotNull();
 
-        Task verifyModelTask = tasks.findByName(verifyModel.name());
+        var verifyModelTask = tasks.findByName(verifyModel.name());
         assertThat(classes.getDependsOn())
                 .contains(verifyModelTask);
     }
@@ -122,12 +118,12 @@ class GradleTaskBuilderTest {
         GradleTask.newBuilder(verifyModel, NoOp.action())
               .insertAfterTask(compileJava)
               .applyNowTo(project);
-        TaskContainer tasks = project.getTasks();
+        var tasks = project.getTasks();
 
-        Task compileJavaTask = tasks.findByName(compileJava.name());
+        var compileJavaTask = tasks.findByName(compileJava.name());
         assertThat(compileJavaTask)
                 .isNotNull();
-        Task verifyModelTask = tasks.findByName(verifyModel.name());
+        var verifyModelTask = tasks.findByName(verifyModel.name());
 
         assertThat(verifyModelTask)
                 .isNotNull();
@@ -141,13 +137,13 @@ class GradleTaskBuilderTest {
         GradleTask.newBuilder(generateTestProto, NoOp.action())
               .insertAfterAllTasks(generateProto)
               .applyNowTo(project);
-        TaskContainer tasks = project.getTasks();
+        var tasks = project.getTasks();
 
-        Task generateProtoTask = tasks.findByName(generateProto.name());
+        var generateProtoTask = tasks.findByName(generateProto.name());
         assertThat(generateProtoTask)
                 .isNull();
 
-        Task generateTestProtoTask = tasks.findByName(generateTestProto.name());
+        var generateTestProtoTask = tasks.findByName(generateTestProto.name());
         assertThat(generateTestProtoTask)
                 .isNotNull();
     }
@@ -155,14 +151,14 @@ class GradleTaskBuilderTest {
     @Test
     @DisplayName("not allow tasks without any connection to task graph")
     void notAllowTasksWithoutAnyConnectionToTaskGraph() {
-        Builder builder = GradleTask.newBuilder(verifyModel, action());
+        var builder = GradleTask.newBuilder(verifyModel, action());
         assertIllegalState(() -> builder.applyNowTo(project));
     }
 
     @Test
     @DisplayName("return build task description")
     void returnBuildTaskDescription() {
-        GradleTask desc = GradleTask.newBuilder(preClean, NoOp.action())
+        var desc = GradleTask.newBuilder(preClean, NoOp.action())
                 .insertBeforeTask(clean)
                 .applyNowTo(project);
         assertThat(desc.getName())
@@ -174,21 +170,19 @@ class GradleTaskBuilderTest {
     @Test
     @DisplayName("create task with given inputs")
     void createTaskWithGivenInputs() throws IOException {
-        File input = new File(".").getAbsoluteFile();
-        FileCollection files = project.getLayout().files(input);
+        var input = new File(".").getAbsoluteFile();
+        var files = project.getLayout().files(input);
         GradleTask.newBuilder(preClean, NoOp.action())
               .insertBeforeTask(clean)
               .withInputFiles(files)
               .applyNowTo(project);
-        Task task = project.getTasks()
-                           .findByPath(preClean.name());
+        var task = project.getTasks()
+                          .findByPath(preClean.name());
         assertNotNull(task);
         @Nullable TaskInputs inputs = task.getInputs();
         assertNotNull(inputs);
 
-        ImmutableList<File> inputFiles =
-                ImmutableList.copyOf(inputs.getFiles()
-                                           .getFiles());
+        var inputFiles = ImmutableList.copyOf(inputs.getFiles().getFiles());
         assertThat(inputFiles)
                 .hasSize(1);
         assertThat(inputFiles.get(0).getCanonicalFile())

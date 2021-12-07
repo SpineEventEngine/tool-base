@@ -28,7 +28,6 @@ package io.spine.tools.java.code;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeName;
-import io.spine.code.java.PackageName;
 import io.spine.code.java.SimpleClassName;
 import io.spine.code.proto.FieldDeclaration;
 import io.spine.code.proto.ScalarType;
@@ -36,7 +35,6 @@ import io.spine.type.MessageType;
 
 import java.lang.reflect.Type;
 import java.util.Objects;
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -59,7 +57,7 @@ public final class JavaPoetName {
 
     public static JavaPoetName of(Type type) {
         checkNotNull(type);
-        TypeName typeName = TypeName.get(type);
+        var typeName = TypeName.get(type);
         return new JavaPoetName(typeName);
     }
 
@@ -71,14 +69,13 @@ public final class JavaPoetName {
 
     public static JavaPoetName of(io.spine.code.java.ClassName className) {
         checkNotNull(className);
-        PackageName packageName = className.packageName();
-        SimpleClassName topLevel = className.topLevelClass();
-        String[] nestingChain = NestedClassName.from(className)
-                                               .split()
-                                               .stream()
-                                               .skip(1)
-                                               .map(SimpleClassName::value)
-                                               .toArray(String[]::new);
+        var packageName = className.packageName();
+        var topLevel = className.topLevelClass();
+        var nestedClassName = NestedClassName.from(className);
+        var nestingChain = nestedClassName.split().stream()
+                .skip(1)
+                .map(SimpleClassName::value)
+                .toArray(String[]::new);
         TypeName value = ClassName.get(packageName.value(), topLevel.value(), nestingChain);
         return new JavaPoetName(value);
     }
@@ -88,9 +85,9 @@ public final class JavaPoetName {
      */
     public static JavaPoetName of(MessageType type) {
         checkNotNull(type);
-        PackageName packageName = type.javaPackage();
-        SimpleClassName simpleClassName = type.simpleJavaClassName();
-        ClassName result = ClassName.get(packageName.value(), simpleClassName.value());
+        var packageName = type.javaPackage();
+        var simpleClassName = type.simpleJavaClassName();
+        var result = ClassName.get(packageName.value(), simpleClassName.value());
         return new JavaPoetName(result);
     }
 
@@ -103,18 +100,16 @@ public final class JavaPoetName {
     public static JavaPoetName of(FieldDeclaration field) {
         checkNotNull(field);
 
-        Optional<ScalarType> maybeScalar = ScalarType.of(field.descriptor()
-                                                              .toProto());
+        var maybeScalar = ScalarType.of(field.descriptor().toProto());
         TypeName typeName;
         if (maybeScalar.isPresent()) {
-            ScalarType scalar = maybeScalar.get();
-            Class<?> javaType = scalar.javaClass();
+            var scalar = maybeScalar.get();
+            var javaType = scalar.javaClass();
             typeName = TypeName.get(javaType);
         } else {
-            String rawTypeName = field.javaTypeName();
-            io.spine.code.java.ClassName className = io.spine.code.java.ClassName.of(rawTypeName);
-            String packageName = className.packageName()
-                                          .value();
+            var rawTypeName = field.javaTypeName();
+            var className = io.spine.code.java.ClassName.of(rawTypeName);
+            var packageName = className.packageName().value();
             typeName = ClassName.get(packageName, className.withoutPackage());
         }
         return new JavaPoetName(typeName);
@@ -151,7 +146,7 @@ public final class JavaPoetName {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        JavaPoetName name = (JavaPoetName) o;
+        var name = (JavaPoetName) o;
         return Objects.equals(value, name.value);
     }
 

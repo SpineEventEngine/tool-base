@@ -57,8 +57,8 @@ final class TestEnvGradle {
     }
 
     void createFile() throws IOException {
-        Path testEnvFile = path();
-        List<String> lines = content();
+        var testEnvFile = path();
+        var lines = content();
         Files.write(testEnvFile, lines);
     }
 
@@ -67,8 +67,7 @@ final class TestEnvGradle {
     }
 
     private List<String> content() {
-        String unixLikeRootPath = rootProjectDir.toString()
-                                                .replace('\\', '/');
+        var unixLikeRootPath = rootProjectDir.toString().replace('\\', '/');
         List<String> lines = ImmutableList.of(
                 "ext {",
                 format("    %s = '%s'", VAR_NAME, unixLikeRootPath),

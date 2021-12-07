@@ -26,12 +26,9 @@
 
 package io.spine.tools.gradle.given;
 
-import org.gradle.BuildListener;
 import org.gradle.api.Project;
 import org.gradle.api.internal.GradleInternal;
 import org.gradle.api.tasks.TaskCollection;
-import org.gradle.api.tasks.TaskContainer;
-import org.gradle.api.tasks.compile.CompileOptions;
 import org.gradle.api.tasks.compile.JavaCompile;
 
 import java.util.List;
@@ -54,11 +51,11 @@ class ProjectTasks {
      * @return the project {@link JavaCompile} tasks
      */
     static TaskCollection<JavaCompile> acquireJavaCompileTasks(Project project) {
-        GradleInternal gradle = (GradleInternal) project.getGradle();
-        BuildListener buildListenerBroadcaster = gradle.getBuildListenerBroadcaster();
+        var gradle = (GradleInternal) project.getGradle();
+        var buildListenerBroadcaster = gradle.getBuildListenerBroadcaster();
         buildListenerBroadcaster.projectsEvaluated(project.getGradle());
-        TaskContainer tasks = project.getTasks();
-        TaskCollection<JavaCompile> javaCompileTasks = tasks.withType(JavaCompile.class);
+        var tasks = project.getTasks();
+        var javaCompileTasks = tasks.withType(JavaCompile.class);
         return javaCompileTasks;
     }
 
@@ -69,8 +66,8 @@ class ProjectTasks {
      * @return the {@code List} of the compiler arguments
      */
     static List<String> obtainCompilerArgs(JavaCompile task) {
-        CompileOptions options = task.getOptions();
-        List<String> compilerArgs = options.getCompilerArgs();
+        var options = task.getOptions();
+        var compilerArgs = options.getCompilerArgs();
         return compilerArgs;
     }
 }

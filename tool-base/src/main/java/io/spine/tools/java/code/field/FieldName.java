@@ -48,15 +48,16 @@ public final class FieldName extends AbstractFieldName {
      */
     public static FieldName from(io.spine.code.proto.FieldName protoField) {
         checkNotNull(protoField);
-        String fieldName = protoField.javaCase();
-        FieldName result = new FieldName(fieldName);
+        var fieldName = protoField.javaCase();
+        var result = new FieldName(fieldName);
         return result;
     }
 
     /** Obtains this name starting with a capital letter. */
+    @SuppressWarnings("unused") /* Part of the public API. */
     public String capitalize() {
-        String name = value();
-        String result = toUpperCase(name.charAt(0)) + name.substring(1);
+        var name = value();
+        var result = toUpperCase(name.charAt(0)) + name.substring(1);
         return result;
     }
 

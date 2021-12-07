@@ -57,8 +57,7 @@ public final class Directory extends SourceCodeDirectory {
      */
     static Directory rootIn(AbstractDirectory parent) {
         checkNotNull(parent);
-        Path path = parent.path()
-                          .resolve(ROOT_NAME);
+        var path = parent.path().resolve(ROOT_NAME);
         return at(path);
     }
 
@@ -67,7 +66,7 @@ public final class Directory extends SourceCodeDirectory {
      */
     public Path resolve(FileName fileName) {
         checkNotNull(fileName);
-        Path result = path().resolve(fileName.value());
+        var result = path().resolve(fileName.value());
         return result;
     }
 

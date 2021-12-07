@@ -27,7 +27,6 @@
 package io.spine.tools.type;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.protobuf.DescriptorProtos.FileDescriptorProto;
 import com.google.protobuf.DescriptorProtos.FileDescriptorSet;
 import io.spine.code.proto.FileDescriptorSetReader;
 import io.spine.logging.Logging;
@@ -37,7 +36,6 @@ import io.spine.tools.archive.ArchiveFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
@@ -75,12 +73,10 @@ public final class FileDescriptorSuperset implements Logging {
      * @return the result of the sets merging
      */
     public MergedDescriptorSet merge() {
-        Set<FileDescriptorProto> allFiles = descriptors
-                .stream()
+        var allFiles = descriptors.stream()
                 .flatMap(set -> set.getFileList().stream())
                 .collect(toSet());
-        FileDescriptorSet descriptorSet = FileDescriptorSet
-                .newBuilder()
+        var descriptorSet = FileDescriptorSet.newBuilder()
                 .addAllFile(allFiles)
                 .build();
         return new MergedDescriptorSet(descriptorSet);
@@ -110,7 +106,7 @@ public final class FileDescriptorSuperset implements Logging {
     }
 
     private ImmutableSet<FileDescriptorSet> mergeDirectory(File directory) {
-        File[] descriptorFiles = directory.listFiles(
+        var descriptorFiles = directory.listFiles(
                 (dir, name) -> name.endsWith(DESC_EXTENSION)
         );
         checkState(descriptorFiles != null,
@@ -119,7 +115,7 @@ public final class FileDescriptorSuperset implements Logging {
             _debug().log("No descriptors found in the directory: `%s`.", directory);
             return ImmutableSet.of();
         } else {
-            ImmutableSet<FileDescriptorSet> result =
+            var result =
                     Stream.of(descriptorFiles)
                           .map(this::read)
                           .collect(toImmutableSet());
@@ -128,8 +124,8 @@ public final class FileDescriptorSuperset implements Logging {
     }
 
     private ImmutableSet<FileDescriptorSet> readFromArchive(File archiveFile) {
-        ArchiveFile archive = ArchiveFile.from(archiveFile);
-        ImmutableSet<FileDescriptorSet> result =
+        var archive = ArchiveFile.from(archiveFile);
+        var result =
                 archive.findByExtension(DESC_EXTENSION)
                        .stream()
                        .map(ArchiveEntry::asDescriptorSet)
@@ -143,10 +139,10 @@ public final class FileDescriptorSuperset implements Logging {
 
     private FileDescriptorSet read(File file) {
         checkArgument(file.exists(), "File does not exist: `%s`.", file);
-        Path path = file.toPath();
+        var path = file.toPath();
         _debug().log("Reading descriptors from file `%s`.", file);
         try {
-            byte[] bytes = Files.readAllBytes(path);
+            var bytes = Files.readAllBytes(path);
             return FileDescriptorSetReader.parse(bytes);
         } catch (IOException e) {
             throw illegalStateWithCauseOf(e);
@@ -155,7 +151,7 @@ public final class FileDescriptorSuperset implements Logging {
 
     private Optional<FileDescriptorSet> readFromPlainFile(File file) {
         if (file.getName().endsWith(DESC_EXTENSION)) {
-            FileDescriptorSet result = read(file);
+            var result = read(file);
             return Optional.of(result);
         } else {
             return Optional.empty();

@@ -47,8 +47,8 @@ class DirectoryTest {
     @Test
     @DisplayName("obtain a source code root")
     void javaRoot() {
-        DefaultJavaPaths project = DefaultJavaPaths.at(Paths.get("some/dir"));
-        Directory rootDir = Directory.rootIn(project);
+        var project = DefaultJavaPaths.at(Paths.get("some/dir"));
+        var rootDir = Directory.rootIn(project);
         assertThat(rootDir.path().endsWith("java"))
                 .isTrue();
     }

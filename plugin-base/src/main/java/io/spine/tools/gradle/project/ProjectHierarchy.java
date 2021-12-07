@@ -65,7 +65,7 @@ public final class ProjectHierarchy {
         action.execute(rootProject);
         Deque<Project> subprojects = newLinkedList(directChildren(rootProject));
         while (!subprojects.isEmpty()) {
-            Project current = subprojects.poll();
+            var current = subprojects.poll();
             checkNotNull(current);
             action.execute(current);
             subprojects.addAll(directChildren(current));

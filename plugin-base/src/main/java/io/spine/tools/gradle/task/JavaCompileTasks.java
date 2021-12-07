@@ -28,12 +28,9 @@ package io.spine.tools.gradle.task;
 
 import org.gradle.api.Project;
 import org.gradle.api.tasks.TaskCollection;
-import org.gradle.api.tasks.TaskContainer;
-import org.gradle.api.tasks.compile.CompileOptions;
 import org.gradle.api.tasks.compile.JavaCompile;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -45,7 +42,7 @@ public final class JavaCompileTasks {
     private final TaskCollection<JavaCompile> tasks;
 
     private JavaCompileTasks(Project project) {
-        TaskContainer allTasks = project.getTasks();
+        var allTasks = project.getTasks();
         this.tasks = allTasks.withType(JavaCompile.class);
     }
 
@@ -62,9 +59,9 @@ public final class JavaCompileTasks {
      */
     public void addArgs(String... arguments) {
         checkNotNull(arguments);
-        for (JavaCompile task : tasks) {
-            CompileOptions taskOptions = task.getOptions();
-            List<String> compilerArgs = taskOptions.getCompilerArgs();
+        for (var task : tasks) {
+            var taskOptions = task.getOptions();
+            var compilerArgs = taskOptions.getCompilerArgs();
             compilerArgs.addAll(Arrays.asList(arguments));
         }
     }

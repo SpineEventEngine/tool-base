@@ -89,16 +89,16 @@ public final class DependantProject implements Dependant {
     }
 
     private Configuration configuration(ConfigurationName name) {
-        Configuration result = configurations.getByName(name.value());
+        var result = configurations.getByName(name.value());
         return result;
     }
 
     @Override
     public void exclude(Dependency dependency) {
-        Configuration mainConfig = configuration(runtimeClasspath);
+        var mainConfig = configuration(runtimeClasspath);
         exclude(mainConfig, dependency);
 
-        Configuration testConfig = configuration(testRuntimeClasspath);
+        var testConfig = configuration(testRuntimeClasspath);
         exclude(testConfig, dependency);
     }
 
@@ -152,9 +152,7 @@ public final class DependantProject implements Dependant {
      */
     private static void
     removeForcedDependency(Configuration configuration, Predicate<ModuleVersionSelector> filter) {
-        Set<ModuleVersionSelector> forcedModules =
-                configuration.getResolutionStrategy()
-                             .getForcedModules();
+        var forcedModules =configuration.getResolutionStrategy().getForcedModules();
         Collection<ModuleVersionSelector> newForcedModules = new HashSet<>(forcedModules);
         newForcedModules.removeIf(filter);
 
@@ -168,10 +166,8 @@ public final class DependantProject implements Dependant {
      */
     private static Predicate<ModuleVersionSelector> equalsTo(Dependency dependency) {
         return selector -> {
-            boolean groupEquals = dependency.groupId()
-                                            .equals(selector.getGroup());
-            boolean nameEquals = dependency.name()
-                                           .equals(selector.getName());
+            var groupEquals = dependency.groupId().equals(selector.getGroup());
+            var nameEquals = dependency.name().equals(selector.getName());
             return groupEquals && nameEquals;
         };
     }
@@ -182,15 +178,14 @@ public final class DependantProject implements Dependant {
      */
     private static Predicate<ModuleVersionSelector> equalsTo(String notation) {
         return selector -> {
-            Artifact.Builder artifact = Artifact.newBuilder()
+            var artifact = Artifact.newBuilder()
                     .setGroup(selector.getGroup())
                     .setName(selector.getName());
             if (selector.getVersion() != null) {
                 artifact.setVersion(selector.getVersion());
             }
-            String artifactNotation = artifact.build()
-                                              .notation();
-            boolean result = artifactNotation.equals(notation);
+            var artifactNotation = artifact.build().notation();
+            var result = artifactNotation.equals(notation);
             return result;
         };
     }

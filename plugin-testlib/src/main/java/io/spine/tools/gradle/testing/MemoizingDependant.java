@@ -90,8 +90,8 @@ public final class MemoizingDependant implements Dependant {
 
     private static Predicate<String> matches(Dependency dependency) {
         return notation -> {
-            String spec = String.format("%s:%s", dependency.groupId(), dependency.name());
-            boolean result = notation.startsWith(spec);
+            var spec = String.format("%s:%s", dependency.groupId(), dependency.name());
+            var result = notation.startsWith(spec);
             return result;
         };
     }

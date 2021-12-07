@@ -87,7 +87,7 @@ public final class ArchiveFile {
      */
     public Collection<ArchiveEntry> findByExtension(String fileExtension) {
         checkNotNull(fileExtension);
-        try (EntryLookup open = EntryLookup.open(this)) {
+        try (var open = EntryLookup.open(this)) {
             return open.findByExtension(fileExtension);
         } catch (IOException e) {
             throw illegalStateWithCauseOf(e);

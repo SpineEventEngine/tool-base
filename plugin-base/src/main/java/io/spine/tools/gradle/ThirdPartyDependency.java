@@ -63,7 +63,7 @@ public final class ThirdPartyDependency implements Dependency {
         if (!(o instanceof ThirdPartyDependency)) {
             return false;
         }
-        ThirdPartyDependency module = (ThirdPartyDependency) o;
+        var module = (ThirdPartyDependency) o;
         return Objects.equal(groupId, module.groupId) &&
                 Objects.equal(name, module.name);
     }

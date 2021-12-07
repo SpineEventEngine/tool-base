@@ -63,7 +63,7 @@ public final class MoreKnownTypes {
         checkNotNull(descriptorSetFile);
         checkArgument(descriptorSetFile.exists());
 
-        FileSet protoFiles = FileSet.parse(descriptorSetFile);
+        var protoFiles = FileSet.parse(descriptorSetFile);
         extendWith(protoFiles);
     }
 
@@ -75,7 +75,7 @@ public final class MoreKnownTypes {
      */
     public static void extendWith(FileSet protoFiles) {
         checkNotNull(protoFiles);
-        TypeSet types = TypeSet.from(protoFiles);
+        var types = TypeSet.from(protoFiles);
         KnownTypes.Holder.extendWith(types);
     }
 }

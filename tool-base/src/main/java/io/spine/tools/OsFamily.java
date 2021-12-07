@@ -48,11 +48,11 @@ public enum OsFamily {
     Unix {
         @Override
         public boolean isCurrent() {
-            boolean separatorMatches = ":".equals(PATH_SEP);
-            boolean notMac = !macOS.isCurrent()
+            var separatorMatches = ":".equals(PATH_SEP);
+            var notMac = !macOS.isCurrent()
                     || OS_NAME.endsWith("x")
                     || OS_NAME.contains(DARWIN);
-            boolean notVms = !OS_NAME.contains("openvms");
+            var notVms = !OS_NAME.contains("openvms");
             return separatorMatches && notVms && notMac;
         }
     };
@@ -86,7 +86,7 @@ public enum OsFamily {
      * to this OS family.
      */
     public boolean isCurrent() {
-        boolean result = OS_NAME.contains(signature);
+        var result = OS_NAME.contains(signature);
         return result;
     }
 }

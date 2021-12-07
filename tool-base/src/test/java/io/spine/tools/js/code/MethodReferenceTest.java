@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@DisplayName("MethodReference should")
+@DisplayName("`MethodReference` should")
 class MethodReferenceTest {
 
     private static final String METHOD_NAME = "method";
@@ -42,24 +42,24 @@ class MethodReferenceTest {
     @Test
     @DisplayName("provide reference to an instance method")
     void instanceMethod() {
-        MethodReference reference = MethodReference.onPrototype(typeName, METHOD_NAME);
-        String expectedName = "proto.google.protobuf.Any.prototype.method";
+        var reference = MethodReference.onPrototype(typeName, METHOD_NAME);
+        var expectedName = "proto.google.protobuf.Any.prototype.method";
         assertEquals(expectedName, reference.value());
     }
 
     @Test
     @DisplayName("provide reference to a static method")
     void staticMethod() {
-        MethodReference reference = MethodReference.onType(typeName, METHOD_NAME);
-        String expectedName = "proto.google.protobuf.Any.method";
+        var reference = MethodReference.onType(typeName, METHOD_NAME);
+        var expectedName = "proto.google.protobuf.Any.method";
         assertEquals(expectedName, reference.value());
     }
 
     @Test
     @DisplayName("provide reference to a constructor")
     void constructor() {
-        MethodReference reference = MethodReference.constructor(typeName);
-        String expected = "proto.google.protobuf.Any";
+        var reference = MethodReference.constructor(typeName);
+        var expected = "proto.google.protobuf.Any";
         assertEquals(expected, reference.value());
     }
 }

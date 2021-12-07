@@ -39,6 +39,7 @@ import static java.nio.file.Files.exists;
  * <p>See <a href="https://dart.dev/tools/pub/cmd/pub-global#running-a-script-from-your-path">
  * Pub documentation</a>.
  */
+@SuppressWarnings("unused") /* Part of the public API. */
 public final class ProtocPluginPath {
 
     private static final boolean WINDOWS = OsFamily.Windows.isCurrent();
@@ -59,7 +60,7 @@ public final class ProtocPluginPath {
      */
     public static synchronized Path locate() {
         if (resolved == null) {
-            Path pathToExecutable = PubCache.bin().resolve(SCRIPT_FILE_NAME);
+            var pathToExecutable = PubCache.bin().resolve(SCRIPT_FILE_NAME);
             checkState(exists(pathToExecutable),
                        "Protoc plugin for Dart code generation is not installed. " +
                                "`protoc_plugin` should be activated globally. " +

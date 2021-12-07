@@ -31,8 +31,6 @@ import io.spine.tools.gradle.GradlePlugin;
 import io.spine.tools.gradle.PluginScript;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
-import org.gradle.api.plugins.PluginContainer;
-import org.gradle.api.plugins.PluginManager;
 
 import java.util.function.Consumer;
 
@@ -64,8 +62,8 @@ public final class PlugableProject implements PluginTarget, Logging {
     }
 
     private <P extends Plugin<Project>> void accept(GradlePlugin<P> pluginType, Consumer<P> action) {
-        P plugin = project.getPlugins()
-                          .getAt(pluginType.implementationClass());
+        var plugin = project.getPlugins()
+                            .getAt(pluginType.implementationClass());
         action.accept(plugin);
     }
 
@@ -74,7 +72,7 @@ public final class PlugableProject implements PluginTarget, Logging {
         checkNotNull(plugin);
 
         if (isNotApplied(plugin)) {
-            PluginManager pluginManager = project.getPluginManager();
+            var pluginManager = project.getPluginManager();
             pluginManager.apply(plugin.implementationClass());
         } else {
             _debug().log("Plugin `%s` is already applied.", plugin.className());
@@ -89,8 +87,8 @@ public final class PlugableProject implements PluginTarget, Logging {
     @Override
     public boolean isApplied(GradlePlugin<?> plugin) {
         checkNotNull(plugin);
-        PluginContainer plugins = project.getPlugins();
-        boolean result = plugins.hasPlugin(plugin.implementationClass());
+        var plugins = project.getPlugins();
+        var result = plugins.hasPlugin(plugin.implementationClass());
         return result;
     }
 }

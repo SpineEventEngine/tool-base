@@ -27,8 +27,6 @@ package io.spine.tools.gradle.task;
 
 import org.gradle.api.Task;
 
-import java.util.Set;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -55,7 +53,7 @@ public final class TaskDependencies {
     public static boolean dependsOn(Task task, TaskName ontoTaskWithName) {
         checkNotNull(task);
         checkNotNull(ontoTaskWithName);
-        String taskName = ontoTaskWithName.name();
+        var taskName = ontoTaskWithName.name();
         return dependsOn(task, taskName);
     }
 
@@ -65,15 +63,15 @@ public final class TaskDependencies {
      */
     @SuppressWarnings("ChainOfInstanceofChecks")
     private static boolean dependsOn(Task task, String ontoTaskWithName) {
-        Set<Object> dependsOn = task.getDependsOn();
+        var dependsOn = task.getDependsOn();
 
-        boolean contains = false;
-        for (Object anObject : dependsOn) {
+        var contains = false;
+        for (var anObject : dependsOn) {
             if (anObject instanceof String) {
                 contains = contains || ontoTaskWithName.equals(anObject);
             }
             if (anObject instanceof Task) {
-                Task objectAsTask = (Task) anObject;
+                var objectAsTask = (Task) anObject;
                 contains = contains || ontoTaskWithName.equals(objectAsTask.getName());
             }
         }

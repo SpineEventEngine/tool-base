@@ -26,7 +26,6 @@
 
 package io.spine.tools.dart.fs;
 
-import com.google.common.truth.StringSubject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -38,8 +37,8 @@ class GeneratedFileSuffixTest {
     @Test
     @DisplayName("enumerate file extensions ending with `.dart`")
     void suffixes() {
-        for (GeneratedFileSuffix suffix : GeneratedFileSuffix.values()) {
-            StringSubject assertValue = assertThat(suffix.value());
+        for (var suffix : GeneratedFileSuffix.values()) {
+            var assertValue = assertThat(suffix.value());
             assertValue.startsWith(".");
             assertValue.endsWith(".dart");
         }

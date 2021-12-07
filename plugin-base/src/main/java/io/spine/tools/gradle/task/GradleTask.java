@@ -34,10 +34,10 @@ import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.file.FileCollection;
-import org.gradle.api.tasks.TaskContainer;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
@@ -45,7 +45,6 @@ import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
-import static com.google.common.collect.Maps.newHashMap;
 
 /**
  * Utility wrapper around the Gradle tasks created.
@@ -84,7 +83,7 @@ public final class GradleTask {
     public static GradleTask from(Task task) {
         checkNotNull(task);
         TaskName taskName = new DynamicTaskName(task.getName());
-        Project project = task.getProject();
+        var project = task.getProject();
         return new GradleTask(task, taskName, project);
     }
 
@@ -251,7 +250,7 @@ public final class GradleTask {
         public Builder withInputProperty(String propertyName, @Nullable Serializable value) {
             checkNotNull(propertyName);
             if (inputProperties == null) {
-                inputProperties = newHashMap();
+                inputProperties = new HashMap<>();
             }
             inputProperties.put(propertyName, value);
             return this;
@@ -284,20 +283,20 @@ public final class GradleTask {
          */
         @CanIgnoreReturnValue
         public GradleTask applyNowTo(Project project) {
-            String errMsg = "Project is not specified for the new Gradle task: ";
+            var errMsg = "Project is not specified for the new Gradle task: ";
             checkNotNull(project, errMsg + name);
 
             if (dependenciesRequired() && !dependenciesPresent()) {
-                String exceptionMsg = "Either the previous or the following task must be set. " +
+                var exceptionMsg = "Either the previous or the following task must be set. " +
                         "Call `allowNoDependencies()` to skip task dependencies setup.";
                 throw new IllegalStateException(exceptionMsg);
             }
 
-            Task newTask = project.task(name.name())
-                                  .doLast(action);
+            var newTask = project.task(name.name())
+                                 .doLast(action);
             dependTask(newTask, project);
             addTaskIO(newTask);
-            GradleTask result = new GradleTask(newTask, name, project);
+            var result = new GradleTask(newTask, name, project);
             return result;
         }
 
@@ -316,21 +315,20 @@ public final class GradleTask {
                 task.dependsOn(previousTask.name());
             }
             if (followingTask != null) {
-                TaskContainer existingTasks = project.getTasks();
+                var existingTasks = project.getTasks();
                 existingTasks.getByName(followingTask.name())
                              .dependsOn(task);
             }
             if (previousTaskOfAllProjects != null) {
-                Project root = project.getRootProject();
+                var root = project.getRootProject();
                 dependTaskOnAllProjects(task, root);
             }
         }
 
         private void dependTaskOnAllProjects(Task task, Project rootProject) {
-            String prevTaskName = previousTaskOfAllProjects.name();
+            var prevTaskName = previousTaskOfAllProjects.name();
             ProjectHierarchy.applyToAll(rootProject, project -> {
-                Task existingTask = project.getTasks()
-                                           .findByName(prevTaskName);
+                var existingTask = project.getTasks().findByName(prevTaskName);
                 if (existingTask != null) {
                     task.dependsOn(existingTask);
                 }
@@ -377,7 +375,7 @@ public final class GradleTask {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        GradleTask other = (GradleTask) obj;
+        var other = (GradleTask) obj;
         return Objects.equals(this.name.name(), other.name.name())
                 && Objects.equals(this.project, other.project);
     }

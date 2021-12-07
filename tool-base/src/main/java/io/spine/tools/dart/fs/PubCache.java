@@ -72,7 +72,7 @@ public final class PubCache {
      */
     private static Path defaultPath() {
         if (OsFamily.Windows.isCurrent()) {
-            Path inLocalAppData = winPathFromEnv(LOCAL_APP_DATA_ENV);
+            var inLocalAppData = winPathFromEnv(LOCAL_APP_DATA_ENV);
             if (exists(inLocalAppData)) {
                 return inLocalAppData;
             } else {
@@ -80,10 +80,10 @@ public final class PubCache {
             }
         } else {
             @SuppressWarnings("AccessOfSystemProperties")
-            String userHome = System.getProperty("user.home");
-            Path path = Paths.get(userHome)
-                             .resolve(".pub-cache")
-                             .resolve(BIN);
+            var userHome = System.getProperty("user.home");
+            var path = Paths.get(userHome)
+                            .resolve(".pub-cache")
+                            .resolve(BIN);
             return path;
         }
     }
@@ -97,7 +97,7 @@ public final class PubCache {
      */
     private static Path winPathFromEnv(String envVariableName) {
         @SuppressWarnings("CallToSystemGetenv")
-        String localAppData = System.getenv(envVariableName);
+        var localAppData = System.getenv(envVariableName);
         return Paths.get(localAppData)
                     .resolve("Pub")
                     .resolve("Cache")
@@ -106,15 +106,15 @@ public final class PubCache {
 
     private static Optional<Path> customPath() {
         @SuppressWarnings("CallToSystemGetenv")
-        String customPubCache = System.getenv(PUB_CACHE_ENV);
+        var customPubCache = System.getenv(PUB_CACHE_ENV);
         if (Strings.isNullOrEmpty(customPubCache)) {
             return Optional.empty();
         }
-        Path pubCachePath = Paths.get(customPubCache);
+        var pubCachePath = Paths.get(customPubCache);
         if (!exists(pubCachePath)) {
             return Optional.empty();
         }
-        Path resolvedBin = pubCachePath.resolve(BIN);
+        var resolvedBin = pubCachePath.resolve(BIN);
         if (exists(resolvedBin)) {
             return Optional.of(resolvedBin);
         }

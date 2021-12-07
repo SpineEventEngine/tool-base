@@ -37,11 +37,10 @@ class IndentedLineTest {
     @Test
     @DisplayName("create indent for code based on the level of indent")
     void createIndent() {
-        Indent indentPerLevel = Indent.of2();
-        IndentedLine line =
-                IndentedLine.of(indentPerLevel, "content")
-                            .adjustLevelBy(2);
-        String expected = "    content";
+        var indentPerLevel = Indent.of2();
+        var line = IndentedLine.of(indentPerLevel, "content")
+                               .adjustLevelBy(2);
+        var expected = "    content";
 
         assertThat(line.text())
                 .isEqualTo(expected);

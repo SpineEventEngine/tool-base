@@ -84,8 +84,8 @@ public final class FileName extends AbstractFileName<FileName> {
      */
     public static FileName from(FileDescriptor descriptor) {
         checkNotNull(descriptor);
-        io.spine.code.proto.FileName protoFileName = io.spine.code.proto.FileName.from(descriptor);
-        String fileName = protoFileName.nameWithoutExtension() + protoEnding();
+        var protoFileName = io.spine.code.proto.FileName.from(descriptor);
+        var fileName = protoFileName.nameWithoutExtension() + protoEnding();
         return of(fileName);
     }
 
@@ -96,10 +96,10 @@ public final class FileName extends AbstractFileName<FileName> {
      * by the {@link FileReference#parentDirectory()}.
      */
     public String pathToRoot() {
-        List<String> pathElements = pathElements();
-        int fileLocationDepth = pathElements.size() - 1;
-        String pathToRoot = Strings.repeat(FileReference.parentDirectory(), fileLocationDepth);
-        String result = pathToRoot.isEmpty() ? FileReference.currentDirectory() : pathToRoot;
+        var pathElements = pathElements();
+        var fileLocationDepth = pathElements.size() - 1;
+        var pathToRoot = Strings.repeat(FileReference.parentDirectory(), fileLocationDepth);
+        var result = pathToRoot.isEmpty() ? FileReference.currentDirectory() : pathToRoot;
         return result;
     }
 
@@ -108,6 +108,7 @@ public final class FileName extends AbstractFileName<FileName> {
      *
      * <p>Assumes that the path is used at the root directory with generated Protobuf files.
      */
+    @SuppressWarnings("unused") /* Part of the public API. */
     public String pathFromRoot() {
         return FileReference.currentDirectory() + value();
     }
@@ -118,7 +119,7 @@ public final class FileName extends AbstractFileName<FileName> {
      */
     @VisibleForTesting
     List<String> pathElements() {
-        Iterable<String> elements = splitter().split(value());
+        var elements = splitter().split(value());
         return ImmutableList.copyOf(elements);
     }
 

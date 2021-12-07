@@ -87,8 +87,8 @@ public final class FileReference extends StringTypeValue implements Comparable<F
      * Obtains the name of the imported file skipping the path to it.
      */
     public String fileName() {
-        List<String> elements = elements();
-        String fileName = elements.get(elements.size() - 1);
+        var elements = elements();
+        var fileName = elements.get(elements.size() - 1);
         return fileName;
     }
 
@@ -98,12 +98,12 @@ public final class FileReference extends StringTypeValue implements Comparable<F
      * @return the directory path omitting relative path
      */
     public DirectoryReference directory() {
-        String nonRelativePath = withoutRelative();
-        int fileNameSeparator = nonRelativePath.lastIndexOf(IMPORT_PATH_SEPARATOR);
+        var nonRelativePath = withoutRelative();
+        var fileNameSeparator = nonRelativePath.lastIndexOf(IMPORT_PATH_SEPARATOR);
         if (fileNameSeparator < 0) {
             return DirectoryReference.currentDir();
         } else {
-            String directory = nonRelativePath.substring(0, fileNameSeparator);
+            var directory = nonRelativePath.substring(0, fileNameSeparator);
             return DirectoryReference.of(directory);
         }
     }
@@ -114,7 +114,7 @@ public final class FileReference extends StringTypeValue implements Comparable<F
      * @return {@code true} if the path starts with the current or parent directory reference
      */
     public boolean isRelative() {
-        boolean result = isRelativeToParent() || isRelativeToCurrent();
+        var result = isRelativeToParent() || isRelativeToCurrent();
         return result;
     }
 
@@ -122,12 +122,12 @@ public final class FileReference extends StringTypeValue implements Comparable<F
      * Obtains the elements of this file reference.
      */
     public List<String> elements() {
-        Iterable<String> elements = splitter().split(value());
+        var elements = splitter().split(value());
         return ImmutableList.copyOf(elements);
     }
 
     private String withoutRelative() {
-        String result = value();
+        var result = value();
         if (result.startsWith(CURRENT_DIR)) {
             result = result.substring(CURRENT_DIR.length());
         }

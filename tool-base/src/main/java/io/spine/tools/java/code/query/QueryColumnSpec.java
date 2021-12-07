@@ -72,8 +72,7 @@ final class QueryColumnSpec implements GeneratedMethodSpec {
 
     @Override
     public MethodSpec methodSpec() {
-        MethodSpec result = MethodSpec
-                .methodBuilder(columnName())
+        var result = MethodSpec.methodBuilder(columnName())
                 .addJavadoc(javadoc().spec())
                 .addModifiers(PUBLIC)
                 .returns(queryCriterion())
@@ -86,16 +85,14 @@ final class QueryColumnSpec implements GeneratedMethodSpec {
      * Returns the column name as it looks in the generated Java code.
      */
     private String columnName() {
-        return column.name()
-                     .javaCase();
+        return column.name().javaCase();
     }
 
     /**
      * Returns the method Javadoc.
      */
     private GeneratedJavadoc javadoc() {
-        String columnName = column.name()
-                                  .javaCase();
+        var columnName = columnName();
         return GeneratedJavadoc.singleParagraph(
                 CodeBlock.of("Creates a criterion for the {@link Column#$L() Column.$L()} column.",
                              columnName, columnName)
@@ -106,8 +103,8 @@ final class QueryColumnSpec implements GeneratedMethodSpec {
      * Returns the name of the Java type of a column.
      */
     private ParameterizedTypeName queryCriterion() {
-        JavaPoetName result = JavaPoetName.of(EntityCriterion.class);
-        ParameterizedTypeName parameterizedResult =
+        var result = JavaPoetName.of(EntityCriterion.class);
+        var parameterizedResult =
                 ParameterizedTypeName.get(result.className(),
                                           entityStateName, returningValueName, queryBuilderName);
         return parameterizedResult;

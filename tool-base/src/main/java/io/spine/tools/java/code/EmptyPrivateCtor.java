@@ -49,14 +49,13 @@ public final class EmptyPrivateCtor implements GeneratedMethodSpec {
      * Returns a spec for private empty parameter-less constructor.
      */
     public static MethodSpec spec() {
-        MethodSpec spec = INSTANCE.methodSpec();
+        var spec = INSTANCE.methodSpec();
         return spec;
     }
 
     @Override
     public MethodSpec methodSpec() {
-        MethodSpec result = MethodSpec
-                .constructorBuilder()
+        var result = MethodSpec.constructorBuilder()
                 .addJavadoc(javadoc())
                 .addModifiers(PRIVATE)
                 .build();
@@ -67,10 +66,9 @@ public final class EmptyPrivateCtor implements GeneratedMethodSpec {
      * Obtains a class-level Javadoc.
      */
     private static CodeBlock javadoc() {
-        JavadocText javadoc = JavadocText.fromEscaped("Prevents instantiation of this class.")
-                                         .withNewLine();
-        CodeBlock value = CodeBlock
-                .builder()
+        var javadoc = JavadocText.fromEscaped("Prevents instantiation of this class.")
+                                 .withNewLine();
+        var value = CodeBlock.builder()
                 .add(javadoc.value())
                 .build();
         return value;

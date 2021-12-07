@@ -26,18 +26,17 @@
 
 package io.spine.tools.java.code.field;
 
-import com.google.common.collect.ImmutableList;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 import io.spine.base.Field;
 import io.spine.base.SubscribableField;
-import io.spine.tools.java.code.GeneratedJavadoc;
-import io.spine.tools.java.code.JavaPoetName;
-import io.spine.tools.java.code.TypeSpec;
 import io.spine.code.java.ClassName;
 import io.spine.code.java.PackageName;
 import io.spine.code.java.SimpleClassName;
+import io.spine.tools.java.code.GeneratedJavadoc;
+import io.spine.tools.java.code.JavaPoetName;
+import io.spine.tools.java.code.TypeSpec;
 import io.spine.type.MessageType;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -83,8 +82,7 @@ final class MessageTypedField implements TypeSpec {
 
     @Override
     public com.squareup.javapoet.TypeSpec toPoet() {
-        com.squareup.javapoet.TypeSpec result = com.squareup.javapoet.TypeSpec
-                .classBuilder(typeName().value())
+        var result = com.squareup.javapoet.TypeSpec.classBuilder(typeName().value())
                 .addJavadoc(javadoc().spec())
                 .addModifiers(PUBLIC, STATIC, FINAL)
                 .superclass(superclass())
@@ -101,15 +99,14 @@ final class MessageTypedField implements TypeSpec {
     }
 
     private TypeName superclass() {
-        JavaPoetName type = JavaPoetName.of(fieldSupertype);
-        TypeName result = type.value();
+        var type = JavaPoetName.of(fieldSupertype);
+        var result = type.value();
         return result;
     }
 
     private static MethodSpec constructor() {
-        String argName = "field";
-        MethodSpec result = MethodSpec
-                .constructorBuilder()
+        var argName = "field";
+        var result = MethodSpec.constructorBuilder()
                 .addModifiers(PRIVATE)
                 .addParameter(Field.class, argName)
                 .addStatement("super($L)", argName)
@@ -118,12 +115,11 @@ final class MessageTypedField implements TypeSpec {
     }
 
     private Iterable<MethodSpec> fields() {
-        ImmutableList<MethodSpec> result =
-                fieldType.fields()
-                         .stream()
-                         .map(field -> new NestedFieldAccessor(field, fieldSupertype))
-                         .map(FieldAccessor::methodSpec)
-                         .collect(toImmutableList());
+        var fields = fieldType.fields();
+        var result = fields.stream()
+                .map(field -> new NestedFieldAccessor(field, fieldSupertype))
+                .map(FieldAccessor::methodSpec)
+                .collect(toImmutableList());
         return result;
     }
 
@@ -131,7 +127,7 @@ final class MessageTypedField implements TypeSpec {
      * Obtains the class Javadoc.
      */
     private static GeneratedJavadoc javadoc() {
-        CodeBlock text = CodeBlock.of("The listing of nested fields of the message type.");
+        var text = CodeBlock.of("The listing of nested fields of the message type.");
         return GeneratedJavadoc.singleParagraph(text);
     }
 }

@@ -63,8 +63,7 @@ abstract class FieldAccessor implements GeneratedMethodSpec {
 
     @Override
     public MethodSpec methodSpec() {
-        MethodSpec result = MethodSpec
-                .methodBuilder(fieldName().javaCase())
+        var result = MethodSpec.methodBuilder(fieldName().javaCase())
                 .addJavadoc(javadoc().spec())
                 .addModifiers(modifiers())
                 .returns(returnType().value())
@@ -111,7 +110,7 @@ abstract class FieldAccessor implements GeneratedMethodSpec {
      * returned from this method.
      */
     private JavaPoetName nestedFieldsContainer() {
-        JavaPoetName type = JavaPoetName.of(fieldTypeName().with("Field"));
+        var type = JavaPoetName.of(fieldTypeName().with("Field"));
         return type;
     }
 
@@ -120,7 +119,7 @@ abstract class FieldAccessor implements GeneratedMethodSpec {
      * ones) returned by this method.
      */
     private JavaPoetName simpleField() {
-        JavaPoetName type = JavaPoetName.of(fieldSupertype);
+        var type = JavaPoetName.of(fieldSupertype);
         return type;
     }
 
@@ -131,9 +130,8 @@ abstract class FieldAccessor implements GeneratedMethodSpec {
      */
     private SimpleClassName fieldTypeName() {
         checkState(field.isMessage());
-        String fieldTypeName = field.javaTypeName();
-        SimpleClassName result = ClassName.of(fieldTypeName)
-                                          .toSimple();
+        var fieldTypeName = field.javaTypeName();
+        var result = ClassName.of(fieldTypeName).toSimple();
         return result;
     }
 

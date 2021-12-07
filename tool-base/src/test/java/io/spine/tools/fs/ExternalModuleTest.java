@@ -30,8 +30,6 @@ import com.google.common.testing.EqualsTester;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static io.spine.testing.Assertions.assertIllegalArgument;
 import static io.spine.testing.Assertions.assertIllegalState;
 import static java.util.Collections.emptySet;
@@ -62,54 +60,54 @@ class ExternalModuleTest {
     @Test
     @DisplayName("resolve an import if the directory is same as in the pattern")
     void resolveIfDirectorySame() {
-        ExternalModule module = newModule(moduleName, "d");
-        FileReference origin = FileReference.of("./../../d/f.js");
-        FileReference result = module.fileInModule(origin);
-        FileReference expected = FileReference.of(moduleName + "/d/f.js");
+        var module = newModule(moduleName, "d");
+        var origin = FileReference.of("./../../d/f.js");
+        var result = module.fileInModule(origin);
+        var expected = FileReference.of(moduleName + "/d/f.js");
         assertEquals(expected, result);
     }
 
     @Test
     @DisplayName("resolve an import for a subdirectory of a pattern")
     void resolveForSubdirectoryPattern() {
-        ExternalModule module = newModule(moduleName, "d/*");
-        FileReference origin = FileReference.of("./../../d/d2/f.js");
-        FileReference result = module.fileInModule(origin);
-        FileReference expected = FileReference.of(moduleName + "/d/d2/f.js");
+        var module = newModule(moduleName, "d/*");
+        var origin = FileReference.of("./../../d/d2/f.js");
+        var result = module.fileInModule(origin);
+        var expected = FileReference.of(moduleName + "/d/d2/f.js");
         assertEquals(expected, result);
     }
 
     @Test
     @DisplayName("resolve an import if subdirectories match but root is absent")
     void resolveImportMatchingSubdirectories() {
-        ExternalModule module = newModule(moduleName, "d/d2/d3");
-        FileReference origin = FileReference.of("./../../d2/d3/f.js");
-        FileReference result = module.fileInModule(origin);
-        FileReference expected = FileReference.of(moduleName + "/d/d2/d3/f.js");
+        var module = newModule(moduleName, "d/d2/d3");
+        var origin = FileReference.of("./../../d2/d3/f.js");
+        var result = module.fileInModule(origin);
+        var expected = FileReference.of(moduleName + "/d/d2/d3/f.js");
         assertEquals(expected, result);
     }
 
     @Test
     @DisplayName("resolve an import if subdirectories match by pattern but root is absent")
     void resolveImportMatchingAnySubdirectories() {
-        ExternalModule module = newModule(moduleName, "d/d2/d3/*");
-        FileReference origin = FileReference.of("./../../d2/d3/d4/f.js");
-        FileReference result = module.fileInModule(origin);
-        FileReference expected = FileReference.of(moduleName + "/d/d2/d3/d4/f.js");
+        var module = newModule(moduleName, "d/d2/d3/*");
+        var origin = FileReference.of("./../../d2/d3/d4/f.js");
+        var result = module.fileInModule(origin);
+        var expected = FileReference.of(moduleName + "/d/d2/d3/d4/f.js");
         assertEquals(expected, result);
     }
 
     @Test
     @DisplayName("compose an import path only if package is provided by the module")
     void acceptOnlyProvidedProto() {
-        ExternalModule module = newModule(moduleName, "should_not_match_it");
-        FileReference reference = FileReference.of("d/index_pb.js");
+        var module = newModule(moduleName, "should_not_match_it");
+        var reference = FileReference.of("d/index_pb.js");
         assertIllegalState(() -> module.fileInModule(reference));
     }
 
     private static ExternalModule newModule(String moduleName, String directoryPattern) {
-        DirectoryPattern pattern = DirectoryPattern.of(directoryPattern);
-        List<DirectoryPattern> patterns = singletonList(pattern);
+        var pattern = DirectoryPattern.of(directoryPattern);
+        var patterns = singletonList(pattern);
         return new ExternalModule(moduleName, patterns);
     }
 }

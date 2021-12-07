@@ -28,7 +28,6 @@ package io.spine.tools.gradle;
 
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.NullPointerTester;
-import com.google.common.truth.StringSubject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -44,7 +43,7 @@ import static java.lang.String.format;
 class ThirdPartyDependencyTest {
 
     @Test
-    @DisplayName("not accept nulls on construction")
+    @DisplayName("not accept `null`s on construction")
     void nullsInCtors() {
         new NullPointerTester()
                 .testAllPublicConstructors(ThirdPartyDependency.class);
@@ -53,8 +52,7 @@ class ThirdPartyDependencyTest {
     @Test
     @DisplayName(NOT_ACCEPT_NULLS)
     void nulls() {
-        ThirdPartyDependency dependency =
-                new ThirdPartyDependency("org.example.group", "example-artifact-name");
+        var dependency = new ThirdPartyDependency("org.example.group", "example-artifact-name");
         new NullPointerTester()
                 .testAllPublicInstanceMethods(dependency);
     }
@@ -74,10 +72,10 @@ class ThirdPartyDependencyTest {
     @Test
     @DisplayName("create artifact with the given version")
     void createArtifacts() {
-        String version = "42.0";
+        var version = "42.0";
         Dependency dependency = new ThirdPartyDependency(EXAMPLE_GROUP, EXAMPLE);
-        Artifact artifact = dependency.ofVersion(version);
-        String expectedArtifactNotation = format("%s:%s:%s", EXAMPLE_GROUP, EXAMPLE, version);
+        var artifact = dependency.ofVersion(version);
+        var expectedArtifactNotation = format("%s:%s:%s", EXAMPLE_GROUP, EXAMPLE, version);
         assertThat(artifact.notation())
                 .isEqualTo(expectedArtifactNotation);
     }
@@ -86,8 +84,8 @@ class ThirdPartyDependencyTest {
     @DisplayName("create a file-safe ID for the dependency")
     void fileSafeId() {
         Dependency dependency = new ThirdPartyDependency(EXAMPLE_GROUP, EXAMPLE);
-        String id = dependency.fileSafeId();
-        StringSubject assertId = assertThat(id);
+        var id = dependency.fileSafeId();
+        var assertId = assertThat(id);
         assertId.contains(EXAMPLE_GROUP);
         assertId.contains(EXAMPLE);
         assertId.doesNotContain(":");

@@ -72,15 +72,15 @@ class DirectoryPatternTest {
         @Test
         @DisplayName("non-nested format")
         void nameForNonNested() {
-            String name = "original";
-            DirectoryPattern pattern = DirectoryPattern.of(name);
+            var name = "original";
+            var pattern = DirectoryPattern.of(name);
             assertDirName(pattern, name);
         }
 
         @Test
         @DisplayName("nested format")
         void nameForNested() {
-            DirectoryPattern pattern = DirectoryPattern.of("work/*");
+            var pattern = DirectoryPattern.of("work/*");
             assertDirName(pattern, "work");
         }
 
@@ -96,8 +96,8 @@ class DirectoryPatternTest {
         private void assertTransform(DirectoryPattern pattern,
                                      String originReference,
                                      String expectedReference) {
-            DirectoryReference origin = DirectoryReference.of(originReference);
-            DirectoryReference transformed = pattern.transform(origin);
+            var origin = DirectoryReference.of(originReference);
+            var transformed = pattern.transform(origin);
             assertThat(transformed.value())
                     .isEqualTo(expectedReference);
         }
@@ -105,9 +105,9 @@ class DirectoryPatternTest {
         @Test
         @DisplayName("match the same directory")
         void matchSame() {
-            String name = "protos";
-            DirectoryPattern pattern = DirectoryPattern.of(name);
-            boolean matches = matches(pattern, name);
+            var name = "protos";
+            var pattern = DirectoryPattern.of(name);
+            var matches = matches(pattern, name);
             assertTrue(matches);
             assertTransform(pattern, name, name);
         }
@@ -116,9 +116,9 @@ class DirectoryPatternTest {
         @Test
         @DisplayName("nested directories if specified")
         void matchNested() {
-            DirectoryPattern pattern = DirectoryPattern.of("foo/*");
-            String directory = "foo/bar";
-            boolean matches = matches(pattern, directory);
+            var pattern = DirectoryPattern.of("foo/*");
+            var directory = "foo/bar";
+            var matches = matches(pattern, directory);
             assertTrue(matches);
             assertTransform(pattern, directory, directory);
         }
@@ -130,9 +130,9 @@ class DirectoryPatternTest {
             @Test
             @DisplayName("a pattern ending")
             void matchAccordingToPatternEnding() {
-                DirectoryPattern pattern = DirectoryPattern.of("base/nested");
-                String directory = "nested";
-                boolean matches = matches(pattern, directory);
+                var pattern = DirectoryPattern.of("base/nested");
+                var directory = "nested";
+                var matches = matches(pattern, directory);
                 assertTrue(matches);
                 assertTransform(pattern, directory, pattern.directoryName().value());
             }
@@ -140,9 +140,9 @@ class DirectoryPatternTest {
             @Test
             @DisplayName("a middle element of the pattern")
             void matchAccordingToPatternMiddle() {
-                DirectoryPattern pattern = DirectoryPattern.of("base/nested" + INCLUDE_NESTED);
-                String directory = "nested/l2";
-                boolean matches = matches(pattern, directory);
+                var pattern = DirectoryPattern.of("base/nested" + INCLUDE_NESTED);
+                var directory = "nested/l2";
+                var matches = matches(pattern, directory);
                 assertTrue(matches);
                 assertTransform(pattern, directory, "base/nested/l2");
             }
@@ -152,8 +152,8 @@ class DirectoryPatternTest {
     @Test
     @DisplayName("not match nested directories by default")
     void notMatchNested() {
-        DirectoryPattern pattern = DirectoryPattern.of("first");
-        boolean matches = matches(pattern, "first/second");
+        var pattern = DirectoryPattern.of("first");
+        var matches = matches(pattern, "first/second");
         assertFalse(matches);
     }
 
@@ -161,38 +161,38 @@ class DirectoryPatternTest {
     @Test
     @DisplayName("not match a directory only if the root is same")
     void notMatchIfOnlyRootSame() {
-        DirectoryPattern pattern = DirectoryPattern.of("proto/spine/base" + INCLUDE_NESTED);
-        String directory = "spine/users";
-        boolean matches = matches(pattern, directory);
+        var pattern = DirectoryPattern.of("proto/spine/base" + INCLUDE_NESTED);
+        var directory = "spine/users";
+        var matches = matches(pattern, directory);
         assertFalse(matches);
     }
 
     @Test
     @DisplayName("not match if pattern is longer than directory reference")
     void notMatchIfPatternIsLonger() {
-        DirectoryPattern pattern = DirectoryPattern.of("spine/foo/bar" + INCLUDE_NESTED);
-        boolean matches = matches(pattern, "spine/foo");
+        var pattern = DirectoryPattern.of("spine/foo/bar" + INCLUDE_NESTED);
+        var matches = matches(pattern, "spine/foo");
         assertFalse(matches);
     }
 
     @Test
     @DisplayName("not transform if not matches")
     void notTransformNonMatching() {
-        DirectoryPattern pattern = DirectoryPattern.of("a");
-        DirectoryReference directory = DirectoryReference.of("b");
+        var pattern = DirectoryPattern.of("a");
+        var directory = DirectoryReference.of("b");
         assertIllegalState(() -> pattern.transform(directory));
     }
 
     private static boolean matches(DirectoryPattern pattern, String directoryToMatch) {
-        DirectoryReference directory = DirectoryReference.of(directoryToMatch);
+        var directory = DirectoryReference.of(directoryToMatch);
         return pattern.matches(directory);
     }
 
     @Test
     @DisplayName("cut the trailing separator in the directory name")
     void cutSuffix() {
-        String pureRef = "r/e";
-        DirectoryReference dir = DirectoryPattern.of(pureRef + '/').directoryName();
+        var pureRef = "r/e";
+        var dir = DirectoryPattern.of(pureRef + '/').directoryName();
         assertThat(dir.value())
                 .isEqualTo(pureRef);
 
@@ -211,7 +211,7 @@ class DirectoryPatternTest {
         @Test
         @DisplayName("alphabetically")
         void asText() {
-            String pat1 = "a/b/";
+            var pat1 = "a/b/";
             p1 = DirectoryPattern.of(pat1);
             p2 = DirectoryPattern.of("c/d/");
 

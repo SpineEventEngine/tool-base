@@ -31,7 +31,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.InlineMe;
 import com.google.protobuf.gradle.ExecutableLocator;
 import com.google.protobuf.gradle.GenerateProtoTask;
-import com.google.protobuf.gradle.GenerateProtoTask.DescriptorSetOptions;
 import com.google.protobuf.gradle.ProtobufConfigurator;
 import com.google.protobuf.gradle.ProtobufConfigurator.GenerateProtoTaskCollection;
 import io.spine.tools.groovy.ConsumerClosure;
@@ -39,17 +38,15 @@ import org.gradle.api.NamedDomainObjectContainer;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 
-import java.io.File;
-import java.nio.file.Path;
 import java.util.Collection;
 
 import static io.spine.tools.gradle.Artifact.PLUGIN_BASE_ID;
 import static io.spine.tools.gradle.ProtobufDependencies.gradlePlugin;
 import static io.spine.tools.gradle.ProtobufDependencies.protobufCompiler;
-import static io.spine.tools.gradle.task.Tasks.getDescriptorSetFile;
 import static io.spine.tools.gradle.project.Projects.getConventionUsesDefaultGeneratedDir;
 import static io.spine.tools.gradle.project.Projects.getGeneratedDir;
 import static io.spine.tools.gradle.project.Projects.getProtobufConvention;
+import static io.spine.tools.gradle.task.Tasks.getDescriptorSetFile;
 import static io.spine.tools.groovy.ConsumerClosure.closure;
 import static org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME;
 
@@ -96,7 +93,7 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
     }
 
     private void configureProtobuf(Project project, ProtobufConfigurator protobuf) {
-        Helper helper = new Helper(this, project, protobuf);
+        var helper = new Helper(this, project, protobuf);
         helper.configure();
     }
 
@@ -150,9 +147,7 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
         }
 
         private void setProtocArtifact() {
-            String protocArtifact =
-                    protobufCompiler.withVersionFrom(versions)
-                                    .notation();
+            var protocArtifact = protobufCompiler.withVersionFrom(versions).notation();
             protobuf.protoc(closure(
                     (ExecutableLocator locator) -> locator.setArtifact(protocArtifact)
             ));
@@ -166,7 +161,7 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
          */
         private void setGeneratedFilesBaseDir() {
             if (getConventionUsesDefaultGeneratedDir(project)) {
-                Path generatedFilesBaseDir = getGeneratedDir(project);
+                var generatedFilesBaseDir = getGeneratedDir(project);
                 protobuf.setGeneratedFilesBaseDir(generatedFilesBaseDir.toString());
             }
         }
@@ -188,8 +183,8 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
              *  Otherwise, a `ConcurrentModificationException` is thrown upon an attempt to
              *  insert a task into the Gradle lifecycle.
              */
-            ImmutableList<GenerateProtoTask> allTasks = ImmutableList.copyOf(tasksProxy);
-            for (GenerateProtoTask task : allTasks) {
+            var allTasks = ImmutableList.copyOf(tasksProxy);
+            for (var task : allTasks) {
                 configureProtocTask(task);
             }
         }
@@ -199,10 +194,10 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
             plugin.customizeTask(protocTask);
         }
 
-        private void configureDescriptorSetGeneration(GenerateProtoTask protocTask) {
+        private static void configureDescriptorSetGeneration(GenerateProtoTask protocTask) {
             protocTask.setGenerateDescriptorSet(true);
-            DescriptorSetOptions options = protocTask.getDescriptorSetOptions();
-            File descriptorSetFile = getDescriptorSetFile(protocTask);
+            var options = protocTask.getDescriptorSetOptions();
+            var descriptorSetFile = getDescriptorSetFile(protocTask);
             options.setPath(descriptorSetFile.getPath());
             options.setIncludeImports(true);
             options.setIncludeSourceInfo(true);

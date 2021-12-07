@@ -35,6 +35,7 @@ import io.spine.code.java.SimpleClassName;
 
 import java.nio.file.Path;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static io.spine.util.Preconditions2.checkNotEmptyOrBlank;
 
 /**
@@ -56,7 +57,7 @@ public final class FileName extends AbstractFileName<FileName> {
      */
     public static FileName forType(String typeName) {
         checkNotEmptyOrBlank(typeName);
-        FileName result = new FileName(typeName + EXTENSION);
+        var result = new FileName(typeName + EXTENSION);
         return result;
     }
 
@@ -68,8 +69,9 @@ public final class FileName extends AbstractFileName<FileName> {
      * @return the name of the Java file
      */
     public static FileName forMessage(DescriptorProto message) {
-        String typeName = message.getName();
-        FileName result = forType(typeName);
+        checkNotNull(message);
+        var typeName = message.getName();
+        var result = forType(typeName);
         return result;
     }
 
@@ -81,9 +83,10 @@ public final class FileName extends AbstractFileName<FileName> {
      * @return the name of the Java file
      */
     public static FileName forMessageOrBuilder(DescriptorProto message) {
-        String typeName = message.getName();
-        String javaType = SimpleClassName.messageOrBuilder(typeName).value();
-        FileName result = forType(javaType);
+        checkNotNull(message);
+        var typeName = message.getName();
+        var javaType = SimpleClassName.messageOrBuilder(typeName).value();
+        var result = forType(javaType);
         return result;
     }
 
@@ -91,6 +94,7 @@ public final class FileName extends AbstractFileName<FileName> {
      * Obtains file name for the passed enum.
      */
     public static FileName forEnum(EnumDescriptorProto enumType) {
+        checkNotNull(enumType);
         return forType(enumType.getName());
     }
 
@@ -98,6 +102,7 @@ public final class FileName extends AbstractFileName<FileName> {
      * Obtains file name for the specified service.
      */
     public static FileName forService(ServiceDescriptorProto service) {
+        checkNotNull(service);
         return forType(service.getName() + GRPC_CLASSNAME_SUFFIX);
     }
 
@@ -107,7 +112,9 @@ public final class FileName extends AbstractFileName<FileName> {
      * @param path  the target file path
      * @return {@code true} in case if the file has the .java extension.
      */
+    @SuppressWarnings("unused") /* Part of the public API. */
     public static boolean isJava(Path path) {
+        checkNotNull(path);
         return path.toString()
                    .endsWith(EXTENSION);
     }
