@@ -107,8 +107,9 @@ public interface Dependant {
     /**
      * Adds a new dependency within the {@code compile} configuration.
      *
-     * @see #compile(String)
+     * @deprecated please use {@link JavaConfigurationName#compileOnly}
      */
+    @Deprecated
     default void compile(Artifact artifact) {
         compile(artifact.notation());
     }
@@ -120,9 +121,9 @@ public interface Dependant {
      * define Protobuf dependencies without re-generating the Java/JS sources from the upstream
      * Protobuf definitions.
      *
-     * @see #depend(ConfigurationName, String)
+     * @deprecated please use {@link JavaConfigurationName#compileOnly}
      */
-    @SuppressWarnings({"deprecation", "RedundantSuppression"}) // See the doc.
+    @Deprecated
     default void compile(String notation) {
         depend(JavaConfigurationName.compile, notation);
     }
