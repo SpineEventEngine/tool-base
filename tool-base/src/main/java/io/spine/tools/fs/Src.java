@@ -35,7 +35,7 @@ import static io.spine.tools.fs.DirectoryName.src;
  * The source code directory named {@code src} under the given project directory.
  */
 @Immutable
-public class Src extends SourceRoot {
+public final class Src extends SourceRoot {
 
     public Src(AbstractDirectory projectDir) {
         super(projectDir, src.value());
