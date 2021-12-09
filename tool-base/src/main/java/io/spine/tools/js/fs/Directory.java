@@ -26,7 +26,6 @@
 
 package io.spine.tools.js.fs;
 
-import io.spine.code.fs.AbstractDirectory;
 import io.spine.code.fs.SourceCodeDirectory;
 
 import java.nio.file.Path;
@@ -35,10 +34,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * A folder with JavaScript source files.
+ *
+ * @deprecated please use {@link JsFiles}.
  */
+@Deprecated
 public final class Directory extends SourceCodeDirectory {
-
-    private static final String ROOT_NAME = "js";
 
     private Directory(Path path) {
         super(path);
@@ -53,21 +53,10 @@ public final class Directory extends SourceCodeDirectory {
     }
 
     /**
-     * Creates an instance of the root directory named {@code "js"}.
-     */
-    static Directory rootIn(AbstractDirectory parent) {
-        checkNotNull(parent);
-        var path = parent.path().resolve(ROOT_NAME);
-        return at(path);
-    }
-
-    /**
      * Obtains the source code path for the passed file name.
      */
     public Path resolve(FileName fileName) {
-        checkNotNull(fileName);
-        var result = path().resolve(fileName.value());
-        return result;
+        return JsFiles.resolve(this, fileName);
     }
 
     /**
@@ -75,6 +64,6 @@ public final class Directory extends SourceCodeDirectory {
      */
     public Path resolve(LibraryFile libraryFile) {
         checkNotNull(libraryFile);
-        return resolve(libraryFile.fileName());
+        return JsFiles.resolve(this, libraryFile.fileName());
     }
 }

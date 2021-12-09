@@ -27,9 +27,9 @@
 package io.spine.tools.gradle.task
 
 import com.google.common.truth.Truth.assertThat
-import io.spine.tools.gradle.SourceSetName
-import io.spine.tools.gradle.SourceSetName.Companion.main
-import io.spine.tools.gradle.SourceSetName.Companion.test
+import io.spine.tools.code.SourceSetName
+import io.spine.tools.code.SourceSetName.Companion.main
+import io.spine.tools.code.SourceSetName.Companion.test
 import io.spine.tools.gradle.task.JavaTaskName.Companion.classes
 import io.spine.tools.gradle.task.JavaTaskName.Companion.compileJava
 import io.spine.tools.gradle.task.JavaTaskName.Companion.compileTestJava

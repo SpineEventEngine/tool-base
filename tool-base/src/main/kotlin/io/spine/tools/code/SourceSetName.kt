@@ -24,31 +24,52 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.js.fs;
+package io.spine.tools.code
 
-import com.google.errorprone.annotations.Immutable;
-import io.spine.code.fs.AbstractDirectory;
-import io.spine.tools.fs.DefaultPaths;
-import io.spine.tools.fs.SourceRoot;
+import io.spine.tools.titlecaseFirstChar
 
 /**
- * A code with generated JS code.
+ * A name of a Gradle project source set.
  */
-@Immutable
-public final class GeneratedRoot extends SourceRoot {
+public data class SourceSetName(val value: String) {
 
-    @SuppressWarnings("DuplicateStringLiteralInspection") // Same name in different context.
-    private static final String DIR_NAME = "generated";
-
-    GeneratedRoot(AbstractDirectory parent) {
-        super(parent, DIR_NAME);
+    init {
+        require(value.isNotBlank())
     }
 
-    public Directory mainJs() {
-        return Directory.rootIn(main());
+    public companion object {
+        @JvmField
+        public val main: SourceSetName = SourceSetName("main")
+
+        @JvmField
+        public val test: SourceSetName = SourceSetName("test")
     }
 
-    public Directory testJs() {
-        return Directory.rootIn(test());
+    /** Returns the [value] of the source set name. */
+    override fun toString(): String {
+        return value
+    }
+
+    /**
+     * Obtains the name of the source set with the first character capitalized, if
+     * it is not [main].
+     *
+     * For [main], an empty string is returned.
+     */
+    public fun toInfix(): String {
+        if (this == main) {
+            return ""
+        }
+        return value.titlecaseFirstChar()
+    }
+
+    /**
+     * If this name is not [main], returns its value. For [main], returns an empty string.
+     */
+    public fun toPrefix(): String {
+        if (this == main) {
+            return ""
+        }
+        return value
     }
 }

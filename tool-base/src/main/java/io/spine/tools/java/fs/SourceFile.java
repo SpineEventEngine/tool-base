@@ -64,6 +64,7 @@ public final class SourceFile extends AbstractSourceFile {
      *         the type from which the file is generated
      * @return a relative file path
      */
+    @SuppressWarnings("unused")
     public static SourceFile forType(Type<?, ?> type) {
         var classFile = whichDeclares(type.javaClassName());
         return classFile;
@@ -147,6 +148,7 @@ public final class SourceFile extends AbstractSourceFile {
      *         message type
      * @return the relative file path
      */
+    @SuppressWarnings("unused")
     public static SourceFile forMessageOrBuilder(DescriptorProto message,
                                                  FileDescriptorProto file) {
         return forMessageOrInterface(message, file, FileName::forMessageOrBuilder);
@@ -244,7 +246,7 @@ public final class SourceFile extends AbstractSourceFile {
     /**
      * Obtains a source file of the specified class.
      */
-    public static SourceFile of(Class cls) {
+    public static SourceFile of(Class<?> cls) {
         var packageName = PackageName.of(cls);
         var directory = Directory.of(packageName);
         return forType(directory.toString(), cls.getSimpleName());

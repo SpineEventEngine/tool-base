@@ -28,9 +28,9 @@ package io.spine.tools.gradle.project
 
 import com.google.common.truth.Truth.assertThat
 import io.spine.tools.gradle.ProtobufDependencies
-import io.spine.tools.gradle.SourceSetName
-import io.spine.tools.gradle.SourceSetName.Companion.main
-import io.spine.tools.gradle.SourceSetName.Companion.test
+import io.spine.tools.code.SourceSetName
+import io.spine.tools.code.SourceSetName.Companion.main
+import io.spine.tools.code.SourceSetName.Companion.test
 import java.io.File
 import java.nio.file.Path
 import org.gradle.api.Project

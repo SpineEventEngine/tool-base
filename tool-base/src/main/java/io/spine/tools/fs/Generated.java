@@ -24,33 +24,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.java.fs;
+package io.spine.tools.fs;
 
 import com.google.errorprone.annotations.Immutable;
 import io.spine.code.fs.AbstractDirectory;
-import io.spine.tools.fs.SourceRoot;
+import io.spine.tools.code.SourceSetName;
+
+import static io.spine.tools.fs.DirectoryName.generated;
 
 /**
- * A root directory with Java code, such as {@code main} or {@code generated}.
+ * A root directory for the generated source code.
  */
 @Immutable
-class JavaCodeRoot extends SourceRoot {
+public abstract class Generated extends SourceRoot {
 
-    protected JavaCodeRoot(AbstractDirectory parent, String name) {
-        super(parent, name);
+    protected Generated(AbstractDirectory projectDir) {
+        super(projectDir, generated.value());
     }
 
-    /**
-     * A root directory for main Java code.
-     */
-    public Directory mainJava() {
-        return Directory.rootIn(main());
-    }
-
-    /**
-     * A root directory for test Java code.
-     */
-    public Directory testJava() {
-        return Directory.rootIn(test());
-    }
+    public abstract SourceDir dir(SourceSetName ssn);
 }

@@ -26,8 +26,10 @@
 
 package io.spine.tools.gradle
 
-import io.spine.tools.gradle.SourceSetName.Companion.main
-import io.spine.tools.gradle.SourceSetName.Companion.test
+import io.spine.tools.code.SourceSetBasedName
+import io.spine.tools.code.SourceSetName
+import io.spine.tools.code.SourceSetName.Companion.main
+import io.spine.tools.code.SourceSetName.Companion.test
 
 /**
  * Names of Java project configurations used by the Spine Gradle plugins.

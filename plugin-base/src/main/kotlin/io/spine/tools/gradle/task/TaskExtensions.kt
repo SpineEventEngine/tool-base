@@ -29,7 +29,7 @@
 package io.spine.tools.gradle.task
 
 import com.google.protobuf.gradle.GenerateProtoTask
-import io.spine.tools.gradle.SourceSetName
+import io.spine.tools.code.SourceSetName
 import io.spine.tools.gradle.named
 import io.spine.tools.gradle.project.descriptorSetFile
 import java.io.File

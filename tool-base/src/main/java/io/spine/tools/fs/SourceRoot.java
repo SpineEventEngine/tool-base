@@ -28,32 +28,24 @@ package io.spine.tools.fs;
 
 import com.google.errorprone.annotations.Immutable;
 import io.spine.code.fs.AbstractDirectory;
-
-import static io.spine.tools.fs.DirectoryName.main;
-import static io.spine.tools.fs.DirectoryName.test;
+import io.spine.tools.code.SourceSetName;
 
 /**
  * A root source code directory in a project or a module.
  */
 @Immutable
-public class SourceRoot extends SourceDir {
+public abstract class SourceRoot extends SourceDir {
 
     protected SourceRoot(AbstractDirectory parent, String name) {
         super(parent, name);
     }
 
     /**
-     * Obtains the directory called {@code main} under this source root.
+     * Obtains a subdirectory for the given source set name (such as {@code main} or {@code test})
+     * for the specified programming language.
      */
-    @SuppressWarnings("ConfusingMainMethod") // named according to Maven conventions.
-    protected SourceDir main() {
-        return new SourceDir(this, main.value());
-    }
-
-    /**
-     * Obtains the directory called {@code test} under this source root.
-     */
-    protected SourceDir test() {
-        return new SourceDir(this, test.value());
+    protected final SourceDir subDir(SourceSetName ssn, String language) {
+        SourceDir sourceSetDir = subDir(ssn.getValue());
+        return sourceSetDir.subDir(language);
     }
 }

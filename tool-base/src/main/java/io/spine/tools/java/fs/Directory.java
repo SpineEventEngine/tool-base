@@ -41,8 +41,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public final class Directory extends SourceCodeDirectory {
 
-    private static final String ROOT_NAME = "java";
-
     private Directory(Path path) {
         super(path);
     }
@@ -60,7 +58,7 @@ public final class Directory extends SourceCodeDirectory {
      */
     public static Directory rootIn(AbstractDirectory parent) {
         checkNotNull(parent);
-        var path = parent.path().resolve(ROOT_NAME);
+        var path = parent.path().resolve(DefaultJavaPaths.ROOT_NAME);
         return at(path);
     }
 

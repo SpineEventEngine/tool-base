@@ -24,35 +24,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.java.fs;
+package io.spine.tools.js
 
-import com.google.errorprone.annotations.Immutable;
-import io.spine.code.fs.AbstractDirectory;
+import com.google.common.truth.Truth.assertThat
+import io.spine.tools.code.SourceSetName
+import io.spine.tools.js.fs.DefaultJsPaths
+import java.nio.file.Path
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 
-/**
- * A root source code directory for manually written code.
- *
- * <p>Adds a root directory for the proto code in addition to those exposed
- * by {@code DefaultProject.SourceRoot}.
- */
-@Immutable
-public class HandmadeCodeRoot extends JavaCodeRoot {
+class `'DefaultJsPaths' should` {
 
-    HandmadeCodeRoot(AbstractDirectory parent, String name) {
-        super(parent, name);
+    private lateinit var defaultPaths: DefaultJsPaths
+
+    @BeforeEach
+    fun createDefaults(@TempDir projectDir: Path) {
+        defaultPaths = DefaultJsPaths.at(projectDir)
     }
 
-    /**
-     * A root for the main proto code.
-     */
-    public io.spine.tools.proto.fs.Directory mainProto() {
-        return io.spine.tools.proto.fs.Directory.rootIn(main());
-    }
-
-    /**
-     * A root for the test proto code.
-     */
-    public io.spine.tools.proto.fs.Directory testProto() {
-        return io.spine.tools.proto.fs.Directory.rootIn(test());
+    @Test
+    fun `obtain 'js' directory for a source set`() {
+        val subDir = defaultPaths.generated().dir(SourceSetName.main)
+        val assertPath = assertThat(subDir.toString())
+        assertPath.contains("/main/js")
     }
 }

@@ -40,4 +40,11 @@ public class SourceDir extends SourceCodeDirectory {
         super(parent.path()
                     .resolve(name));
     }
+
+    /**
+     * Obtains a subdirectory with the given short name.
+     */
+    protected final SourceDir subDir(String name) {
+        return new SourceDir(this, name);
+    }
 }

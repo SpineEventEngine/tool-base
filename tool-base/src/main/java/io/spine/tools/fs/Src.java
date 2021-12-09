@@ -24,54 +24,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle
+package io.spine.tools.fs;
 
-import io.spine.tools.titlecaseFirstChar
-import org.gradle.api.tasks.SourceSet.MAIN_SOURCE_SET_NAME
-import org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME
+import com.google.errorprone.annotations.Immutable;
+import io.spine.code.fs.AbstractDirectory;
+
+import static io.spine.tools.fs.DirectoryName.src;
 
 /**
- * A name of a Gradle project source set.
+ * The source code directory named {@code src} under the given project directory.
  */
-public data class SourceSetName(val value: String) {
+@Immutable
+public class Src extends SourceRoot {
 
-    init {
-        require(value.isNotBlank())
-    }
-
-    public companion object {
-        @JvmField
-        public val main: SourceSetName = SourceSetName(MAIN_SOURCE_SET_NAME)
-
-        @JvmField
-        public val test: SourceSetName = SourceSetName(TEST_SOURCE_SET_NAME)
-    }
-
-    /** Returns the [value] of the source set name. */
-    override fun toString(): String {
-        return value
-    }
-
-    /**
-     * Obtains the name of the source set with the first character capitalized, if
-     * it is not [main].
-     *
-     * For [main], an empty string is returned.
-     */
-    public fun toInfix(): String {
-        if (this == main) {
-            return ""
-        }
-        return value.titlecaseFirstChar()
-    }
-
-    /**
-     * If this name is not [main], returns its value. For [main], returns an empty string.
-     */
-    public fun toPrefix(): String {
-        if (this == main) {
-            return ""
-        }
-        return value
+    public Src(AbstractDirectory projectDir) {
+        super(projectDir, src.value());
     }
 }
