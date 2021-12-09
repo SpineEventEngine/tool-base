@@ -81,7 +81,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @SuppressWarnings("unused") /* Part of the public API. */
 public final class DefaultJsPaths extends DefaultPaths {
 
-    static final String ROOT_NAME = "js";
+    private static final String ROOT_NAME = "js";
 
     private DefaultJsPaths(Path projectDir) {
         super(projectDir);
@@ -103,6 +103,9 @@ public final class DefaultJsPaths extends DefaultPaths {
         return new GeneratedJs(projectDir());
     }
 
+    /**
+     * The directory with the generated JavaScript code.
+     */
     public static final class GeneratedJs extends Generated {
 
         private GeneratedJs(AbstractDirectory projectDir) {

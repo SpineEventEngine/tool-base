@@ -92,6 +92,9 @@ public final class DefaultJavaPaths extends DefaultPaths {
         return new GeneratedJava(projectDir());
     }
 
+    /**
+     * The directory with the generated Java code.
+     */
     public static final class GeneratedJava extends Generated {
 
         private GeneratedJava(AbstractDirectory projectDir) {

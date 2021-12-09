@@ -30,15 +30,16 @@ import io.spine.code.fs.AbstractDirectory;
 import io.spine.code.fs.SourceCodeDirectory;
 import io.spine.code.java.PackageName;
 
-import java.io.File;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * A folder with Java source files.
+ *
+ * @deprecated please use {@link io.spine.tools.java.fs.FsTypes}.
  */
+@Deprecated
 public final class Directory extends SourceCodeDirectory {
 
     private Directory(Path path) {
@@ -73,9 +74,7 @@ public final class Directory extends SourceCodeDirectory {
      */
     public static Directory of(PackageName packageName) {
         checkNotNull(packageName);
-        var packagePath = packageName.value()
-                                     .replace(PackageName.delimiterChar(), File.separatorChar);
-        var path = Paths.get(packagePath);
+        var path = FsTypes.toDirectory(packageName);
         return at(path);
     }
 
@@ -83,16 +82,13 @@ public final class Directory extends SourceCodeDirectory {
      * Obtains the source code file for the passed name.
      */
     public SourceFile resolve(FileName fileName) {
-        var filePath = path().resolve(fileName.value());
-        var result = SourceFile.of(filePath);
-        return result;
+        return FsTypes.resolve(this, fileName);
     }
 
     /**
      * Obtains the source code path for the passed file.
      */
     public Path resolve(Path file) {
-        var result = path().resolve(file);
-        return result;
+        return FsTypes.resolve(this, file);
     }
 }

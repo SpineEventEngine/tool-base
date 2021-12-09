@@ -40,6 +40,8 @@ import java.nio.file.Path;
 import java.util.function.Function;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static io.spine.tools.java.fs.FsTypes.resolve;
+import static io.spine.tools.java.fs.FsTypes.toDirectory;
 import static io.spine.util.Exceptions.newIllegalStateException;
 
 /**
@@ -86,10 +88,10 @@ public final class SourceFile extends AbstractSourceFile {
      */
     public static SourceFile whichDeclares(ClassName javaClass) {
         checkNotNull(javaClass);
-        var directory = Directory.of(javaClass.packageName());
+        var directory = toDirectory(javaClass.packageName());
         var topLevelClass = javaClass.topLevelClass();
         var javaFile = FileName.forType(topLevelClass.value());
-        var sourceFile = directory.resolve(javaFile);
+        var sourceFile = resolve(directory, javaFile);
         return sourceFile;
     }
 
@@ -103,22 +105,22 @@ public final class SourceFile extends AbstractSourceFile {
     public static SourceFile forOuterClassOf(FileDescriptorProto file) {
         checkNotNull(file);
         var filename = FileName.forType(SimpleClassName.outerOf(file).value());
-        var result = getGeneratedFolder(file).resolve(filename);
+        var dir = getGeneratedFolder(file);
+        var result = resolve(dir, filename);
         return result;
     }
 
     /**
-     * Obtains the {@link Path} to a folder, that contains
-     * a generated file from the file descriptor.
+     * Obtains directory that contains a generated file from the file descriptor.
      *
      * @param file
      *         the proto file descriptor
      * @return the relative folder path
      */
-    private static Directory getGeneratedFolder(FileDescriptorProto file) {
+    private static Path getGeneratedFolder(FileDescriptorProto file) {
         checkNotNull(file);
         var packageName = PackageName.resolve(file);
-        var result = Directory.of(packageName);
+        var result = toDirectory(packageName);
         return result;
     }
 
@@ -167,7 +169,8 @@ public final class SourceFile extends AbstractSourceFile {
         if (file.getOptions()
                 .getJavaMultipleFiles()) {
             var filename = fileName.apply(message);
-            var result = getGeneratedFolder(file).resolve(filename);
+            var dir = getGeneratedFolder(file);
+            var result = resolve(dir, filename);
             return result;
         } else {
             var result = forOuterClassOf(file);
@@ -202,7 +205,8 @@ public final class SourceFile extends AbstractSourceFile {
         if (file.getOptions()
                 .getJavaMultipleFiles()) {
             var filename = FileName.forEnum(enumType);
-            var result = getGeneratedFolder(file).resolve(filename);
+            var dir = getGeneratedFolder(file);
+            var result = resolve(dir, filename);
             return result;
         } else {
             var result = forOuterClassOf(file);
@@ -227,19 +231,19 @@ public final class SourceFile extends AbstractSourceFile {
                  .contains(service)) {
             throw invalidNestedDefinition(file.getName(), serviceType);
         }
-
         var filename = FileName.forService(service);
-        var result = getGeneratedFolder(file).resolve(filename);
+        var dir = getGeneratedFolder(file);
+        var result = resolve(dir, filename);
         return result;
     }
 
     /**
-     * Obtains a file path for the source code file of the give type in the passed package.
+     * Obtains a file path for the source code file of the give type in the given package.
      */
     public static SourceFile forType(String javaPackage, String typename) {
         var packageName = PackageName.of(javaPackage);
-        var result = Directory.of(packageName)
-                              .resolve(FileName.forType(typename));
+        var directory = toDirectory(packageName);
+        var result = resolve(directory, FileName.forType(typename));
         return result;
     }
 
@@ -248,7 +252,7 @@ public final class SourceFile extends AbstractSourceFile {
      */
     public static SourceFile of(Class<?> cls) {
         var packageName = PackageName.of(cls);
-        var directory = Directory.of(packageName);
+        var directory = toDirectory(packageName);
         return forType(directory.toString(), cls.getSimpleName());
     }
 }
