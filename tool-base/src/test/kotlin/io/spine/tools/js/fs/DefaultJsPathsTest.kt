@@ -30,6 +30,7 @@ import com.google.common.truth.Truth.assertThat
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.js.fs.DefaultJsPaths
 import java.nio.file.Path
+import kotlin.io.path.invariantSeparatorsPathString
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
@@ -46,7 +47,7 @@ class `'DefaultJsPaths' should` {
     @Test
     fun `obtain 'js' directory for a source set`() {
         val subDir = defaultPaths.generated().dir(SourceSetName.main)
-        val assertPath = assertThat(subDir.toString())
+        val assertPath = assertThat(subDir.path().invariantSeparatorsPathString)
         assertPath.contains("/main/js")
     }
 }
