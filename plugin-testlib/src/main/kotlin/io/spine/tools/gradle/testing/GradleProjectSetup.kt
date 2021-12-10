@@ -28,6 +28,8 @@ package io.spine.tools.gradle.testing
 import com.google.common.annotations.VisibleForTesting
 import java.io.File
 import java.nio.file.Path
+import java.nio.file.Paths
+import java.util.function.Predicate
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull
 
 /**
@@ -120,6 +122,25 @@ public class GradleProjectSetup internal constructor(
     }
 
     /**
+     * Sets the name of the resource directory and the predicate which accepts the files
+     * from the specified directory for copying to the project to be created.
+     *
+     * Only files and directories that belong to the [resourceDir] would be passed to
+     * the [matching] predicate when creating the project when the [create] method is called.
+     */
+    public fun fromResources(resourceDir: String, matching: Predicate<Path>) : GradleProjectSetup =
+        fromResources(resourceDir) { path ->
+            matching.test(path)
+        }
+
+    /**
+     * Sets the name of the resource directory and names of the files to be copied
+     * from the directory.
+     */
+    public fun fromResources(resourceDir: String, vararg fileNames: String) : GradleProjectSetup =
+        fromResources(resourceDir, acceptingEndings(*fileNames))
+
+    /**
      * Creates a source code file with the given content.
      *
      * @param path
@@ -137,6 +158,15 @@ public class GradleProjectSetup internal constructor(
             "Cannot use environment variables in the `debug` mode. Please see the documentation" +
                     " of `org.gradle.testkit.runner.GradleRunner.isDebug()`" +
                     " for more details on this."
+
+        /**
+         * Creates a predicate for paths that accept only those that end with the given
+         * file names.
+         */
+        fun acceptingEndings(vararg fileNames: String): (Path) -> Boolean {
+            val paths = fileNames.toList().map { fn -> Paths.get(fn) }
+            return { file -> paths.any { file.endsWith(it) } }
+        }
     }
 
     /**
