@@ -27,6 +27,7 @@ package io.spine.tools.java.fs
 
 import com.google.common.truth.Truth.assertThat
 import io.spine.code.java.PackageName
+import java.nio.file.Path
 import java.nio.file.Paths
 import org.junit.jupiter.api.Test
 
@@ -43,8 +44,10 @@ class `'FsTypesExtensions' should` {
     @Test
     fun `obtain a source code file from a path and file name`() {
         val dir = Paths.get("some/dir/")
-        val file = FileName.forType("SomethingBlue")
-        assertThat(dir.resolve(file).toString())
-            .endsWith("some/dir/SomethingBlue.java")
+        val typeName = "SomethingBlue"
+        val file = FileName.forType(typeName)
+        val resolved = dir.resolve(file)
+        assertThat(resolved.path().map(Path::toString))
+            .containsExactly("some", "dir", "$typeName.java")
     }
 }
