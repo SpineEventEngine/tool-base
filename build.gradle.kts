@@ -178,8 +178,8 @@ subprojects {
     publishProtoArtifact(project)
     LicenseReporter.generateReportIn(project)
 
-    val spineBaseVersion: String by extra
-    updateGitHubPages(spineBaseVersion) {
+    val baseVersion: String by extra
+    updateGitHubPages(baseVersion) {
         allowInternalJavadoc.set(true)
         rootFolder.set(rootDir)
     }
