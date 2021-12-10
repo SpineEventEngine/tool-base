@@ -223,6 +223,7 @@ public final class SourceFile extends AbstractSourceFile {
      *         the file descriptor containing the enum descriptor
      * @return the relative file path
      */
+    @SuppressWarnings("unused")
     public static SourceFile forService(ServiceDescriptorProto service, FileDescriptorProto file) {
         checkNotNull(service);
         checkNotNull(file);
