@@ -34,10 +34,10 @@ import io.spine.tools.code.SourceSetName;
  * A root source code directory in a project or a module.
  */
 @Immutable
-public abstract class SourceRoot extends SourceDir {
+public abstract class SourceRoot extends AbstractDirectory {
 
     protected SourceRoot(AbstractDirectory parent, String name) {
-        super(parent, name);
+        super(parent.path().resolve(name));
     }
 
     /**
@@ -47,5 +47,9 @@ public abstract class SourceRoot extends SourceDir {
     protected final SourceDir subDir(SourceSetName ssn, String language) {
         SourceDir sourceSetDir = subDir(ssn.getValue());
         return sourceSetDir.subDir(language);
+    }
+
+    private SourceDir subDir(String name) {
+        return new SourceDir(this, name);
     }
 }
