@@ -40,8 +40,8 @@ import java.nio.file.Path;
 import java.util.function.Function;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static io.spine.tools.java.fs.FsTypes.resolve;
-import static io.spine.tools.java.fs.FsTypes.toDirectory;
+import static io.spine.tools.java.fs.JavaFiles.resolve;
+import static io.spine.tools.java.fs.JavaFiles.toDirectory;
 import static io.spine.util.Exceptions.newIllegalStateException;
 
 /**
