@@ -37,7 +37,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * A folder with Java source files.
  *
- * @deprecated please use {@link io.spine.tools.java.fs.FsTypes}.
+ * @deprecated please use {@link io.spine.tools.java.fs.JavaFiles}.
  */
 @Deprecated
 public final class Directory extends SourceCodeDirectory {
@@ -74,7 +74,7 @@ public final class Directory extends SourceCodeDirectory {
      */
     public static Directory of(PackageName packageName) {
         checkNotNull(packageName);
-        var path = FsTypes.toDirectory(packageName);
+        var path = JavaFiles.toDirectory(packageName);
         return at(path);
     }
 
@@ -82,13 +82,13 @@ public final class Directory extends SourceCodeDirectory {
      * Obtains the source code file for the passed name.
      */
     public SourceFile resolve(FileName fileName) {
-        return FsTypes.resolve(this, fileName);
+        return JavaFiles.resolve(this, fileName);
     }
 
     /**
      * Obtains the source code path for the passed file.
      */
     public Path resolve(Path file) {
-        return FsTypes.resolve(this, file);
+        return JavaFiles.resolve(this, file);
     }
 }
