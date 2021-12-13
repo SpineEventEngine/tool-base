@@ -26,8 +26,8 @@
 
 package io.spine.tools.gradle.task
 
-import io.spine.tools.gradle.SourceSetBasedName
-import io.spine.tools.gradle.SourceSetName
+import io.spine.tools.code.SourceSetBasedName
+import io.spine.tools.code.SourceSetName
 
 /**
  * An abstract base for a task name type the value of which depend on a name of a source set

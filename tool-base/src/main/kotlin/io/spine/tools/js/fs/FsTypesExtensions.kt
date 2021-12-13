@@ -1,5 +1,5 @@
 /*
- * Copyright 2020, TeamDev. All rights reserved.
+ * Copyright 2021, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,5 +24,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val baseVersion: String by extra("2.0.0-SNAPSHOT.80")
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.85")
+@file:JvmName("JsFiles")
+
+package io.spine.tools.js.fs
+
+import io.spine.code.fs.SourceCodeDirectory
+import java.nio.file.Path
+
+/**
+ * Obtains a path to the given file placed in this source code directory.
+ */
+public fun SourceCodeDirectory.resolve(file: FileName): Path =
+    path().resolve(file.value())
+

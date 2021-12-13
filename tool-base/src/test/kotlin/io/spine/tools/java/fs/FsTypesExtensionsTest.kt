@@ -23,36 +23,31 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package io.spine.tools.java.fs
 
-package io.spine.tools.java.fs;
+import com.google.common.truth.Truth.assertThat
+import io.spine.code.java.PackageName
+import java.nio.file.Path
+import java.nio.file.Paths
+import org.junit.jupiter.api.Test
 
-import com.google.errorprone.annotations.Immutable;
-import io.spine.code.fs.AbstractDirectory;
+class `'FsTypesExtensions' should` {
 
-/**
- * A root source code directory for manually written code.
- *
- * <p>Adds a root directory for the proto code in addition to those exposed
- * by {@code DefaultProject.SourceRoot}.
- */
-@Immutable
-public class HandmadeCodeRoot extends JavaCodeRoot {
+    @Test
+    fun `convert Java package to a directory`() {
+        val javaPackage = PackageName.of(String::class.java)
 
-    HandmadeCodeRoot(AbstractDirectory parent, String name) {
-        super(parent, name);
+        assertThat(javaPackage.toDirectory())
+            .isEqualTo(Paths.get("java/lang"))
     }
 
-    /**
-     * A root for the main proto code.
-     */
-    public io.spine.tools.proto.fs.Directory mainProto() {
-        return io.spine.tools.proto.fs.Directory.rootIn(main());
-    }
-
-    /**
-     * A root for the test proto code.
-     */
-    public io.spine.tools.proto.fs.Directory testProto() {
-        return io.spine.tools.proto.fs.Directory.rootIn(test());
+    @Test
+    fun `obtain a source code file from a path and file name`() {
+        val dir = Paths.get("some/dir/")
+        val typeName = "SomethingBlue"
+        val file = FileName.forType(typeName)
+        val resolved = dir.resolve(file)
+        assertThat(resolved.path().map(Path::toString))
+            .containsExactly("some", "dir", "$typeName.java")
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020, TeamDev. All rights reserved.
+ * Copyright 2021, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,5 +24,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val baseVersion: String by extra("2.0.0-SNAPSHOT.80")
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.85")
+package io.spine.internal.gradle.dart.plugin
+
+import com.google.protobuf.gradle.builtins
+import com.google.protobuf.gradle.id
+import com.google.protobuf.gradle.plugins
+import com.google.protobuf.gradle.protobuf
+import com.google.protobuf.gradle.remove
+import io.spine.internal.dependency.Protobuf
+
+/**
+ * Applies `protobuf` plugin and configures `GenerateProtoTask` to work with a Dart module.
+ *
+ * @see DartPlugins
+ */
+fun DartPlugins.protobuf() {
+
+    plugins.apply(Protobuf.GradlePlugin.id)
+
+    project.protobuf {
+        generateProtoTasks.all().forEach { task ->
+            task.apply {
+                plugins { id("dart") }
+                builtins { remove("java") }
+            }
+        }
+    }
+}

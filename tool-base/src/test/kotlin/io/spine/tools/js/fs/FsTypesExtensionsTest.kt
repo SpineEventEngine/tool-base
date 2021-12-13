@@ -1,5 +1,5 @@
 /*
- * Copyright 2020, TeamDev. All rights reserved.
+ * Copyright 2021, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,31 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package io.spine.tools.js.fs
 
-val baseVersion: String by extra("2.0.0-SNAPSHOT.80")
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.85")
+import com.google.common.truth.Truth.assertThat
+import io.spine.code.fs.SourceCodeDirectory
+import io.spine.tools.code.SourceSetName.Companion.main
+import java.nio.file.Path
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
+
+class `'FsTypesExtensions' should` {
+
+    private lateinit var directory: SourceCodeDirectory
+
+    @BeforeEach
+    fun setUp(@TempDir projectDir: Path) {
+        directory = DefaultJsPaths.at(projectDir).generated().dir(main)
+    }
+
+    @Test
+    fun `resolve JS files`() {
+        val rawName = "tasks_pb.js"
+        val fileName = FileName.of(rawName)
+        val resolved = directory.resolve(fileName)
+        assertThat(resolved.toString())
+            .endsWith(rawName)
+    }
+}

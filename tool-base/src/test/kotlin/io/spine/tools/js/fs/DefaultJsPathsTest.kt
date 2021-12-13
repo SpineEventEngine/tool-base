@@ -24,33 +24,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.java.fs;
+package io.spine.tools.js
 
-import com.google.errorprone.annotations.Immutable;
-import io.spine.code.fs.AbstractDirectory;
-import io.spine.tools.fs.SourceRoot;
+import com.google.common.truth.Truth.assertThat
+import io.spine.tools.code.SourceSetName
+import io.spine.tools.js.fs.DefaultJsPaths
+import java.nio.file.Path
+import kotlin.io.path.invariantSeparatorsPathString
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 
-/**
- * A root directory with Java code, such as {@code main} or {@code generated}.
- */
-@Immutable
-class JavaCodeRoot extends SourceRoot {
+class `'DefaultJsPaths' should` {
 
-    protected JavaCodeRoot(AbstractDirectory parent, String name) {
-        super(parent, name);
+    private lateinit var defaultPaths: DefaultJsPaths
+
+    @BeforeEach
+    fun createDefaults(@TempDir projectDir: Path) {
+        defaultPaths = DefaultJsPaths.at(projectDir)
     }
 
-    /**
-     * A root directory for main Java code.
-     */
-    public Directory mainJava() {
-        return Directory.rootIn(main());
-    }
-
-    /**
-     * A root directory for test Java code.
-     */
-    public Directory testJava() {
-        return Directory.rootIn(test());
+    @Test
+    fun `obtain 'js' directory for a source set`() {
+        val subDir = defaultPaths.generated().dir(SourceSetName.main)
+        val assertPath = assertThat(subDir.path().invariantSeparatorsPathString)
+        assertPath.contains("/main/js")
     }
 }

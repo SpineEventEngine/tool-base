@@ -1,5 +1,5 @@
 /*
- * Copyright 2020, TeamDev. All rights reserved.
+ * Copyright 2021, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,5 +24,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val baseVersion: String by extra("2.0.0-SNAPSHOT.80")
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.85")
+package io.spine.internal.gradle.dart
+
+import org.gradle.api.Project
+import org.gradle.api.tasks.Exec
+
+/**
+ * Provides access to the current [DartEnvironment] and shortcuts for running `pub` tool.
+ */
+open class DartContext(dartEnv: DartEnvironment, internal val project: Project)
+    : DartEnvironment by dartEnv
+{
+    /**
+     * Executes `pub` command in this [Exec] task.
+     *
+     * The Dart ecosystem uses packages to manage shared software such as libraries and tools.
+     * To get or publish Dart packages, the `pub` package manager is to be used.
+     */
+    fun Exec.pub(vararg args: Any) = commandLine(pubExecutable, *args)
+}

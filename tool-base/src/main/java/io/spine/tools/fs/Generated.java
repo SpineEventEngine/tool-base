@@ -24,31 +24,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.js.fs;
+package io.spine.tools.fs;
 
 import com.google.errorprone.annotations.Immutable;
 import io.spine.code.fs.AbstractDirectory;
-import io.spine.tools.fs.DefaultPaths;
-import io.spine.tools.fs.SourceRoot;
+import io.spine.tools.code.SourceSetName;
+
+import static io.spine.tools.fs.DirectoryName.generated;
 
 /**
- * A code with generated JS code.
+ * A root directory for the generated source code.
  */
 @Immutable
-public final class GeneratedRoot extends SourceRoot {
+public abstract class Generated extends SourceRoot {
 
-    @SuppressWarnings("DuplicateStringLiteralInspection") // Same name in different context.
-    private static final String DIR_NAME = "generated";
-
-    GeneratedRoot(AbstractDirectory parent) {
-        super(parent, DIR_NAME);
+    protected Generated(AbstractDirectory projectDir) {
+        super(projectDir, generated.value());
     }
 
-    public Directory mainJs() {
-        return Directory.rootIn(main());
-    }
-
-    public Directory testJs() {
-        return Directory.rootIn(test());
-    }
+    public abstract SourceDir dir(SourceSetName ssn);
 }

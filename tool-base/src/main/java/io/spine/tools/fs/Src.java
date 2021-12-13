@@ -24,32 +24,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.java.fs;
+package io.spine.tools.fs;
 
-import io.spine.code.java.PackageName;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.google.errorprone.annotations.Immutable;
+import io.spine.code.fs.AbstractDirectory;
 
-import java.nio.file.Paths;
+import static io.spine.tools.fs.DirectoryName.src;
 
-import static com.google.common.truth.Truth.assertThat;
+/**
+ * The source code directory named {@code src} under the given project directory.
+ */
+@Immutable
+public final class Src extends SourceRoot {
 
-@DisplayName("`java.fs.Directory` should")
-class DirectoryTest {
-
-    @Test
-    @DisplayName("create an instance by a package")
-    void fromPackage() {
-        assertThat(Directory.of(PackageName.of(String.class)))
-                .isEqualTo(Directory.at(Paths.get("java/lang")));
-    }
-
-    @Test
-    @DisplayName("obtain a source code root")
-    void javaRoot() {
-        var project = DefaultJavaPaths.at(Paths.get("some/dir"));
-        var rootDir = Directory.rootIn(project);
-        assertThat(rootDir.path().endsWith("java"))
-                .isTrue();
+    public Src(AbstractDirectory projectDir) {
+        super(projectDir, src.value());
     }
 }

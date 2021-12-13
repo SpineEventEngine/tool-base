@@ -28,6 +28,7 @@
 
 package io.spine.tools.gradle
 
+import io.spine.tools.code.SourceSetName
 import org.gradle.api.tasks.SourceSet
 
 /** The name of this source set. */

@@ -27,13 +27,17 @@
 package io.spine.tools.java.fs;
 
 import com.google.errorprone.annotations.Immutable;
+import io.spine.code.fs.AbstractDirectory;
+import io.spine.tools.code.SourceSetName;
 import io.spine.tools.fs.DefaultPaths;
+import io.spine.tools.fs.Generated;
+import io.spine.tools.fs.SourceDir;
+import io.spine.tools.fs.Src;
 
 import java.io.File;
 import java.nio.file.Path;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static io.spine.tools.fs.DirectoryName.src;
 
 /**
  * A default directory structure for a Spine-based Java project.
@@ -61,6 +65,8 @@ import static io.spine.tools.fs.DirectoryName.src;
 @Immutable
 public final class DefaultJavaPaths extends DefaultPaths {
 
+    static final String ROOT_NAME = "java";
+
     private DefaultJavaPaths(Path projectDir) {
         super(projectDir);
     }
@@ -77,12 +83,27 @@ public final class DefaultJavaPaths extends DefaultPaths {
     }
 
     @SuppressWarnings("unused") /* Part of the public API. */
-    public HandmadeCodeRoot src() {
-        return new HandmadeCodeRoot(projectDir(), src.value());
+    public Src src() {
+        return new Src(projectDir());
     }
 
-    public GeneratedRoot generated() {
-        return new GeneratedRoot(projectDir());
+    @Override
+    public GeneratedJava generated() {
+        return new GeneratedJava(projectDir());
     }
 
+    /**
+     * The directory with the generated Java code.
+     */
+    public static final class GeneratedJava extends Generated {
+
+        private GeneratedJava(AbstractDirectory projectDir) {
+            super(projectDir);
+        }
+
+        @Override
+        public SourceDir dir(SourceSetName ssn) {
+            return subDir(ssn, ROOT_NAME);
+        }
+    }
 }

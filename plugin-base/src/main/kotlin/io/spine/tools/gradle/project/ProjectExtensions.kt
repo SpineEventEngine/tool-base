@@ -29,15 +29,15 @@
 package io.spine.tools.gradle.project
 
 import com.google.protobuf.gradle.ProtobufConvention
-import io.spine.tools.fs.DefaultPaths
+import io.spine.tools.code.SourceSetName
+import io.spine.tools.code.SourceSetName.Companion.main
+import io.spine.tools.code.SourceSetName.Companion.test
 import io.spine.tools.fs.DescriptorsDir
 import io.spine.tools.fs.DirectoryName.generated
 import io.spine.tools.gradle.Artifact
 import io.spine.tools.gradle.ConfigurationName
 import io.spine.tools.gradle.ProtobufDependencies.sourceSetExtensionName
-import io.spine.tools.gradle.SourceSetName
-import io.spine.tools.gradle.SourceSetName.Companion.main
-import io.spine.tools.gradle.SourceSetName.Companion.test
+import io.spine.tools.java.fs.DefaultJavaPaths
 import io.spine.tools.resolve
 import java.io.File
 import java.nio.file.Path
@@ -119,16 +119,10 @@ public fun Project.protoDirectorySet(ssn: SourceSetName): SourceDirectorySet? {
 }
 
 /**
- * Obtains language-neutral instance of [DefaultPaths] for this project.
- */
-private val Project.defaultPaths: DefaultPaths
-    get() = DefaultPaths(projectDir.toPath())
-
-/**
  * Obtains the directory into which descriptor set files are generated during the build.
  */
 private val Project.descriptorsDir: DescriptorsDir
-    get() = defaultPaths.buildRoot().descriptors()
+    get() = DefaultJavaPaths.at(projectDir.toPath()).buildRoot().descriptors()
 
 /**
  * Obtains the descriptor set file for the specified source set of this project.

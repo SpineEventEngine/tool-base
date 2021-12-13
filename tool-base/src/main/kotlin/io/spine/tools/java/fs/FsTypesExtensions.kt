@@ -24,54 +24,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle
+@file:JvmName("JavaFiles")
 
-import io.spine.tools.titlecaseFirstChar
-import org.gradle.api.tasks.SourceSet.MAIN_SOURCE_SET_NAME
-import org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME
+package io.spine.tools.java.fs
+
+import io.spine.code.fs.SourceCodeDirectory
+import io.spine.code.java.PackageName
+import io.spine.code.java.PackageName.delimiterChar
+import java.io.File
+import java.nio.file.Path
+import java.nio.file.Paths
 
 /**
- * A name of a Gradle project source set.
+ * Converts this package name to a relative directory path.
  */
-public data class SourceSetName(val value: String) {
-
-    init {
-        require(value.isNotBlank())
-    }
-
-    public companion object {
-        @JvmField
-        public val main: SourceSetName = SourceSetName(MAIN_SOURCE_SET_NAME)
-
-        @JvmField
-        public val test: SourceSetName = SourceSetName(TEST_SOURCE_SET_NAME)
-    }
-
-    /** Returns the [value] of the source set name. */
-    override fun toString(): String {
-        return value
-    }
-
-    /**
-     * Obtains the name of the source set with the first character capitalized, if
-     * it is not [main].
-     *
-     * For [main], an empty string is returned.
-     */
-    public fun toInfix(): String {
-        if (this == main) {
-            return ""
-        }
-        return value.titlecaseFirstChar()
-    }
-
-    /**
-     * If this name is not [main], returns its value. For [main], returns an empty string.
-     */
-    public fun toPrefix(): String {
-        if (this == main) {
-            return ""
-        }
-        return value
-    }
+public fun PackageName.toDirectory(): Path {
+    val packagePath: String = value().replace(delimiterChar(), File.separatorChar)
+    val path = Paths.get(packagePath)
+    return path
 }
+
+/**
+ * Obtains the source file with the given name.
+ */
+public fun Path.resolve(file: FileName): SourceFile {
+    val filePath: Path = resolve(file.value())
+    return SourceFile.of(filePath)
+}
+
+/**
+ * Obtains the source code file for the passed name.
+ */
+public fun SourceCodeDirectory.resolve(file: FileName): SourceFile = path().resolve(file)
+
+/**
+ * Obtains the source code path for the passed file.
+ */
+public fun SourceCodeDirectory.resolve(file: Path): Path = path().resolve(file)

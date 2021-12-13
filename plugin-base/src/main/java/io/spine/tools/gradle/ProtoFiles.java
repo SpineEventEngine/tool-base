@@ -27,6 +27,7 @@
 package io.spine.tools.gradle;
 
 import io.spine.code.proto.FileSet;
+import io.spine.tools.code.SourceSetName;
 import io.spine.tools.gradle.project.Projects;
 import io.spine.tools.type.FileDescriptorSuperset;
 import io.spine.tools.type.MoreKnownTypes;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020, TeamDev. All rights reserved.
+ * Copyright 2021, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,5 +24,52 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val baseVersion: String by extra("2.0.0-SNAPSHOT.80")
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.85")
+package io.spine.tools.code
+
+import io.spine.tools.titlecaseFirstChar
+
+/**
+ * A name of a Gradle project source set.
+ */
+public data class SourceSetName(val value: String) {
+
+    init {
+        require(value.isNotBlank())
+    }
+
+    public companion object {
+        @JvmField
+        public val main: SourceSetName = SourceSetName("main")
+
+        @JvmField
+        public val test: SourceSetName = SourceSetName("test")
+    }
+
+    /** Returns the [value] of the source set name. */
+    override fun toString(): String {
+        return value
+    }
+
+    /**
+     * Obtains the name of the source set with the first character capitalized, if
+     * it is not [main].
+     *
+     * For [main], an empty string is returned.
+     */
+    public fun toInfix(): String {
+        if (this == main) {
+            return ""
+        }
+        return value.titlecaseFirstChar()
+    }
+
+    /**
+     * If this name is not [main], returns its value. For [main], returns an empty string.
+     */
+    public fun toPrefix(): String {
+        if (this == main) {
+            return ""
+        }
+        return value
+    }
+}

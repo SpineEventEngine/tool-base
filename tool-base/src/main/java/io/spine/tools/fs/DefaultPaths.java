@@ -44,7 +44,7 @@ import static io.spine.tools.fs.DirectoryName.dotSpine;
  * remain unchanged.
  */
 @Immutable
-public class DefaultPaths extends AbstractDirectory {
+public abstract class DefaultPaths extends AbstractDirectory {
 
     /**
      * Creates a new instance taking the passed project root.
@@ -78,4 +78,10 @@ public class DefaultPaths extends AbstractDirectory {
         var result = new File(path().toFile(), dotSpine.value());
         return result;
     }
+
+    /**
+     * Obtains the {@code generated} directory as an immediate subdirectory of
+     * the project directory.
+     */
+    public abstract Generated generated();
 }

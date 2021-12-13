@@ -23,47 +23,50 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package io.spine.tools.js.fs
 
-package io.spine.tools.js.fs;
+import com.google.common.testing.NullPointerTester
+import com.google.common.truth.Truth.assertThat
+import com.google.protobuf.Any
+import io.spine.testing.Assertions.assertIllegalArgument
+import org.junit.jupiter.api.Test
 
-import io.spine.code.fs.SourceCodeDirectory;
+class `'FileName' should` {
 
-import java.nio.file.Path;
+    private val file = Any.getDescriptor().file
+    private val fileName = FileName.from(file)
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-/**
- * A folder with JavaScript source files.
- *
- * @deprecated please use {@link JsFiles}.
- */
-@Deprecated
-public final class Directory extends SourceCodeDirectory {
-
-    private Directory(Path path) {
-        super(path);
+    @Test
+    fun `handle 'null's`() {
+        NullPointerTester().testAllPublicStaticMethods(FileName::class.java)
     }
 
-    /**
-     * Creates a new instance at the specified location.
-     */
-    public static Directory at(Path path) {
-        checkNotNull(path);
-        return new Directory(path);
+    @Test
+    fun `not accept names without extension`() {
+        assertIllegalArgument { FileName.of("no-extension") }
     }
 
-    /**
-     * Obtains the source code path for the passed file name.
-     */
-    public Path resolve(FileName fileName) {
-        return JsFiles.resolve(this, fileName);
+    @Test
+    fun `replace 'proto' extension with predefined suffix`() {
+        assertThat(fileName.value())
+            .isEqualTo("google/protobuf/any_pb.js")
     }
 
-    /**
-     * Obtains the source code path for the passed library file.
-     */
-    public Path resolve(LibraryFile libraryFile) {
-        checkNotNull(libraryFile);
-        return JsFiles.resolve(this, libraryFile.fileName());
+    @Test
+    fun `return path elements`() {
+        val pathElements = fileName.pathElements()
+        assertThat(pathElements)
+            .containsExactly("google", "protobuf", "any_pb.js")
+    }
+
+    @Test
+    fun `obtain relative path to source root dir`() {
+        assertThat(fileName.pathToRoot()).startsWith("../../")
+    }
+
+    @Test
+    fun `obtain path from source root dir`() {
+        assertThat(fileName.pathFromRoot())
+            .isEqualTo("./google/protobuf/any_pb.js")
     }
 }

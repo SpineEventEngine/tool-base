@@ -25,9 +25,9 @@
  */
 package io.spine.tools.gradle.task
 
-import io.spine.tools.gradle.SourceSetName
-import io.spine.tools.gradle.SourceSetName.Companion.main
-import io.spine.tools.gradle.SourceSetName.Companion.test
+import io.spine.tools.code.SourceSetName
+import io.spine.tools.code.SourceSetName.Companion.main
+import io.spine.tools.code.SourceSetName.Companion.test
 
 /**
  * Names of Gradle tasks defined by the Protobuf Gradle plugin.
