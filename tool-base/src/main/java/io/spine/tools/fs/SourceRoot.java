@@ -45,7 +45,7 @@ public abstract class SourceRoot extends AbstractDirectory {
      * for the specified programming language.
      */
     protected final SourceDir subDir(SourceSetName ssn, String language) {
-        SourceDir sourceSetDir = subDir(ssn.getValue());
+        var sourceSetDir = subDir(ssn.getValue());
         return sourceSetDir.subDir(language);
     }
 
