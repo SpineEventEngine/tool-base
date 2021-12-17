@@ -24,16 +24,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.internal.dependency
+@CheckReturnValue
+@ParametersAreNonnullByDefault
+package io.spine.tools.java.js;
 
-// https://github.com/google/flogger
-object Flogger {
-    internal const val version = "0.7.3"
-    const val lib     = "com.google.flogger:flogger:${version}"
-    @Suppress("unused")
-    object Runtime {
-        const val systemBackend = "com.google.flogger:flogger-system-backend:${version}"
-        const val log4J         = "com.google.flogger:flogger-log4j:${version}"
-        const val slf4J         = "com.google.flogger:slf4j-backend-factory:${version}"
-    }
-}
+import com.google.errorprone.annotations.CheckReturnValue;
+
+import javax.annotation.ParametersAreNonnullByDefault;
