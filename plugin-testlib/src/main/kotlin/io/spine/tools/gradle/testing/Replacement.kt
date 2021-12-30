@@ -59,13 +59,26 @@ public class Replacement(token: String, public val value: String) {
     }
 
     /**
-     * Replaces all occurrences of [token][token]
+     * Replaces all occurrences of [token][token].
      */
     public fun replaceIn(file: File) {
+        if(file.isDirectory) {
+            replaceInDir(file)
+            return
+        }
         val original = file.readText()
         val modified = original.replace(token(), value)
         if (modified != original) {
             file.writeText(modified)
         }
+    }
+
+    //TODO:2021-12-30:alex.tymchenko: exclude `buildSrc` by pattern!
+    private fun replaceInDir(file: File) {
+        file.walk()
+            .filter { f -> !f.isDirectory }
+            .forEach { f ->
+                replaceIn(f)
+            }
     }
 }
