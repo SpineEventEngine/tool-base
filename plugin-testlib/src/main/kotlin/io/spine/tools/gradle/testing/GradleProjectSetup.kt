@@ -104,6 +104,8 @@ public class GradleProjectSetup internal constructor(
     internal var addPluginUnderTestClasspath = false
         private set
 
+    internal var replacements: MutableSet<Replacement> = HashSet()
+
     /**
      * Sets the name of the resource directory and the predicate which accepts the files
      * from the specified directory for copying to the project to be created.
@@ -259,6 +261,22 @@ public class GradleProjectSetup internal constructor(
      */
     public fun withOptions(list: Iterable<String>): GradleProjectSetup {
         this.arguments = arguments.withOptions(list)
+        return this
+    }
+
+    /**
+     * Upon building the `GradleProject`, traverses through the resulting project directory,
+     * and replace all occurrences of the [token] with the passed [replacement] value.
+     *
+     * In text, token name must be framed with `@` symbols:
+     *```
+     *      The latest version of the library is @LATEST_VERSION@.
+     * ```
+     * where `LATEST_VERSION` is the token name to pass to this method.
+     */
+    public fun replace(token: String, replacement: String): GradleProjectSetup {
+        val r = Replacement(token, replacement)
+        this.replacements.add(r)
         return this
     }
 

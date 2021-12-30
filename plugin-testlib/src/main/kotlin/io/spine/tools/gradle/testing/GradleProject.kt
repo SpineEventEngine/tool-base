@@ -56,6 +56,7 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
             runner.withEnvironment(setup.environment)
         }
         writeSources(setup)
+        replaceTokens(setup)
     }
 
     public companion object {
@@ -77,6 +78,12 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
         private fun writeSources(setup: GradleProjectSetup) {
             val sources = Sources(setup)
             sources.write()
+        }
+
+        private fun replaceTokens(setup: GradleProjectSetup) {
+            setup.replacements.forEach { r ->
+                r.replaceIn(setup.projectDir)
+            }
         }
     }
 
