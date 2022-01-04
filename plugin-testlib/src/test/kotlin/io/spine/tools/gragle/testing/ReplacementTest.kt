@@ -81,10 +81,8 @@ class `'Replacement' should` {
 
         @Test
         fun `in files residing in a folder and its subfolders`() {
-            val refs = ArrayList<TestData>()
-            for(i in 0..10) {
-                refs.add(TestData(folder, TEXT))
-            }
+            val refs = generateFiles(folder)
+
             val value = "recursively-replaced"
             Replacement(TOKEN_NAME, value)
                 .replaceIn(folder)
@@ -92,6 +90,34 @@ class `'Replacement' should` {
                 ref.assertReplaced(TOKEN_NAME, value)
             }
         }
+
+        @Test
+        fun `in all files in the folder recursively, excluding some folder`() {
+            val toReplace = generateFiles(folder)
+
+            val excludedFolder = folder.resolve("untouchable")
+            excludedFolder.mkdirs()
+            val toExclude = generateFiles(excludedFolder)
+
+            val value = "recursively-replaced"
+            Replacement(TOKEN_NAME, value)
+                .replaceIn(folder, excludedFolder)
+
+            for (ref in toReplace) {
+                ref.assertReplaced(TOKEN_NAME, value)
+            }
+            for (ref in toExclude) {
+                ref.assertNotReplaced()
+            }
+        }
+    }
+
+    private fun generateFiles(folder: File): ArrayList<TestData> {
+        val refs = ArrayList<TestData>()
+        for (i in 0..10) {
+            refs.add(TestData(folder, TEXT))
+        }
+        return refs
     }
 
     companion object {
@@ -134,6 +160,12 @@ class `'Replacement' should` {
                 val expected = content.replace("@$token@", value)
                 assertThat(text)
                     .isEqualTo(expected)
+            }
+
+            fun assertNotReplaced() {
+                val text = file.readText()
+                assertThat(text)
+                    .isEqualTo(content)
             }
         }
     }

@@ -61,9 +61,12 @@ public class Replacement(token: String, public val value: String) {
     /**
      * Replaces all occurrences of [token][token].
      */
-    public fun replaceIn(file: File) {
-        if(file.isDirectory) {
-            replaceInDir(file)
+    public fun replaceIn(file: File, excludeFolder: File? = null) {
+        if (file.isDirectory) {
+            replaceInDir(file, excludeFolder)
+            return
+        }
+        if (!shouldReplace(file, excludeFolder)) {
             return
         }
         val original = file.readText()
@@ -73,12 +76,21 @@ public class Replacement(token: String, public val value: String) {
         }
     }
 
-    //TODO:2021-12-30:alex.tymchenko: exclude `buildSrc` by pattern!
-    private fun replaceInDir(file: File) {
+    private fun replaceInDir(file: File, excludeFolder: File? = null) {
         file.walk()
             .filter { f -> !f.isDirectory }
+            .filter { f ->
+                shouldReplace(f, excludeFolder)
+            }
             .forEach { f ->
                 replaceIn(f)
             }
     }
+
+    private fun shouldReplace(f: File, excludeFolder: File?) =
+        if (excludeFolder == null) {
+            true
+        } else {
+            !f.absolutePath.startsWith(excludeFolder.absolutePath)
+        }
 }
