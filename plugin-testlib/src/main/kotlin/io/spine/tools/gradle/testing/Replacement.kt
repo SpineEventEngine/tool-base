@@ -60,6 +60,11 @@ public class Replacement(token: String, public val value: String) {
 
     /**
      * Replaces all occurrences of [token][token].
+     *
+     * If the passed [file] is a folder, the occurrences are replaced in all files which reside
+     * in this folder and its sub-folders recursively.
+     *
+     * Optionally, allows to specify the folder, which files should be excluded from replacement.
      */
     public fun replaceIn(file: File, excludeFolder: File? = null) {
         if (file.isDirectory) {
