@@ -71,7 +71,7 @@ public class Replacement(token: String, public val value: String) {
             replaceInDir(file, excludeFolder)
             return
         }
-        if (!shouldReplace(file, excludeFolder)) {
+        if (file.isIn(excludeFolder)) {
             return
         }
         val original = file.readText()
@@ -84,18 +84,21 @@ public class Replacement(token: String, public val value: String) {
     private fun replaceInDir(file: File, excludeFolder: File? = null) {
         file.walk()
             .filter { f -> !f.isDirectory }
-            .filter { f ->
-                shouldReplace(f, excludeFolder)
-            }
+            .filter { f -> !f.isIn(excludeFolder) }
             .forEach { f ->
                 replaceIn(f)
             }
     }
 
-    private fun shouldReplace(f: File, excludeFolder: File?) =
-        if (excludeFolder == null) {
-            true
+    /**
+     * Tells whether the file resides in the [folder].
+     *
+     * If the [folder] is `null`, returns `false`.
+     */
+    private fun File.isIn(folder: File?) =
+        if(folder == null) {
+            false
         } else {
-            !f.absolutePath.startsWith(excludeFolder.absolutePath)
+            this.absolutePath.startsWith(folder.absolutePath)
         }
 }
