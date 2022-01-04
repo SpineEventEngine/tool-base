@@ -81,8 +81,9 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
         }
 
         private fun replaceTokens(setup: GradleProjectSetup) {
+            val buildSrcDir = setup.projectDir.resolve("buildSrc")
             setup.replacements.forEach { r ->
-                r.replaceIn(setup.projectDir)
+                r.replaceIn(setup.projectDir, buildSrcDir)
             }
         }
     }

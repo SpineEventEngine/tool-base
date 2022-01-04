@@ -104,6 +104,12 @@ public class GradleProjectSetup internal constructor(
     internal var addPluginUnderTestClasspath = false
         private set
 
+    /**
+     * The text replacements to be made in the files residing under the [projectDir].
+     *
+     * The replacements are not made to the files in the `buildSrc` folder
+     * placed under the [projectDir].
+     */
     internal var replacements: MutableSet<Replacement> = HashSet()
 
     /**
@@ -273,6 +279,10 @@ public class GradleProjectSetup internal constructor(
      *      The latest version of the library is @LATEST_VERSION@.
      * ```
      * where `LATEST_VERSION` is the token name to pass to this method.
+     *
+     * The files placed under the `projectDir/buildSrc` are excluded from the replacements.
+     * This is done so, as the `buildSrc` files are typically copied over from the parent
+     * Gradle project, and thus hardly may contain any tokenized values.
      */
     public fun replace(token: String, replacement: String): GradleProjectSetup {
         val r = Replacement(token, replacement)
