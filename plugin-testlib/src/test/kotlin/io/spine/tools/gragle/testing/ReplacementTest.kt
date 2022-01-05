@@ -124,8 +124,8 @@ class `'Replacement' should` {
 
         private val random: Random = SecureRandom()
 
-        val TOKEN_NAME = "TEST_TOKEN"
-        val TEXT = "This is a `@$TOKEN_NAME@` which should be replaced with " +
+        const val TOKEN_NAME = "TEST_TOKEN"
+        const val TEXT = "This is a `@$TOKEN_NAME@` which should be replaced with " +
                 "`@$TOKEN_NAME@`. \n\n\n And this `@TEST@ should remain the same."
 
         /**
