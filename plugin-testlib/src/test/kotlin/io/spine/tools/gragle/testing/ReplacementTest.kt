@@ -136,7 +136,7 @@ class `'Replacement' should` {
          *
          * The name of the file and the names of folders are based on UUIDs.
          */
-        class TestData(val parentFolder: File, val content: String) {
+        class TestData(private val parentFolder: File, val content: String) {
 
             val file: File
 
