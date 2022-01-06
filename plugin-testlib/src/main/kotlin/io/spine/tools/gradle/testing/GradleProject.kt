@@ -82,9 +82,16 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
 
         private fun replaceTokens(setup: GradleProjectSetup) {
             val buildSrcDir = setup.projectDir.resolve("buildSrc")
-            setup.replacements.forEach { r ->
-                r.replaceIn(setup.projectDir, buildSrcDir)
-            }
+            setup.projectDir
+                .walk()
+                .filter { f -> !f.isDirectory }
+                .filter { f -> !f.isIn(buildSrcDir) }
+                .forEach { f ->
+                    setup.replacements.forEach { r ->
+                        r.replaceIn(setup.projectDir)
+                    }
+                }
+
         }
     }
 
@@ -112,3 +119,15 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
         return runner.withArguments(args)
     }
 }
+
+/**
+ * Tells whether the file resides in the [folder].
+ *
+ * If the [folder] is `null`, returns `false`.
+ */
+private fun File.isIn(folder: File?) =
+    if(folder == null) {
+        false
+    } else {
+        this.absolutePath.startsWith(folder.absolutePath)
+    }

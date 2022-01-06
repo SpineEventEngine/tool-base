@@ -26,6 +26,7 @@
 
 package io.spine.tools.gradle.testing
 
+import com.google.common.base.Preconditions.checkArgument
 import java.io.File
 
 /**
@@ -61,19 +62,10 @@ public class Replacement(token: String, public val value: String) {
     /**
      * Replaces all occurrences of [token][token].
      *
-     * If the passed [file] is a folder, the occurrences are replaced in all files which reside
-     * in this folder and its sub-folders recursively.
-     *
-     * Optionally, allows to specify the folder, which files should be excluded from replacement.
+     * The passed [file] must exist and must not be a folder.
      */
-    public fun replaceIn(file: File, excludeFolder: File? = null) {
-        if (file.isDirectory) {
-            replaceInDir(file, excludeFolder)
-            return
-        }
-        if (file.isIn(excludeFolder)) {
-            return
-        }
+    public fun replaceIn(file: File) {
+        ensureFileAndExists(file)
         val original = file.readText()
         val modified = original.replace(token(), value)
         if (modified != original) {
@@ -81,24 +73,17 @@ public class Replacement(token: String, public val value: String) {
         }
     }
 
-    private fun replaceInDir(file: File, excludeFolder: File? = null) {
-        file.walk()
-            .filter { f -> !f.isDirectory }
-            .filter { f -> !f.isIn(excludeFolder) }
-            .forEach { f ->
-                replaceIn(f)
-            }
+    private fun ensureFileAndExists(file: File) {
+        checkArgument(
+            file.exists(),
+            "`Replacement` requires an existing file, but none found at `%s`.",
+            file.absolutePath
+        )
+        checkArgument(
+            !file.isDirectory,
+            "`Replacement` cannot be launched in a directory `%s`. " +
+                    "Please pass a single file instead.",
+            file.absolutePath
+        )
     }
-
-    /**
-     * Tells whether the file resides in the [folder].
-     *
-     * If the [folder] is `null`, returns `false`.
-     */
-    private fun File.isIn(folder: File?) =
-        if(folder == null) {
-            false
-        } else {
-            this.absolutePath.startsWith(folder.absolutePath)
-        }
 }
