@@ -88,7 +88,7 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
                 .filter { f -> !f.isIn(buildSrcDir) }
                 .forEach { f ->
                     setup.replacements.forEach { r ->
-                        r.replaceIn(setup.projectDir)
+                        r.replaceIn(f)
                     }
                 }
 
