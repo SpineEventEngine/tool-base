@@ -80,6 +80,13 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
             sources.write()
         }
 
+        /**
+         * Uses the pre-configured [replacements][GradleProjectSetup.replacements] and replaces
+         * the tokens in all files of the [projectDir] and its sub-folders.
+         *
+         * The contents of `projectDir/buildSrc` folder are ignored in this process — as these files
+         * hardly ever may contain the tokenized values.
+         */
         private fun replaceTokens(setup: GradleProjectSetup) {
             val buildSrcDir = setup.projectDir.resolve("buildSrc")
             setup.projectDir
