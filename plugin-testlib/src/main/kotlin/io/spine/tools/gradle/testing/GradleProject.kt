@@ -98,7 +98,6 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
                         r.replaceIn(f)
                     }
                 }
-
         }
     }
 
