@@ -88,7 +88,7 @@ class `'Replacement' should` {
 
         private fun File.assertReplaced(token: String, value: String) {
             val text = this.readText()
-            val expected = TEXT.replace("@$token@", value)
+            val expected = TEXT.replace(token, value)
             assertThat(text)
                 .isEqualTo(expected)
         }
