@@ -93,10 +93,8 @@ class `'Replacement' should` {
                 .isEqualTo(expected)
         }
     }
-
-    companion object {
-        const val TOKEN_NAME = "@TEST_TOKEN@"
-        const val TEXT = "This is a `$TOKEN_NAME` which should be replaced with " +
-                "`$TOKEN_NAME`. \n\n\n And this `@TEST@ should remain the same."
-    }
 }
+
+private const val TOKEN_NAME = "@TEST_TOKEN@"
+private const val TEXT = "This is a `$TOKEN_NAME` which should be replaced with " +
+        "`$TOKEN_NAME`. \n\n\n And this `@TEST@ should remain the same."
