@@ -90,11 +90,16 @@ class `'GradleProject' should` {
         assertThat(buildScript.readText())
             .contains(replacement)
 
-        val someTextFile = projectDir
+        val noReplacementFile = projectDir
             .resolve("buildSrc")
             .resolve("no-replacement.txt")
 
-        assertThat(someTextFile.readText())
+        assertThat(noReplacementFile.readText())
             .doesNotContain(replacement)
+
+        val replacementFile = projectDir
+            .resolve("src/main/java/acme/replacement.txt")
+        assertThat(replacementFile.readText())
+            .contains(replacement)
     }
 }
