@@ -32,31 +32,19 @@ import java.io.File
 /**
  * A replacement to be made in a text.
  *
- * Scans the text for the occurrences of the formatted token, such as `@MY_TOKEN@`,
+ * Scans the text for the occurrences of the token, such as `@MY_TOKEN@`,
  * and replaces them with the passed text value.
  *
- * @param token the name of the token, without `@` symbols
+ * This type uses the token names as-is. It is a responsibility of callers to provide
+ * the correct name for the token with the respect of the format they consider to be legit.
+ *
+ * @param token the name of the token
  * @param value the value to replace the token occurrences to; may be blank
  */
-public class Replacement(token: String, public val value: String) {
-
-    private val token: String
+public class Replacement(public val token: String, public val value: String) {
 
     init {
         require(token.isNotBlank())
-        this.token = token
-    }
-
-    /**
-     * Returns the token formatted as used in the text, in which the replacement will take place.
-     *
-     * Example:
-     * ```
-     *      Replacement("VERSION", ...).token() // -> returns "@VERSION@"
-     * ```
-     */
-    internal fun token(): String {
-        return "@$token@"
     }
 
     /**
@@ -67,7 +55,7 @@ public class Replacement(token: String, public val value: String) {
     public fun replaceIn(file: File) {
         ensureFileAndExists(file)
         val original = file.readText()
-        val modified = original.replace(token(), value)
+        val modified = original.replace(token, value)
         if (modified != original) {
             file.writeText(modified)
         }

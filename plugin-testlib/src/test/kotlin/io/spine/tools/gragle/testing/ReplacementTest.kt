@@ -46,14 +46,6 @@ class `'Replacement' should` {
     }
 
     @Test
-    fun `frame the token name with '@' symbols`() {
-        val original = "mytoken"
-        val actual = Replacement(original, "").token()
-        assertThat(actual)
-            .isEqualTo("@$original@")
-    }
-
-    @Test
     fun `not allow empty tokens`() {
         assertThrows<IllegalArgumentException> { Replacement("", "value") }
     }
@@ -62,6 +54,24 @@ class `'Replacement' should` {
     fun `allow empty values-to-replace-with`() {
         assertThat(Replacement("sometoken", "").value)
             .isEmpty()
+    }
+
+    @Nested
+    inner class `not accept` {
+
+        @Test
+        fun `folder as the 'replaceIn' argument`() {
+            assertThrows<IllegalArgumentException> {
+                Replacement("some-token", "").replaceIn(folder)
+            }
+        }
+
+        @Test
+        fun `non-existing file as the 'replaceIn' argument`() {
+            assertThrows<IllegalArgumentException> {
+                Replacement("some-token", "").replaceIn(folder.resolve("foobar"))
+            }
+        }
     }
 
     @Nested
@@ -85,10 +95,8 @@ class `'Replacement' should` {
     }
 
     companion object {
-
-        const val TOKEN_NAME = "TEST_TOKEN"
-        const val TEXT = "This is a `@$TOKEN_NAME@` which should be replaced with " +
-                "`@$TOKEN_NAME@`. \n\n\n And this `@TEST@ should remain the same."
-
+        const val TOKEN_NAME = "@TEST_TOKEN@"
+        const val TEXT = "This is a `$TOKEN_NAME` which should be replaced with " +
+                "`$TOKEN_NAME`. \n\n\n And this `@TEST@ should remain the same."
     }
 }

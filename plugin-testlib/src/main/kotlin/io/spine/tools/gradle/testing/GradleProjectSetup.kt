@@ -274,11 +274,12 @@ public class GradleProjectSetup internal constructor(
      * Upon building the `GradleProject`, traverses through the resulting project directory,
      * and replace all occurrences of the [token] with the passed [replacement] value.
      *
-     * In text, token name must be framed with `@` symbols:
+     * It is recommended to use `@` symbols framing the token name. It's the convention used
+     * by native Gradle plugins. E.g.:
      *```
      *      The latest version of the library is @LATEST_VERSION@.
      * ```
-     * where `LATEST_VERSION` is the token name to pass to this method.
+     * where `@LATEST_VERSION@` is the token name to pass to this method.
      *
      * The files placed under the `projectDir/buildSrc` are excluded from the replacements.
      * This is done so, as the `buildSrc` files are typically copied over from the parent
