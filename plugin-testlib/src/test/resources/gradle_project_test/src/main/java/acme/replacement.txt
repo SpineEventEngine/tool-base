@@ -1,0 +1,2 @@
+// This comment has a token named @TEST_TOKEN@ which should be replaced.
+// It is used in `GradleProjectTest`.

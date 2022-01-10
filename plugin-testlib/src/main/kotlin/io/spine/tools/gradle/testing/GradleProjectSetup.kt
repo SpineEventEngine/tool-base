@@ -105,6 +105,14 @@ public class GradleProjectSetup internal constructor(
         private set
 
     /**
+     * The text replacements to be made in the files residing under the [projectDir].
+     *
+     * The replacements are not made to the files in the `buildSrc` folder
+     * placed under the [projectDir].
+     */
+    internal var replacements: MutableSet<Replacement> = HashSet()
+
+    /**
      * Sets the name of the resource directory and the predicate which accepts the files
      * from the specified directory for copying to the project to be created.
      *
@@ -259,6 +267,27 @@ public class GradleProjectSetup internal constructor(
      */
     public fun withOptions(list: Iterable<String>): GradleProjectSetup {
         this.arguments = arguments.withOptions(list)
+        return this
+    }
+
+    /**
+     * Upon building the `GradleProject`, traverses through the resulting project directory,
+     * and replace all occurrences of the [token] with the passed [replacement] value.
+     *
+     * It is recommended to use `@` symbols framing the token name. It's the convention used
+     * by native Gradle plugins. E.g.:
+     *```
+     *      The latest version of the library is @LATEST_VERSION@.
+     * ```
+     * where `@LATEST_VERSION@` is the token name to pass to this method.
+     *
+     * The files placed under the `projectDir/buildSrc` are excluded from the replacements.
+     * This is done so, as the `buildSrc` files are typically copied over from the parent
+     * Gradle project, and thus hardly may contain any tokenized values.
+     */
+    public fun replace(token: String, replacement: String): GradleProjectSetup {
+        val r = Replacement(token, replacement)
+        this.replacements.add(r)
         return this
     }
 
