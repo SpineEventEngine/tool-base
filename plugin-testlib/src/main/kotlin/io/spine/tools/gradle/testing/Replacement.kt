@@ -26,7 +26,6 @@
 
 package io.spine.tools.gradle.testing
 
-import com.google.common.base.Preconditions.checkArgument
 import java.io.File
 
 /**
@@ -62,16 +61,12 @@ public class Replacement(public val token: String, public val value: String) {
     }
 
     private fun ensureFileAndExists(file: File) {
-        checkArgument(
-            file.exists(),
-            "`Replacement` requires an existing file, but none found at `%s`.",
-            file.absolutePath
-        )
-        checkArgument(
-            !file.isDirectory,
-            "`Replacement` cannot be launched in a directory `%s`. " +
-                    "Please pass a single file instead.",
-            file.absolutePath
-        )
+        require(file.exists()) {
+            "`Replacement` requires an existing file, but none found at `${file.absolutePath}`."
+        }
+        require(!file.isDirectory) {
+            "`Replacement` cannot be launched in a directory `${file.absolutePath}`. " +
+                    "Please pass a single file instead."
+        }
     }
 }
