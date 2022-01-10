@@ -56,6 +56,7 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
             runner.withEnvironment(setup.environment)
         }
         writeSources(setup)
+        replaceTokens(setup)
     }
 
     public companion object {
@@ -77,6 +78,26 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
         private fun writeSources(setup: GradleProjectSetup) {
             val sources = Sources(setup)
             sources.write()
+        }
+
+        /**
+         * Uses the pre-configured [replacements][GradleProjectSetup.replacements] and replaces
+         * the tokens in all files of the [projectDir] and its sub-folders.
+         *
+         * The contents of `projectDir/buildSrc` folder are ignored in this process — as these files
+         * hardly ever may contain the tokenized values.
+         */
+        private fun replaceTokens(setup: GradleProjectSetup) {
+            val buildSrcDir = setup.projectDir.resolve("buildSrc")
+            setup.projectDir
+                .walk()
+                .filter { f -> !f.isDirectory }
+                .filter { f -> !f.isIn(buildSrcDir) }
+                .forEach { f ->
+                    setup.replacements.forEach { r ->
+                        r.replaceIn(f)
+                    }
+                }
         }
     }
 
@@ -104,3 +125,15 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
         return runner.withArguments(args)
     }
 }
+
+/**
+ * Tells whether the file resides in the [folder].
+ *
+ * If the [folder] is `null`, returns `false`.
+ */
+private fun File.isIn(folder: File?) =
+    if(folder == null) {
+        false
+    } else {
+        this.absolutePath.startsWith(folder.absolutePath)
+    }

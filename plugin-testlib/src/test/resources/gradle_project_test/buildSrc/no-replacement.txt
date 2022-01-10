@@ -1,0 +1,4 @@
+// This comment has a token named @TEST_TOKEN@ which should NOT be replaced, as it is a part
+// of the `buildSrc` folder, which is excluded from the replacement.
+//
+// This file is used in `GradleProjectTest`.

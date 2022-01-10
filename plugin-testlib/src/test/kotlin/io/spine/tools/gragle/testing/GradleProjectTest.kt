@@ -26,6 +26,7 @@
 package io.spine.tools.gragle.testing
 
 import com.google.common.truth.Truth.assertThat
+import io.spine.base.Identifier
 import io.spine.tools.gradle.task.JavaTaskName.Companion.compileJava
 import io.spine.tools.gradle.testing.GradleProject
 import io.spine.tools.gradle.testing.GradleProjectSetup
@@ -76,5 +77,29 @@ class `'GradleProject' should` {
 
         assertThat(compileTask!!.outcome)
             .isEqualTo(TaskOutcome.FAILED)
+    }
+
+    @Test
+    fun `replace tokens in the build files, but exclude the 'buildSrc' folder`() {
+        val replacement = Identifier.newUuid()
+        setup.fromResources(origin)
+            .replace("TEST_TOKEN", replacement)
+            .create()
+
+        val buildScript = projectDir.resolve("build.gradle.kts")
+        assertThat(buildScript.readText())
+            .contains(replacement)
+
+        val noReplacementFile = projectDir
+            .resolve("buildSrc")
+            .resolve("no-replacement.txt")
+
+        assertThat(noReplacementFile.readText())
+            .doesNotContain(replacement)
+
+        val replacementFile = projectDir
+            .resolve("src/main/java/acme/replacement.txt")
+        assertThat(replacementFile.readText())
+            .contains(replacement)
     }
 }
