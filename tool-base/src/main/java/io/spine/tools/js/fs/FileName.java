@@ -104,7 +104,7 @@ public final class FileName extends AbstractFileName<FileName> {
     public String pathToRoot() {
         var pathElements = pathElements();
         var fileLocationDepth = pathElements.size() - 1;
-        var pathToRoot = repeat(parentDirectory(), fileLocationDepth);
+        var pathToRoot = parentDirectory().repeat(fileLocationDepth);
         var result = pathToRoot.isEmpty()
                      ? currentDirectory()
                      : pathToRoot;

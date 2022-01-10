@@ -25,4 +25,4 @@
  */
 
 val baseVersion: String by extra("2.0.0-SNAPSHOT.80")
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.87")
+val versionToPublish: String by extra("2.0.0-SNAPSHOT.88")

@@ -49,7 +49,7 @@ public final class TaskSubject extends Subject {
      * Obtains factory for creating task subjects for actual values.
      */
     public static Factory<TaskSubject, Task> tasks() {
-        return (TaskSubject::new);
+        return TaskSubject::new;
     }
 
     /**

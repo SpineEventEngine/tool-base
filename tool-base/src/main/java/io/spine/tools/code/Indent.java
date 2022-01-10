@@ -169,7 +169,7 @@ public final class Indent implements Element, Serializable {
      */
     @Override
     public String text() {
-        var text = Strings.repeat(SPACE, size * level);
+        var text = SPACE.repeat(size * level);
         return text;
     }
 
