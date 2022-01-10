@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2022, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -169,7 +169,7 @@ public final class Indent implements Element, Serializable {
      */
     @Override
     public String text() {
-        var text = Strings.repeat(SPACE, size * level);
+        var text = SPACE.repeat(size * level);
         return text;
     }
 

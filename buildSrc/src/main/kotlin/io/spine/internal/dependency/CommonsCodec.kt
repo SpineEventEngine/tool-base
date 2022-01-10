@@ -23,31 +23,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package io.spine.tools.java.fs
 
-import com.google.common.truth.Truth.assertThat
-import io.spine.code.java.PackageName
-import java.nio.file.Path
-import java.nio.file.Paths
-import org.junit.jupiter.api.Test
+package io.spine.internal.dependency
 
-class `'FsTypesExtensions' should` {
-
-    @Test
-    fun `convert Java package to a directory`() {
-        val javaPackage = PackageName.of(String::class.java)
-
-        assertThat(javaPackage.toDirectory())
-            .isEqualTo(Paths.get("java/lang"))
-    }
-
-    @Test
-    fun `obtain a source code file from a path and file name`() {
-        val dir = Paths.get("some/dir/")
-        val typeName = "SomethingBlue"
-        val file = FileName.forType(typeName)
-        val resolved = dir.resolve(file)
-        assertThat(resolved.path().map(Path::toString))
-            .containsExactly("some", "dir", "$typeName.java")
-    }
+// https://commons.apache.org/proper/commons-codec/changes-report.html
+@Suppress("unused")
+object CommonsCodec {
+    private const val version = "1.15"
+    const val lib = "commons-codec:commons-codec:$version"
 }
