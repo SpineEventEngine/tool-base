@@ -51,14 +51,14 @@ public abstract class Language internal constructor(
      *
      * The passed values are converted to lower case.
      */
-    fileExtensions: List<String>,
+    fileExtensions: Iterable<String>,
 
     /**
      * Patterns one of which a language source file must match.
      *
      * If not specified, patterns matching [fileExtensions] will be created.
      */
-    filePatterns: List<Glob>? = null
+    filePattern: Glob? = null
 ) {
 
     /**
@@ -69,7 +69,7 @@ public abstract class Language internal constructor(
     /**
      * Pattern which source code files must match.
      */
-    private val filePatterns: List<Glob>
+    private val filePattern: Glob
 
     init {
         this.fileExtensions = fileExtensions
@@ -77,7 +77,7 @@ public abstract class Language internal constructor(
             .map { it.lowercase() }
             .toMutableList()
             .sorted()
-        this.filePatterns = filePatterns ?: this.fileExtensions.map(Glob::extension)
+        this.filePattern = filePattern ?: Glob.extension(this.fileExtensions)
     }
 
     /**
@@ -101,7 +101,7 @@ public abstract class Language internal constructor(
      *
      * If the passed instance is a directory, rather than a file, returns `false`.
      */
-    public fun matches(file: Path): Boolean = filePatterns.any { it.matches(file) }
+    public fun matches(file: Path): Boolean = filePattern.matches(file)
 
     /**
      * Returns the name of the language.
@@ -116,7 +116,7 @@ public abstract class Language internal constructor(
  */
 public class SlashCommentLanguage(
     name: String,
-    fileExtensions: List<String>
+    fileExtensions: Iterable<String>
 ) : Language(name, fileExtensions) {
 
     override fun comment(line: String): String = "// $line"
@@ -143,7 +143,7 @@ public object CommonLanguages {
      */
     @get:JvmName("any")
     @JvmStatic
-    public val any: Language = object : Language("any language", listOf(""), listOf(Glob.any)) {
+    public val any: Language = object : Language("any language", listOf(""), Glob.any) {
         override fun comment(line: String): String {
             throw UnsupportedOperationException("`$name` does not support comments.")
         }
