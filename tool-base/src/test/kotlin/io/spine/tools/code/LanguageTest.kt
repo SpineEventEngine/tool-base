@@ -96,6 +96,10 @@ class `'Language' should` {
     }
 }
 
+/**
+ * [Brainfuck](https://en.wikipedia.org/wiki/Brainfuck) is an esoteric programming language
+ * created in 1993 by Urban Müller.
+ */
 private class Brainfuck: Language("Brainfuck", listOf(".b", ".bf")) {
     override fun comment(line: String): String = "[ $line ]"
 }
