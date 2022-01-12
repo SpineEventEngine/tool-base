@@ -24,33 +24,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.Pmd
+package io.spine.tools.code;
 
-plugins {
-    pmd
-}
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
-pmd {
-    toolVersion = Pmd.version
-    isConsoleOutput = true
-    incrementalAnalysis.set(true)
+import java.nio.file.Paths;
 
-    // The build is going to fail in case of violations.
-    isIgnoreFailures = false
+import static com.google.common.truth.Truth.assertWithMessage;
 
-    // Disable the default rule set to use the custom rules (see below).
-    ruleSets = listOf()
+@DisplayName("`Language` Java API should expose")
+class LanguageTest {
 
-    // Load PMD settings.
-    val pmdSettings = file("$rootDir/config/quality/pmd.xml")
-    val textResource: TextResource = resources.text.fromFile(pmdSettings)
-    ruleSetConfig = textResource
+    @Test
+    @DisplayName("`any()` language")
+    void anyLang() {
+        assertMatches(CommonLanguages.any(), "anything_will.do");
+    }
 
-    reportsDir = file("build/reports/pmd")
+    @Test
+    void kotlin() {
+        assertMatches(CommonLanguages.kotlin(), "my.kt");
+    }
 
-    // Just analyze the main sources; do not analyze tests.
-    val javaExtension: JavaPluginExtension =
-        project.extensions.getByType(JavaPluginExtension::class.java)
-    val mainSourceSet = javaExtension.sourceSets.getByName("main")
-    sourceSets = listOf(mainSourceSet)
+    @Test
+    void java() {
+        assertMatches(CommonLanguages.java(), "pure.java");
+    }
+
+    @Test
+    void javaScript() {
+        assertMatches(CommonLanguages.javaScript(), "wild.js");
+    }
+
+    private static void assertMatches(Language language, String file) {
+        var path = Paths.get(file);
+        assertWithMessage("The language `%s` should recognize the file `%s`.", language, file)
+                .that(language.matches(path))
+                .isTrue();
+    }
 }
