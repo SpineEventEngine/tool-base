@@ -31,6 +31,7 @@ import io.spine.internal.dependency.Spine
 dependencies {
     api(JavaPoet.lib)
     api(JavaX.annotations)
+    implementation("io.github.z4kn4fein:semver:1.2.1")
 
     val spine = Spine(project)
     api(spine.base)
