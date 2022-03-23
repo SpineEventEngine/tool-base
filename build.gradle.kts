@@ -48,7 +48,6 @@ import io.spine.internal.gradle.javadoc.JavadocConfig
 import io.spine.internal.gradle.kotlin.applyJvmToolchain
 import io.spine.internal.gradle.kotlin.setFreeCompilerArgs
 import io.spine.internal.gradle.publish.IncrementGuard
-import io.spine.internal.gradle.publish.Publish.Companion.publishProtoArtifact
 import io.spine.internal.gradle.publish.PublishingRepos
 import io.spine.internal.gradle.publish.spinePublishing
 import io.spine.internal.gradle.report.coverage.JacocoConfig
@@ -74,15 +73,18 @@ plugins {
 }
 
 spinePublishing {
-    with(PublishingRepos) {
-        targetRepositories.addAll(
+    modules = setOf(
+        "plugin-base",
+        "plugin-testlib",
+        "tool-base",
+    )
+    destinations = with(PublishingRepos) {
+        setOf(
             cloudRepo,
             cloudArtifactRegistry,
             gitHub("tool-base")
         )
     }
-    projectsToPublish.addAll(subprojects.map { it.path })
-    spinePrefix.set(true)
 }
 
 allprojects {
@@ -175,7 +177,6 @@ subprojects {
 
     apply<IncrementGuard>()
     apply<VersionWriter>()
-    publishProtoArtifact(project)
     LicenseReporter.generateReportIn(project)
 
     val baseVersion: String by extra
