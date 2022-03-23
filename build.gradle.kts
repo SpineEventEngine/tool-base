@@ -133,28 +133,25 @@ subprojects {
         excludeProtobufLite()
     }
 
-    val javaVersion = 11
+    val javaVersion = JavaVersion.VERSION_11.toString()
     kotlin {
         applyJvmToolchain(javaVersion)
         explicitApi()
     }
 
-    tasks.withType<JavaCompile> {
-        configureJavac()
-        configureErrorProne()
-    }
-
-    CheckStyleConfig.applyTo(project)
-    JavadocConfig.applyTo(project)
-
-    tasks.withType<KotlinCompile>().configureEach {
-        kotlinOptions.jvmTarget = JavaVersion.VERSION_11.toString()
-        setFreeCompilerArgs()
-    }
-
     tasks {
+        withType<JavaCompile>().configureEach {
+            configureJavac()
+            configureErrorProne()
+        }
+
+        withType<KotlinCompile>().configureEach {
+            kotlinOptions.jvmTarget = javaVersion
+            setFreeCompilerArgs()
+        }
+
         registerTestTasks()
-        test {
+        test.configure {
             useJUnitPlatform {
                 includeEngines("junit-jupiter")
             }
@@ -171,12 +168,15 @@ subprojects {
         }
     }
 
-    tasks.clean {
+    tasks.clean.configure {
         delete(generatedDir)
     }
 
     apply<IncrementGuard>()
     apply<VersionWriter>()
+
+    CheckStyleConfig.applyTo(project)
+    JavadocConfig.applyTo(project)
     LicenseReporter.generateReportIn(project)
 
     val baseVersion: String by extra
