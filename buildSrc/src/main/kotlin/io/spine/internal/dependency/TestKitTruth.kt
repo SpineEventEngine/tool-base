@@ -24,16 +24,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.internal.gradle.publish
+package io.spine.internal.dependency
 
 /**
- * Default artifact task names.
+ * Gradle TestKit extension for Google Truth.
  *
- * These tasks, if not present on a project already, are created by the [Publish] plugin.
- * Their output is published as project's artifacts.
+ * Source code:
+ * https://github.com/autonomousapps/dependency-analysis-android-gradle-plugin/tree/main/testkit-truth
+ *
+ * Usage description:
+ * https://dev.to/autonomousapps/gradle-all-the-way-down-testing-your-gradle-plugin-with-gradle-testkit-2hmc
  */
-internal enum class ArtifactTaskName {
-    sourceJar,
-    testOutputJar,
-    javadocJar;
+@Suppress("unused")
+object TestKitTruth {
+    private const val version = "1.1"
+    const val lib = "com.autonomousapps:testkit-truth:$version"
 }
