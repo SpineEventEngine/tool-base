@@ -29,14 +29,16 @@ import com.google.protobuf.gradle.protobuf
 import io.spine.internal.dependency.Protobuf
 import io.spine.internal.gradle.WriteVersions
 
-kotlin { explicitApi() }
-
 dependencies {
     api(gradleApi())
     api(Protobuf.GradlePlugin.lib)
     api(project(":tool-base"))
 
     testImplementation(project(":plugin-testlib"))
+}
+
+kotlin {
+    explicitApi()
 }
 
 protobuf {
@@ -49,6 +51,8 @@ protobuf {
     }
 }
 
-tasks.withType<WriteVersions> {
-    version(Protobuf.compiler)
+tasks {
+    withType<WriteVersions>().configureEach {
+        version(Protobuf.compiler)
+    }
 }
