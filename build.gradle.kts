@@ -48,7 +48,6 @@ import io.spine.internal.gradle.javadoc.JavadocConfig
 import io.spine.internal.gradle.kotlin.applyJvmToolchain
 import io.spine.internal.gradle.kotlin.setFreeCompilerArgs
 import io.spine.internal.gradle.publish.IncrementGuard
-import io.spine.internal.gradle.publish.Publish.Companion.publishProtoArtifact
 import io.spine.internal.gradle.publish.PublishingRepos
 import io.spine.internal.gradle.publish.spinePublishing
 import io.spine.internal.gradle.report.coverage.JacocoConfig
@@ -74,15 +73,18 @@ plugins {
 }
 
 spinePublishing {
-    with(PublishingRepos) {
-        targetRepositories.addAll(
+    modules = setOf(
+        "plugin-base",
+        "plugin-testlib",
+        "tool-base",
+    )
+    destinations = with(PublishingRepos) {
+        setOf(
             cloudRepo,
             cloudArtifactRegistry,
             gitHub("tool-base")
         )
     }
-    projectsToPublish.addAll(subprojects.map { it.path })
-    spinePrefix.set(true)
 }
 
 allprojects {
@@ -131,28 +133,25 @@ subprojects {
         excludeProtobufLite()
     }
 
-    val javaVersion = 11
+    val javaVersion = JavaVersion.VERSION_11.toString()
     kotlin {
         applyJvmToolchain(javaVersion)
         explicitApi()
     }
 
-    tasks.withType<JavaCompile> {
-        configureJavac()
-        configureErrorProne()
-    }
-
-    CheckStyleConfig.applyTo(project)
-    JavadocConfig.applyTo(project)
-
-    tasks.withType<KotlinCompile>().configureEach {
-        kotlinOptions.jvmTarget = JavaVersion.VERSION_11.toString()
-        setFreeCompilerArgs()
-    }
-
     tasks {
+        withType<JavaCompile>().configureEach {
+            configureJavac()
+            configureErrorProne()
+        }
+
+        withType<KotlinCompile>().configureEach {
+            kotlinOptions.jvmTarget = javaVersion
+            setFreeCompilerArgs()
+        }
+
         registerTestTasks()
-        test {
+        test.configure {
             useJUnitPlatform {
                 includeEngines("junit-jupiter")
             }
@@ -169,13 +168,15 @@ subprojects {
         }
     }
 
-    tasks.clean {
+    tasks.clean.configure {
         delete(generatedDir)
     }
 
     apply<IncrementGuard>()
     apply<VersionWriter>()
-    publishProtoArtifact(project)
+
+    CheckStyleConfig.applyTo(project)
+    JavadocConfig.applyTo(project)
     LicenseReporter.generateReportIn(project)
 
     val baseVersion: String by extra

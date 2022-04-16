@@ -116,16 +116,12 @@ fun Project.spinePublishing(configuration: SpinePublishing.() -> Unit) {
 /**
  * A Gradle extension for setting up publishing of spine modules using `maven-publish` plugin.
  *
- * @param project a project in which the extension is opened. By default, this project will be
- *  published as long as a [set][modules] of modules to publish is not specified explicitly.
- *
  * @see spinePublishing
  */
 open class SpinePublishing(private val project: Project) {
 
     private val protoJar = ProtoJar()
     private val testJar = TestJar()
-    private val dokkaJar = DokkaJar()
 
     /**
      * Set of modules to be published.
@@ -243,30 +239,6 @@ open class SpinePublishing(private val project: Project) {
      */
     fun testJar(configuration: TestJar.() -> Unit)  = testJar.run(configuration)
 
-
-    /**
-     * Configures publishing of [dokkaJar] artifact, containing Dokka-generated documentation. By
-     * default, publishing of the artifact is disabled.
-     *
-     * Remember that the Dokka Gradle plugin should be applied to publish this artifact as it is
-     * produced by the `dokkaHtml` task. It can be done by using the
-     * [io.spine.internal.dependency.Dokka] dependency object or by applying the
-     * `buildSrc/src/main/kotlin/dokka-for-java` script plugin for Java projects.
-     *
-     * Here's an example of how to use this option:
-     *
-     * ```
-     * spinePublishing {
-     *     dokkaJar {
-     *         enabled = true
-     *     }
-     * }
-     * ```
-     *
-     * The resulting artifact is available under "dokka" classifier.
-     */
-    fun dokkaJar(configuration: DokkaJar.() -> Unit)  = dokkaJar.run(configuration)
-
     /**
      * Called to notify the extension that its configuration is completed.
      *
@@ -281,36 +253,20 @@ open class SpinePublishing(private val project: Project) {
 
         val protoJarExclusions = protoJar.exclusions
         val testJarInclusions = testJar.inclusions
-        val publishedProjects = publishedProjects()
+        val publishedModules = modules.ifEmpty { setOf(project.name) }
 
-        publishedProjects.forEach { project ->
-            val name = project.name
-            val includeProtoJar = (protoJarExclusions.contains(name) || protoJar.disabled).not()
-            val includeTestJar = (testJarInclusions.contains(name) || testJar.enabled)
-            setUpPublishing(project, includeProtoJar, includeTestJar, dokkaJar.enabled)
+        publishedModules.forEach { module ->
+            val includeProtoJar = (protoJarExclusions.contains(module) || protoJar.disabled).not()
+            val includeTestJar = (testJarInclusions.contains(module) || testJar.enabled)
+            setUpPublishing(module, includeProtoJar, includeTestJar)
         }
     }
 
     /**
-     * Maps the names of published modules to [Project] instances.
+     * Sets up `maven-publish` plugin for the given module.
      *
-     * The method considers two options:
-     *
-     * 1. The [set][modules] of subprojects to publish is not empty. It means that the extension
-     *   is opened from a root project.
-     * 2. The [set][modules] is empty. Then, the [project] in which the extension is opened
-     *   will be published.
-     *
-     * @see modules
-     */
-    private fun publishedProjects() = modules.map { name -> project.project(name) }
-        .ifEmpty { setOf(project) }
-
-    /**
-     * Sets up `maven-publish` plugin for the given project.
-     *
-     * Firstly, an instance of [PublishingConfig] is assembled for the project. Then, this
-     * config is applied.
+     * Firstly, an instance of [PublishingConfig] is assembled for the module. Then, this
+     * config is applied to the module.
      *
      * This method utilizes `project.afterEvaluate` closure. General rule of thumb is to avoid using
      * of this closure, as it configures a project when its configuration is considered completed.
@@ -328,19 +284,14 @@ open class SpinePublishing(private val project: Project) {
      * `project.afterEvaluate` in order to guarantee that a module will be configured by the time
      * we configure publishing for it.
      */
-    private fun setUpPublishing(
-        project: Project,
-        includeProtoJar: Boolean,
-        includeTestJar: Boolean,
-        includeDokkaJar: Boolean
-    ) {
+    private fun setUpPublishing(module: String, includeProtoJar: Boolean, includeTestJar: Boolean) {
+        val project = project.project(module)
         val artifactId = artifactId(project)
         val publishingConfig = PublishingConfig(
             artifactId,
             destinations,
             includeProtoJar,
             includeTestJar,
-            includeDokkaJar
         )
         project.afterEvaluate {
             publishingConfig.apply(project)
@@ -407,3 +358,4 @@ open class SpinePublishing(private val project: Project) {
         }
     }
 }
+

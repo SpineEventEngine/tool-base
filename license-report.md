@@ -7,7 +7,7 @@
      * **Project URL:** [http://findbugs.sourceforge.net/](http://findbugs.sourceforge.net/)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : com.google.code.gson. **Name** : gson. **Version** : 2.8.9.
+1.  **Group** : com.google.code.gson. **Name** : gson. **Version** : 2.9.0.
      * **Project URL:** [https://github.com/google/gson/gson](https://github.com/google/gson/gson)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -30,7 +30,7 @@
      * **Project URL:** [https://github.com/google/guava/](https://github.com/google/guava/)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : com.google.guava. **Name** : guava. **Version** : 31.0.1-jre.
+1.  **Group** : com.google.guava. **Name** : guava. **Version** : 31.1-jre.
      * **Project URL:** [https://github.com/google/guava](https://github.com/google/guava)
      * **License:** [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -45,15 +45,15 @@
      * **Project URL:** [https://github.com/google/protobuf-gradle-plugin](https://github.com/google/protobuf-gradle-plugin)
      * **License:** [BSD 3-Clause](http://opensource.org/licenses/BSD-3-Clause)
 
-1.  **Group** : com.google.protobuf. **Name** : protobuf-java. **Version** : 3.19.3.
+1.  **Group** : com.google.protobuf. **Name** : protobuf-java. **Version** : 3.19.4.
      * **Project URL:** [https://developers.google.com/protocol-buffers/](https://developers.google.com/protocol-buffers/)
      * **License:** [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause)
 
-1.  **Group** : com.google.protobuf. **Name** : protobuf-java-util. **Version** : 3.19.3.
+1.  **Group** : com.google.protobuf. **Name** : protobuf-java-util. **Version** : 3.19.4.
      * **Project URL:** [https://developers.google.com/protocol-buffers/](https://developers.google.com/protocol-buffers/)
      * **License:** [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause)
 
-1.  **Group** : com.google.protobuf. **Name** : protobuf-kotlin. **Version** : 3.19.3.
+1.  **Group** : com.google.protobuf. **Name** : protobuf-kotlin. **Version** : 3.19.4.
      * **License:** [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause)
 
 1.  **Group** : com.squareup. **Name** : javapoet. **Version** : 1.13.0.
@@ -63,11 +63,6 @@
 1.  **Group** : commons-lang. **Name** : commons-lang. **Version** : 2.6.
      * **Project URL:** [http://commons.apache.org/lang/](http://commons.apache.org/lang/)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-
-1.  **Group** : io.github.z4kn4fein. **Name** : semver. **Version** : 1.2.1.**No license information found**
-1.  **Group** : io.github.z4kn4fein. **Name** : semver-jvm. **Version** : 1.2.1.
-     * **Project URL:** [https://z4kn4fein.github.io/kotlin-semver](https://z4kn4fein.github.io/kotlin-semver)
-     * **License:** [MIT License](https://raw.githubusercontent.com/z4kn4fein/kotlin-semver/main/LICENSE)
 
 1.  **Group** : javax.annotation. **Name** : javax.annotation-api. **Version** : 1.3.2.
      * **Project URL:** [http://jcp.org/en/jsr/detail?id=250](http://jcp.org/en/jsr/detail?id=250)
@@ -82,7 +77,7 @@
      * **License:** [GNU General Public License, version 2 (GPL2), with the classpath exception](http://www.gnu.org/software/classpath/license.html)
      * **License:** [The MIT License](http://opensource.org/licenses/MIT)
 
-1.  **Group** : org.checkerframework. **Name** : checker-qual. **Version** : 3.21.0.
+1.  **Group** : org.checkerframework. **Name** : checker-qual. **Version** : 3.21.3.
      * **Project URL:** [https://checkerframework.org](https://checkerframework.org)
      * **License:** [The MIT License](http://opensource.org/licenses/MIT)
 
@@ -139,7 +134,7 @@
      * **Project URL:** [http://findbugs.sourceforge.net/](http://findbugs.sourceforge.net/)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : com.google.code.gson. **Name** : gson. **Version** : 2.8.9.
+1.  **Group** : com.google.code.gson. **Name** : gson. **Version** : 2.9.0.
      * **Project URL:** [https://github.com/google/gson/gson](https://github.com/google/gson/gson)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -174,11 +169,11 @@
      * **Project URL:** [https://github.com/google/guava/](https://github.com/google/guava/)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : com.google.guava. **Name** : guava. **Version** : 31.0.1-jre.
+1.  **Group** : com.google.guava. **Name** : guava. **Version** : 31.1-jre.
      * **Project URL:** [https://github.com/google/guava](https://github.com/google/guava)
      * **License:** [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : com.google.guava. **Name** : guava-testlib. **Version** : 31.0.1-jre.
+1.  **Group** : com.google.guava. **Name** : guava-testlib. **Version** : 31.1-jre.
      * **License:** [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : com.google.guava. **Name** : listenablefuture. **Version** : 9999.0-empty-to-avoid-conflict-with-guava.
@@ -192,18 +187,18 @@
      * **Project URL:** [https://github.com/google/protobuf-gradle-plugin](https://github.com/google/protobuf-gradle-plugin)
      * **License:** [BSD 3-Clause](http://opensource.org/licenses/BSD-3-Clause)
 
-1.  **Group** : com.google.protobuf. **Name** : protobuf-java. **Version** : 3.19.3.
+1.  **Group** : com.google.protobuf. **Name** : protobuf-java. **Version** : 3.19.4.
      * **Project URL:** [https://developers.google.com/protocol-buffers/](https://developers.google.com/protocol-buffers/)
      * **License:** [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause)
 
-1.  **Group** : com.google.protobuf. **Name** : protobuf-java-util. **Version** : 3.19.3.
+1.  **Group** : com.google.protobuf. **Name** : protobuf-java-util. **Version** : 3.19.4.
      * **Project URL:** [https://developers.google.com/protocol-buffers/](https://developers.google.com/protocol-buffers/)
      * **License:** [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause)
 
-1.  **Group** : com.google.protobuf. **Name** : protobuf-kotlin. **Version** : 3.19.3.
+1.  **Group** : com.google.protobuf. **Name** : protobuf-kotlin. **Version** : 3.19.4.
      * **License:** [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause)
 
-1.  **Group** : com.google.protobuf. **Name** : protoc. **Version** : 3.19.3.
+1.  **Group** : com.google.protobuf. **Name** : protoc. **Version** : 3.19.4.
      * **Project URL:** [https://developers.google.com/protocol-buffers/](https://developers.google.com/protocol-buffers/)
      * **License:** [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -220,7 +215,7 @@
 1.  **Group** : com.google.truth.extensions. **Name** : truth-proto-extension. **Version** : 1.1.3.
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : com.puppycrawl.tools. **Name** : checkstyle. **Version** : 9.2.
+1.  **Group** : com.puppycrawl.tools. **Name** : checkstyle. **Version** : 10.1.
      * **Project URL:** [https://checkstyle.org/](https://checkstyle.org/)
      * **License:** [LGPL-2.1+](http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt)
 
@@ -244,18 +239,13 @@
      * **Project URL:** [http://commons.apache.org/lang/](http://commons.apache.org/lang/)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : info.picocli. **Name** : picocli. **Version** : 4.6.2.
+1.  **Group** : info.picocli. **Name** : picocli. **Version** : 4.6.3.
      * **Project URL:** [http://picocli.info](http://picocli.info)
      * **License:** [The Apache Software License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : io.github.java-diff-utils. **Name** : java-diff-utils. **Version** : 4.0.
      * **Project URL:** [https://github.com/java-diff-utils/java-diff-utils](https://github.com/java-diff-utils/java-diff-utils)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-
-1.  **Group** : io.github.z4kn4fein. **Name** : semver. **Version** : 1.2.1.**No license information found**
-1.  **Group** : io.github.z4kn4fein. **Name** : semver-jvm. **Version** : 1.2.1.
-     * **Project URL:** [https://z4kn4fein.github.io/kotlin-semver](https://z4kn4fein.github.io/kotlin-semver)
-     * **License:** [MIT License](https://raw.githubusercontent.com/z4kn4fein/kotlin-semver/main/LICENSE)
 
 1.  **Group** : javax.annotation. **Name** : javax.annotation-api. **Version** : 1.3.2.
      * **Project URL:** [http://jcp.org/en/jsr/detail?id=250](http://jcp.org/en/jsr/detail?id=250)
@@ -278,10 +268,10 @@
      * **Project URL:** [http://www.saxonica.com/](http://www.saxonica.com/)
      * **License:** [Mozilla Public License Version 2.0](http://www.mozilla.org/MPL/2.0/)
 
-1.  **Group** : net.sourceforge.pmd. **Name** : pmd-core. **Version** : 6.41.0.
+1.  **Group** : net.sourceforge.pmd. **Name** : pmd-core. **Version** : 6.44.0.
      * **License:** [BSD-style](http://pmd.sourceforge.net/license.html)
 
-1.  **Group** : net.sourceforge.pmd. **Name** : pmd-java. **Version** : 6.41.0.
+1.  **Group** : net.sourceforge.pmd. **Name** : pmd-java. **Version** : 6.44.0.
      * **License:** [BSD-style](http://pmd.sourceforge.net/license.html)
 
 1.  **Group** : net.sourceforge.saxon. **Name** : saxon. **Version** : 9.1.0.8.
@@ -309,7 +299,7 @@
      * **License:** [GNU General Public License, version 2 (GPL2), with the classpath exception](http://www.gnu.org/software/classpath/license.html)
      * **License:** [The MIT License](http://opensource.org/licenses/MIT)
 
-1.  **Group** : org.checkerframework. **Name** : checker-qual. **Version** : 3.21.0.
+1.  **Group** : org.checkerframework. **Name** : checker-qual. **Version** : 3.21.3.
      * **Project URL:** [https://checkerframework.org](https://checkerframework.org)
      * **License:** [The MIT License](http://opensource.org/licenses/MIT)
 
@@ -463,7 +453,7 @@
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Thu Mar 31 18:03:10 EEST 2022** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -479,7 +469,7 @@ This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-Lic
      * **Project URL:** [http://findbugs.sourceforge.net/](http://findbugs.sourceforge.net/)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : com.google.code.gson. **Name** : gson. **Version** : 2.8.9.
+1.  **Group** : com.google.code.gson. **Name** : gson. **Version** : 2.9.0.
      * **Project URL:** [https://github.com/google/gson/gson](https://github.com/google/gson/gson)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -502,11 +492,11 @@ This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-Lic
      * **Project URL:** [https://github.com/google/guava/](https://github.com/google/guava/)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : com.google.guava. **Name** : guava. **Version** : 31.0.1-jre.
+1.  **Group** : com.google.guava. **Name** : guava. **Version** : 31.1-jre.
      * **Project URL:** [https://github.com/google/guava](https://github.com/google/guava)
      * **License:** [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : com.google.guava. **Name** : guava-testlib. **Version** : 31.0.1-jre.
+1.  **Group** : com.google.guava. **Name** : guava-testlib. **Version** : 31.1-jre.
      * **License:** [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : com.google.guava. **Name** : listenablefuture. **Version** : 9999.0-empty-to-avoid-conflict-with-guava.
@@ -520,15 +510,15 @@ This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-Lic
      * **Project URL:** [https://github.com/google/protobuf-gradle-plugin](https://github.com/google/protobuf-gradle-plugin)
      * **License:** [BSD 3-Clause](http://opensource.org/licenses/BSD-3-Clause)
 
-1.  **Group** : com.google.protobuf. **Name** : protobuf-java. **Version** : 3.19.3.
+1.  **Group** : com.google.protobuf. **Name** : protobuf-java. **Version** : 3.19.4.
      * **Project URL:** [https://developers.google.com/protocol-buffers/](https://developers.google.com/protocol-buffers/)
      * **License:** [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause)
 
-1.  **Group** : com.google.protobuf. **Name** : protobuf-java-util. **Version** : 3.19.3.
+1.  **Group** : com.google.protobuf. **Name** : protobuf-java-util. **Version** : 3.19.4.
      * **Project URL:** [https://developers.google.com/protocol-buffers/](https://developers.google.com/protocol-buffers/)
      * **License:** [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause)
 
-1.  **Group** : com.google.protobuf. **Name** : protobuf-kotlin. **Version** : 3.19.3.
+1.  **Group** : com.google.protobuf. **Name** : protobuf-kotlin. **Version** : 3.19.4.
      * **License:** [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause)
 
 1.  **Group** : com.google.truth. **Name** : truth. **Version** : 1.1.3.
@@ -551,11 +541,6 @@ This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-Lic
      * **Project URL:** [http://commons.apache.org/lang/](http://commons.apache.org/lang/)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : io.github.z4kn4fein. **Name** : semver. **Version** : 1.2.1.**No license information found**
-1.  **Group** : io.github.z4kn4fein. **Name** : semver-jvm. **Version** : 1.2.1.
-     * **Project URL:** [https://z4kn4fein.github.io/kotlin-semver](https://z4kn4fein.github.io/kotlin-semver)
-     * **License:** [MIT License](https://raw.githubusercontent.com/z4kn4fein/kotlin-semver/main/LICENSE)
-
 1.  **Group** : javax.annotation. **Name** : javax.annotation-api. **Version** : 1.3.2.
      * **Project URL:** [http://jcp.org/en/jsr/detail?id=250](http://jcp.org/en/jsr/detail?id=250)
      * **License:** [CDDL + GPLv2 with classpath exception](https://github.com/javaee/javax.annotation/blob/master/LICENSE)
@@ -577,7 +562,7 @@ This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-Lic
      * **License:** [GNU General Public License, version 2 (GPL2), with the classpath exception](http://www.gnu.org/software/classpath/license.html)
      * **License:** [The MIT License](http://opensource.org/licenses/MIT)
 
-1.  **Group** : org.checkerframework. **Name** : checker-qual. **Version** : 3.21.0.
+1.  **Group** : org.checkerframework. **Name** : checker-qual. **Version** : 3.21.3.
      * **Project URL:** [https://checkerframework.org](https://checkerframework.org)
      * **License:** [The MIT License](http://opensource.org/licenses/MIT)
 
@@ -659,7 +644,7 @@ This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-Lic
      * **Project URL:** [http://findbugs.sourceforge.net/](http://findbugs.sourceforge.net/)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : com.google.code.gson. **Name** : gson. **Version** : 2.8.9.
+1.  **Group** : com.google.code.gson. **Name** : gson. **Version** : 2.9.0.
      * **Project URL:** [https://github.com/google/gson/gson](https://github.com/google/gson/gson)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -694,11 +679,11 @@ This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-Lic
      * **Project URL:** [https://github.com/google/guava/](https://github.com/google/guava/)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : com.google.guava. **Name** : guava. **Version** : 31.0.1-jre.
+1.  **Group** : com.google.guava. **Name** : guava. **Version** : 31.1-jre.
      * **Project URL:** [https://github.com/google/guava](https://github.com/google/guava)
      * **License:** [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : com.google.guava. **Name** : guava-testlib. **Version** : 31.0.1-jre.
+1.  **Group** : com.google.guava. **Name** : guava-testlib. **Version** : 31.1-jre.
      * **License:** [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : com.google.guava. **Name** : listenablefuture. **Version** : 9999.0-empty-to-avoid-conflict-with-guava.
@@ -712,18 +697,18 @@ This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-Lic
      * **Project URL:** [https://github.com/google/protobuf-gradle-plugin](https://github.com/google/protobuf-gradle-plugin)
      * **License:** [BSD 3-Clause](http://opensource.org/licenses/BSD-3-Clause)
 
-1.  **Group** : com.google.protobuf. **Name** : protobuf-java. **Version** : 3.19.3.
+1.  **Group** : com.google.protobuf. **Name** : protobuf-java. **Version** : 3.19.4.
      * **Project URL:** [https://developers.google.com/protocol-buffers/](https://developers.google.com/protocol-buffers/)
      * **License:** [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause)
 
-1.  **Group** : com.google.protobuf. **Name** : protobuf-java-util. **Version** : 3.19.3.
+1.  **Group** : com.google.protobuf. **Name** : protobuf-java-util. **Version** : 3.19.4.
      * **Project URL:** [https://developers.google.com/protocol-buffers/](https://developers.google.com/protocol-buffers/)
      * **License:** [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause)
 
-1.  **Group** : com.google.protobuf. **Name** : protobuf-kotlin. **Version** : 3.19.3.
+1.  **Group** : com.google.protobuf. **Name** : protobuf-kotlin. **Version** : 3.19.4.
      * **License:** [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause)
 
-1.  **Group** : com.google.protobuf. **Name** : protoc. **Version** : 3.19.3.
+1.  **Group** : com.google.protobuf. **Name** : protoc. **Version** : 3.19.4.
      * **Project URL:** [https://developers.google.com/protocol-buffers/](https://developers.google.com/protocol-buffers/)
      * **License:** [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -740,7 +725,7 @@ This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-Lic
 1.  **Group** : com.google.truth.extensions. **Name** : truth-proto-extension. **Version** : 1.1.3.
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : com.puppycrawl.tools. **Name** : checkstyle. **Version** : 9.2.
+1.  **Group** : com.puppycrawl.tools. **Name** : checkstyle. **Version** : 10.1.
      * **Project URL:** [https://checkstyle.org/](https://checkstyle.org/)
      * **License:** [LGPL-2.1+](http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt)
 
@@ -764,18 +749,13 @@ This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-Lic
      * **Project URL:** [http://commons.apache.org/lang/](http://commons.apache.org/lang/)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : info.picocli. **Name** : picocli. **Version** : 4.6.2.
+1.  **Group** : info.picocli. **Name** : picocli. **Version** : 4.6.3.
      * **Project URL:** [http://picocli.info](http://picocli.info)
      * **License:** [The Apache Software License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : io.github.java-diff-utils. **Name** : java-diff-utils. **Version** : 4.0.
      * **Project URL:** [https://github.com/java-diff-utils/java-diff-utils](https://github.com/java-diff-utils/java-diff-utils)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-
-1.  **Group** : io.github.z4kn4fein. **Name** : semver. **Version** : 1.2.1.**No license information found**
-1.  **Group** : io.github.z4kn4fein. **Name** : semver-jvm. **Version** : 1.2.1.
-     * **Project URL:** [https://z4kn4fein.github.io/kotlin-semver](https://z4kn4fein.github.io/kotlin-semver)
-     * **License:** [MIT License](https://raw.githubusercontent.com/z4kn4fein/kotlin-semver/main/LICENSE)
 
 1.  **Group** : javax.annotation. **Name** : javax.annotation-api. **Version** : 1.3.2.
      * **Project URL:** [http://jcp.org/en/jsr/detail?id=250](http://jcp.org/en/jsr/detail?id=250)
@@ -798,10 +778,10 @@ This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-Lic
      * **Project URL:** [http://www.saxonica.com/](http://www.saxonica.com/)
      * **License:** [Mozilla Public License Version 2.0](http://www.mozilla.org/MPL/2.0/)
 
-1.  **Group** : net.sourceforge.pmd. **Name** : pmd-core. **Version** : 6.41.0.
+1.  **Group** : net.sourceforge.pmd. **Name** : pmd-core. **Version** : 6.44.0.
      * **License:** [BSD-style](http://pmd.sourceforge.net/license.html)
 
-1.  **Group** : net.sourceforge.pmd. **Name** : pmd-java. **Version** : 6.41.0.
+1.  **Group** : net.sourceforge.pmd. **Name** : pmd-java. **Version** : 6.44.0.
      * **License:** [BSD-style](http://pmd.sourceforge.net/license.html)
 
 1.  **Group** : net.sourceforge.saxon. **Name** : saxon. **Version** : 9.1.0.8.
@@ -829,7 +809,7 @@ This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-Lic
      * **License:** [GNU General Public License, version 2 (GPL2), with the classpath exception](http://www.gnu.org/software/classpath/license.html)
      * **License:** [The MIT License](http://opensource.org/licenses/MIT)
 
-1.  **Group** : org.checkerframework. **Name** : checker-qual. **Version** : 3.21.0.
+1.  **Group** : org.checkerframework. **Name** : checker-qual. **Version** : 3.21.3.
      * **Project URL:** [https://checkerframework.org](https://checkerframework.org)
      * **License:** [The MIT License](http://opensource.org/licenses/MIT)
 
@@ -983,7 +963,7 @@ This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Thu Mar 31 18:03:10 EEST 2022** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -995,7 +975,7 @@ This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-Lic
      * **Project URL:** [http://findbugs.sourceforge.net/](http://findbugs.sourceforge.net/)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : com.google.code.gson. **Name** : gson. **Version** : 2.8.9.
+1.  **Group** : com.google.code.gson. **Name** : gson. **Version** : 2.9.0.
      * **Project URL:** [https://github.com/google/gson/gson](https://github.com/google/gson/gson)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -1014,7 +994,7 @@ This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-Lic
      * **Project URL:** [https://github.com/google/guava/](https://github.com/google/guava/)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : com.google.guava. **Name** : guava. **Version** : 31.0.1-jre.
+1.  **Group** : com.google.guava. **Name** : guava. **Version** : 31.1-jre.
      * **Project URL:** [https://github.com/google/guava](https://github.com/google/guava)
      * **License:** [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -1025,25 +1005,20 @@ This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-Lic
      * **Project URL:** [https://github.com/google/j2objc/](https://github.com/google/j2objc/)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : com.google.protobuf. **Name** : protobuf-java. **Version** : 3.19.3.
+1.  **Group** : com.google.protobuf. **Name** : protobuf-java. **Version** : 3.19.4.
      * **Project URL:** [https://developers.google.com/protocol-buffers/](https://developers.google.com/protocol-buffers/)
      * **License:** [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause)
 
-1.  **Group** : com.google.protobuf. **Name** : protobuf-java-util. **Version** : 3.19.3.
+1.  **Group** : com.google.protobuf. **Name** : protobuf-java-util. **Version** : 3.19.4.
      * **Project URL:** [https://developers.google.com/protocol-buffers/](https://developers.google.com/protocol-buffers/)
      * **License:** [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause)
 
-1.  **Group** : com.google.protobuf. **Name** : protobuf-kotlin. **Version** : 3.19.3.
+1.  **Group** : com.google.protobuf. **Name** : protobuf-kotlin. **Version** : 3.19.4.
      * **License:** [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause)
 
 1.  **Group** : com.squareup. **Name** : javapoet. **Version** : 1.13.0.
      * **Project URL:** [http://github.com/square/javapoet/](http://github.com/square/javapoet/)
      * **License:** [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-
-1.  **Group** : io.github.z4kn4fein. **Name** : semver. **Version** : 1.2.1.**No license information found**
-1.  **Group** : io.github.z4kn4fein. **Name** : semver-jvm. **Version** : 1.2.1.
-     * **Project URL:** [https://z4kn4fein.github.io/kotlin-semver](https://z4kn4fein.github.io/kotlin-semver)
-     * **License:** [MIT License](https://raw.githubusercontent.com/z4kn4fein/kotlin-semver/main/LICENSE)
 
 1.  **Group** : javax.annotation. **Name** : javax.annotation-api. **Version** : 1.3.2.
      * **Project URL:** [http://jcp.org/en/jsr/detail?id=250](http://jcp.org/en/jsr/detail?id=250)
@@ -1054,7 +1029,7 @@ This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-Lic
      * **License:** [GNU General Public License, version 2 (GPL2), with the classpath exception](http://www.gnu.org/software/classpath/license.html)
      * **License:** [The MIT License](http://opensource.org/licenses/MIT)
 
-1.  **Group** : org.checkerframework. **Name** : checker-qual. **Version** : 3.21.0.
+1.  **Group** : org.checkerframework. **Name** : checker-qual. **Version** : 3.21.3.
      * **Project URL:** [https://checkerframework.org](https://checkerframework.org)
      * **License:** [The MIT License](http://opensource.org/licenses/MIT)
 
@@ -1111,7 +1086,7 @@ This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-Lic
      * **Project URL:** [http://findbugs.sourceforge.net/](http://findbugs.sourceforge.net/)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : com.google.code.gson. **Name** : gson. **Version** : 2.8.9.
+1.  **Group** : com.google.code.gson. **Name** : gson. **Version** : 2.9.0.
      * **Project URL:** [https://github.com/google/gson/gson](https://github.com/google/gson/gson)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -1142,11 +1117,11 @@ This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-Lic
      * **Project URL:** [https://github.com/google/guava/](https://github.com/google/guava/)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : com.google.guava. **Name** : guava. **Version** : 31.0.1-jre.
+1.  **Group** : com.google.guava. **Name** : guava. **Version** : 31.1-jre.
      * **Project URL:** [https://github.com/google/guava](https://github.com/google/guava)
      * **License:** [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : com.google.guava. **Name** : guava-testlib. **Version** : 31.0.1-jre.
+1.  **Group** : com.google.guava. **Name** : guava-testlib. **Version** : 31.1-jre.
      * **License:** [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : com.google.guava. **Name** : listenablefuture. **Version** : 9999.0-empty-to-avoid-conflict-with-guava.
@@ -1156,18 +1131,18 @@ This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-Lic
      * **Project URL:** [https://github.com/google/j2objc/](https://github.com/google/j2objc/)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : com.google.protobuf. **Name** : protobuf-java. **Version** : 3.19.3.
+1.  **Group** : com.google.protobuf. **Name** : protobuf-java. **Version** : 3.19.4.
      * **Project URL:** [https://developers.google.com/protocol-buffers/](https://developers.google.com/protocol-buffers/)
      * **License:** [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause)
 
-1.  **Group** : com.google.protobuf. **Name** : protobuf-java-util. **Version** : 3.19.3.
+1.  **Group** : com.google.protobuf. **Name** : protobuf-java-util. **Version** : 3.19.4.
      * **Project URL:** [https://developers.google.com/protocol-buffers/](https://developers.google.com/protocol-buffers/)
      * **License:** [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause)
 
-1.  **Group** : com.google.protobuf. **Name** : protobuf-kotlin. **Version** : 3.19.3.
+1.  **Group** : com.google.protobuf. **Name** : protobuf-kotlin. **Version** : 3.19.4.
      * **License:** [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause)
 
-1.  **Group** : com.google.protobuf. **Name** : protoc. **Version** : 3.19.3.
+1.  **Group** : com.google.protobuf. **Name** : protoc. **Version** : 3.19.4.
      * **Project URL:** [https://developers.google.com/protocol-buffers/](https://developers.google.com/protocol-buffers/)
      * **License:** [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -1184,7 +1159,7 @@ This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-Lic
 1.  **Group** : com.google.truth.extensions. **Name** : truth-proto-extension. **Version** : 1.1.3.
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : com.puppycrawl.tools. **Name** : checkstyle. **Version** : 9.2.
+1.  **Group** : com.puppycrawl.tools. **Name** : checkstyle. **Version** : 10.1.
      * **Project URL:** [https://checkstyle.org/](https://checkstyle.org/)
      * **License:** [LGPL-2.1+](http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt)
 
@@ -1204,18 +1179,13 @@ This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-Lic
      * **Project URL:** [http://commons.apache.org/proper/commons-io/](http://commons.apache.org/proper/commons-io/)
      * **License:** [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : info.picocli. **Name** : picocli. **Version** : 4.6.2.
+1.  **Group** : info.picocli. **Name** : picocli. **Version** : 4.6.3.
      * **Project URL:** [http://picocli.info](http://picocli.info)
      * **License:** [The Apache Software License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : io.github.java-diff-utils. **Name** : java-diff-utils. **Version** : 4.0.
      * **Project URL:** [https://github.com/java-diff-utils/java-diff-utils](https://github.com/java-diff-utils/java-diff-utils)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-
-1.  **Group** : io.github.z4kn4fein. **Name** : semver. **Version** : 1.2.1.**No license information found**
-1.  **Group** : io.github.z4kn4fein. **Name** : semver-jvm. **Version** : 1.2.1.
-     * **Project URL:** [https://z4kn4fein.github.io/kotlin-semver](https://z4kn4fein.github.io/kotlin-semver)
-     * **License:** [MIT License](https://raw.githubusercontent.com/z4kn4fein/kotlin-semver/main/LICENSE)
 
 1.  **Group** : javax.annotation. **Name** : javax.annotation-api. **Version** : 1.3.2.
      * **Project URL:** [http://jcp.org/en/jsr/detail?id=250](http://jcp.org/en/jsr/detail?id=250)
@@ -1234,10 +1204,10 @@ This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-Lic
      * **Project URL:** [http://www.saxonica.com/](http://www.saxonica.com/)
      * **License:** [Mozilla Public License Version 2.0](http://www.mozilla.org/MPL/2.0/)
 
-1.  **Group** : net.sourceforge.pmd. **Name** : pmd-core. **Version** : 6.41.0.
+1.  **Group** : net.sourceforge.pmd. **Name** : pmd-core. **Version** : 6.44.0.
      * **License:** [BSD-style](http://pmd.sourceforge.net/license.html)
 
-1.  **Group** : net.sourceforge.pmd. **Name** : pmd-java. **Version** : 6.41.0.
+1.  **Group** : net.sourceforge.pmd. **Name** : pmd-java. **Version** : 6.44.0.
      * **License:** [BSD-style](http://pmd.sourceforge.net/license.html)
 
 1.  **Group** : net.sourceforge.saxon. **Name** : saxon. **Version** : 9.1.0.8.
@@ -1265,7 +1235,7 @@ This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-Lic
      * **License:** [GNU General Public License, version 2 (GPL2), with the classpath exception](http://www.gnu.org/software/classpath/license.html)
      * **License:** [The MIT License](http://opensource.org/licenses/MIT)
 
-1.  **Group** : org.checkerframework. **Name** : checker-qual. **Version** : 3.21.0.
+1.  **Group** : org.checkerframework. **Name** : checker-qual. **Version** : 3.21.3.
      * **Project URL:** [https://checkerframework.org](https://checkerframework.org)
      * **License:** [The MIT License](http://opensource.org/licenses/MIT)
 
@@ -1419,4 +1389,4 @@ This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Sat Apr 16 16:36:07 EEST 2022** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Thu Mar 31 18:03:11 EEST 2022** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
