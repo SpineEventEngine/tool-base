@@ -26,12 +26,15 @@
 
 package io.spine.tools.code.version
 
+import com.google.common.annotations.VisibleForTesting
+import java.io.InputStream
+import java.util.jar.Attributes
 import java.util.jar.Attributes.Name
 import java.util.jar.Attributes.Name.IMPLEMENTATION_VERSION
 import java.util.jar.Manifest
 
 
-public class KManifest(private val impl: Manifest) {
+public open class KManifest(protected val impl: Manifest) {
 
     public companion object {
 
@@ -50,6 +53,17 @@ public class KManifest(private val impl: Manifest) {
          */
         public fun load(cl: ClassLoader): KManifest {
             val stream = cl.getResourceAsStream(MANIFEST_MF)
+            check(stream != null) {
+                "Unable to load the `$MANIFEST_MF` file from resources."
+            }
+            return load(stream)
+        }
+
+        /**
+         * Loads the manifest from the given input stream.
+         */
+        @VisibleForTesting
+        internal fun load(stream: InputStream): KManifest {
             stream.use {
                 val impl = Manifest(it)
                 return KManifest(impl)
@@ -57,12 +71,14 @@ public class KManifest(private val impl: Manifest) {
         }
     }
 
+    protected val mainAttributes: Attributes = impl.mainAttributes
+
     /**
      * Obtains the [`Implementation-Version`][IMPLEMENTATION_VERSION] attribute of the manifest.
      */
     public val implementationVersion: String
         get() {
-            val loaded = impl.mainAttributes[IMPLEMENTATION_VERSION]
+            val loaded = mainAttributes[IMPLEMENTATION_VERSION]
             require(loaded != null)
             val version = loaded.toString()
             return version
@@ -74,7 +90,8 @@ public class KManifest(private val impl: Manifest) {
      */
     public val dependencies: Dependencies
         get() {
-            val depsValue = impl.mainAttributes[Name(DEPENDS_ON_ATTR)].toString()
+            val dependsOnAttr = mainAttributes[Name(DEPENDS_ON_ATTR)]
+            val depsValue = dependsOnAttr.toString()
             val deps = Dependencies.parse(depsValue)
             return deps
         }

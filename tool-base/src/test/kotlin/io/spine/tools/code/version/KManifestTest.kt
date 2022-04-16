@@ -27,7 +27,14 @@
 package io.spine.tools.code.version
 
 import com.google.common.truth.Truth.assertThat
+import io.spine.testing.TestValues.randomString
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 
 class `'KManifest' should` {
 
@@ -36,5 +43,38 @@ class `'KManifest' should` {
         val manifest = KManifest.load(javaClass.classLoader)
 
         assertThat(manifest.implementationVersion).isEqualTo("2.0.0-SNAPSHOT.92")
+    }
+
+    @Nested
+    inner class `provide configuration via writer object for` {
+
+        private lateinit var manifest: KManifest
+
+        private lateinit var version: String
+
+        @BeforeEach
+        fun initManifest(@TempDir tmp: File) {
+            version = randomString()
+
+            val writer = KManifestWriter()
+            writer.implementationVersion(version)
+
+            val file = tmp.resolve("MANIFEST.MF")
+            val output = FileOutputStream(file)
+            output.use {
+                writer.write(it)
+            }
+
+            val input = FileInputStream(file)
+            input.use {
+                manifest = KManifest.load(input)
+            }
+        }
+
+        @Test
+        fun implementationVersion() {
+            assertThat(manifest.implementationVersion)
+                .isEqualTo(version)
+        }
     }
 }
