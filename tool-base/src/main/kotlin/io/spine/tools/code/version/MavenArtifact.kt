@@ -31,6 +31,39 @@ package io.spine.tools.code.version
  */
 public data class MavenArtifact(val coordinates: String) : Dependency {
 
+    /**
+     * The group to which the artifact belongs.
+     */
+    public val group: String
+
+    /**
+     * The ID of the artifact within the group.
+     */
+    public val name: String
+
+    /**
+     * The version of the artifact.
+     */
+    public val version: String
+
+    init {
+        val parts = coordinates.split(":")
+        require(parts.size == 3) {
+            "Maven coordinates must have 3 parts. Encountered: `$coordinates`."
+        }
+
+        fun requireNonEmpty(value: String, propName: String): String {
+            require(value.isNotEmpty()) {
+                "The `${propName}` part of Maven coordinates must not be empty."
+            }
+            return value
+        }
+
+        group = requireNonEmpty(parts[0], "group")
+        name = requireNonEmpty(parts[1], "name")
+        version = requireNonEmpty(parts[2], "version")
+    }
+
     public companion object {
 
         /**
@@ -54,7 +87,7 @@ public data class MavenArtifact(val coordinates: String) : Dependency {
 
     /**
      * Obtains the string representation in the format:
-     * `maven:<groupId>:<artifact>:<version>`.
+     * `maven:<group>:<artifact>:<version>`.
      */
     override fun toString(): String = "$PREFIX$coordinates"
 }

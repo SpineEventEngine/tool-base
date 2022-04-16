@@ -35,8 +35,9 @@ class `'MavenArtifact' should` {
 
     @Test
     fun `parse string form`() {
-        val artifact = MavenArtifact.parse("maven:io.spine:spine-foo-bar:2.0.0-SNAPSHOT.91")
-        assertThat(artifact.coordinates).isEqualTo("io.spine:spine-foo-bar:2.0.0-SNAPSHOT.91")
+        val coordinates = "io.spine:spine-foo-bar:2.0.0-SNAPSHOT.91"
+        val artifact = MavenArtifact.parse("maven:$coordinates")
+        assertThat(artifact.coordinates).isEqualTo(coordinates)
     }
 
     @Test
@@ -46,5 +47,40 @@ class `'MavenArtifact' should` {
         
         val parsed = MavenArtifact.parse(PREFIX + coordinates)
         assertThat(parsed.coordinates).isEqualTo(coordinates)
+    }
+
+    @Test
+    fun `require 3 parts in Maven coordinates`() {
+        assertThrows<IllegalArgumentException> {
+            MavenArtifact("fiz")
+        }
+        assertThrows<IllegalArgumentException> {
+            MavenArtifact("fiz:baz")
+        }
+
+        assertThrows<IllegalArgumentException> {
+            MavenArtifact(":baz:bar")
+        }
+
+        assertThrows<IllegalArgumentException> {
+            MavenArtifact("fiz::bar")
+        }
+
+        assertThrows<IllegalArgumentException> {
+            MavenArtifact("fiz:baz:")
+        }
+    }
+
+    @Test
+    fun `expose properties of coordinates`() {
+        val group = "io.spine"
+        val name = "tool-base"
+        val version = "2.0.0"
+
+        val ma = MavenArtifact("$group:$name:$version")
+
+        assertThat(ma.group).isEqualTo(group)
+        assertThat(ma.name).isEqualTo(name)
+        assertThat(ma.version).isEqualTo(version)
     }
 }
