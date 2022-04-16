@@ -24,10 +24,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.internal.dependency
+package io.spine.internal.gradle.publish
 
-// https://www.mojohaus.org/animal-sniffer/animal-sniffer-maven-plugin/
-object AnimalSniffer {
-    private const val version = "1.21"
-    const val lib = "org.codehaus.mojo:animal-sniffer-annotations:${version}"
+/**
+ * A DSL element of [SpinePublishing] extension which configures publishing of [dokkaJar] artifact.
+ *
+ * This artifact contains Dokka-generated documentation. By default, it is not published.
+ *
+ * Take a look at the [SpinePublishing.dokkaJar] for a usage example.
+ *
+ * @see [registerArtifacts]
+ */
+class DokkaJar {
+    /**
+     * Enables publishing `JAR`s with Dokka-generated documentation for all published modules.
+     */
+    var enabled = false
 }

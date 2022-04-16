@@ -26,8 +26,9 @@
 
 package io.spine.internal.dependency
 
-// https://www.mojohaus.org/animal-sniffer/animal-sniffer-maven-plugin/
-object AnimalSniffer {
-    private const val version = "1.21"
-    const val lib = "org.codehaus.mojo:animal-sniffer-annotations:${version}"
+// https://github.com/z4kn4fein/kotlin-semver
+@Suppress("unused")
+object KotlinSemver {
+    private const val version = "1.2.1"
+    const val lib     = "io.github.z4kn4fein:semver:$version"
 }

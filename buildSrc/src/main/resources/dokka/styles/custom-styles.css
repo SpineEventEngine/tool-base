@@ -24,10 +24,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.internal.dependency
+:root,
+:root.theme-dark {
+    --color-dark: #007bff;
+}
 
-// https://www.mojohaus.org/animal-sniffer/animal-sniffer-maven-plugin/
-object AnimalSniffer {
-    private const val version = "1.21"
-    const val lib = "org.codehaus.mojo:animal-sniffer-annotations:${version}"
+.library-name a::before {
+    background-image: url('https://spine.io/img/spine-sign-white.svg')
+}
+
+.cover a,
+.main-subrow.keyValue a {
+    font-family: monospace;
+}
+
+:root.theme-dark dt {
+    color: #fff;
 }
