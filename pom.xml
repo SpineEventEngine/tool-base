@@ -155,6 +155,11 @@ all modules and does not describe the project structure per-subproject.
   <dependency>
     <groupId>net.sourceforge.pmd</groupId>
     <artifactId>pmd-java</artifactId>
+    <version>6.39.0</version>
+  </dependency>
+  <dependency>
+    <groupId>net.sourceforge.pmd</groupId>
+    <artifactId>pmd-java</artifactId>
     <version>6.44.0</version>
   </dependency>
   <dependency>
