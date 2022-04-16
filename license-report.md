@@ -1,6 +1,6 @@
 
 
-# Dependencies of `io.spine.tools:spine-plugin-base:2.0.0-SNAPSHOT.91`
+# Dependencies of `io.spine.tools:spine-plugin-base:2.0.0-SNAPSHOT.92`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -63,6 +63,11 @@
 1.  **Group** : commons-lang. **Name** : commons-lang. **Version** : 2.6.
      * **Project URL:** [http://commons.apache.org/lang/](http://commons.apache.org/lang/)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : io.github.z4kn4fein. **Name** : semver. **Version** : 1.2.1.**No license information found**
+1.  **Group** : io.github.z4kn4fein. **Name** : semver-jvm. **Version** : 1.2.1.
+     * **Project URL:** [https://z4kn4fein.github.io/kotlin-semver](https://z4kn4fein.github.io/kotlin-semver)
+     * **License:** [MIT License](https://raw.githubusercontent.com/z4kn4fein/kotlin-semver/main/LICENSE)
 
 1.  **Group** : javax.annotation. **Name** : javax.annotation-api. **Version** : 1.3.2.
      * **Project URL:** [http://jcp.org/en/jsr/detail?id=250](http://jcp.org/en/jsr/detail?id=250)
@@ -246,6 +251,11 @@
 1.  **Group** : io.github.java-diff-utils. **Name** : java-diff-utils. **Version** : 4.0.
      * **Project URL:** [https://github.com/java-diff-utils/java-diff-utils](https://github.com/java-diff-utils/java-diff-utils)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : io.github.z4kn4fein. **Name** : semver. **Version** : 1.2.1.**No license information found**
+1.  **Group** : io.github.z4kn4fein. **Name** : semver-jvm. **Version** : 1.2.1.
+     * **Project URL:** [https://z4kn4fein.github.io/kotlin-semver](https://z4kn4fein.github.io/kotlin-semver)
+     * **License:** [MIT License](https://raw.githubusercontent.com/z4kn4fein/kotlin-semver/main/LICENSE)
 
 1.  **Group** : javax.annotation. **Name** : javax.annotation-api. **Version** : 1.3.2.
      * **Project URL:** [http://jcp.org/en/jsr/detail?id=250](http://jcp.org/en/jsr/detail?id=250)
@@ -453,12 +463,12 @@
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu Mar 31 18:03:10 EEST 2022** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Sat Apr 16 17:00:25 EEST 2022** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:spine-plugin-testlib:2.0.0-SNAPSHOT.91`
+# Dependencies of `io.spine.tools:spine-plugin-testlib:2.0.0-SNAPSHOT.92`
 
 ## Runtime
 1.  **Group** : com.google.auto.value. **Name** : auto-value-annotations. **Version** : 1.9.
@@ -540,6 +550,11 @@ This report was generated on **Thu Mar 31 18:03:10 EEST 2022** using [Gradle-Lic
 1.  **Group** : commons-lang. **Name** : commons-lang. **Version** : 2.6.
      * **Project URL:** [http://commons.apache.org/lang/](http://commons.apache.org/lang/)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : io.github.z4kn4fein. **Name** : semver. **Version** : 1.2.1.**No license information found**
+1.  **Group** : io.github.z4kn4fein. **Name** : semver-jvm. **Version** : 1.2.1.
+     * **Project URL:** [https://z4kn4fein.github.io/kotlin-semver](https://z4kn4fein.github.io/kotlin-semver)
+     * **License:** [MIT License](https://raw.githubusercontent.com/z4kn4fein/kotlin-semver/main/LICENSE)
 
 1.  **Group** : javax.annotation. **Name** : javax.annotation-api. **Version** : 1.3.2.
      * **Project URL:** [http://jcp.org/en/jsr/detail?id=250](http://jcp.org/en/jsr/detail?id=250)
@@ -757,6 +772,11 @@ This report was generated on **Thu Mar 31 18:03:10 EEST 2022** using [Gradle-Lic
      * **Project URL:** [https://github.com/java-diff-utils/java-diff-utils](https://github.com/java-diff-utils/java-diff-utils)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : io.github.z4kn4fein. **Name** : semver. **Version** : 1.2.1.**No license information found**
+1.  **Group** : io.github.z4kn4fein. **Name** : semver-jvm. **Version** : 1.2.1.
+     * **Project URL:** [https://z4kn4fein.github.io/kotlin-semver](https://z4kn4fein.github.io/kotlin-semver)
+     * **License:** [MIT License](https://raw.githubusercontent.com/z4kn4fein/kotlin-semver/main/LICENSE)
+
 1.  **Group** : javax.annotation. **Name** : javax.annotation-api. **Version** : 1.3.2.
      * **Project URL:** [http://jcp.org/en/jsr/detail?id=250](http://jcp.org/en/jsr/detail?id=250)
      * **License:** [CDDL + GPLv2 with classpath exception](https://github.com/javaee/javax.annotation/blob/master/LICENSE)
@@ -963,12 +983,12 @@ This report was generated on **Thu Mar 31 18:03:10 EEST 2022** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu Mar 31 18:03:10 EEST 2022** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Sat Apr 16 17:00:25 EEST 2022** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:spine-tool-base:2.0.0-SNAPSHOT.91`
+# Dependencies of `io.spine.tools:spine-tool-base:2.0.0-SNAPSHOT.92`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -1019,6 +1039,11 @@ This report was generated on **Thu Mar 31 18:03:10 EEST 2022** using [Gradle-Lic
 1.  **Group** : com.squareup. **Name** : javapoet. **Version** : 1.13.0.
      * **Project URL:** [http://github.com/square/javapoet/](http://github.com/square/javapoet/)
      * **License:** [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : io.github.z4kn4fein. **Name** : semver. **Version** : 1.2.1.**No license information found**
+1.  **Group** : io.github.z4kn4fein. **Name** : semver-jvm. **Version** : 1.2.1.
+     * **Project URL:** [https://z4kn4fein.github.io/kotlin-semver](https://z4kn4fein.github.io/kotlin-semver)
+     * **License:** [MIT License](https://raw.githubusercontent.com/z4kn4fein/kotlin-semver/main/LICENSE)
 
 1.  **Group** : javax.annotation. **Name** : javax.annotation-api. **Version** : 1.3.2.
      * **Project URL:** [http://jcp.org/en/jsr/detail?id=250](http://jcp.org/en/jsr/detail?id=250)
@@ -1186,6 +1211,11 @@ This report was generated on **Thu Mar 31 18:03:10 EEST 2022** using [Gradle-Lic
 1.  **Group** : io.github.java-diff-utils. **Name** : java-diff-utils. **Version** : 4.0.
      * **Project URL:** [https://github.com/java-diff-utils/java-diff-utils](https://github.com/java-diff-utils/java-diff-utils)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : io.github.z4kn4fein. **Name** : semver. **Version** : 1.2.1.**No license information found**
+1.  **Group** : io.github.z4kn4fein. **Name** : semver-jvm. **Version** : 1.2.1.
+     * **Project URL:** [https://z4kn4fein.github.io/kotlin-semver](https://z4kn4fein.github.io/kotlin-semver)
+     * **License:** [MIT License](https://raw.githubusercontent.com/z4kn4fein/kotlin-semver/main/LICENSE)
 
 1.  **Group** : javax.annotation. **Name** : javax.annotation-api. **Version** : 1.3.2.
      * **Project URL:** [http://jcp.org/en/jsr/detail?id=250](http://jcp.org/en/jsr/detail?id=250)
@@ -1389,4 +1419,4 @@ This report was generated on **Thu Mar 31 18:03:10 EEST 2022** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu Mar 31 18:03:11 EEST 2022** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Sat Apr 16 17:00:26 EEST 2022** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
