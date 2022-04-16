@@ -35,6 +35,6 @@ class `'KManifest' should` {
     fun `load version from resources`() {
         val manifest = KManifest.load(javaClass.classLoader)
 
-        assertThat(manifest.implementationVersion).isEqualTo("2.0.0-SNAPSHOT.91")
+        assertThat(manifest.implementationVersion).isEqualTo("2.0.0-SNAPSHOT.92")
     }
 }
