@@ -54,7 +54,8 @@ public data class MavenArtifact(val coordinates: String) : Dependency {
 
         fun requireNonEmpty(value: String, propName: String): String {
             require(value.isNotEmpty()) {
-                "The `${propName}` part of Maven coordinates must not be empty."
+                "The `${propName}` part of Maven coordinates must not be empty." +
+                        " Encountered: `$coordinates`."
             }
             return value
         }
