@@ -34,12 +34,19 @@ import java.util.jar.Manifest
 /**
  * Allows to configure and write a manifest file.
  */
-public class KManifestWriter: KManifest(Manifest()) {
+public class KManifestWriter(impl: Manifest) : KManifest(impl) {
+
+    /**
+     * Creates a new instance of the writer with an empty manifest.
+     */
+    public constructor() : this(Manifest())
 
     init {
         // The `Manifest-Version` version attribute must be initialized.
         // Otherwise, `java.util.jar.Attributes.writeMain()` skips writing its content.
-        mainAttributes[MANIFEST_VERSION] = "1.0"
+        if (mainAttributes[MANIFEST_VERSION] == null) {
+            mainAttributes[MANIFEST_VERSION] = "1.0"
+        }
     }
 
     /**

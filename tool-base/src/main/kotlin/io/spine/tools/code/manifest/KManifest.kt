@@ -46,7 +46,8 @@ public open class KManifest(protected val impl: Manifest) {
         /**
          * The name of the custom manifest attribute containing a list of dependencies.
          */
-        public const val DEPENDS_ON_ATTR: String = "Depends-On"
+        @JvmField
+        public val DEPENDS_ON_ATTR: Name = Name("Depends-On")
 
         /**
          * Loads the manifest from the program resources.
@@ -90,7 +91,7 @@ public open class KManifest(protected val impl: Manifest) {
      */
     public val dependencies: Dependencies
         get() {
-            val dependsOnAttr = mainAttributes[Name(DEPENDS_ON_ATTR)]
+            val dependsOnAttr = mainAttributes[DEPENDS_ON_ATTR]
             val depsValue = dependsOnAttr.toString()
             val deps = Dependencies.parse(depsValue)
             return deps
