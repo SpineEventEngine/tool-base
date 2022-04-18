@@ -24,7 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.code.version
+package io.spine.tools.code.manifest
 
 /**
  * A dependency on a software artifact.

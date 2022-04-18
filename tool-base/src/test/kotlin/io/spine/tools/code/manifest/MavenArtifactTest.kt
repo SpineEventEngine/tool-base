@@ -24,11 +24,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.code.version
+package io.spine.tools.code.manifest
 
 import com.google.common.truth.Truth.assertThat
 import io.spine.testing.TestValues.randomString
-import io.spine.tools.code.version.MavenArtifact.Companion.PREFIX
+import io.spine.tools.code.manifest.MavenArtifact.Companion.PREFIX
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 

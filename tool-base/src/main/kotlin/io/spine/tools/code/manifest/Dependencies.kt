@@ -24,19 +24,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.code.version
+package io.spine.tools.code.manifest
 
 import com.google.common.annotations.VisibleForTesting
 
+/**
+ * Dependencies of a software component.
+ */
 public class Dependencies(public val list: List<Dependency>){
 
     public companion object {
 
+        /**
+         * Parses comma-separated list of dependencies.
+         */
         @VisibleForTesting
-        internal fun parse(deps: String): Dependencies {
-            val list: List<Dependency> = listOf()
-            //TODO:2022-02-23:alexander.yevsyukov: Implement
+        internal fun parse(value: String): Dependencies {
+            val list: MutableList<Dependency> = mutableListOf()
+            val deps = value.split(",")
+            deps.forEach {
+                val dep = parseDependency(it)
+                list.add(dep)
+            }
             return Dependencies(list)
         }
     }
+}
+
+/**
+ * Parses a dependency from the given string representation.
+ *
+ * Only [MavenArtifact] is currently supported.
+ *
+ * @throws IllegalStateException if the given string does not start with [MavenArtifact.PREFIX].
+ */
+private fun parseDependency(value: String): Dependency {
+    if (value.startsWith(MavenArtifact.PREFIX)) {
+        val result = MavenArtifact.parse(value)
+        return result
+    }
+    throw IllegalStateException("Unsupported dependency format: `$value`.")
 }
