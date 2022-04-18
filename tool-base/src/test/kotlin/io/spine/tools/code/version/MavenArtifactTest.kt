@@ -27,6 +27,7 @@
 package io.spine.tools.code.version
 
 import com.google.common.truth.Truth.assertThat
+import io.spine.testing.TestValues.randomString
 import io.spine.tools.code.version.MavenArtifact.Companion.PREFIX
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -82,5 +83,17 @@ class `'MavenArtifact' should` {
         assertThat(ma.group).isEqualTo(group)
         assertThat(ma.name).isEqualTo(name)
         assertThat(ma.version).isEqualTo(version)
+    }
+
+    @Test
+    fun `have string form with protocol prefix`() {
+        val group = randomString()
+        val name = randomString()
+        val version = randomString()
+
+        val coordinates = "$group:$name:$version"
+        val ma = MavenArtifact(coordinates)
+
+        assertThat(ma.toString()).isEqualTo("$PREFIX$coordinates")
     }
 }
