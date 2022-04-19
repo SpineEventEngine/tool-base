@@ -47,7 +47,7 @@ public data class MavenArtifact(val coordinates: String) : Dependency {
     public val version: String
 
     init {
-        val parts = coordinates.split(":")
+        val parts = coordinates.split(SEPARATOR)
         require(parts.size == 3) {
             "Maven coordinates must have 3 parts. Encountered: `$coordinates`."
         }
@@ -72,6 +72,11 @@ public data class MavenArtifact(val coordinates: String) : Dependency {
          * a Maven artifact dependency.
          */
         public const val PREFIX: String = "maven:"
+
+        /**
+         * The separator between [group], [name], and [version] parts of Maven coordinates.
+         */
+        public const val SEPARATOR: String = ":"
 
         /**
          * Obtains the instance from the given string representation.
