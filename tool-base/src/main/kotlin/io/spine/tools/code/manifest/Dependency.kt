@@ -29,4 +29,11 @@ package io.spine.tools.code.manifest
 /**
  * A dependency of a software component on another software component.
  */
-public interface Dependency
+public interface Dependency {
+
+    /**
+     * A string form of a dependency must be prefixed with name of the format,
+     * such as `"maven:"` or `"ivy:"`.
+     */
+    public override fun toString(): String
+}
