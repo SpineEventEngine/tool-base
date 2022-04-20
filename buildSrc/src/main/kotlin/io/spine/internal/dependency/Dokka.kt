@@ -34,7 +34,7 @@ object Dokka {
     /**
      * When changing the version, also change the version used in the `buildSrc/build.gradle.kts`.
      */
-    const val version = "1.6.10"
+    const val version = "1.6.20"
 
     object GradlePlugin {
         const val id = "org.jetbrains.dokka"
@@ -70,7 +70,7 @@ object Dokka {
     object SpineExtensions {
         private const val group = "io.spine.tools"
 
-        const val version = "2.0.0-SNAPSHOT.2"
+        const val version = "2.0.0-SNAPSHOT.3"
         const val lib = "${group}:spine-dokka-extensions:${version}"
     }
 }
