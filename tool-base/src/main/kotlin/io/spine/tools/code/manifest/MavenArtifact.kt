@@ -32,6 +32,12 @@ package io.spine.tools.code.manifest
 public data class MavenArtifact(val coordinates: String) : Dependency {
 
     /**
+     * Creates an artifact with the given parts of the Maven coordinates.
+     */
+    public constructor(group: String, name: String, version: String) :
+            this("$group$SEPARATOR$name$SEPARATOR$version")
+
+    /**
      * The group to which the artifact belongs.
      */
     public val group: String
