@@ -96,10 +96,11 @@ private fun String.escapeQuotes() = replace(QUOTE, QUOTE_ESCAPED)
 private fun String.unescapeQuotes() = replace(QUOTE_ESCAPED, QUOTE)
 
 /**
- * The regular expression for a non-empty list of dependencies.
- * An empty value is handled programmatically before this regexp comes into play.
+ * The regular expression for dependency enclosed in double quotes which may also have such
+ * quotes escape. Does not accept empty strings, which are handled programmatically before this
+ * regexp comes into play.
  *
- * For the explanation of this regexp, please visit this
+ * For a detailed explanation of this regexp, please visit this
  * [blog post](https://www.metaltoad.com/blog/regex-quoted-string-escapable-quotes).
  * The only difference with the one described in the post is that this regexp handles only
  * double quotes.
@@ -107,17 +108,17 @@ private fun String.unescapeQuotes() = replace(QUOTE_ESCAPED, QUOTE)
  * @see Dependencies.toString
  * @see Dependencies.parse
  */
-private val depsRegex = "((?<!\\\\)\")((?:.(?!(?<!\\\\)\\1))*.?)\\1".toRegex()
+private val quotedRegex = "((?<!\\\\)\")((?:.(?!(?<!\\\\)\\1))*.?)\\1".toRegex()
 
 private fun splitDeps(value: String): List<String> {
     require(value.isNotEmpty())
-    val parts = mutableListOf<String>()
-    val matches = depsRegex.findAll(value)
+    val deps = mutableListOf<String>()
+    val matches = quotedRegex.findAll(value)
     matches.forEach { matchResult ->
-        val part = matchResult.groupValues[2]
-        parts.add(part.unescapeQuotes())
+        val dep = matchResult.groupValues[2]
+        deps.add(dep.unescapeQuotes())
     }
-    return parts
+    return deps
 }
 
 /**
@@ -128,12 +129,10 @@ private fun splitDeps(value: String): List<String> {
  */
 private fun parseDependency(value: String): Dependency {
     if (value.startsWith(MavenArtifact.PREFIX)) {
-        val result = MavenArtifact.parse(value)
-        return result
+        return MavenArtifact.parse(value)
     }
     if (value.startsWith(IvyDependency.PREFIX)) {
-        val result = IvyDependency.parse(value)
-        return result
+        return IvyDependency.parse(value)
     }
     throw IllegalStateException("Unsupported dependency format: `$value`.")
 }
