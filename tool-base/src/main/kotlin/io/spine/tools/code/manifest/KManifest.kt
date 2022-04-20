@@ -44,7 +44,10 @@ public open class KManifest(protected val impl: Manifest) {
         private const val MANIFEST_MF = "META-INF/MANIFEST.MF"
 
         /**
-         * The name of the custom manifest attribute containing a list of dependencies.
+         * The name of the custom manifest attribute containing a list of dependencies
+         * of a software component.
+         *
+         * @see Dependencies.parse
          */
         @JvmField
         public val DEPENDS_ON_ATTR: Name = Name("Depends-On")
