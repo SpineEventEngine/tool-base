@@ -24,18 +24,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.internal.dependency
+package io.spine.internal.gradle.dokka
 
-// https://github.com/JetBrains/kotlin
-// https://github.com/Kotlin
-object Kotlin {
-    /**
-    * When changing the version, also change the version used in the `buildSrc/build.gradle.kts`.
-    */
-    @Suppress("MemberVisibilityCanBePrivate") // used directly from outside
-    const val version      = "1.6.20"
-    const val reflect      = "org.jetbrains.kotlin:kotlin-reflect:${version}"
-    const val stdLib       = "org.jetbrains.kotlin:kotlin-stdlib:${version}"
-    const val stdLibCommon = "org.jetbrains.kotlin:kotlin-stdlib-common:${version}"
-    const val stdLibJdk8   = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${version}"
+import java.io.File
+import java.time.LocalDate
+import org.gradle.api.file.FileCollection
+import org.jetbrains.dokka.base.DokkaBase
+import org.jetbrains.dokka.base.DokkaBaseConfiguration
+import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.dokka.gradle.GradleDokkaSourceSetBuilder
+
+/**
+ * Returns only Java source roots out of all present in the source set.
+ *
+ * It is a helper method for generating documentation by Dokka only for Java code. It is helpful
+ * when both Java and Kotlin source files are present in a source set. Dokka can properly generate
+ * documentation for either Kotlin or Java depending on the configuration, but not both.
+ */
+internal fun GradleDokkaSourceSetBuilder.onlyJavaSources(): FileCollection {
+    return sourceRoots.filter(File::isJavaSourceDirectory)
+}
+
+private fun File.isJavaSourceDirectory(): Boolean {
+    return isDirectory() && name == "java"
 }
