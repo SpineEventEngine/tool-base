@@ -108,7 +108,12 @@ private fun String.unescapeQuotes() = replace(QUOTE_ESCAPED, QUOTE)
  * @see Dependencies.toString
  * @see Dependencies.parse
  */
-private val quotedRegex = "((?<!\\\\)\")((?:.(?!(?<!\\\\)\\1))*.?)\\1".toRegex()
+private val quotedRegex = ("((?<!" +
+        "\\\\)\")" +
+        "((?:.(?!(" +
+        "?<!\\\\)" +
+        "\\1))*.?)\\1")
+    .toRegex()
 
 private fun splitDeps(value: String): List<String> {
     require(value.isNotEmpty())
