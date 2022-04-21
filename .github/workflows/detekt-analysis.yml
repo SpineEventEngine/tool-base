@@ -24,7 +24,7 @@ on:
   pull_request:
     branches: [ master ]
   schedule:
-    - cron: '17 1 * * 4'
+    - cron: '19 17 * * 4'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -53,7 +53,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh api graphql --field tagName=$DETEKT_RELEASE_TAG --raw-field query='
+          DETEKT_DOWNLOAD_URL=$( gh api graphql --field tagName=$DETEKT_RELEASE_TAG --raw-field query='
             query getReleaseAssetDownloadUrl($tagName: String!) {
               repository(name: "detekt", owner: "detekt") {
                 release(tagName: $tagName) {
@@ -62,16 +62,11 @@ jobs:
                       downloadUrl
                     }
                   }
-                  tagCommit {
-                    oid
-                  }
                 }
               }
             }
-          ' 1> gh_response.json
-          
-          DETEKT_DOWNLOAD_URL=$(jq --raw-output '.data.repository.release.releaseAssets.nodes[0].downloadUrl' gh_response.json)
-          echo "Download URL: $DETEKT_DOWNLOAD_URL" 
+          ' | \
+          jq --raw-output '.data.repository.release.releaseAssets.nodes[0].downloadUrl' )
           echo "::set-output name=download_url::$DETEKT_DOWNLOAD_URL"
 
       # Sets up the detekt cli
