@@ -30,10 +30,15 @@ import com.google.common.annotations.VisibleForTesting
 import java.io.InputStream
 import java.util.jar.Attributes
 import java.util.jar.Attributes.Name
+import java.util.jar.Attributes.Name.IMPLEMENTATION_TITLE
+import java.util.jar.Attributes.Name.IMPLEMENTATION_VENDOR
 import java.util.jar.Attributes.Name.IMPLEMENTATION_VERSION
 import java.util.jar.Manifest
 
-
+/**
+ * Provides convenience access to standard and custom attributes of a JAR [Manifest]
+ * used by the tools of the framework.
+ */
 public open class KManifest(protected val impl: Manifest) {
 
     public companion object {
@@ -75,18 +80,25 @@ public open class KManifest(protected val impl: Manifest) {
         }
     }
 
+    /**
+     * Provides access to [main attributes][Manifest.getMainAttributes] of the manifest.
+     */
     protected val mainAttributes: Attributes = impl.mainAttributes
+
+    /**
+     * Obtains the [`Implementation-Title`][IMPLEMENTATION_TITLE] attribute of the manifest.
+     */
+    public val implementationTitle: String? = mainAttributes[IMPLEMENTATION_TITLE]?.toString()
 
     /**
      * Obtains the [`Implementation-Version`][IMPLEMENTATION_VERSION] attribute of the manifest.
      */
-    public val implementationVersion: String
-        get() {
-            val loaded = mainAttributes[IMPLEMENTATION_VERSION]
-            require(loaded != null)
-            val version = loaded.toString()
-            return version
-        }
+    public val implementationVersion: String? = mainAttributes[IMPLEMENTATION_VERSION]?.toString()
+
+    /**
+     * Obtains the [`Implementation-Vendor`][IMPLEMENTATION_VENDOR] attribute of the manifest.
+     */
+    public val implementationVendor: String? = mainAttributes[IMPLEMENTATION_VENDOR]?.toString()
 
     /**
      * Obtains the dependencies declared in the ['Depends-On'][DEPENDS_ON_ATTR] attribute
