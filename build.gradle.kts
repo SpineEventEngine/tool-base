@@ -61,7 +61,6 @@ plugins {
     `java-library`
     jacoco
     idea
-    pmd
     `project-report`
     io.spine.internal.dependency.Protobuf.GradlePlugin.apply {
         id(id)
