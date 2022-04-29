@@ -29,6 +29,7 @@ package io.spine.tools.gradle;
 import com.google.common.collect.ImmutableMap;
 import io.spine.annotation.Internal;
 import io.spine.io.Resource;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.IOException;
 import java.util.Map;
@@ -89,10 +90,7 @@ public final class DependencyVersions {
     public Optional<String> versionOf(Dependency dependency) {
         checkNotNull(dependency);
         var key = dependency.fileSafeId();
-        if (versions.containsKey(key)) {
-            return Optional.of(versions.get(key));
-        } else {
-            return Optional.empty();
-        }
+        @Nullable String value = versions.get(key);
+        return Optional.ofNullable(value);
     }
 }
