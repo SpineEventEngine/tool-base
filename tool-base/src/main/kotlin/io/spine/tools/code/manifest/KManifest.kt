@@ -27,6 +27,7 @@
 package io.spine.tools.code.manifest
 
 import com.google.common.annotations.VisibleForTesting
+import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.util.jar.Attributes
 import java.util.jar.Attributes.Name
@@ -34,6 +35,7 @@ import java.util.jar.Attributes.Name.IMPLEMENTATION_TITLE
 import java.util.jar.Attributes.Name.IMPLEMENTATION_VENDOR
 import java.util.jar.Attributes.Name.IMPLEMENTATION_VERSION
 import java.util.jar.Manifest
+import kotlin.text.Charsets.UTF_8
 
 /**
  * Provides convenience access to standard and custom attributes of a JAR [Manifest]
@@ -46,7 +48,7 @@ public open class KManifest(protected val impl: Manifest) {
         /**
          * The path to the manifest file in program resources.
          */
-        private const val MANIFEST_MF = "META-INF/MANIFEST.MF"
+        public const val RESOURCE_FILE: String = "META-INF/MANIFEST.MF"
 
         /**
          * The name of the custom manifest attribute containing a list of dependencies
@@ -61,9 +63,9 @@ public open class KManifest(protected val impl: Manifest) {
          * Loads the manifest from the program resources.
          */
         public fun load(cl: ClassLoader): KManifest {
-            val stream = cl.getResourceAsStream(MANIFEST_MF)
+            val stream = cl.getResourceAsStream(RESOURCE_FILE)
             check(stream != null) {
-                "Unable to load the `$MANIFEST_MF` file from resources."
+                "Unable to load the `$RESOURCE_FILE` file from resources."
             }
             return load(stream)
         }
@@ -111,4 +113,17 @@ public open class KManifest(protected val impl: Manifest) {
             val deps = Dependencies.parse(depsValue)
             return deps
         }
+
+    /**
+     * Prints the content of the underlying [Manifest] instance in
+     * the form it is stored in a resource file.
+     */
+    override fun toString(): String {
+        val stream = ByteArrayOutputStream()
+        stream.use {
+            impl.write(it)
+        }
+        val manifest = String(stream.toByteArray(), UTF_8)
+        return manifest
+    }
 }
