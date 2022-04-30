@@ -42,12 +42,6 @@ all modules and does not describe the project structure per-subproject.
     <scope>compile</scope>
   </dependency>
   <dependency>
-    <groupId>io.github.z4kn4fein</groupId>
-    <artifactId>semver</artifactId>
-    <version>1.2.1</version>
-    <scope>compile</scope>
-  </dependency>
-  <dependency>
     <groupId>io.spine</groupId>
     <artifactId>spine-base</artifactId>
     <version>2.0.0-SNAPSHOT.91</version>
