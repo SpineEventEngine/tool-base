@@ -39,8 +39,8 @@ import org.junit.jupiter.api.io.TempDir
 class `'KManifest' should` {
 
     @Test
-    fun `load version from resources`() {
-        val manifest = KManifest.load(javaClass.classLoader)
+    fun `load itself from resources`() {
+        val manifest = KManifest.load(javaClass)
 
         assertThat(manifest.implementationVersion).isEqualTo("2.0.0-SNAPSHOT.92")
     }
