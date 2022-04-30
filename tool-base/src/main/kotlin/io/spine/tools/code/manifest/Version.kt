@@ -38,8 +38,8 @@ public data class Version(val value: String) {
         /**
          * Obtains the version from a JAR manifest resource loaded using the given classloader.
          */
-        public fun fromManifest(cl: ClassLoader): Version {
-            val manifest = KManifest.load(cl)
+        public fun fromManifestOf(cls: Class<*>): Version {
+            val manifest = KManifest.load(cls)
             val implVersion = manifest.implementationVersion
             check(implVersion != null) {
                 "Unable to obtain the version:" +
