@@ -110,6 +110,7 @@ subprojects {
         plugin("net.ltgt.errorprone")
         plugin("pmd-settings")
         plugin(Protobuf.GradlePlugin.id)
+        plugin("write-manifest")
     }
 
     dependencies {
