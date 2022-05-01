@@ -34,21 +34,37 @@ import java.util.jar.Manifest
 import java.util.jar.Attributes.Name.IMPLEMENTATION_VERSION
 import java.util.jar.Attributes.Name.IMPLEMENTATION_TITLE
 import java.util.jar.Attributes.Name.IMPLEMENTATION_VENDOR
+import java.util.jar.Attributes.Name.MANIFEST_VERSION
 
 plugins {
     java
 }
 
+/**
+ * Obtains a string value of a [Sysmtem] property with the given key.
+ */
 fun prop(key: String): String = System.getProperties()[key].toString()
 
+/**
+ * Obtains the current time in UTC using ISO 8601 format.
+ */
 fun currentTime(): String = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(Date())
 
+/**
+ * Obtains the information on the JDK used for the build.
+ */
 fun buildJdk(): String =
     "${prop("java.version")} (${prop("java.vendor")} ${prop("java.vm.version")})"
 
+/**
+ * Obtains the information on the operating system used for the build.
+ */
 fun buildOs(): String =
     "${prop("os.name")} ${prop("os.arch")} ${prop("os.version")}"
 
+/**
+ * The attributes we put into the JAR manifest.
+ */
 val manifestAttributes = mapOf(
     "Built-By" to prop("user.name"),
     "Build-Timestamp" to currentTime(),
@@ -60,19 +76,31 @@ val manifestAttributes = mapOf(
     IMPLEMENTATION_VENDOR.toString() to "TeamDev"
 )
 
+/**
+ * Creates a manifest file in `resources` so that it is available for the tests.
+ *
+ * This task does the same what does the block which configures the `tasks.jar` below.
+ * We cannot use the manifest file created by the `Jar` task because it's not visible
+ * when running tests. We cannot depend on the `Jar` from `resources` because it would
+ * form a circular dependency.
+ */
 val exposeManifestForTests by tasks.creating {
     doLast {
         val manifest = Manifest()
-        manifest.mainAttributes.apply {
-            // The manifest version attribute is crucial for writing.
-            put(Attributes.Name.MANIFEST_VERSION, "1.0")
-            manifestAttributes.forEach {
-                putValue(it.key, it.value.toString())
-            }
+
+        // The manifest version attribute is crucial for writing.
+        // It it's absent nothing would be written.
+        manifest.mainAttributes[MANIFEST_VERSION] = "1.0"
+
+        manifestAttributes.forEach { entry ->
+            manifest.mainAttributes.putValue(entry.key, entry.value.toString())
         }
+
         var file = file("$buildDir/resources/main/META-INF/MANIFEST.MF")
         createDirectories(file.toPath().parent)
-        createFile(file.toPath())
+        if (!file.exists()) {
+            createFile(file.toPath())
+        }
         val stream = file.outputStream()
         stream.use {
             manifest.write(stream)
