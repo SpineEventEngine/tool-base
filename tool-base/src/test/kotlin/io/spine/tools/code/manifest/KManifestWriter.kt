@@ -34,12 +34,12 @@ import java.util.jar.Manifest
 /**
  * Allows to configure and write a manifest file.
  */
-public class KManifestWriter(impl: Manifest) : KManifest(impl) {
+class KManifestWriter(impl: Manifest) : KManifest(impl) {
 
     /**
      * Creates a new instance of the writer with an empty manifest.
      */
-    public constructor() : this(Manifest())
+    constructor() : this(Manifest())
 
     init {
         // The `Manifest-Version` version attribute must be initialized.
@@ -54,7 +54,7 @@ public class KManifestWriter(impl: Manifest) : KManifest(impl) {
      *
      * @param value a non-empty version string
      */
-    public fun implementationVersion(value: String) {
+    fun implementationVersion(value: String) {
         require(value.isNotEmpty())
         mainAttributes[IMPLEMENTATION_VERSION] = value
     }
@@ -62,7 +62,7 @@ public class KManifestWriter(impl: Manifest) : KManifest(impl) {
     /**
      * Writes the manifest to the given stream.
      */
-    public fun write(stream: OutputStream) {
+    fun write(stream: OutputStream) {
         impl.write(stream)
     }
 }
