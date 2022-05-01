@@ -40,9 +40,12 @@ class `'KManifest' should` {
 
     @Test
     fun `load itself from resources`() {
-        val manifest = KManifest.load(javaClass)
+        val manifest = KManifest.load(KManifest::class.java)
 
-        assertThat(manifest.implementationVersion).isEqualTo("2.0.0-SNAPSHOT.92")
+        assertThat(manifest.implementationTitle)
+            .isEqualTo("io.spine.tools:tool-base")
+        assertThat(manifest.implementationVersion)
+            .isNotEmpty()
     }
 
     @Nested

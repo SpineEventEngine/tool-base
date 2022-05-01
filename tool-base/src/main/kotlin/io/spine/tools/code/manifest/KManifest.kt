@@ -27,8 +27,11 @@
 package io.spine.tools.code.manifest
 
 import com.google.common.annotations.VisibleForTesting
+import io.spine.io.Resource
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
+import java.net.JarURLConnection
+import java.net.URL
 import java.util.jar.Attributes
 import java.util.jar.Attributes.Name
 import java.util.jar.Attributes.Name.IMPLEMENTATION_TITLE
@@ -60,14 +63,23 @@ public open class KManifest(protected val impl: Manifest) {
         public val DEPENDS_ON_ATTR: Name = Name("Depends-On")
 
         /**
-         * Loads the manifest from the program resources.
+         * Loads the manifest next to the given class.
          */
-        public fun load(cl: ClassLoader): KManifest {
-            val stream = cl.getResourceAsStream(RESOURCE_FILE)
-            check(stream != null) {
-                "Unable to load the `$RESOURCE_FILE` file from resources."
+        public fun load(cls: Class<*>): KManifest {
+            val classFile = cls.simpleName + ".class"
+            val classResource = cls.getResource(classFile)!!
+
+            val urlConnection = classResource.openConnection()!!
+            if (urlConnection is JarURLConnection) {
+                val manifest = urlConnection.manifest
+                return KManifest(manifest)
             }
-            return load(stream)
+
+            val classResourcePath = classResource.toString()
+            if (!classResourcePath.startsWith("jar")) {
+                return loadNonJar(cls, classResourcePath)
+            }
+            return loadFromJar(classResourcePath)
         }
 
         /**
@@ -127,3 +139,30 @@ public open class KManifest(protected val impl: Manifest) {
         return manifest
     }
 }
+
+private fun loadFromJar(classPath: String): KManifest {
+    val manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1) +
+            "/" + KManifest.RESOURCE_FILE
+    val url = URL(manifestPath)
+    val stream = url.openStream()
+    return KManifest.load(stream)
+}
+
+private fun loadNonJar(cls: Class<*>, classResourcePath: String): KManifest {
+    println("**** CLASS RESOURCE PATH: $classResourcePath")
+    val manifestResource = Resource.file(KManifest.RESOURCE_FILE, cls.classLoader)
+    val allManifests = manifestResource.locateAll()
+    println("**** ALL MANIFESTS: $allManifests")
+    val urlToCommonPrefix = mutableMapOf<String, URL>()
+    allManifests.forEach { url ->
+        val commonPrefix = classResourcePath.commonPrefixWith(url.toString())
+        urlToCommonPrefix[commonPrefix] = url
+    }
+    val longest = urlToCommonPrefix.keys.maxByOrNull { it.length }!!
+    println("**** LONGEST PREFIX: $longest")
+    val nearestManifest = urlToCommonPrefix[longest]!!
+    println("**** NEAREST MANIFEST: $nearestManifest")
+    val stream = nearestManifest.openStream()
+    return KManifest.load(stream)
+}
+

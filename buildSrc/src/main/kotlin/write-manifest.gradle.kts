@@ -24,8 +24,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import java.nio.file.Files
+import java.nio.file.Files.createDirectories
+import java.nio.file.Files.createFile
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.jar.Attributes
+import java.util.jar.Manifest
 import java.util.jar.Attributes.Name.IMPLEMENTATION_VERSION
 import java.util.jar.Attributes.Name.IMPLEMENTATION_TITLE
 import java.util.jar.Attributes.Name.IMPLEMENTATION_VENDOR
@@ -44,25 +49,43 @@ fun buildJdk(): String =
 fun buildOs(): String =
     "${prop("os.name")} ${prop("os.arch")} ${prop("os.version")}"
 
-tasks.jar {
-    manifest {
-        attributes(
-            mapOf(
-                "Built-By" to prop("user.name"),
-                "Build-Timestamp" to currentTime(),
-                "Created-By" to "Gradle ${gradle.gradleVersion}",
-                "Build-Jdk" to buildJdk(),
-                "Build-OS" to buildOs(),
-                IMPLEMENTATION_TITLE.toString() to "${project.group}:${project.name}",
-                IMPLEMENTATION_VERSION.toString() to project.version,
-                IMPLEMENTATION_VENDOR.toString() to "TeamDev"
-            )
-        )
+val manifestAttributes = mapOf(
+    "Built-By" to prop("user.name"),
+    "Build-Timestamp" to currentTime(),
+    "Created-By" to "Gradle ${gradle.gradleVersion}",
+    "Build-Jdk" to buildJdk(),
+    "Build-OS" to buildOs(),
+    IMPLEMENTATION_TITLE.toString() to "${project.group}:${project.name}",
+    IMPLEMENTATION_VERSION.toString() to project.version,
+    IMPLEMENTATION_VENDOR.toString() to "TeamDev"
+)
+
+val exposeManifestForTests by tasks.creating {
+    doLast {
+        val manifest = Manifest()
+        manifest.mainAttributes.apply {
+            // The manifest version attribute is crucial for writing.
+            put(Attributes.Name.MANIFEST_VERSION, "1.0")
+            manifestAttributes.forEach {
+                putValue(it.key, it.value.toString())
+            }
+        }
+        var file = file("$buildDir/resources/main/META-INF/MANIFEST.MF")
+        createDirectories(file.toPath().parent)
+        createFile(file.toPath())
+        val stream = file.outputStream()
+        stream.use {
+            manifest.write(stream)
+        }
     }
 }
 
-sourceSets {
-    main {
-        resources.srcDir("$buildDir/tmp/jar")
+tasks.processResources {
+    dependsOn(exposeManifestForTests)
+}
+
+tasks.jar {
+    manifest {
+        attributes(manifestAttributes)
     }
 }
