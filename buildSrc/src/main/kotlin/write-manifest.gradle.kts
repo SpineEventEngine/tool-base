@@ -24,6 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import io.spine.internal.gradle.publish.SpinePublishing
 import java.nio.file.Files.createDirectories
 import java.nio.file.Files.createFile
 import java.text.SimpleDateFormat
@@ -60,6 +61,17 @@ fun buildJdk(): String =
 fun buildOs(): String =
     "${prop("os.name")} ${prop("os.arch")} ${prop("os.version")}"
 
+/** The publishing settings from the root project. */
+val spinePublishing = rootProject.the<SpinePublishing>()
+val artifactPrefix = spinePublishing.artifactPrefix
+
+/**
+ * Obtains the imlementation title for the project using project group,
+ * artifact prefix from [SpinePublishing], and the name of the project to which
+ * this script plugin is applied.
+ */
+fun implementationTitle() = "${project.group}:$artifactPrefix${project.name}"
+
 /**
  * The name of the manifest attribute holding the timestamp of the build.
  */
@@ -77,7 +89,7 @@ val manifestAttributes = mapOf(
     "Created-By" to "Gradle ${gradle.gradleVersion}",
     "Build-Jdk" to buildJdk(),
     "Build-OS" to buildOs(),
-    IMPLEMENTATION_TITLE.toString() to "${project.group}:${project.name}",
+    IMPLEMENTATION_TITLE.toString() to implementationTitle(),
     IMPLEMENTATION_VERSION.toString() to project.version,
     IMPLEMENTATION_VENDOR.toString() to "TeamDev"
 )

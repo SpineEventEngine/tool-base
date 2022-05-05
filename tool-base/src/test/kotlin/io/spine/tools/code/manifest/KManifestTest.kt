@@ -45,7 +45,7 @@ class `'KManifest' should` {
                     + visibleManifests
         )
             .that(manifest.implementationTitle)
-            .isEqualTo("io.spine.tools:tool-base")
+            .isEqualTo("io.spine.tools:spine-tool-base")
 
         assertThat(manifest.implementationVersion)
             .isNotEmpty()
