@@ -63,11 +63,19 @@ fun buildOs(): String =
     "${prop("os.name")} ${prop("os.arch")} ${prop("os.version")}"
 
 /**
+ * The name of the manifest attribute holding the timestamp of the build.
+ */
+val BUILD_TIMESTAMP = "Build-Timestamp"
+
+/**
  * The attributes we put into the JAR manifest.
+ *
+ * This map is shared between the [exposeManifestForTests] task and the action which
+ * customizes the [Jar] task below.
  */
 val manifestAttributes = mapOf(
     "Built-By" to prop("user.name"),
-    "Build-Timestamp" to currentTime(),
+    BUILD_TIMESTAMP to currentTime(),
     "Created-By" to "Gradle ${gradle.gradleVersion}",
     "Build-Jdk" to buildJdk(),
     "Build-OS" to buildOs(),
@@ -115,5 +123,19 @@ tasks.processResources {
 tasks.jar {
     manifest {
         attributes(manifestAttributes)
+    }
+}
+
+/**
+ * Makes Gradle ignore the [BUILD_TIMESTAMP] attribute during normalization.
+ *
+ * See [Java META-INF normalization](https://docs.gradle.org/current/userguide/more_about_tasks.html#sec:meta_inf_normalization)
+ * sectio of the Gradle documentation for details.
+ */
+normalization {
+    runtimeClasspath {
+        metaInf {
+            ignoreAttribute(BUILD_TIMESTAMP)
+        }
     }
 }
