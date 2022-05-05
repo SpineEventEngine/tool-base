@@ -34,6 +34,7 @@ import java.util.jar.Attributes.Name.IMPLEMENTATION_VERSION
 import java.util.jar.Attributes.Name.IMPLEMENTATION_TITLE
 import java.util.jar.Attributes.Name.IMPLEMENTATION_VENDOR
 import java.util.jar.Attributes.Name.MANIFEST_VERSION
+import org.jetbrains.kotlin.gradle.internal.Kapt3GradleSubplugin.Companion.isIncludeCompileClasspath
 
 plugins {
     java
@@ -105,7 +106,7 @@ val manifestAttributes = mapOf(
 val exposeManifestForTests by tasks.creating {
 
     val outputFile = layout.buildDirectory.file("resources/main/META-INF/MANIFEST.MF")
-    outputs.file(outputFile)
+    outputs.file(outputFile).withPropertyName("manifestFile")
 
     fun createManifest(): Manifest {
         val manifest = Manifest()
