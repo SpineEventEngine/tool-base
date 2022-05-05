@@ -29,12 +29,11 @@ import java.nio.file.Files.createDirectories
 import java.nio.file.Files.createFile
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.jar.Manifest
-import java.util.jar.Attributes.Name.IMPLEMENTATION_VERSION
 import java.util.jar.Attributes.Name.IMPLEMENTATION_TITLE
 import java.util.jar.Attributes.Name.IMPLEMENTATION_VENDOR
+import java.util.jar.Attributes.Name.IMPLEMENTATION_VERSION
 import java.util.jar.Attributes.Name.MANIFEST_VERSION
-import org.jetbrains.kotlin.gradle.internal.Kapt3GradleSubplugin.Companion.isIncludeCompileClasspath
+import java.util.jar.Manifest
 
 plugins {
     java
