@@ -40,7 +40,7 @@ class `'KManifest' should` {
         val nl = System.lineSeparator()
         val visibleManifests = manifestsVisibleTo(cls).joinToString(nl)
         assertWithMessage(
-            "Unable to load correct manifest for the class `${cls}`."
+            "Unable to load correct manifest for the class `${cls.name}`."
                     + " Visible manifests are: $nl"
                     + visibleManifests
         )
