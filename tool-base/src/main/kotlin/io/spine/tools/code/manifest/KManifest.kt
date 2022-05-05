@@ -27,6 +27,7 @@
 package io.spine.tools.code.manifest
 
 import com.google.common.annotations.VisibleForTesting
+import com.google.common.collect.ImmutableList
 import io.spine.io.Resource
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
@@ -166,9 +167,8 @@ private fun URL.isInJar() = toString().startsWith("jar")
  * @see KManifest.load
  */
 private fun loadNonJar(cls: Class<*>): KManifest {
+    val allManifests = manifestsVisibleTo(cls)
     val classResourcePath = cls.toResourceUrl().toString()
-    val manifestResource = Resource.file(KManifest.RESOURCE_FILE, cls.classLoader)
-    val allManifests = manifestResource.locateAll()
     val urlToCommonPrefix = mutableMapOf<String, URL>()
     allManifests.forEach { url ->
         val commonPrefix = classResourcePath.commonPrefixWith(url.toString())
@@ -178,5 +178,15 @@ private fun loadNonJar(cls: Class<*>): KManifest {
     val nearestManifest = urlToCommonPrefix[longest]!!
     val stream = nearestManifest.openStream()
     return KManifest.load(stream)
+}
+
+/**
+ * Obtains the list of all manifests visible to the given class.
+ */
+@VisibleForTesting
+public fun manifestsVisibleTo(cls: Class<*>): ImmutableList<URL> {
+    val manifestResource = Resource.file(KManifest.RESOURCE_FILE, cls.classLoader)
+    val result = manifestResource.locateAll()
+    return result
 }
 

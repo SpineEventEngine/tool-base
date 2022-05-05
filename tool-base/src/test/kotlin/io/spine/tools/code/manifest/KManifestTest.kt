@@ -27,6 +27,7 @@
 package io.spine.tools.code.manifest
 
 import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth.assertWithMessage
 import io.spine.testing.TestValues.randomString
 import java.io.File
 import java.io.FileInputStream
@@ -40,10 +41,17 @@ class `'KManifest' should` {
 
     @Test
     fun `load itself from resources`() {
-        val manifest = KManifest.load(KManifest::class.java)
+        val cls = KManifest::class.java
+        val manifest = KManifest.load(cls)
 
-        assertThat(manifest.implementationTitle)
+        assertWithMessage(
+            "Unable to load correct manifest for the class `${cls}`."
+                    + " Visible manifests are: ${System.lineSeparator()}"
+                    + "${manifestsVisibleTo(cls)}"
+        )
+            .that(manifest.implementationTitle)
             .isEqualTo("io.spine.tools:tool-base")
+
         assertThat(manifest.implementationVersion)
             .isNotEmpty()
     }
