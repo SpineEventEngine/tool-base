@@ -28,14 +28,7 @@ package io.spine.tools.code.manifest
 
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
-import io.spine.testing.TestValues.randomString
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 
 class `'KManifest' should` {
 
@@ -44,48 +37,17 @@ class `'KManifest' should` {
         val cls = KManifest::class.java
         val manifest = KManifest.load(cls)
 
+        val nl = System.lineSeparator()
+        val visibleManifests = manifestsVisibleTo(cls).joinToString(nl)
         assertWithMessage(
             "Unable to load correct manifest for the class `${cls}`."
-                    + " Visible manifests are: ${System.lineSeparator()}"
-                    + "${manifestsVisibleTo(cls)}"
+                    + " Visible manifests are: $nl"
+                    + visibleManifests
         )
             .that(manifest.implementationTitle)
             .isEqualTo("io.spine.tools:tool-base")
 
         assertThat(manifest.implementationVersion)
             .isNotEmpty()
-    }
-
-    @Nested
-    inner class `provide configuration via writer object for` {
-
-        private lateinit var manifest: KManifest
-
-        private lateinit var version: String
-
-        @BeforeEach
-        fun initManifest(@TempDir tmp: File) {
-            version = randomString()
-
-            val writer = KManifestWriter()
-            writer.implementationVersion(version)
-
-            val file = tmp.resolve("MANIFEST.MF")
-            val output = FileOutputStream(file)
-            output.use {
-                writer.write(it)
-            }
-
-            val input = FileInputStream(file)
-            input.use {
-                manifest = KManifest.load(input)
-            }
-        }
-
-        @Test
-        fun implementationVersion() {
-            assertThat(manifest.implementationVersion)
-                .isEqualTo(version)
-        }
     }
 }
