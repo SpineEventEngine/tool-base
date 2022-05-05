@@ -24,12 +24,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.nio.file.Files
 import java.nio.file.Files.createDirectories
 import java.nio.file.Files.createFile
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.jar.Attributes
 import java.util.jar.Manifest
 import java.util.jar.Attributes.Name.IMPLEMENTATION_VERSION
 import java.util.jar.Attributes.Name.IMPLEMENTATION_TITLE
@@ -104,7 +102,9 @@ val exposeManifestForTests by tasks.creating {
             manifest.mainAttributes.putValue(entry.key, entry.value.toString())
         }
 
-        var file = file("$buildDir/resources/main/META-INF/MANIFEST.MF")
+        val fileProvider =
+            layout.buildDirectory.file("$buildDir/resources/main/META-INF/MANIFEST.MF")
+        val file = fileProvider.get().getAsFile()
         createDirectories(file.toPath().parent)
         if (!file.exists()) {
             createFile(file.toPath())
