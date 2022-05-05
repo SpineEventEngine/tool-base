@@ -123,9 +123,10 @@ val exposeManifestForTests by tasks.creating {
 
     fun writeManifest(manifest: Manifest) {
         val file = outputFile.get().getAsFile()
-        createDirectories(file.toPath().parent)
+        val path = file.toPath()
+        createDirectories(path.parent)
         if (!file.exists()) {
-            createFile(file.toPath())
+            createFile(path)
         }
         val stream = file.outputStream()
         stream.use {
@@ -162,4 +163,3 @@ normalization {
         }
     }
 }
-
