@@ -102,7 +102,8 @@ val exposeManifestForTests by tasks.creating {
             manifest.mainAttributes.putValue(entry.key, entry.value.toString())
         }
 
-        val fileProvider = layout.buildDirectory.file("resources/main/META-INF/MANIFEST.MF")
+        val fileProvider =
+            layout.buildDirectory.file("$buildDir/resources/main/META-INF/MANIFEST.MF")
         val file = fileProvider.get().getAsFile()
         createDirectories(file.toPath().parent)
         if (!file.exists()) {
