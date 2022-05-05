@@ -103,7 +103,11 @@ val manifestAttributes = mapOf(
  * form a circular dependency.
  */
 val exposeManifestForTests by tasks.creating {
-    doLast {
+
+    val outputFile = layout.buildDirectory.file("resources/main/META-INF/MANIFEST.MF")
+    outputs.file(outputFile)
+
+    fun createManifest(): Manifest {
         val manifest = Manifest()
 
         // The manifest version attribute is crucial for writing.
@@ -113,10 +117,11 @@ val exposeManifestForTests by tasks.creating {
         manifestAttributes.forEach { entry ->
             manifest.mainAttributes.putValue(entry.key, entry.value.toString())
         }
+        return manifest
+    }
 
-        val fileProvider =
-            layout.buildDirectory.file("$buildDir/resources/main/META-INF/MANIFEST.MF")
-        val file = fileProvider.get().getAsFile()
+    fun writeManifest(manifest: Manifest) {
+        val file = outputFile.get().getAsFile()
         createDirectories(file.toPath().parent)
         if (!file.exists()) {
             createFile(file.toPath())
@@ -125,6 +130,11 @@ val exposeManifestForTests by tasks.creating {
         stream.use {
             manifest.write(stream)
         }
+    }
+
+    doLast {
+        val manifest = createManifest()
+        writeManifest(manifest)
     }
 }
 
@@ -151,3 +161,4 @@ normalization {
         }
     }
 }
+
