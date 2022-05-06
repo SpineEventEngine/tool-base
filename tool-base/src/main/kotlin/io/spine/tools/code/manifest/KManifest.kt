@@ -45,7 +45,7 @@ import kotlin.text.Charsets.UTF_8
  * Provides convenience access to standard and custom attributes of a JAR [Manifest]
  * used by the tools of the framework.
  */
-public open class KManifest(protected val impl: Manifest) {
+public class KManifest(public val impl: Manifest) {
 
     public companion object {
 

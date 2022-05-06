@@ -28,7 +28,12 @@ package io.spine.tools.code.manifest
 
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
+import java.nio.file.Files.createFile
+import java.nio.file.Path
+import kotlin.io.path.outputStream
+import kotlin.io.path.readText
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 
 class `'KManifest' should` {
 
@@ -49,5 +54,21 @@ class `'KManifest' should` {
 
         assertThat(manifest.implementationVersion)
             .isNotEmpty()
+    }
+
+    @Test
+    fun `print its content to string as if it were a resource file`(@TempDir tmpDir: Path) {
+        val cls = KManifest::class.java
+        val manifest = KManifest.load(cls)
+
+        val tmpFile = tmpDir.resolve("MANIFEST.MF")
+        createFile(tmpFile)
+        val stream = tmpFile.outputStream()
+        stream.use {
+            manifest.impl.write(it)
+        }
+
+        assertThat(manifest.toString())
+            .isEqualTo(tmpFile.readText())
     }
 }
