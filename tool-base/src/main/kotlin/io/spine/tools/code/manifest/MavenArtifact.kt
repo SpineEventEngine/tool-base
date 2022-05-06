@@ -27,7 +27,7 @@
 package io.spine.tools.code.manifest
 
 /**
- * A dependency on a software artifact.
+ * A dependency on a software artifact stored in a Maven repository.
  */
 public data class MavenArtifact(val coordinates: String) : Dependency {
 
