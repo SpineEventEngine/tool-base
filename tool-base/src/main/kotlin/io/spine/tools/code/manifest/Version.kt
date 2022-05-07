@@ -24,26 +24,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-println("`slow-tests.gradle` script is deprecated. " +
-        "Please use `TaskContainer.registerTestTasks()` instead.")
+package io.spine.tools.code.manifest
 
-final def slowTag = 'slow' // See io.spine.testing.SlowTest
+import java.util.jar.Attributes.Name.IMPLEMENTATION_VERSION
 
-task fastTest(type: Test) {
-    description = 'Executes all JUnit tests but the ones tagged as "slow".'
-    group = 'Verification'
+/**
+ * A version of a software component.
+ */
+public data class Version(val value: String) {
 
-    useJUnitPlatform {
-        excludeTags slowTag
+    public companion object {
+
+        /**
+         * Obtains the version from a JAR manifest resource loaded using the given classloader.
+         */
+        public fun fromManifestOf(cls: Class<*>): Version {
+            val manifest = KManifest.load(cls)
+            val implVersion = manifest.implementationVersion
+            check(implVersion != null) {
+                "Unable to obtain the version:" +
+                        " no `${IMPLEMENTATION_VERSION}` attribute found in the manifest."
+            }
+            val version = Version(implVersion)
+            return version
+        }
     }
-}
-
-task slowTest(type: Test) {
-    description = 'Executes JUnit tests tagged as "slow".'
-    group = 'Verification'
-
-    useJUnitPlatform {
-        includeTags slowTag
-    }
-    shouldRunAfter fastTest
 }

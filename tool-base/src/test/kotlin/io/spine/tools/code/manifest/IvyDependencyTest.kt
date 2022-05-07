@@ -24,45 +24,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.apache.tools.ant.taskdefs.condition.Os
+package io.spine.tools.code.manifest
 
-println("`build-tasks.gradle` script is deprecated. " +
-        "Please use `DartTasks.build()` extension instead.")
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
-final def GROUP = 'Dart'
-final def packageIndex = "$projectDir/.packages" as File
-final def extension = Os.isFamily(Os.FAMILY_WINDOWS) ? '.bat' : ''
-final def PUB_EXECUTABLE = 'pub' + extension
+import com.google.common.truth.Truth.assertThat
+import io.spine.testing.TestValues.randomString
 
-task resolveDependencies(type: Exec) {
-    group = GROUP
-    description = 'Fetches the dependencies declared via `pubspec.yaml`.'
+internal class IvyDependencyTest {
 
-    inputs.file "$projectDir/pubspec.yaml"
-    outputs.file packageIndex
+    private lateinit var org: String
+    private lateinit var name: String
+    private lateinit var rev: String
 
-    commandLine PUB_EXECUTABLE, 'get'
+    private lateinit var strForm: String
 
-    mustRunAfter 'cleanPackageIndex'
+    @BeforeEach
+    fun generateParts() {
+        org = randomString()
+        name = randomString()
+        rev = randomString()
+        strForm = "${IvyDependency.PREFIX} org=\"$org\" name=\"$name\" rev=\"$rev\""
+    }
+
+    @Test
+    fun `provide string form with all components`() {
+        val idep = IvyDependency(org, name, rev)
+
+        assertThat(idep.toString()).isEqualTo(strForm)
+    }
+
+    @Test
+    fun `parse string representation`() {
+        val idep = IvyDependency.parse(strForm)
+
+        assertThat(idep).isEqualTo(IvyDependency(org, name, rev))
+    }
 }
-
-tasks['assemble'].dependsOn 'resolveDependencies'
-
-task cleanPackageIndex(type: Delete) {
-    group = GROUP
-    description = 'Deletes the `.packages` file on this Dart module.'
-    delete = [packageIndex]
-}
-
-tasks['clean'].dependsOn 'cleanPackageIndex'
-
-task testDart(type: Exec) {
-    group = GROUP
-    description = 'Runs Dart tests declared in the `./test` directory. See `https://pub.dev/packages/test#running-tests`.'
-
-    commandLine PUB_EXECUTABLE, 'run', 'test'
-
-    dependsOn 'resolveDependencies'
-}
-
-tasks['check'].dependsOn 'testDart'

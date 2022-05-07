@@ -40,7 +40,7 @@ import java.io.File
  * @param token the name of the token
  * @param value the value to replace the token occurrences to; may be blank
  */
-public class Replacement(public val token: String, public val value: String) {
+public data class Replacement(public val token: String, public val value: String) {
 
     init {
         require(token.isNotBlank())

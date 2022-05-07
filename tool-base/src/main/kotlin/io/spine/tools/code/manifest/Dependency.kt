@@ -24,20 +24,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*
- * This script configures Gradle Checkstyle plugin.
+package io.spine.tools.code.manifest
+
+/**
+ * A dependency of a software component on another software component.
  */
+public interface Dependency {
 
-import io.spine.internal.dependency.CheckStyle
-
-println("`checkstyle.gradle` script is deprecated. Please use the `CheckStyleConfig` utility instead.")
-
-apply plugin: 'checkstyle'
-
-checkstyle {
-    toolVersion = "${CheckStyle.version}"
-    configFile = file("$rootDir/config/quality/checkstyle.xml")
-
-    // Disable checking the test sources.
-    checkstyleTest.enabled = false
+    /**
+     * A string form of a dependency must be prefixed with name of the format,
+     * such as `"maven:"` or `"ivy:"`.
+     */
+    public override fun toString(): String
 }
