@@ -28,12 +28,16 @@ import io.spine.internal.dependency.JavaPoet
 import io.spine.internal.dependency.JavaX
 import io.spine.internal.dependency.Spine
 
+val baseVersion: String by extra
+
 dependencies {
     api(JavaPoet.lib)
     api(JavaX.annotations)
 
     val spine = Spine(project)
     api(spine.base)
+
+    implementation("io.spine:spine-validate:$baseVersion")
 
     testImplementation(spine.testlib)
 }
