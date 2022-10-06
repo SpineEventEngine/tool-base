@@ -68,7 +68,7 @@ public final class TypeSpecWriter implements Logging {
             _debug().log("Writing `%s.java`.", className);
 
             var packageName = this.spec.packageName().value();
-            var indentLevel = String.valueOf(indent.level());
+            var indentLevel = indent.at(1).toString();
             var javaFile = JavaFile.builder(packageName, typeSpec)
                     .skipJavaLangImports(true)
                     .indent(indentLevel)
