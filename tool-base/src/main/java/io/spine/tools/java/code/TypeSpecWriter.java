@@ -53,6 +53,10 @@ public final class TypeSpecWriter implements Logging {
      *
      * @param outputDir
      *         the root dir to write to
+     * @implNote When passing the indentation value to JavaPoet,
+     *         this method uses a nominal value of {@code indent.level()}.
+     *         JavaPoet library then utilizes this value to calculate
+     *         the indentation level for each line in the generated code.
      */
     public void write(Path outputDir) {
         try {
@@ -64,9 +68,10 @@ public final class TypeSpecWriter implements Logging {
             _debug().log("Writing `%s.java`.", className);
 
             var packageName = this.spec.packageName().value();
+            var indentLevel = String.valueOf(indent.level());
             var javaFile = JavaFile.builder(packageName, typeSpec)
                     .skipJavaLangImports(true)
-                    .indent(indent.toString())
+                    .indent(indentLevel)
                     .build();
             javaFile.writeTo(outputDir);
             _debug().log("File `%s.java` written successfully.", className);
