@@ -28,6 +28,7 @@ import com.google.protobuf.gradle.generateProtoTasks
 import com.google.protobuf.gradle.protobuf
 import io.spine.internal.dependency.Protobuf
 import io.spine.internal.gradle.WriteVersions
+import io.spine.internal.gradle.protobuf.setup
 
 dependencies {
     api(gradleApi())
@@ -41,12 +42,12 @@ kotlin {
     explicitApi()
 }
 
+val generatedDir by extra("$projectDir/generated")
+
 protobuf {
     generateProtoTasks {
         for (task in all()) {
-            task.generateDescriptorSet = true
-            task.descriptorSetOptions.path =
-                "$buildDir/descriptors/${task.sourceSet.name}/known_types.desc"
+            task.setup(generatedDir)
         }
     }
 }
