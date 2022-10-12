@@ -42,6 +42,16 @@ public enum ProtocPluginName {
     java,
 
     /**
+     * The standard Kotlin protoc plugin.
+     *
+     * <p>Built into the Protobuf compiler.
+     *
+     * @see <a href="https://developers.google.com/protocol-buffers/docs/reference/kotlin-generated">
+     *         Kotlin generated code reference</a>
+     */
+    kotlin,
+
+    /**
      * The standard JavaScript protoc plugin.
      *
      * <p>Built into the Protobuf compiler.
