@@ -36,8 +36,7 @@ dependencies {
 
     val spine = Spine(project)
     api(spine.base)
-
-    implementation("io.spine:spine-validate:$baseVersion")
+    implementation(spine.validation.runtime)
 
     testImplementation(spine.testlib)
 }
