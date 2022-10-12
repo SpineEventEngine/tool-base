@@ -24,9 +24,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.google.protobuf.gradle.generateProtoTasks
+import com.google.protobuf.gradle.protobuf
+
 import io.spine.internal.dependency.JavaPoet
 import io.spine.internal.dependency.JavaX
 import io.spine.internal.dependency.Spine
+import io.spine.internal.gradle.protobuf.setup
 
 val baseVersion: String by extra
 
@@ -36,8 +40,16 @@ dependencies {
 
     val spine = Spine(project)
     api(spine.base)
-
-    implementation("io.spine:spine-validate:$baseVersion")
+    implementation(spine.validation.runtime)
 
     testImplementation(spine.testlib)
+}
+
+val generatedDir by extra("$projectDir/generated")
+protobuf {
+    generateProtoTasks {
+        for (task in all()) {
+            task.setup(generatedDir)
+        }
+    }
 }

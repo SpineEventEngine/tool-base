@@ -23,37 +23,23 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package io.spine.tools.gradle
 
-import com.google.protobuf.gradle.generateProtoTasks
-import com.google.protobuf.gradle.protobuf
-import io.spine.internal.dependency.Protobuf
-import io.spine.internal.gradle.WriteVersions
-import io.spine.internal.gradle.protobuf.setup
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 
-dependencies {
-    api(gradleApi())
-    api(Protobuf.GradlePlugin.lib)
-    api(project(":tool-base"))
+import com.google.common.truth.Truth.assertThat
 
-    testImplementation(project(":plugin-testlib"))
-}
+/**
+ * This test suite guards against accidental refactoring enum names coming
+ * in the [ProtocPluginName] enum in small caps to uppercase (as it's customary for enums).
+ */
+@DisplayName("`ProtocPluginName` should")
+internal class ProtocPluginNameTest {
 
-kotlin {
-    explicitApi()
-}
-
-val generatedDir by extra("$projectDir/generated")
-
-protobuf {
-    generateProtoTasks {
-        for (task in all()) {
-            task.setup(generatedDir)
-        }
-    }
-}
-
-tasks {
-    withType<WriteVersions>().configureEach {
-        version(Protobuf.compiler)
+    @Test
+    fun `have 'kotlin' name`() {
+        assertThat(ProtocPluginName.kotlin.name)
+            .isEqualTo("kotlin")
     }
 }
