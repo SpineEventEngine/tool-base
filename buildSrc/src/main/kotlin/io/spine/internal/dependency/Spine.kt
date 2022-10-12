@@ -26,21 +26,159 @@
 
 package io.spine.internal.dependency
 
-import org.gradle.api.Project
+import org.gradle.api.plugins.ExtensionAware
 import org.gradle.kotlin.dsl.extra
 
 /**
- * Dependencies on Spine `base` modules.
+ * Dependencies on Spine modules.
  *
  * @constructor
- * Creates a new instance of `Spine` taking the `baseVersion` from the given project's
- * extra properties.
+ * Creates a new instance of `Spine` taking the property values
+ * of versions from the given project's extra properties.
  */
-class Spine(p: Project) {
+@Suppress("unused")
+class Spine(p: ExtensionAware) {
 
-    val base = "io.spine:spine-base:${p.spineVersion}"
-    val testlib = "io.spine.tools:spine-testlib:${p.spineVersion}"
+    /**
+     * Default versions for the modules of Spine, unless they are
+     * configured in `versions.gradle.kts`.
+     */
+    object DefaultVersion {
 
-    private val Project.spineVersion: String
-        get() = extra["baseVersion"] as String
+        /**
+         * The default version  of `base` to use.
+         * @see [Spine.base]
+         */
+        const val base = "2.0.0-SNAPSHOT.112"
+
+        /**
+         * The version of `model-compiler` to use.
+         * @see [Spine.modelCompiler]
+         */
+        const val mc = "2.0.0-SNAPSHOT.90"
+
+        /**
+         * The version of `base-types` to use.
+         * @see [Spine.baseTypes]
+         */
+        const val baseTypes = "2.0.0-SNAPSHOT.108"
+
+        /**
+         * The version of `time` to use.
+         * @see [Spine.time]
+         */
+        const val time = "2.0.0-SNAPSHOT.108"
+
+        /**
+         * The version of `tool-base` to use.
+         * @see [Spine.toolBase]
+         */
+        const val toolBase = "2.0.0-SNAPSHOT.109"
+
+        /**
+         * The version of `validation` to use.
+         * @see [Spine.validation]
+         */
+        const val validation = "2.0.0-SNAPSHOT.32"
+    }
+
+    companion object {
+        const val group = "io.spine"
+        const val toolsGroup = "io.spine.tools"
+
+        /**
+         * The version of ProtoData to be used in the project.
+         *
+         * We do it here instead of `versions.gradle.kts` because we later use
+         * it in a `plugins` section in a build script.
+         *
+         * @see [ProtoData]
+         */
+        const val protoDataVersion = "0.2.18"
+    }
+
+    val base = "$group:spine-base:${p.baseVersion}"
+    val testlib = "$toolsGroup:spine-testlib:${p.baseVersion}"
+
+    @Deprecated("Please use `validation.runtime`", replaceWith = ReplaceWith("validation.runtime"))
+    val validate = "$group:spine-validate:${p.baseVersion}"
+
+    val baseTypes = "$group:spine-base-types:${p.baseTypesVersion}"
+
+    val time = "$toolsGroup:spine-testlib:${p.timeVersion}"
+
+    val toolBase = "$toolsGroup:spine-tool-base:${p.toolBaseVersion}"
+    val pluginBase = "$toolsGroup:spine-plugin-base:${p.toolBaseVersion}"
+    val pluginTestlib = "$toolsGroup:spine-plugin-testlib:${p.toolBaseVersion}"
+
+    val modelCompiler = "$toolsGroup:spine-model-compiler:${p.mcVersion}"
+
+    val validation = Validation(p)
+
+    private val ExtensionAware.baseVersion: String
+        get() = "baseVersion".asExtra(this, DefaultVersion.base)
+
+    private val ExtensionAware.baseTypesVersion: String
+        get() = "baseTypesVersion".asExtra(this, DefaultVersion.baseTypes)
+
+    private val ExtensionAware.timeVersion: String
+        get() = "timeVersion".asExtra(this, DefaultVersion.time)
+
+    private val ExtensionAware.mcVersion: String
+        get() = "mcVersion".asExtra(this, DefaultVersion.mc)
+
+    private val ExtensionAware.toolBaseVersion: String
+        get() = "toolBaseVersion".asExtra(this, DefaultVersion.toolBase)
+
+    /**
+     * Dependencies on Spine validation modules.
+     *
+     * See [`SpineEventEngine/validation`](https://github.com/SpineEventEngine/validation/).
+     */
+    class Validation(p: ExtensionAware) {
+
+        companion object {
+            const val group = "io.spine.validation"
+        }
+
+        val runtime = "$group:spine-validation-java-runtime:${p.validationVersion}"
+        val java = "$group:spine-validation-java:${p.validationVersion}"
+        val model = "$group:spine-validation-model:${p.validationVersion}"
+        val config = "$group:spine-validation-configuration:${p.validationVersion}"
+
+        private val ExtensionAware.validationVersion: String
+            get() = "validationVersion".asExtra(this, DefaultVersion.validation)
+    }
+
+    /**
+     * Dependencies on ProtoData modules.
+     *
+     * See [`SpineEventEngine/ProtoData`](https://github.com/SpineEventEngine/ProtoData/).
+     */
+    object ProtoData {
+
+        const val pluginId = "io.spine.protodata"
+
+        const val version = protoDataVersion
+        const val pluginLib = "$group:protodata:$version"
+    }
 }
+
+/**
+ * Obtains the value of the extension property named as this string from the given project.
+ *
+ * @param p the project declaring extension properties
+ * @param defaultValue
+ *         the default value to return, if the project does not have such a property.
+ *         If `null` then rely on the property declaration, even if this would cause an error.
+ */
+private fun String.asExtra(p: ExtensionAware, defaultValue: String? = null): String {
+    if (defaultValue != null) {
+        if (p.extra.has(this)) {
+            return p.extra[this] as String
+        }
+        return defaultValue
+    }
+    return p.extra[this] as String
+}
+
