@@ -139,6 +139,20 @@ private fun processResourceTaskName(sourceSetName: String): String {
     return "process${infix}Resources"
 }
 
+/**
+ * Obtains the path to this source code file.
+ */
+private object SourcePath {
+
+    internal val value: String
+        get() {
+            val thisClass = SourcePath::class.java
+            val filePath  = thisClass.`package`.name.replace('.', '/') + "/ProtoTaskExtensions.kt"
+            return "buildSrc/src/main/kotin/" + filePath
+        }
+}
+
+private val SUPPRESSION_COMMENT = "// Suppressed by `${SourcePath.value}`."
 private const val SUPPRESS_DEPRECATION = "@file:Suppress(\"DEPRECATION\")"
 
 /**
@@ -157,11 +171,11 @@ private fun suppressDeprecationsInKotlin(generatedDir: String, ssn: String) {
         if (lines.isEmpty()) {
             return@forEachRemaining
         }
-        if (lines[0] == SUPPRESS_DEPRECATION) {
+        if (lines[0] == SUPPRESSION_COMMENT) {
             return@forEachRemaining
         }
         val withSuppression = mutableListOf<String>()
-        withSuppression.add("// Added by `ProtoTaskExtensions.kt`")
+        withSuppression.add(SUPPRESSION_COMMENT)
         withSuppression.add(SUPPRESS_DEPRECATION + lineSeparator())
         withSuppression.addAll(lines)
         val text = withSuppression.joinToString(lineSeparator())
