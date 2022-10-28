@@ -52,7 +52,7 @@ class `'Language' should` {
 
     @Test
     fun `format a test line as comments`() {
-        assertThat(Java.comment("Hey!")).isEqualTo("// Hey!")
+        assertThat(Java.comment("Hey!")).isEqualTo("/* Hey! */")
     }
 
     @Test
@@ -74,7 +74,7 @@ class `'Language' should` {
     @Nested
     inner class `support more than one file extension` {
 
-        private val cpp = SlashCommentLanguage("C++", listOf(".HPP", ".cc", ".CPP", "h"))
+        private val cpp = SlashAsteriskCommentLang("C++", listOf(".HPP", ".cc", ".CPP", "h"))
 
         @Test
         fun `sorting and lower-casing them on initialization`() {

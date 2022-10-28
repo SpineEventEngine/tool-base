@@ -37,7 +37,6 @@ import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Strings.repeat;
 import static io.spine.tools.fs.FileReference.currentDirectory;
 import static io.spine.tools.fs.FileReference.parentDirectory;
 import static io.spine.tools.fs.FileReference.splitter;
