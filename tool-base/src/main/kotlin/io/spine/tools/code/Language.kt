@@ -114,6 +114,7 @@ public abstract class Language internal constructor(
  *
  * Supports double-slash comments (`// <comment body>`).
  */
+@Deprecated("Use `SlashAsteriskCommentLang` instead.")
 public class SlashCommentLanguage(
     name: String,
     fileExtensions: Iterable<String>
@@ -123,11 +124,24 @@ public class SlashCommentLanguage(
 }
 
 /**
+ * A C-like language.
+ *
+ * Supports slash-asterisk-asterisk-slash comments (`/* <comment body> */`).
+ */
+public class SlashAsteriskCommentLang(
+    name: String,
+    fileExtensions: Iterable<String>
+) : Language(name, fileExtensions) {
+
+    override fun comment(line: String): String = "/* $line */"
+}
+
+/**
  * A collection of commonly used [Language]s.
  *
  * If this prepared set is not enough, users are encouraged to create custom [Language] types
  * by either extending the class directly, or using one of its existing subtypes, such as
- * [SlashCommentLanguage].
+ * [SlashAsteriskCommentLang].
  */
 public object CommonLanguages {
 
@@ -151,13 +165,13 @@ public object CommonLanguages {
 
     @get:JvmName("kotlin")
     @JvmStatic
-    public val Kotlin: Language = SlashCommentLanguage("Kotlin", listOf("kt"))
+    public val Kotlin: Language = SlashAsteriskCommentLang("Kotlin", listOf("kt"))
 
     @get:JvmName("java")
     @JvmStatic
-    public val Java: Language = SlashCommentLanguage("Java", listOf("java"))
+    public val Java: Language = SlashAsteriskCommentLang("Java", listOf("java"))
 
     @get:JvmName("javaScript")
     @JvmStatic
-    public val JavaScript: Language = SlashCommentLanguage("JavaScript", listOf("js"))
+    public val JavaScript: Language = SlashAsteriskCommentLang("JavaScript", listOf("js"))
 }

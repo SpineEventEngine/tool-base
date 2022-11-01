@@ -26,7 +26,6 @@
 
 package io.spine.tools.code;
 
-import com.google.common.base.Strings;
 import com.google.errorprone.annotations.Immutable;
 
 import java.io.Serializable;
