@@ -34,6 +34,7 @@ import io.spine.internal.dependency.FindBugs
 import io.spine.internal.dependency.Guava
 import io.spine.internal.dependency.JUnit
 import io.spine.internal.dependency.Protobuf
+import io.spine.internal.dependency.Spine
 import io.spine.internal.dependency.Truth
 import io.spine.internal.gradle.VersionWriter
 import io.spine.internal.gradle.applyGitHubPackages
@@ -62,12 +63,8 @@ plugins {
     jacoco
     idea
     `project-report`
-    io.spine.internal.dependency.Protobuf.GradlePlugin.apply {
-        id(id)
-    }
-    io.spine.internal.dependency.ErrorProne.GradlePlugin.apply {
-        id(id)
-    }
+    id(protobufPlugin)
+    id(errorPronePlugin)
     kotlin("jvm")
 }
 
@@ -179,8 +176,7 @@ subprojects {
     JavadocConfig.applyTo(project)
     LicenseReporter.generateReportIn(project)
 
-    val baseVersion: String by extra
-    updateGitHubPages(baseVersion) {
+    updateGitHubPages(Spine.DefaultVersion.javadocTools) {
         allowInternalJavadoc.set(true)
         rootFolder.set(rootDir)
     }
