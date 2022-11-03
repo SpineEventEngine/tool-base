@@ -34,6 +34,7 @@ import io.spine.internal.dependency.FindBugs
 import io.spine.internal.dependency.Guava
 import io.spine.internal.dependency.JUnit
 import io.spine.internal.dependency.Protobuf
+import io.spine.internal.dependency.Spine
 import io.spine.internal.dependency.Truth
 import io.spine.internal.gradle.VersionWriter
 import io.spine.internal.gradle.applyGitHubPackages
@@ -59,16 +60,13 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     `java-library`
-    jacoco
-    idea
-    `project-report`
-    io.spine.internal.dependency.Protobuf.GradlePlugin.apply {
-        id(id)
-    }
-    io.spine.internal.dependency.ErrorProne.GradlePlugin.apply {
-        id(id)
-    }
     kotlin("jvm")
+    idea
+    id(protobufPlugin)
+    id(errorPronePlugin)
+    `detekt-code-analysis`
+    jacoco
+    `project-report`
 }
 
 spinePublishing {
@@ -104,6 +102,29 @@ allprojects {
 }
 
 subprojects {
+    applyPlugins()
+    addDependencies()
+    forceConfigurations()
+
+    val javaVersion = JavaLanguageVersion.of(11)
+    configureJava(javaVersion)
+    configureKotlin(javaVersion)
+
+    configureTests()
+
+    val generatedDir = "$projectDir/generated"
+    configureProtoc(generatedDir)
+
+    configureGitHubPages()
+}
+
+JacocoConfig.applyTo(project)
+PomGenerator.applyTo(project)
+LicenseReporter.mergeAllReports(project)
+
+typealias Subproject = Project
+
+fun Subproject.applyPlugins() {
     apply {
         plugin("java-library")
         plugin("kotlin")
@@ -113,6 +134,15 @@ subprojects {
         plugin("write-manifest")
     }
 
+    apply<IncrementGuard>()
+    apply<VersionWriter>()
+
+    CheckStyleConfig.applyTo(project)
+    JavadocConfig.applyTo(project)
+    LicenseReporter.generateReportIn(project)
+}
+
+fun Subproject.addDependencies() {
     dependencies {
         errorprone(ErrorProne.core)
 
@@ -127,29 +157,43 @@ subprojects {
         Truth.libs.forEach { testImplementation(it) }
         testRuntimeOnly(JUnit.runner)
     }
+}
 
+fun Subproject.forceConfigurations() {
     with(configurations) {
         forceVersions()
         excludeProtobufLite()
     }
+}
 
-    val javaVersion = JavaVersion.VERSION_11.toString()
-    kotlin {
-        applyJvmToolchain(javaVersion)
-        explicitApi()
+fun Subproject.configureJava(javaVersion: JavaLanguageVersion) {
+    java {
+        toolchain.languageVersion.set(javaVersion)
     }
-
     tasks {
         withType<JavaCompile>().configureEach {
             configureJavac()
             configureErrorProne()
         }
+    }
+}
 
+fun Subproject.configureKotlin(javaVersion: JavaLanguageVersion) {
+    kotlin {
+        applyJvmToolchain(javaVersion.asInt())
+        explicitApi()
+    }
+
+    tasks {
         withType<KotlinCompile>().configureEach {
-            kotlinOptions.jvmTarget = javaVersion
+            kotlinOptions.jvmTarget = javaVersion.toString()
             setFreeCompilerArgs()
         }
+    }
+}
 
+fun Subproject.configureTests() {
+    tasks {
         registerTestTasks()
         test.configure {
             useJUnitPlatform {
@@ -158,9 +202,9 @@ subprojects {
             configureLogging()
         }
     }
+}
 
-    val generatedDir = "$projectDir/generated"
-
+fun Subproject.configureProtoc(generatedDir: String) {
     protobuf {
         generatedFilesBaseDir = generatedDir
         protoc {
@@ -171,21 +215,11 @@ subprojects {
     tasks.clean.configure {
         delete(generatedDir)
     }
+}
 
-    apply<IncrementGuard>()
-    apply<VersionWriter>()
-
-    CheckStyleConfig.applyTo(project)
-    JavadocConfig.applyTo(project)
-    LicenseReporter.generateReportIn(project)
-
-    val baseVersion: String by extra
-    updateGitHubPages(baseVersion) {
+fun Subproject.configureGitHubPages() {
+    updateGitHubPages(Spine.DefaultVersion.javadocTools) {
         allowInternalJavadoc.set(true)
         rootFolder.set(rootDir)
     }
 }
-
-JacocoConfig.applyTo(project)
-PomGenerator.applyTo(project)
-LicenseReporter.mergeAllReports(project)

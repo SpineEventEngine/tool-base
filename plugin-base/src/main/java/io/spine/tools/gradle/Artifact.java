@@ -27,6 +27,7 @@
 package io.spine.tools.gradle;
 
 import com.google.common.base.Objects;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.gradle.api.artifacts.Dependency;
 
@@ -203,37 +204,76 @@ public final class Artifact {
         private Builder() {
         }
 
+        @CanIgnoreReturnValue
         public Builder setGroup(String group) {
-            this.group = group;
+            this.group = checkNotNull(group);
             return this;
         }
 
-        public  Builder useSpineToolsGroup() {
+        public @Nullable String getGroup() {
+            return group;
+        }
+
+        @CanIgnoreReturnValue
+        public Builder useSpineToolsGroup() {
             return setGroup(SPINE_TOOLS_GROUP);
         }
 
+        @CanIgnoreReturnValue
         public Builder setName(String name) {
-            this.name = name;
+            this.name = checkNotNull(name);
             return this;
         }
 
-        public  Builder setVersion(String version) {
-            this.version = version;
+        public @Nullable String getName() {
+            return name;
+        }
+
+        @CanIgnoreReturnValue
+        public Builder setVersion(String version) {
+            this.version = checkNotNull(version);
             return this;
         }
 
-        public  Builder setClassifier(String classifier) {
+        public @Nullable String getVersion() {
+            return version;
+        }
+
+        @CanIgnoreReturnValue
+        public Builder setClassifier(String classifier) {
             this.classifier = classifier;
             return this;
         }
 
+        @CanIgnoreReturnValue
         public Builder useTestClassifier() {
             return setClassifier("test");
         }
 
+        public @Nullable String getClassifier() {
+            return classifier;
+        }
+
+        @CanIgnoreReturnValue
         public Builder setExtension(String extension) {
             this.extension = extension;
             return this;
+        }
+
+        public @Nullable String getExtension() {
+            return extension;
+        }
+
+        @CanIgnoreReturnValue
+        public Builder setDependency(io.spine.tools.gradle.Dependency dependency) {
+            checkNotNull(dependency);
+            this.group = dependency.groupId();
+            this.name = dependency.name();
+            return this;
+        }
+
+        public io.spine.tools.gradle.Dependency getDependency() {
+            return new ThirdPartyDependency(group, name);
         }
 
         /**
@@ -243,7 +283,6 @@ public final class Artifact {
             checkNotNull(group);
             checkNotNull(name);
             checkNotNull(version);
-
             return new Artifact(this);
         }
     }

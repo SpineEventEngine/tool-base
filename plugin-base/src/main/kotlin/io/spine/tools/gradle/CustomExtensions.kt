@@ -24,16 +24,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// TODO:2021-07-05:dmytro.dashenkov: https://github.com/SpineEventEngine/config/issues/214.
+package io.spine.tools.gradle
 
-allprojects {
-    configurations.all {
-        resolutionStrategy {
-            eachDependency {
-                if (requested.group == "org.jacoco") {
-                    useVersion("0.8.7")
-                }
-            }
-        }
-    }
+/**
+ * Provides DSL syntax for creating an [Artifact].
+ */
+public fun artifact(action: Artifact.Builder.() -> Unit): Artifact {
+    val builder = Artifact.newBuilder()
+    action(builder)
+    return builder.build()
 }

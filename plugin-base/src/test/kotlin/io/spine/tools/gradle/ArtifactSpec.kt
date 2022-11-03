@@ -23,31 +23,31 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package io.spine.tools.gradle
 
-package io.spine.internal.dependency
+import com.google.common.truth.Truth.assertThat
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 
-// https://junit.org/junit5/
-@Suppress("unused")
-object JUnit {
-    const val version                    = "5.9.1"
-    private const val platformVersion    = "1.9.1"
-    private const val legacyVersion      = "4.13.1"
+@DisplayName("`Artifact` should")
+internal class ArtifactSpec {
 
-    // https://github.com/apiguardian-team/apiguardian
-    private const val apiGuardianVersion = "1.1.2"
-    // https://github.com/junit-pioneer/junit-pioneer
-    private const val pioneerVersion     = "1.7.1"
+    @Test
+    fun `provide builder fun`() {
+        val expectedGroup = "group"
+        val expectedName = "name"
+        val artifact = artifact {
+            group = expectedGroup
+            name = expectedName
+            version = "2.0.0"
+        }
+        assertThat(artifact.notation()).isEqualTo("group:name:2.0.0")
+    }
 
-    const val legacy = "junit:junit:${legacyVersion}"
-    val api = listOf(
-        "org.apiguardian:apiguardian-api:${apiGuardianVersion}",
-        "org.junit.jupiter:junit-jupiter-api:${version}",
-        "org.junit.jupiter:junit-jupiter-params:${version}"
-    )
-    const val bom     = "org.junit:junit-bom:${version}"
-    const val runner  = "org.junit.jupiter:junit-jupiter-engine:${version}"
-    const val pioneer = "org.junit-pioneer:junit-pioneer:${pioneerVersion}"
-    const val platformCommons = "org.junit.platform:junit-platform-commons:${platformVersion}"
-    const val platformLauncher = "org.junit.platform:junit-platform-launcher:${platformVersion}"
-    const val params = "org.junit.jupiter:junit-jupiter-params:${version}"
+    @Test
+    fun `allow classifier for an artifact`() {
+        val expectedClassifier = "de-class"
+        assertThat(Artifact.newBuilder().setClassifier(expectedClassifier).classifier)
+            .isEqualTo(expectedClassifier)
+    }
 }
