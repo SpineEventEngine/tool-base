@@ -40,10 +40,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static io.spine.util.Exceptions.illegalStateWithCauseOf;
 
 /**
- * Representation of a archive file contents.
+ * Representation of an archive file contents.
  *
- * The file represented by an instance of this type is of one of the {@link ArchiveExtension}s, i.e.
- * a ZIP or a JAR.
+ * <p>The file represented by an instance of this type is of one of the {@link ArchiveExtension}s,
+ * i.e. a ZIP or a JAR.
  */
 public final class ArchiveFile {
 
@@ -74,8 +74,8 @@ public final class ArchiveFile {
         checkNotNull(file);
         checkArgument(file.exists(), "Archive file %s does not exist.", file);
         checkArgument(isArchive(file),
-                      "File %s must be have one of extensions: %s.",
-                      Arrays.toString(ArchiveExtension.values()));
+                      "An archive file must have one of extensions: %s. Encountered file: %s.",
+                      Arrays.toString(ArchiveExtension.values()), file);
     }
 
     /**
