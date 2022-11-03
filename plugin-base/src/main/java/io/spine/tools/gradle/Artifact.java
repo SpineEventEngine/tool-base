@@ -204,25 +204,37 @@ public final class Artifact {
         }
 
         public Builder setGroup(String group) {
-            this.group = group;
+            this.group = checkNotNull(group);
             return this;
         }
 
-        public  Builder useSpineToolsGroup() {
+        public @Nullable String getGroup() {
+            return group;
+        }
+
+        public Builder useSpineToolsGroup() {
             return setGroup(SPINE_TOOLS_GROUP);
         }
 
         public Builder setName(String name) {
-            this.name = name;
+            this.name = checkNotNull(name);
             return this;
         }
 
-        public  Builder setVersion(String version) {
-            this.version = version;
+        public @Nullable String getName() {
+            return name;
+        }
+
+        public Builder setVersion(String version) {
+            this.version = checkNotNull(version);
             return this;
         }
 
-        public  Builder setClassifier(String classifier) {
+        public @Nullable String getVersion() {
+            return version;
+        }
+
+        public Builder setClassifier(String classifier) {
             this.classifier = classifier;
             return this;
         }
@@ -231,9 +243,28 @@ public final class Artifact {
             return setClassifier("test");
         }
 
+        public @Nullable String getClassifier() {
+            return classifier;
+        }
+
         public Builder setExtension(String extension) {
             this.extension = extension;
             return this;
+        }
+
+        public @Nullable String getExtension() {
+            return extension;
+        }
+
+        public Builder setDependency(io.spine.tools.gradle.Dependency dependency) {
+            checkNotNull(dependency);
+            this.group = dependency.groupId();
+            this.name = dependency.name();
+            return this;
+        }
+
+        public io.spine.tools.gradle.Dependency getDependency() {
+            return new ThirdPartyDependency(group, name);
         }
 
         /**
@@ -243,7 +274,6 @@ public final class Artifact {
             checkNotNull(group);
             checkNotNull(name);
             checkNotNull(version);
-
             return new Artifact(this);
         }
     }
