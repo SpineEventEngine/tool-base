@@ -31,7 +31,9 @@ package io.spine.tools.gradle
 import io.spine.tools.code.SourceSetName
 import org.gradle.api.tasks.SourceSet
 
-/** The name of this source set. */
+/**
+ * The name of this source set.
+ */
 public val SourceSet.named: SourceSetName
     get() = SourceSetName(name)
 
