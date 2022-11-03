@@ -60,12 +60,13 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     `java-library`
-    jacoco
+    kotlin("jvm")
     idea
-    `project-report`
     id(protobufPlugin)
     id(errorPronePlugin)
-    kotlin("jvm")
+    `detekt-code-analysis`
+    jacoco
+    `project-report`
 }
 
 spinePublishing {
