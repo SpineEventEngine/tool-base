@@ -62,8 +62,8 @@ plugins {
     `java-library`
     kotlin("jvm")
     idea
-    id(protobufPlugin)
-    id(errorPronePlugin)
+    protobuf
+    errorprone
     `detekt-code-analysis`
     jacoco
     `project-report`

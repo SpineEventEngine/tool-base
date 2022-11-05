@@ -24,4 +24,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.121")
+package io.spine.tools.gradle.testing
+
+import io.spine.tools.gradle.task.TaskName
+import org.gradle.testkit.runner.BuildResult
+import org.gradle.testkit.runner.TaskOutcome
+
+/**
+ * Obtains the result of the [task] from this build result.
+ *
+ * @throws IllegalStateException
+ *          if the build result does not have a task with the given name.
+ */
+public operator fun BuildResult.get(task: TaskName): TaskOutcome {
+    val buildTask = task(task.path())
+    check(buildTask != null) {
+        "The build result does not have the task named `${task.name()}`."
+    }
+    return buildTask.outcome
+}
