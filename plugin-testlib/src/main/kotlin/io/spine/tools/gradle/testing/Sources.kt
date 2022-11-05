@@ -65,9 +65,7 @@ internal class Sources(private val setup: GradleProjectSetup) {
         }
     }
 
-    private fun resourceOriginAssigned(): Boolean {
-        return setup.resourceDir != null
-    }
+    private fun resourceOriginAssigned(): Boolean = setup.resourceDir != null
 
     private fun origin(): String {
         check(resourceOriginAssigned()) {
@@ -92,7 +90,5 @@ internal class Sources(private val setup: GradleProjectSetup) {
         }
     }
 
-    private fun resolve(path: String): Path {
-        return projectDir.resolve(path)
-    }
+    private fun resolve(path: String): Path = projectDir.resolve(path)
 }
