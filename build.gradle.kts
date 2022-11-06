@@ -99,7 +99,6 @@ spinePublishing {
     )
     destinations = with(PublishingRepos) {
         setOf(
-            cloudRepo,
             cloudArtifactRegistry,
             gitHub("tool-base")
         )
@@ -136,6 +135,7 @@ subprojects {
 
     val generatedDir = "$projectDir/generated"
     configureProtoc(generatedDir)
+    applyGeneratedDirectories(generatedDir)
 
     configureGitHubPages()
 }
@@ -238,7 +238,7 @@ fun Subproject.configureTests() {
 
 fun Subproject.configureProtoc(generatedDir: String) {
     protobuf {
-        generatedFilesBaseDir = generatedDir
+        //generatedFilesBaseDir = generatedDir
         protoc {
             artifact = Protobuf.compiler
         }
@@ -246,6 +246,63 @@ fun Subproject.configureProtoc(generatedDir: String) {
 
     tasks.clean.configure {
         delete(generatedDir)
+    }
+}
+
+/**
+ * Adds directories with the generated source code to source sets of the project and
+ * to IntelliJ IDEA module settings.
+ *
+ * @param generatedDir
+ *          the name of the root directory with the generated code
+ */
+fun Subproject.applyGeneratedDirectories(generatedDir: String) {
+    val generatedMain = "$generatedDir/main"
+    val generatedJava = "$generatedMain/java"
+    val generatedKotlin = "$generatedMain/kotlin"
+    val generatedGrpc = "$generatedMain/grpc"
+
+    val generatedTest = "$generatedDir/test"
+    val generatedTestJava = "$generatedTest/java"
+    val generatedTestKotlin = "$generatedTest/kotlin"
+    val generatedTestGrpc = "$generatedTest/grpc"
+
+    sourceSets {
+        main {
+            java.srcDirs(
+                generatedJava,
+                generatedGrpc,
+            )
+            kotlin.srcDirs(
+                generatedKotlin,
+            )
+        }
+        test {
+            java.srcDirs(
+                generatedTestJava,
+                generatedTestGrpc,
+            )
+            kotlin.srcDirs(
+                generatedTestKotlin,
+            )
+        }
+    }
+
+    idea {
+        module {
+            generatedSourceDirs.addAll(files(
+                generatedJava,
+                generatedKotlin,
+                generatedGrpc,
+            ))
+            testSources.from(
+                generatedTestJava,
+                generatedTestKotlin,
+                generatedTestGrpc,
+            )
+            isDownloadJavadoc = true
+            isDownloadSources = true
+        }
     }
 }
 
