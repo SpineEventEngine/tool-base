@@ -58,6 +58,28 @@ import io.spine.internal.gradle.testing.configureLogging
 import io.spine.internal.gradle.testing.registerTestTasks
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+buildscript {
+    io.spine.internal.gradle.doApplyStandard(repositories)
+    dependencies {
+        classpath(io.spine.internal.dependency.Protobuf.GradlePlugin.lib)
+        classpath(io.spine.internal.dependency.Spine.McJava.pluginLib)
+    }
+
+    val spine = io.spine.internal.dependency.Spine(project)
+    io.spine.internal.gradle.doForceVersions(configurations)
+    configurations {
+        all {
+            resolutionStrategy {
+                force(
+                    spine.base,
+                    spine.validation.java,
+                    io.spine.internal.dependency.Spine.ProtoData.pluginLib
+                )
+            }
+        }
+    }
+}
+
 plugins {
     `java-library`
     kotlin("jvm")
@@ -163,6 +185,16 @@ fun Subproject.forceConfigurations() {
     with(configurations) {
         forceVersions()
         excludeProtobufLite()
+        all {
+            resolutionStrategy {
+                val spine = io.spine.internal.dependency.Spine(project)
+                force(
+                    spine.base,
+                    spine.validation.runtime,
+                )
+            }
+        }
+
     }
 }
 

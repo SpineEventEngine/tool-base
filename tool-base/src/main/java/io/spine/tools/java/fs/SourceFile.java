@@ -47,9 +47,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static io.spine.tools.java.fs.JavaFiles.resolve;
 import static io.spine.tools.java.fs.JavaFiles.toDirectory;
 import static io.spine.util.Exceptions.newIllegalStateException;
+import static io.spine.util.Preconditions2.checkNotEmptyOrBlank;
 
 /**
- * A Java source code file.
+ * A a path to a Java source code file.
  */
 @SuppressWarnings("unused")
 public final class SourceFile extends AbstractSourceFile {
@@ -69,7 +70,7 @@ public final class SourceFile extends AbstractSourceFile {
      *
      * @param type
      *         the type from which the file is generated
-     * @return a relative file path
+     * @return a source file with a relative path
      */
     public static SourceFile forType(Type<?, ?> type) {
         var classFile = whichDeclares(type.javaClassName());
@@ -79,16 +80,16 @@ public final class SourceFile extends AbstractSourceFile {
     /**
      * Resolves the file which contains the declaration of the given class.
      *
-     * <p>The resulting {@code SourceFile} represents a <strong>relative</strong> path to the Java
-     * file starting at the top level package.
+     * <p>The resulting {@code SourceFile} represents a <strong>relative</strong> path
+     * to the Java file starting at the top level package.
      *
-     * <p>In the simplest case, the file name is the same as the simple class name. However, if
-     * the class is nested, then the file name coincides with the simple name of the top-level
-     * class.
+     * <p>In the simplest case, the file name is the same as the simple class name.
+     * However, if the class is nested, then the file name coincides with the simple
+     * name of the top-level class.
      *
      * @param javaClass
      *         the name of the class to resolve
-     * @return the file in which the Java class is declared
+     * @return a source file (with a relative path) in which the Java class is declared
      */
     public static SourceFile whichDeclares(ClassName javaClass) {
         checkNotNull(javaClass);
@@ -104,7 +105,7 @@ public final class SourceFile extends AbstractSourceFile {
      *
      * @param file
      *         the proto file descriptor
-     * @return the relative file path
+     * @return a source file with a relative path
      */
     public static SourceFile forOuterClassOf(FileDescriptorProto file) {
         checkNotNull(file);
@@ -136,7 +137,7 @@ public final class SourceFile extends AbstractSourceFile {
      * @param file
      *         the descriptor of the proto file which contains the declaration of the
      *         message type
-     * @return the relative file path
+     * @return the source file with a relative path
      * @see #forMessage(DescriptorProto, FileDescriptorProto)
      */
     public static SourceFile forMessage(Descriptor message, FileDescriptor file) {
@@ -149,9 +150,9 @@ public final class SourceFile extends AbstractSourceFile {
      * @param message
      *         the descriptor of the message type for which we obtain the source code file
      * @param file
-     *         the descriptor of the proto file which contains the declaration of the
-     *         message type
-     * @return the relative file path
+     *         the descriptor of the proto file which contains the declaration
+     *         of the message type
+     * @return the source file with a relative path
      * @see #forMessage(Descriptor, FileDescriptor)
      */
     public static SourceFile forMessage(DescriptorProto message, FileDescriptorProto file) {
@@ -159,15 +160,15 @@ public final class SourceFile extends AbstractSourceFile {
     }
 
     /**
-     * Obtains the generated file for the {@code MessageOrBuilder} interface of the specified
-     * message descriptor.
+     * Obtains the generated file for the {@code MessageOrBuilder} interface of
+     * the specified message descriptor.
      *
      * @param message
      *         the descriptor of the message type for which we obtain the source code file
      * @param file
-     *         the descriptor of the proto file which contains the declaration of the
-     *         message type
-     * @return the relative file path
+     *         the descriptor of the proto file which contains the declaration
+     *         of the message type
+     * @return the source file with a relative path
      */
     public static SourceFile forMessageOrBuilder(Descriptor message, FileDescriptor file) {
         return forMessageOrBuilder(message.toProto(), file.toProto());
@@ -182,7 +183,7 @@ public final class SourceFile extends AbstractSourceFile {
      * @param file
      *         the descriptor of the proto file which contains the declaration of
      *         the message type
-     * @return the relative file path
+     * @return the source file with a relative path
      */
     public static SourceFile forMessageOrBuilder(DescriptorProto message,
                                                  FileDescriptorProto file) {
@@ -196,7 +197,7 @@ public final class SourceFile extends AbstractSourceFile {
         checkNotNull(message);
         var typeName = message.getName();
         if (!file.getMessageTypeList().contains(message)) {
-            throw invalidNestedDefinition(file.getName(), typeName);
+            throw missingNestedDefinition(file.getName(), typeName);
         }
         if (file.getOptions().getJavaMultipleFiles()) {
             var filename = fileName.apply(message);
@@ -209,10 +210,9 @@ public final class SourceFile extends AbstractSourceFile {
         }
     }
 
-    private static
-    IllegalStateException invalidNestedDefinition(String filename, String nestedDefinitionName) {
+    private static IllegalStateException missingNestedDefinition(String file, String definition) {
         throw newIllegalStateException("`%s` does not contain nested definition `%s`.",
-                                       filename, nestedDefinitionName);
+                                       file, definition);
     }
 
     /**
@@ -222,7 +222,7 @@ public final class SourceFile extends AbstractSourceFile {
      *         the enum descriptor to get the file for
      * @param file
      *         the file descriptor containing the enum descriptor
-     * @return the relative file path
+     * @return the source file with a relative path
      */
     public static SourceFile forEnum(EnumDescriptor enumType, FileDescriptor file) {
         return forEnum(enumType.toProto(), file.toProto());
@@ -235,13 +235,13 @@ public final class SourceFile extends AbstractSourceFile {
      *         the enum descriptor to get the file for
      * @param file
      *         the file descriptor containing the enum descriptor
-     * @return the relative file path
+     * @return the source file with a relative path
      */
     public static SourceFile forEnum(EnumDescriptorProto enumType, FileDescriptorProto file) {
         checkNotNull(file);
         checkNotNull(enumType);
         if (!file.getEnumTypeList().contains(enumType)) {
-            throw invalidNestedDefinition(file.getName(), enumType.getName());
+            throw missingNestedDefinition(file.getName(), enumType.getName());
         }
         if (file.getOptions().getJavaMultipleFiles()) {
             var filename = FileName.forEnum(enumType);
@@ -261,9 +261,11 @@ public final class SourceFile extends AbstractSourceFile {
      *         the service descriptor to get the file for
      * @param file
      *         the file descriptor containing the service descriptor
-     * @return the relative file path
+     * @return the source file with a relative path
      */
     public static SourceFile forService(ServiceDescriptor service, FileDescriptor file) {
+        checkNotNull(service);
+        checkNotNull(file);
         return forService(service.toProto(), file.toProto());
     }
 
@@ -274,14 +276,14 @@ public final class SourceFile extends AbstractSourceFile {
      *         the service descriptor to get the file for
      * @param file
      *         the file descriptor containing the service descriptor
-     * @return the relative file path
+     * @return the source file with a relative path
      */
     public static SourceFile forService(ServiceDescriptorProto service, FileDescriptorProto file) {
         checkNotNull(service);
         checkNotNull(file);
         var serviceType = service.getName();
         if (!file.getServiceList().contains(service)) {
-            throw invalidNestedDefinition(file.getName(), serviceType);
+            throw missingNestedDefinition(file.getName(), serviceType);
         }
         var filename = FileName.forService(service);
         var dir = getGeneratedFolder(file);
@@ -290,9 +292,11 @@ public final class SourceFile extends AbstractSourceFile {
     }
 
     /**
-     * Obtains a file path for the source code file of the give type in the given package.
+     * Obtains a Java source file with the source code of the give type in the given package.
      */
     public static SourceFile forType(String javaPackage, String typename) {
+        checkNotEmptyOrBlank(javaPackage);
+        checkNotEmptyOrBlank(typename);
         var packageName = PackageName.of(javaPackage);
         var directory = toDirectory(packageName);
         var result = resolve(directory, FileName.forType(typename));
@@ -303,6 +307,7 @@ public final class SourceFile extends AbstractSourceFile {
      * Obtains a source file of the specified class.
      */
     public static SourceFile of(Class<?> cls) {
+        checkNotNull(cls);
         var packageName = PackageName.of(cls);
         var directory = toDirectory(packageName);
         return forType(directory.toString(), cls.getSimpleName());

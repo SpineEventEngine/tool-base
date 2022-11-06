@@ -25,8 +25,18 @@
  */
 package io.spine.tools.java.fs
 
+import com.google.common.testing.NullPointerTester
 import com.google.common.truth.Truth.assertThat
+import com.google.protobuf.DescriptorProtos.DescriptorProto
+import com.google.protobuf.DescriptorProtos.EnumDescriptorProto
+import com.google.protobuf.DescriptorProtos.FileDescriptorProto
 import com.google.protobuf.Descriptors.Descriptor
+import com.google.protobuf.Descriptors.EnumDescriptor
+import com.google.protobuf.Descriptors.FileDescriptor
+import com.google.protobuf.Descriptors.ServiceDescriptor
+import com.google.protobuf.Empty
+import io.spine.option.EntityOption
+import io.spine.testing.setDefault
 import io.spine.test.code.NoOuterClassnameSourceFileTest.NoOuterClassnameMessage
 import io.spine.test.code.SourceFile.NestedMessage
 import io.spine.test.code.StandaloneMessage
@@ -45,6 +55,24 @@ internal class SourceFileSpec {
         val expectedPath = Paths.get(expectedName)
 
         assertThat(sourceFile.path()).isEqualTo(expectedPath)
+    }
+
+    @Test
+    fun checkNulls() {
+        val descr = Empty.getDescriptor()
+        val fileDescr = Empty.getDescriptor()
+        val enumDescr = EntityOption.Kind.getDescriptor()
+        NullPointerTester().run {
+            setDefault("nonblank")
+            setDefault<FileDescriptor>(fileDescr.file)
+            setDefault<FileDescriptorProto>(fileDescr.file.toProto())
+            setDefault<Descriptor>(descr)
+            setDefault<DescriptorProto>(descr.toProto())
+            setDefault<EnumDescriptor>(enumDescr)
+            setDefault<EnumDescriptorProto>(enumDescr.toProto())
+            //.setDefault(ServiceDescriptor::class.java, ProjectApi.ge)
+            //.setDefault(ServiceDescriptorProto::class.java, ServiceDescriptor.getDefaultInstance())
+        }.testAllPublicStaticMethods(SourceFile::class.java)
     }
 
     @Test
