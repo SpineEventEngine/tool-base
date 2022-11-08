@@ -214,12 +214,14 @@ public class JavaConfigurationName(value: String, sourceSetName: SourceSetName) 
         /**
          * The `compile` configuration.
          *
-         * Although the `compile` configuration is deprecated in Gradle, it is still used in order
+         * Although the `compile` configuration is deprecated in Gradle, it is still used
          * to define Protobuf dependencies without re-generating the Java/JS sources from
          * the upstream Protobuf definitions.
+         *
+         * For other cases, consider using alternatives: [implementation] and [api].
          */
         @JvmField
-        @Deprecated("Deprecated since Gradle 5.0. Use {@link #implementation} or {@link #api} instead.")
+        @Deprecated("Deprecated since Gradle 5.0.")
         public val compile: ConfigurationName = name("compile")
 
         private fun name(value: String) = ConfigurationNameImpl(value)
