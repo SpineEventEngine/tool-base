@@ -43,8 +43,8 @@ dependencies {
     testImplementation(spine.testlib)
 }
 
-val generatedDir by extra("$projectDir/generated")
 protobuf {
+    val generatedDir by extra("$projectDir/generated")
     generateProtoTasks {
         for (task in all()) {
             task.setup(generatedDir)
