@@ -32,8 +32,6 @@ import io.spine.internal.dependency.JavaX
 import io.spine.internal.dependency.Spine
 import io.spine.internal.gradle.protobuf.setup
 
-val baseVersion: String by extra
-
 dependencies {
     api(JavaPoet.lib)
     api(JavaX.annotations)
