@@ -32,6 +32,10 @@ import io.spine.internal.dependency.JavaX
 import io.spine.internal.dependency.Spine
 import io.spine.internal.gradle.protobuf.setup
 
+plugins {
+    `detekt-code-analysis`
+}
+
 dependencies {
     api(JavaPoet.lib)
     api(JavaX.annotations)

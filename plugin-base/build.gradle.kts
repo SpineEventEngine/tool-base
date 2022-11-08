@@ -30,6 +30,10 @@ import io.spine.internal.dependency.Protobuf
 import io.spine.internal.gradle.WriteVersions
 import io.spine.internal.gradle.protobuf.setup
 
+plugins {
+    `detekt-code-analysis`
+}
+
 dependencies {
     api(gradleApi())
     api(Protobuf.GradlePlugin.lib)
