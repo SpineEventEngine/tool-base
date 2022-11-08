@@ -42,6 +42,7 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull
  * which is used and [exposed][GradleProject.runner] by `GradleProject` — does have
  * the [build()][org.gradle.testkit.runner.GradleRunner.build] method which executes a Gradle build.
  */
+@Suppress("TooManyFunctions") // It is a builder by nature.
 public class GradleProjectSetup internal constructor(
     /** Path on the file system under which the project will be created.  */
     internal val projectDir: File
