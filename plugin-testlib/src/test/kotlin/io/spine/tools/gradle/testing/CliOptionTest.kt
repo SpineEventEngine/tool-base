@@ -24,33 +24,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gragle.testing
+package io.spine.tools.gradle.testing
 
 import com.google.common.truth.Truth.assertThat
-import io.spine.tools.gradle.testing.CliProperty
-import org.junit.jupiter.api.Nested
+import io.spine.tools.gradle.testing.CliOption.Companion.prefix
+import io.spine.tools.gradle.testing.CliOption.Companion.stacktrace
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-class `'CliProperty' should` {
+class `'CliOption' should` {
 
-    @Nested
-    inner class `prohibit illegal arguments` {
-
-        @Test
-        fun `empty name`() {
-            assertThrows<IllegalArgumentException> { CliProperty("", "value")  }
-        }
-
-        @Test
-        fun `blank name`() {
-            assertThrows<IllegalArgumentException> { CliProperty(" ", "fiz")  }
-        }
+    @Test
+    fun `prohibit empty or blank values`() {
+        assertThrows<IllegalArgumentException> {  CliOption("") }
+        assertThrows<IllegalArgumentException> {  CliOption(" ") }
     }
 
     @Test
-    fun `provide prefixed command like argument`() {
-        assertThat(CliProperty("foo", "bar").argument())
-            .isEqualTo("-Pfoo=bar")
+    fun `have prefix in string form`() {
+        assertThat(stacktrace.toString()).startsWith(prefix)
     }
+
 }

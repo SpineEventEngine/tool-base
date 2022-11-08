@@ -24,13 +24,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gragle.testing
+package io.spine.tools.gradle.testing
 
 import com.google.common.testing.NullPointerTester
 import com.google.common.truth.Truth.assertThat
 import io.spine.tools.gradle.task.JavaTaskName.Companion.compileJava
-import io.spine.tools.gradle.testing.GradleProject
-import io.spine.tools.gradle.testing.GradleProjectSetup
 import java.io.File
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested

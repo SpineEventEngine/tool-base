@@ -24,10 +24,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gragle.testing
+package io.spine.tools.gradle.testing
 
 import com.google.common.truth.Truth.assertThat
-import io.spine.tools.gradle.testing.BuildSrcCopy
 import java.nio.file.Paths
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
