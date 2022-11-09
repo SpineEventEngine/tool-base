@@ -23,16 +23,33 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package io.spine.tools.gradle.testing
 
 import com.google.common.truth.Truth.assertThat
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
-class `'RootProject' should` {
+class `'CliProperty' should` {
+
+    @Nested
+    inner class `prohibit illegal arguments` {
+
+        @Test
+        fun `empty name`() {
+            assertThrows<IllegalArgumentException> { CliProperty("", "value")  }
+        }
+
+        @Test
+        fun `blank name`() {
+            assertThrows<IllegalArgumentException> { CliProperty(" ", "fiz")  }
+        }
+    }
 
     @Test
-    fun `locate the project root`() {
-        assertThat(RootProject.dir().exists())
-            .isTrue()
+    fun `provide prefixed command like argument`() {
+        assertThat(CliProperty("foo", "bar").argument())
+            .isEqualTo("-Pfoo=bar")
     }
 }

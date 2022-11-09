@@ -32,7 +32,9 @@ import io.spine.internal.dependency.JavaX
 import io.spine.internal.dependency.Spine
 import io.spine.internal.gradle.protobuf.setup
 
-val baseVersion: String by extra
+plugins {
+    `detekt-code-analysis`
+}
 
 dependencies {
     api(JavaPoet.lib)
@@ -45,8 +47,8 @@ dependencies {
     testImplementation(spine.testlib)
 }
 
-val generatedDir by extra("$projectDir/generated")
 protobuf {
+    val generatedDir by extra("$projectDir/generated")
     generateProtoTasks {
         for (task in all()) {
             task.setup(generatedDir)

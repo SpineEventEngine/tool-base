@@ -23,13 +23,11 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package io.spine.tools.gragle.testing
+package io.spine.tools.gradle.testing
 
 import com.google.common.truth.Truth.assertThat
 import io.spine.base.Identifier
 import io.spine.tools.gradle.task.JavaTaskName.Companion.compileJava
-import io.spine.tools.gradle.testing.GradleProject
-import io.spine.tools.gradle.testing.GradleProjectSetup
 import java.io.File
 import java.nio.file.Path
 import org.gradle.testkit.runner.TaskOutcome

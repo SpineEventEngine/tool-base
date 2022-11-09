@@ -30,8 +30,11 @@ import io.spine.tools.code.SourceSetBasedName
 import io.spine.tools.code.SourceSetName
 
 /**
- * An abstract base for a task name type the value of which depend on a name of a source set
+ * A base for a task name type the value of which depend on a name of a source set
  * to which this task belongs.
  */
-public abstract class TaskWithSourceSetName(value: String, sourceSetName: SourceSetName) :
+public open class TaskWithSourceSetName protected constructor(
+    value: String,
+    sourceSetName: SourceSetName
+) :
     SourceSetBasedName(value, sourceSetName), TaskName
