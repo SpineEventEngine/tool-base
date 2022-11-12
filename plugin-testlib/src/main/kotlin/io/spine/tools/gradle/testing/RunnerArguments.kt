@@ -25,33 +25,47 @@
  */
 package io.spine.tools.gradle.testing
 
+import com.google.common.annotations.VisibleForTesting
 import io.spine.tools.gradle.task.TaskName
+import org.gradle.api.logging.LogLevel
 
 /**
  * Create Gradle Runner arguments for a task.
  */
 internal class RunnerArguments internal constructor(
 
-    /** If `true`, [CliOption.debug] will be passed to the runner.  */
-    private val debugLog: Boolean = false,
+    /**
+     * The level of logging to be used in the runner.
+     */
+    private val loggingLevel: LogLevel = LogLevel.LIFECYCLE,
 
-    /** If `true`, [CliOption.stacktrace] will be passed to the runner. */
+    /**
+     * If `true`, [CliOption.stacktrace] will be passed to the runner.
+     */
     private val stacktrace: Boolean = true,
 
-    /** If `true`, [CliOption.noDaemon] will be passed to the runner. */
+    /**
+     * If `true`, [CliOption.noDaemon] will be passed to the runner.
+     */
     private val noDaemon: Boolean = false,
 
-    /** Properties passed to the runner. */
+    /**
+     * Properties passed to the runner.
+     */
     private val properties: Map<String, String> = mapOf(),
 
-    /** Options passed to the runner. */
+    /**
+     * Options passed to the runner.
+     */
     private val options: List<String> = listOf()
 ) {
 
-    /** Turns on the debug flag. */
+    /**
+     * Turns on the debug flag.
+     */
     fun withDebugLogging(): RunnerArguments {
         return RunnerArguments(
-            debugLog = true,
+            loggingLevel = LogLevel.DEBUG,
             stacktrace = this.stacktrace,
             noDaemon = this.noDaemon,
             properties = this.properties,
@@ -59,10 +73,12 @@ internal class RunnerArguments internal constructor(
         )
     }
 
-    /** Turns off the stacktrace output. */
+    /**
+     * Turns off the stacktrace output.
+     */
     fun noStacktrace(): RunnerArguments {
         return RunnerArguments(
-            debugLog = this.debugLog,
+            loggingLevel = this.loggingLevel,
             stacktrace = false,
             noDaemon = this.noDaemon,
             properties = this.properties,
@@ -70,10 +86,12 @@ internal class RunnerArguments internal constructor(
         )
     }
 
-    /** Turns on the `--no-daemon` flag. */
+    /**
+     * Turns on the `--no-daemon` flag.
+     */
     fun noDaemon(): RunnerArguments {
         return RunnerArguments(
-            debugLog = this.debugLog,
+            loggingLevel = this.loggingLevel,
             stacktrace = this.stacktrace,
             noDaemon = true,
             properties = this.properties,
@@ -81,12 +99,27 @@ internal class RunnerArguments internal constructor(
         )
     }
 
-    /** Adds a Gradle property entry to the command line arguments. */
+    /**
+     * Adds the logging level option.
+     */
+    fun withLoggingLevel(level: LogLevel): RunnerArguments {
+        return RunnerArguments(
+            loggingLevel = level,
+            stacktrace = this.stacktrace,
+            noDaemon = this.noDaemon,
+            properties = this.properties,
+            options = this.options
+        )
+    }
+
+    /**
+     * Adds a Gradle property entry to the command line arguments.
+     */
     fun withProperty(name: String, value: String): RunnerArguments {
         require(name.isNotBlank())
         require(value.isNotBlank())
         return RunnerArguments(
-            debugLog = this.debugLog,
+            loggingLevel = this.loggingLevel,
             stacktrace = this.stacktrace,
             noDaemon = this.noDaemon,
             properties = this.properties + Pair(name, value),
@@ -94,10 +127,12 @@ internal class RunnerArguments internal constructor(
         )
     }
 
-    /** Adds passed properties to the arguments. */
+    /**
+     * Adds passed properties to the arguments.
+     */
     fun withProperties(properties: Map<String, String>): RunnerArguments {
         return RunnerArguments(
-            debugLog = this.debugLog,
+            loggingLevel = this.loggingLevel,
             stacktrace = this.stacktrace,
             noDaemon = this.noDaemon,
             properties = this.properties + properties,
@@ -105,10 +140,12 @@ internal class RunnerArguments internal constructor(
         )
     }
 
-    /** Adds passed options to the command line arguments. */
+    /**
+     * Adds passed options to the command line arguments.
+     */
     fun withOptions(options: Iterable<String>): RunnerArguments {
         return RunnerArguments(
-            debugLog = this.debugLog,
+            loggingLevel = this.loggingLevel,
             stacktrace = this.stacktrace,
             noDaemon = this.noDaemon,
             properties = this.properties,
@@ -130,8 +167,8 @@ internal class RunnerArguments internal constructor(
 
     private fun taskWithOptions(task: TaskName): MutableList<String> {
         val args: MutableList<String> = mutableListOf(task.name())
-        if (debugLog) {
-            args.add(CliOption.debug.argument())
+        if (loggingLevel != LogLevel.LIFECYCLE) {
+            args.add(loggingLevel.toCommandLineOption())
         }
         if (stacktrace) {
             args.add(CliOption.stacktrace.argument())
@@ -143,3 +180,9 @@ internal class RunnerArguments internal constructor(
         return args
     }
 }
+
+/**
+ * Turns this [LogLevel] into a command line option passed to the Gradle process.
+ */
+@VisibleForTesting
+internal fun LogLevel.toCommandLineOption() = "--${name.lowercase()}"

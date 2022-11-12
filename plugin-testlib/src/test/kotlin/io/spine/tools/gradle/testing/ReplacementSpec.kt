@@ -30,12 +30,14 @@ import com.google.common.truth.Truth.assertThat
 import java.io.File
 import java.nio.file.Path
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.io.TempDir
 
-class `'Replacement' should` {
+@DisplayName("`Replacement` should")
+class ReplacementSpec {
 
     private lateinit var folder: File
 
