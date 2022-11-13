@@ -55,7 +55,7 @@ class RunnerArgumentsSpec {
         assertThat(args).containsExactly(
             compileJava.name(),
             stacktrace.argument(),
-            level.toCommandLineOption()
+            level.toCliOption().argument()
         )
     }
 

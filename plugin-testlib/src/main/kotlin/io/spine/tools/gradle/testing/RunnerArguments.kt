@@ -25,7 +25,6 @@
  */
 package io.spine.tools.gradle.testing
 
-import com.google.common.annotations.VisibleForTesting
 import io.spine.tools.gradle.task.TaskName
 import org.gradle.api.logging.LogLevel
 
@@ -168,7 +167,7 @@ internal class RunnerArguments internal constructor(
     private fun taskWithOptions(task: TaskName): MutableList<String> {
         val args: MutableList<String> = mutableListOf(task.name())
         if (loggingLevel != LogLevel.LIFECYCLE) {
-            args.add(loggingLevel.toCommandLineOption())
+            args.add(loggingLevel.toCliOption().argument())
         }
         if (stacktrace) {
             args.add(CliOption.stacktrace.argument())
@@ -180,9 +179,3 @@ internal class RunnerArguments internal constructor(
         return args
     }
 }
-
-/**
- * Turns this [LogLevel] into a command line option passed to the Gradle process.
- */
-@VisibleForTesting
-internal fun LogLevel.toCommandLineOption() = "--${name.lowercase()}"
