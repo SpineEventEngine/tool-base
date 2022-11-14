@@ -60,19 +60,6 @@ internal class RunnerArguments internal constructor(
 ) {
 
     /**
-     * Turns on the debug flag.
-     */
-    fun withDebugLogging(): RunnerArguments {
-        return RunnerArguments(
-            loggingLevel = LogLevel.DEBUG,
-            stacktrace = this.stacktrace,
-            noDaemon = this.noDaemon,
-            properties = this.properties,
-            options = this.options
-        )
-    }
-
-    /**
      * Turns off the stacktrace output.
      */
     fun noStacktrace(): RunnerArguments {

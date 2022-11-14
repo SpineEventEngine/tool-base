@@ -203,8 +203,12 @@ public class GradleProjectSetup internal constructor(
     /**
      * Adds `--debug` command line option to the Gradle process.
      */
+    @Deprecated(
+        message = "Please use `withLoggingLevel(LogLevel.DEBUG)`.",
+        replaceWith = ReplaceWith("withLoggingLevel(LogLevel.DEBUG)")
+    )
     public fun debugLogging(): GradleProjectSetup {
-        arguments = arguments.withDebugLogging()
+        arguments = arguments.withLoggingLevel(LogLevel.DEBUG)
         return this
     }
 
