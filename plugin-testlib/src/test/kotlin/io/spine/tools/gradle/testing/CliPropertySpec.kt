@@ -27,13 +27,31 @@
 package io.spine.tools.gradle.testing
 
 import com.google.common.truth.Truth.assertThat
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
-class `'RootProject' should` {
+@DisplayName("`CliProperty` should")
+class CliPropertySpec {
+
+    @Nested
+    inner class `prohibit illegal arguments` {
+
+        @Test
+        fun `empty name`() {
+            assertThrows<IllegalArgumentException> { CliProperty("", "value")  }
+        }
+
+        @Test
+        fun `blank name`() {
+            assertThrows<IllegalArgumentException> { CliProperty(" ", "fiz")  }
+        }
+    }
 
     @Test
-    fun `locate the project root`() {
-        assertThat(RootProject.dir().exists())
-            .isTrue()
+    fun `provide prefixed command like argument`() {
+        assertThat(CliProperty("foo", "bar").argument())
+            .isEqualTo("-Pfoo=bar")
     }
 }

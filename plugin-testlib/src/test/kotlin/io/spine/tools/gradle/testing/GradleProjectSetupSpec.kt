@@ -30,13 +30,16 @@ import com.google.common.testing.NullPointerTester
 import com.google.common.truth.Truth.assertThat
 import io.spine.tools.gradle.task.JavaTaskName.Companion.compileJava
 import java.io.File
+import org.gradle.api.logging.LogLevel
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.io.TempDir
 
-class `'GradleProjectSetup' should` {
+@DisplayName("`GradleProjectSetup` should")
+class GradleProjectSetupSpec {
 
     private lateinit var projectDir: File
     private lateinit var setup: GradleProjectSetup
@@ -91,7 +94,7 @@ class `'GradleProjectSetup' should` {
         fun `when 'debug' already set`() {
             setup.enableRunnerDebug()
             assertThrows<IllegalStateException> {
-                setup.withEnvironment(mapOf( "foo" to "bar"))
+                setup.withEnvironment(mapOf("foo" to "bar"))
             }
         }
 
@@ -119,7 +122,7 @@ class `'GradleProjectSetup' should` {
     private fun assertCommandLineArgs() = assertThat(commandLineArgs())
 
     @Nested
-    inner class `turn debug logging level` {
+    inner class `turn logging level` {
 
         private val debugOption = "--debug"
 
@@ -130,7 +133,7 @@ class `'GradleProjectSetup' should` {
 
         @Test
         fun `when instructed`() {
-            setup.debugLogging()
+            setup.withLoggingLevel(LogLevel.DEBUG)
             assertCommandLineArgs().contains(debugOption)
         }
     }
@@ -146,8 +149,10 @@ class `'GradleProjectSetup' should` {
         @Test
         fun `passed as 'vararg'`() {
             setup.withOptions(options[0], options[1])
-            assertCommandLineArgs().contains(options[0])
-            assertCommandLineArgs().contains(options[1])
+            assertCommandLineArgs().run {
+                contains(options[0])
+                contains(options[1])
+            }
         }
 
         @Test

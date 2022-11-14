@@ -29,10 +29,12 @@ package io.spine.tools.gradle.testing
 import com.google.common.truth.Truth.assertThat
 import io.spine.tools.gradle.testing.CliOption.Companion.prefix
 import io.spine.tools.gradle.testing.CliOption.Companion.stacktrace
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-class `'CliOption' should` {
+@DisplayName("`CliOption` should")
+class CliOptionSpec {
 
     @Test
     fun `prohibit empty or blank values`() {

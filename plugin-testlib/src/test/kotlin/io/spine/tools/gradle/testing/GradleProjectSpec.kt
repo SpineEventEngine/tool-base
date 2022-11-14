@@ -33,10 +33,12 @@ import java.nio.file.Path
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
-class `'GradleProject' should` {
+@DisplayName("`GradleProject` should")
+class GradleProjectSpec {
 
     companion object {
         private const val origin = "gradle_project_test"

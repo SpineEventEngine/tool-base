@@ -30,9 +30,11 @@ import com.google.common.truth.Truth.assertThat
 import java.nio.file.Paths
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-class `'BuildSrcCopy' should` {
+@DisplayName("`BuildSrcCopy` should")
+class BuildSrcCopySpec {
 
     private lateinit var buildSrcCopy: BuildSrcCopy
 
