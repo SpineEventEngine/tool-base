@@ -39,7 +39,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
-@DisplayName("'Sources' should")
+@DisplayName("`Sources` should")
 class SourcesSpec {
 
     companion object {
