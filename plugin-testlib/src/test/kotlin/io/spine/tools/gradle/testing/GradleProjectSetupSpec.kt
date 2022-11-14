@@ -30,6 +30,7 @@ import com.google.common.testing.NullPointerTester
 import com.google.common.truth.Truth.assertThat
 import io.spine.tools.gradle.task.JavaTaskName.Companion.compileJava
 import java.io.File
+import org.gradle.api.logging.LogLevel
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -121,7 +122,7 @@ class GradleProjectSetupSpec {
     private fun assertCommandLineArgs() = assertThat(commandLineArgs())
 
     @Nested
-    inner class `turn debug logging level` {
+    inner class `turn logging level` {
 
         private val debugOption = "--debug"
 
@@ -132,7 +133,7 @@ class GradleProjectSetupSpec {
 
         @Test
         fun `when instructed`() {
-            setup.debugLogging()
+            setup.withLoggingLevel(LogLevel.DEBUG)
             assertCommandLineArgs().contains(debugOption)
         }
     }
