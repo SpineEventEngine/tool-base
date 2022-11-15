@@ -31,6 +31,7 @@ option java_package = "io.spine.tools.type";
 option java_outer_classname = "ProjectProto";
 option java_multiple_files = true;
 
+import "google/protobuf/wrappers.proto";
 import "spine/tools/type/task.proto";
 
 message Project {
@@ -38,4 +39,8 @@ message Project {
     string name = 1;
 
     repeated TaskId tasks = 2;
+}
+
+service ProjectService {
+    rpc CreateProject(Project) returns (google.protobuf.BoolValue);
 }

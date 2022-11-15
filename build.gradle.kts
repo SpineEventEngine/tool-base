@@ -37,8 +37,6 @@ import io.spine.internal.dependency.Protobuf
 import io.spine.internal.dependency.Spine
 import io.spine.internal.dependency.Truth
 import io.spine.internal.gradle.VersionWriter
-import io.spine.internal.gradle.applyGitHubPackages
-import io.spine.internal.gradle.applyStandard
 import io.spine.internal.gradle.checkstyle.CheckStyleConfig
 import io.spine.internal.gradle.excludeProtobufLite
 import io.spine.internal.gradle.forceVersions
@@ -54,9 +52,32 @@ import io.spine.internal.gradle.publish.spinePublishing
 import io.spine.internal.gradle.report.coverage.JacocoConfig
 import io.spine.internal.gradle.report.license.LicenseReporter
 import io.spine.internal.gradle.report.pom.PomGenerator
+import io.spine.internal.gradle.standardToSpineSdk
 import io.spine.internal.gradle.testing.configureLogging
 import io.spine.internal.gradle.testing.registerTestTasks
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+buildscript {
+    standardSpineSdkRepositories()
+    dependencies {
+        classpath(io.spine.internal.dependency.Protobuf.GradlePlugin.lib)
+        classpath(io.spine.internal.dependency.Spine.McJava.pluginLib)
+    }
+
+    val spine = io.spine.internal.dependency.Spine(project)
+    io.spine.internal.gradle.doForceVersions(configurations)
+    configurations {
+        all {
+            resolutionStrategy {
+                force(
+                    spine.base,
+                    spine.validation.java,
+                    io.spine.internal.dependency.Spine.ProtoData.pluginLib
+                )
+            }
+        }
+    }
+}
 
 plugins {
     `java-library`
@@ -76,7 +97,6 @@ spinePublishing {
     )
     destinations = with(PublishingRepos) {
         setOf(
-            cloudRepo,
             cloudArtifactRegistry,
             gitHub("tool-base")
         )
@@ -94,10 +114,7 @@ allprojects {
     group = "io.spine.tools"
     version = extra["versionToPublish"]!!
 
-    with(repositories) {
-        applyGitHubPackages("base", project)
-        applyStandard()
-    }
+    repositories.standardToSpineSdk()
 }
 
 subprojects {
@@ -113,8 +130,10 @@ subprojects {
 
     val generatedDir = "$projectDir/generated"
     configureProtoc(generatedDir)
+    applyGeneratedDirectories(generatedDir)
 
     configureGitHubPages()
+    configureTaskDependencies()
 }
 
 JacocoConfig.applyTo(project)
@@ -162,6 +181,17 @@ fun Subproject.forceConfigurations() {
     with(configurations) {
         forceVersions()
         excludeProtobufLite()
+        all {
+            resolutionStrategy {
+                val spine = io.spine.internal.dependency.Spine(project)
+                force(
+                    JUnit.runner,
+                    spine.base,
+                    spine.validation.runtime,
+                )
+            }
+        }
+
     }
 }
 
@@ -205,7 +235,7 @@ fun Subproject.configureTests() {
 
 fun Subproject.configureProtoc(generatedDir: String) {
     protobuf {
-        generatedFilesBaseDir = generatedDir
+        //generatedFilesBaseDir = generatedDir
         protoc {
             artifact = Protobuf.compiler
         }
@@ -216,9 +246,68 @@ fun Subproject.configureProtoc(generatedDir: String) {
     }
 }
 
+/**
+ * Adds directories with the generated source code to source sets of the project and
+ * to IntelliJ IDEA module settings.
+ *
+ * @param generatedDir
+ *          the name of the root directory with the generated code
+ */
+fun Subproject.applyGeneratedDirectories(generatedDir: String) {
+    val generatedMain = "$generatedDir/main"
+    val generatedJava = "$generatedMain/java"
+    val generatedKotlin = "$generatedMain/kotlin"
+    val generatedGrpc = "$generatedMain/grpc"
+
+    val generatedTest = "$generatedDir/test"
+    val generatedTestJava = "$generatedTest/java"
+    val generatedTestKotlin = "$generatedTest/kotlin"
+    val generatedTestGrpc = "$generatedTest/grpc"
+
+    sourceSets {
+        main {
+            java.srcDirs(
+                generatedJava,
+                generatedGrpc,
+            )
+            kotlin.srcDirs(
+                generatedKotlin,
+            )
+        }
+        test {
+            java.srcDirs(
+                generatedTestJava,
+                generatedTestGrpc,
+            )
+            kotlin.srcDirs(
+                generatedTestKotlin,
+            )
+        }
+    }
+
+    idea {
+        module {
+            generatedSourceDirs.addAll(files(
+                generatedJava,
+                generatedKotlin,
+                generatedGrpc,
+            ))
+            testSources.from(
+                generatedTestJava,
+                generatedTestKotlin,
+                generatedTestGrpc,
+            )
+            isDownloadJavadoc = true
+            isDownloadSources = true
+        }
+    }
+}
+
 fun Subproject.configureGitHubPages() {
     updateGitHubPages(Spine.DefaultVersion.javadocTools) {
         allowInternalJavadoc.set(true)
         rootFolder.set(rootDir)
     }
 }
+
+
