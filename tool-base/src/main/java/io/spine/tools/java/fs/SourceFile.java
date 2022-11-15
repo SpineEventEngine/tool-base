@@ -50,7 +50,11 @@ import static io.spine.util.Exceptions.newIllegalStateException;
 import static io.spine.util.Preconditions2.checkNotEmptyOrBlank;
 
 /**
- * A a path to a Java source code file.
+ * A path to a Java source code file.
+ *
+ * <p>A typical case of such a file reference is a relative path, which includes
+ * the path from the top level package of the corresponding Java type. For example:
+ * {@code "io/spine/option/EntityOption.java"}.
  */
 public final class SourceFile extends AbstractSourceFile {
 
