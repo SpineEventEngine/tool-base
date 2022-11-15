@@ -51,7 +51,7 @@ import org.junit.jupiter.api.Test
 import spine.test.code.InheritAllSourceFileTest.InheritAllMessage
 import spine.test.code.InheritPackage
 
-@DisplayName("Java `SourceFile` should point to a generated message class which")
+@DisplayName("Java `SourceFile` should point to a file which")
 internal class SourceFileSpec {
 
     @Test
