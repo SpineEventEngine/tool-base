@@ -43,22 +43,16 @@ import io.spine.test.code.SourceFile.NestedMessage
 import io.spine.test.code.StandaloneMessage
 import io.spine.testing.setDefault
 import io.spine.tools.type.ProjectServiceGrpc
+import io.spine.type.MessageType
 import java.nio.file.Paths
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import spine.test.code.InheritAllSourceFileTest.InheritAllMessage
 import spine.test.code.InheritPackage
 
 @DisplayName("Java `SourceFile` should point to a generated message class which")
 internal class SourceFileSpec {
-
-    private fun checkPath(expectedName: String, descriptor: Descriptor) {
-        val file = descriptor.file
-        val sourceFile = SourceFile.forMessage(descriptor, file)
-        val expectedPath = Paths.get(expectedName)
-
-        assertThat(sourceFile.path()).isEqualTo(expectedPath)
-    }
 
     @Test
     fun checkNulls() {
@@ -81,43 +75,93 @@ internal class SourceFileSpec {
         }.testAllPublicStaticMethods(SourceFile::class.java)
     }
 
+    private fun assertPath(messageType: Descriptor, expectedPath: String) {
+        val sourceFile = SourceFile.forMessage(messageType)
+        val path = Paths.get(expectedPath)
+
+        assertThat(sourceFile.path()).isEqualTo(path)
+    }
+
     @Test
     fun `has a separate file`() {
-        checkPath(
-            "io/spine/test/code/StandaloneMessage.java",
-            StandaloneMessage.getDescriptor()
+        assertPath(
+            StandaloneMessage.getDescriptor(),
+            "io/spine/test/code/StandaloneMessage.java"
         )
+    }
+
+    @Nested
+    @DisplayName("is of specified")
+    inner class TypeParameterSpec {
+
+        @Test
+        fun type() {
+            val type = MessageType.of(StandaloneMessage.getDefaultInstance())
+            val sourceFile = SourceFile.forType(type)
+            assertContains(sourceFile, "StandaloneMessage.java")
+        }
+
+        @Test
+        fun `'Message' type`() {
+            val sourceFile = SourceFile.forMessage(StandaloneMessage.getDescriptor())
+            assertContains(sourceFile, "StandaloneMessage.java")
+        }
+
+        @Test
+        fun `'MessageOrBuilder' type`() {
+            val sourceFile = SourceFile.forMessageOrBuilder(StandaloneMessage.getDescriptor())
+            assertContains(sourceFile, "StandaloneMessageOrBuilder.java")
+        }
+
+        @Test
+        fun `enum type`() {
+            val sourceFile = SourceFile.forEnum(EntityOption.Kind.getDescriptor())
+            assertContains(sourceFile, "EntityOption.java")
+        }
+
+        @Test
+        fun `service type`() {
+            val serviceDescriptor = (ProjectServiceGrpc.getServiceDescriptor().schemaDescriptor as
+                    ProtoServiceDescriptorSupplier).serviceDescriptor
+            val sourceFile = SourceFile.forService(serviceDescriptor)
+            assertContains(sourceFile, "ProjectServiceGrpc.java")
+        }
+
+        private fun assertContains(sourceFile: SourceFile, path: String) {
+            assertThat(sourceFile.path())
+                .contains(Paths.get(path))
+        }
     }
 
     @Test
     fun `is declared in an outer class with a custom name`() {
-        checkPath(
-            "io/spine/test/code/SourceFile.java",
-            NestedMessage.getDescriptor()
+        assertPath(
+            NestedMessage.getDescriptor(),
+            "io/spine/test/code/SourceFile.java"
         )
     }
 
     @Test
     fun `is declared in an outer class with the default name`() {
-        checkPath(
-            "io/spine/test/code/NoOuterClassnameSourceFileTest.java",
-            NoOuterClassnameMessage.getDescriptor()
+        assertPath(
+            NoOuterClassnameMessage.getDescriptor(),
+            "io/spine/test/code/NoOuterClassnameSourceFileTest.java"
         )
     }
 
     @Test
     fun `inherits Protobuf package`() {
-        checkPath(
-            "spine/test/code/InheritPackage.java",
-            InheritPackage.getDescriptor()
+        assertPath(
+            InheritPackage.getDescriptor(),
+            "spine/test/code/InheritPackage.java"
         )
     }
 
     @Test
     fun `inherits Protobuf package and is declared in an outer class`() {
-        checkPath(
-            "spine/test/code/InheritAllSourceFileTest.java",
-            InheritAllMessage.getDescriptor()
+        assertPath(
+            InheritAllMessage.getDescriptor(),
+            "spine/test/code/InheritAllSourceFileTest.java"
         )
     }
 }

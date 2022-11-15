@@ -32,13 +32,13 @@ import com.google.protobuf.DescriptorProtos.FileDescriptorProto;
 import com.google.protobuf.DescriptorProtos.ServiceDescriptorProto;
 import com.google.protobuf.Descriptors.Descriptor;
 import com.google.protobuf.Descriptors.EnumDescriptor;
-import com.google.protobuf.Descriptors.FileDescriptor;
 import com.google.protobuf.Descriptors.ServiceDescriptor;
 import io.spine.code.fs.AbstractSourceFile;
 import io.spine.code.java.ClassName;
 import io.spine.code.java.PackageName;
 import io.spine.code.java.SimpleClassName;
 import io.spine.type.Type;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.nio.file.Path;
 import java.util.function.Function;
@@ -52,7 +52,6 @@ import static io.spine.util.Preconditions2.checkNotEmptyOrBlank;
 /**
  * A a path to a Java source code file.
  */
-@SuppressWarnings("unused")
 public final class SourceFile extends AbstractSourceFile {
 
     private SourceFile(Path path) {
@@ -73,6 +72,7 @@ public final class SourceFile extends AbstractSourceFile {
      * @return a source file with a relative path
      */
     public static SourceFile forType(Type<?, ?> type) {
+        checkNotNull(type);
         var classFile = whichDeclares(type.javaClassName());
         return classFile;
     }
@@ -110,7 +110,7 @@ public final class SourceFile extends AbstractSourceFile {
     public static SourceFile forOuterClassOf(FileDescriptorProto file) {
         checkNotNull(file);
         var filename = FileName.forType(SimpleClassName.outerOf(file).value());
-        var dir = getGeneratedFolder(file);
+        var dir = directoryOf(file);
         var result = resolve(dir, filename);
         return result;
     }
@@ -122,7 +122,7 @@ public final class SourceFile extends AbstractSourceFile {
      *         the proto file descriptor
      * @return the relative folder path
      */
-    private static Path getGeneratedFolder(FileDescriptorProto file) {
+    private static Path directoryOf(FileDescriptorProto file) {
         checkNotNull(file);
         var packageName = PackageName.resolve(file);
         var result = toDirectory(packageName);
@@ -134,14 +134,12 @@ public final class SourceFile extends AbstractSourceFile {
      *
      * @param message
      *         the descriptor of the message type for which we obtain the source code file
-     * @param file
-     *         the descriptor of the proto file which contains the declaration of the
-     *         message type
      * @return the source file with a relative path
      * @see #forMessage(DescriptorProto, FileDescriptorProto)
      */
-    public static SourceFile forMessage(Descriptor message, FileDescriptor file) {
-        return forMessage(message.toProto(), file.toProto());
+    public static SourceFile forMessage(Descriptor message) {
+        checkNotNull(message);
+        return forMessage(message.toProto(), message.getFile().toProto());
     }
 
     /**
@@ -153,9 +151,11 @@ public final class SourceFile extends AbstractSourceFile {
      *         the descriptor of the proto file which contains the declaration
      *         of the message type
      * @return the source file with a relative path
-     * @see #forMessage(Descriptor, FileDescriptor)
+     * @see #forMessage(Descriptor)
      */
     public static SourceFile forMessage(DescriptorProto message, FileDescriptorProto file) {
+        checkNotNull(message);
+        checkNotNull(file);
         return forMessageOrInterface(message, file, FileName::forMessage);
     }
 
@@ -165,13 +165,11 @@ public final class SourceFile extends AbstractSourceFile {
      *
      * @param message
      *         the descriptor of the message type for which we obtain the source code file
-     * @param file
-     *         the descriptor of the proto file which contains the declaration
-     *         of the message type
      * @return the source file with a relative path
      */
-    public static SourceFile forMessageOrBuilder(Descriptor message, FileDescriptor file) {
-        return forMessageOrBuilder(message.toProto(), file.toProto());
+    public static SourceFile forMessageOrBuilder(Descriptor message) {
+        checkNotNull(message);
+        return forMessageOrBuilder(message.toProto(), message.getFile().toProto());
     }
 
     /**
@@ -187,21 +185,21 @@ public final class SourceFile extends AbstractSourceFile {
      */
     public static SourceFile forMessageOrBuilder(DescriptorProto message,
                                                  FileDescriptorProto file) {
+        checkNotNull(message);
+        checkNotNull(file);
         return forMessageOrInterface(message, file, FileName::forMessageOrBuilder);
     }
 
     private static SourceFile forMessageOrInterface(DescriptorProto message,
                                                     FileDescriptorProto file,
                                                     Function<DescriptorProto, FileName> fileName) {
-        checkNotNull(file);
-        checkNotNull(message);
         var typeName = message.getName();
         if (!file.getMessageTypeList().contains(message)) {
-            throw missingNestedDefinition(file.getName(), typeName);
+            throw missingDefinition(file.getName(), typeName);
         }
         if (file.getOptions().getJavaMultipleFiles()) {
             var filename = fileName.apply(message);
-            var dir = getGeneratedFolder(file);
+            var dir = directoryOf(file);
             var result = resolve(dir, filename);
             return result;
         } else {
@@ -210,9 +208,10 @@ public final class SourceFile extends AbstractSourceFile {
         }
     }
 
-    private static IllegalStateException missingNestedDefinition(String file, String definition) {
-        throw newIllegalStateException("`%s` does not contain nested definition `%s`.",
-                                       file, definition);
+    private static IllegalStateException missingDefinition(String file, String definition) {
+        throw newIllegalStateException(
+                "The file `%s` does not contain a definition of the type `%s`.",
+                file, definition);
     }
 
     /**
@@ -220,12 +219,11 @@ public final class SourceFile extends AbstractSourceFile {
      *
      * @param enumType
      *         the enum descriptor to get the file for
-     * @param file
-     *         the file descriptor containing the enum descriptor
      * @return the source file with a relative path
      */
-    public static SourceFile forEnum(EnumDescriptor enumType, FileDescriptor file) {
-        return forEnum(enumType.toProto(), file.toProto());
+    public static SourceFile forEnum(EnumDescriptor enumType) {
+        checkNotNull(enumType);
+        return forEnum(enumType.toProto(), enumType.getFile().toProto());
     }
 
     /**
@@ -240,13 +238,24 @@ public final class SourceFile extends AbstractSourceFile {
     public static SourceFile forEnum(EnumDescriptorProto enumType, FileDescriptorProto file) {
         checkNotNull(file);
         checkNotNull(enumType);
-        if (!file.getEnumTypeList().contains(enumType)) {
-            throw missingNestedDefinition(file.getName(), enumType.getName());
+        var isTopLevelEnum = file.getEnumTypeList().contains(enumType);
+        @Nullable DescriptorProto containsNested = null;
+        if (!isTopLevelEnum) {
+            containsNested = containsNested(file, enumType);
         }
-        if (file.getOptions().getJavaMultipleFiles()) {
-            var filename = FileName.forEnum(enumType);
-            var dir = getGeneratedFolder(file);
-            var result = resolve(dir, filename);
+        if (!isTopLevelEnum && containsNested == null) {
+            throw missingDefinition(file.getName(), enumType.getName());
+        }
+        var multipleFiles = file.getOptions().getJavaMultipleFiles();
+        if (multipleFiles) {
+            FileName fileName;
+            var dir = directoryOf(file);
+            if (containsNested == null) {
+                fileName = FileName.forEnum(enumType);
+            } else {
+                fileName = FileName.forMessage(containsNested);
+            }
+            var result = resolve(dir, fileName);
             return result;
         } else {
             var result = forOuterClassOf(file);
@@ -254,19 +263,34 @@ public final class SourceFile extends AbstractSourceFile {
         }
     }
 
+    private static @Nullable DescriptorProto containsNested(FileDescriptorProto file,
+                                                            EnumDescriptorProto enumType) {
+        return file.getMessageTypeList()
+                .stream()
+                .filter(message -> containsEnum(message, enumType))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private static boolean containsEnum(DescriptorProto message, EnumDescriptorProto enumType) {
+        if (message.getEnumTypeList().contains(enumType)) {
+            return true;
+        }
+        return message.getNestedTypeList()
+                .stream()
+                .anyMatch(nested -> containsEnum(nested, enumType));
+    }
+
     /**
      * Obtains a generated file for the specified service descriptor.
      *
      * @param service
      *         the service descriptor to get the file for
-     * @param file
-     *         the file descriptor containing the service descriptor
      * @return the source file with a relative path
      */
-    public static SourceFile forService(ServiceDescriptor service, FileDescriptor file) {
+    public static SourceFile forService(ServiceDescriptor service) {
         checkNotNull(service);
-        checkNotNull(file);
-        return forService(service.toProto(), file.toProto());
+        return forService(service.toProto(), service.getFile().toProto());
     }
 
     /**
@@ -283,10 +307,10 @@ public final class SourceFile extends AbstractSourceFile {
         checkNotNull(file);
         var serviceType = service.getName();
         if (!file.getServiceList().contains(service)) {
-            throw missingNestedDefinition(file.getName(), serviceType);
+            throw missingDefinition(file.getName(), serviceType);
         }
         var filename = FileName.forService(service);
-        var dir = getGeneratedFolder(file);
+        var dir = directoryOf(file);
         var result = resolve(dir, filename);
         return result;
     }
