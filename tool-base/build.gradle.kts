@@ -34,7 +34,7 @@ import io.spine.tools.mc.gradle.modelCompiler
 import io.spine.tools.mc.java.gradle.McJavaOptions
 
 buildscript {
-    io.spine.internal.gradle.doApplyStandard(repositories)
+    standardSpineSdkRepositories()
     dependencies {
         classpath(io.spine.internal.dependency.Spine.McJava.pluginLib)
     }
@@ -63,6 +63,7 @@ dependencies {
         Grpc.stub,
         spine.validation.runtime
     ).forEach {
+        testImplementation(it)
         testFixturesImplementation(it)
     }
 
@@ -96,4 +97,10 @@ protoData {
     plugins(
         "io.spine.validation.ValidationPlugin"
     )
+}
+
+sourceSets {
+    testFixtures {
+        java.srcDirs("$projectDir/generated/testFixtures/grpc")
+    }
 }
