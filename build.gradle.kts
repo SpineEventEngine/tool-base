@@ -133,6 +133,7 @@ subprojects {
     applyGeneratedDirectories(generatedDir)
 
     configureGitHubPages()
+    configureTaskDependencies()
 }
 
 JacocoConfig.applyTo(project)
@@ -308,3 +309,5 @@ fun Subproject.configureGitHubPages() {
         rootFolder.set(rootDir)
     }
 }
+
+
