@@ -23,18 +23,19 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package io.spine.tools.gragle.testing
+
+package io.spine.tools.gradle.testing
 
 import com.google.common.truth.Truth.assertThat
 import io.spine.tools.gradle.task.JavaTaskName.Companion.compileJava
-import io.spine.tools.gradle.testing.CliOption.Companion.debug
 import io.spine.tools.gradle.testing.CliOption.Companion.noDaemon
 import io.spine.tools.gradle.testing.CliOption.Companion.stacktrace
-import io.spine.tools.gradle.testing.CliProperty
-import io.spine.tools.gradle.testing.RunnerArguments
+import org.gradle.api.logging.LogLevel
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-class `'RunnerArguments' should` {
+@DisplayName("`RunnerArguments` should")
+class RunnerArgumentsSpec {
 
     @Test
     fun `contain task name`() {
@@ -46,12 +47,15 @@ class `'RunnerArguments' should` {
     }
 
     @Test
-    fun `contain debug flag`() {
-        val args = RunnerArguments().withDebugLogging().forTask(compileJava)
+    fun `contain logging level flag`() {
+        val level = LogLevel.INFO
+        val args = RunnerArguments()
+            .withLoggingLevel(level)
+            .forTask(compileJava)
         assertThat(args).containsExactly(
             compileJava.name(),
             stacktrace.argument(),
-            debug.argument()
+            level.toCliOption().argument()
         )
     }
 

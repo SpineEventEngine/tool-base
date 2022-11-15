@@ -31,6 +31,7 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.function.Predicate
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull
+import org.gradle.api.logging.LogLevel
 
 /**
  * Customizes creation of a new [GradleProject].
@@ -42,8 +43,11 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull
  * which is used and [exposed][GradleProject.runner] by `GradleProject` — does have
  * the [build()][org.gradle.testkit.runner.GradleRunner.build] method which executes a Gradle build.
  */
+@Suppress("TooManyFunctions") // It is a builder by nature.
 public class GradleProjectSetup internal constructor(
-    /** Path on the file system under which the project will be created.  */
+    /**
+     * Path on the file system under which the project will be created.
+     */
     internal val projectDir: File
 ) {
 
@@ -199,8 +203,20 @@ public class GradleProjectSetup internal constructor(
     /**
      * Adds `--debug` command line option to the Gradle process.
      */
-    public fun debugLogging(): GradleProjectSetup  {
-        arguments = arguments.withDebugLogging()
+    @Deprecated(
+        message = "Please use `withLoggingLevel(LogLevel.DEBUG)`.",
+        replaceWith = ReplaceWith("withLoggingLevel(LogLevel.DEBUG)")
+    )
+    public fun debugLogging(): GradleProjectSetup {
+        arguments = arguments.withLoggingLevel(LogLevel.DEBUG)
+        return this
+    }
+
+    /**
+     * Specifies the [logging level][LogLevel] for the Gradle process.
+     */
+    public fun withLoggingLevel(level: LogLevel): GradleProjectSetup {
+        arguments = arguments.withLoggingLevel(level)
         return this
     }
 

@@ -26,6 +26,9 @@
 
 package io.spine.tools.gradle.testing
 
+import com.google.common.annotations.VisibleForTesting
+import org.gradle.api.logging.LogLevel
+
 /**
  * A command line option passed to a Gradle runner.
  */
@@ -43,6 +46,8 @@ internal data class CliOption(val name: String) {
         val stacktrace: CliOption = CliOption("stacktrace")
 
         @JvmField
+        @Deprecated("Please use `GradleProjectSetup.withLogging(LogLevel)`.")
+        @Suppress("unused")
         val debug: CliOption = CliOption("debug")
 
         @JvmField
@@ -61,3 +66,9 @@ internal data class CliOption(val name: String) {
      */
     override fun toString(): String = argument()
 }
+
+/**
+ * Turns this [LogLevel] into a command line option passed to the Gradle process.
+ */
+@VisibleForTesting
+internal fun LogLevel.toCliOption() = CliOption(name.lowercase())

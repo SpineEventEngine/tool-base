@@ -127,12 +127,8 @@ private fun splitDeps(value: String): List<String> {
  * @throws IllegalStateException if the given string does not start with a prefix of supported
  *          dependency format.
  */
-private fun parseDependency(value: String): Dependency {
-    if (value.startsWith(MavenArtifact.PREFIX)) {
-        return MavenArtifact.parse(value)
-    }
-    if (value.startsWith(IvyDependency.PREFIX)) {
-        return IvyDependency.parse(value)
-    }
-    throw IllegalStateException("Unsupported dependency format: `$value`.")
+private fun parseDependency(value: String): Dependency = when {
+    value.startsWith(MavenArtifact.PREFIX) -> MavenArtifact.parse(value)
+    value.startsWith(IvyDependency.PREFIX) -> IvyDependency.parse(value)
+    else -> error("Unsupported dependency format: `$value`.")
 }

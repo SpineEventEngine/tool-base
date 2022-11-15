@@ -24,11 +24,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gragle.testing
+package io.spine.tools.gradle.testing
 
 import com.google.common.truth.Truth.assertThat
-import io.spine.tools.gradle.testing.GradleProject
-import io.spine.tools.gradle.testing.GradleProjectSetup
 import java.io.File
 import java.nio.file.Files.exists
 import java.nio.file.Path
@@ -36,11 +34,13 @@ import java.nio.file.Paths
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
-class `'Sources' should` {
+@DisplayName("`Sources` should")
+class SourcesSpec {
 
     companion object {
         private const val buildScr = "buildSrc"

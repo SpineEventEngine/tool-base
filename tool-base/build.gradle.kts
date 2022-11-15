@@ -30,7 +30,6 @@ import io.spine.internal.dependency.Grpc
 import io.spine.internal.dependency.JavaPoet
 import io.spine.internal.dependency.JavaX
 import io.spine.internal.dependency.Spine
-
 import io.spine.tools.mc.gradle.modelCompiler
 import io.spine.tools.mc.java.gradle.McJavaOptions
 
@@ -45,6 +44,7 @@ plugins {
     `java-test-fixtures`
     id(mcJava.pluginId)
     id(protoData.pluginId)
+    `detekt-code-analysis`
 }
 
 dependencies {

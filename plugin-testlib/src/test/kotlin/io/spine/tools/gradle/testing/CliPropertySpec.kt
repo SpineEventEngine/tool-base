@@ -24,26 +24,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gragle.testing
+package io.spine.tools.gradle.testing
 
 import com.google.common.truth.Truth.assertThat
-import io.spine.tools.gradle.testing.CliOption
-import io.spine.tools.gradle.testing.CliOption.Companion.prefix
-import io.spine.tools.gradle.testing.CliOption.Companion.stacktrace
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-class `'CliOption' should` {
+@DisplayName("`CliProperty` should")
+class CliPropertySpec {
 
-    @Test
-    fun `prohibit empty or blank values`() {
-        assertThrows<IllegalArgumentException> {  CliOption("") }
-        assertThrows<IllegalArgumentException> {  CliOption(" ") }
+    @Nested
+    inner class `prohibit illegal arguments` {
+
+        @Test
+        fun `empty name`() {
+            assertThrows<IllegalArgumentException> { CliProperty("", "value")  }
+        }
+
+        @Test
+        fun `blank name`() {
+            assertThrows<IllegalArgumentException> { CliProperty(" ", "fiz")  }
+        }
     }
 
     @Test
-    fun `have prefix in string form`() {
-        assertThat(stacktrace.toString()).startsWith(prefix)
+    fun `provide prefixed command like argument`() {
+        assertThat(CliProperty("foo", "bar").argument())
+            .isEqualTo("-Pfoo=bar")
     }
-
 }

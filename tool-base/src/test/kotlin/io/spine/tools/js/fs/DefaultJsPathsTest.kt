@@ -24,11 +24,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.js
+package io.spine.tools.js.fs
 
 import com.google.common.truth.Truth.assertThat
 import io.spine.tools.code.SourceSetName
-import io.spine.tools.js.fs.DefaultJsPaths
 import java.nio.file.Path
 import kotlin.io.path.invariantSeparatorsPathString
 import org.junit.jupiter.api.BeforeEach

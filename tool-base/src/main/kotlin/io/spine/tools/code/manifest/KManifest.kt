@@ -95,7 +95,7 @@ public class KManifest(public val impl: Manifest) {
     /**
      * Provides access to [main attributes][Manifest.getMainAttributes] of the manifest.
      */
-    protected val mainAttributes: Attributes = impl.mainAttributes
+    private val mainAttributes: Attributes = impl.mainAttributes
 
     /**
      * Obtains the [`Implementation-Title`][IMPLEMENTATION_TITLE] attribute of the manifest.

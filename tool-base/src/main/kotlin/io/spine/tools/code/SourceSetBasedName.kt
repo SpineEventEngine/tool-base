@@ -29,9 +29,9 @@ package io.spine.tools.code
 import io.spine.tools.titlecaseFirstChar
 
 /**
- * An abstract base for names of Gradle project objects that are based on a name of a source set.
+ * A base for names of Gradle project objects that are based on a name of a source set.
  */
-public abstract class SourceSetBasedName(
+public open class SourceSetBasedName protected constructor(
 
     /**
      * A formatting string which refers the source set using [SourceSetName.toPrefix]

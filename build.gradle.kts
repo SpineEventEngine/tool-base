@@ -86,7 +86,6 @@ plugins {
     idea
     protobuf
     errorprone
-    `detekt-code-analysis`
     jacoco
     `project-report`
 }
