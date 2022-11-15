@@ -66,7 +66,7 @@ public final class SourceFile extends AbstractSourceFile {
     }
 
     /**
-     * Obtains the generated file {@link Path} for the specified type.
+     * Obtains a references to the generated Java file of the specified type.
      *
      * @param type
      *         the type from which the file is generated
@@ -78,9 +78,9 @@ public final class SourceFile extends AbstractSourceFile {
     }
 
     /**
-     * Resolves the file which contains the declaration of the given class.
+     * Resolves a file which contains the declaration of the given class.
      *
-     * <p>The resulting {@code SourceFile} represents a <strong>relative</strong> path
+     * <p>The resulting instance represents a <strong>relative</strong> path
      * to the Java file starting at the top level package.
      *
      * <p>In the simplest case, the file name is the same as the simple class name.
@@ -101,7 +101,7 @@ public final class SourceFile extends AbstractSourceFile {
     }
 
     /**
-     * Obtains the generated file {@link Path} for the specified file descriptor.
+     * Obtains a reference to generated Java file for the specified file descriptor.
      *
      * @param file
      *         the proto file descriptor
@@ -116,7 +116,7 @@ public final class SourceFile extends AbstractSourceFile {
     }
 
     /**
-     * Obtains directory that contains a generated file from the file descriptor.
+     * Obtains a directory that contains a generated file from the file descriptor.
      *
      * @param file
      *         the proto file descriptor
@@ -130,7 +130,7 @@ public final class SourceFile extends AbstractSourceFile {
     }
 
     /**
-     * Obtains the generated file for the specified message descriptor.
+     * Obtains a generated file for the specified message descriptor.
      *
      * @param message
      *         the descriptor of the message type for which we obtain the source code file
@@ -145,7 +145,7 @@ public final class SourceFile extends AbstractSourceFile {
     }
 
     /**
-     * Obtains the generated file for the specified message descriptor.
+     * Obtains a generated file for the specified message descriptor.
      *
      * @param message
      *         the descriptor of the message type for which we obtain the source code file
@@ -160,7 +160,7 @@ public final class SourceFile extends AbstractSourceFile {
     }
 
     /**
-     * Obtains the generated file for the {@code MessageOrBuilder} interface of
+     * Obtains a generated file for the {@code MessageOrBuilder} interface of
      * the specified message descriptor.
      *
      * @param message
@@ -175,7 +175,7 @@ public final class SourceFile extends AbstractSourceFile {
     }
 
     /**
-     * Obtains the generated file for the {@code MessageOrBuilder} interface of
+     * Obtains a generated file for the {@code MessageOrBuilder} interface of
      * the specified message descriptor.
      *
      * @param message
@@ -216,7 +216,7 @@ public final class SourceFile extends AbstractSourceFile {
     }
 
     /**
-     * Obtains the generated file for the specified enum descriptor.
+     * Obtains a generated file for the specified enum descriptor.
      *
      * @param enumType
      *         the enum descriptor to get the file for
@@ -229,7 +229,7 @@ public final class SourceFile extends AbstractSourceFile {
     }
 
     /**
-     * Obtains the generated file for the specified enum descriptor.
+     * Obtains a generated file for the specified enum descriptor.
      *
      * @param enumType
      *         the enum descriptor to get the file for
@@ -255,7 +255,7 @@ public final class SourceFile extends AbstractSourceFile {
     }
 
     /**
-     * Obtains the generated file for the specified service descriptor.
+     * Obtains a generated file for the specified service descriptor.
      *
      * @param service
      *         the service descriptor to get the file for
@@ -270,7 +270,7 @@ public final class SourceFile extends AbstractSourceFile {
     }
 
     /**
-     * Obtains the generated file for the specified service descriptor.
+     * Obtains a generated file for the specified service descriptor.
      *
      * @param service
      *         the service descriptor to get the file for
