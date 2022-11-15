@@ -30,16 +30,19 @@ import com.google.common.truth.Truth.assertThat
 import com.google.protobuf.DescriptorProtos.DescriptorProto
 import com.google.protobuf.DescriptorProtos.EnumDescriptorProto
 import com.google.protobuf.DescriptorProtos.FileDescriptorProto
+import com.google.protobuf.DescriptorProtos.ServiceDescriptorProto
 import com.google.protobuf.Descriptors.Descriptor
 import com.google.protobuf.Descriptors.EnumDescriptor
 import com.google.protobuf.Descriptors.FileDescriptor
 import com.google.protobuf.Descriptors.ServiceDescriptor
 import com.google.protobuf.Empty
+import io.grpc.protobuf.ProtoServiceDescriptorSupplier
 import io.spine.option.EntityOption
-import io.spine.testing.setDefault
 import io.spine.test.code.NoOuterClassnameSourceFileTest.NoOuterClassnameMessage
 import io.spine.test.code.SourceFile.NestedMessage
 import io.spine.test.code.StandaloneMessage
+import io.spine.testing.setDefault
+import io.spine.tools.type.ProjectServiceGrpc
 import java.nio.file.Paths
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -70,8 +73,11 @@ internal class SourceFileSpec {
             setDefault<DescriptorProto>(descr.toProto())
             setDefault<EnumDescriptor>(enumDescr)
             setDefault<EnumDescriptorProto>(enumDescr.toProto())
-            //.setDefault(ServiceDescriptor::class.java, ProjectApi.ge)
-            //.setDefault(ServiceDescriptorProto::class.java, ServiceDescriptor.getDefaultInstance())
+            setDefault<ServiceDescriptor>(
+                (ProjectServiceGrpc.getServiceDescriptor().schemaDescriptor as
+                        ProtoServiceDescriptorSupplier).serviceDescriptor
+            )
+            setDefault<ServiceDescriptorProto>(ServiceDescriptorProto.getDefaultInstance())
         }.testAllPublicStaticMethods(SourceFile::class.java)
     }
 
