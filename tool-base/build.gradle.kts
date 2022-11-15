@@ -104,3 +104,10 @@ sourceSets {
         java.srcDirs("$projectDir/generated/testFixtures/grpc")
     }
 }
+
+project.afterEvaluate {
+    @Suppress("UNUSED_VARIABLE")
+    val sourcesJar by tasks.getting {
+        (this as Jar).duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    }
+}
