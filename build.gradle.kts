@@ -129,7 +129,7 @@ subprojects {
     configureTests()
 
     val generatedDir = "$projectDir/generated"
-    configureProtoc(generatedDir)
+    configureProtoc()
     applyGeneratedDirectories(generatedDir)
 
     configureGitHubPages()
@@ -233,16 +233,12 @@ fun Subproject.configureTests() {
     }
 }
 
-fun Subproject.configureProtoc(generatedDir: String) {
+fun Subproject.configureProtoc() {
     protobuf {
         //generatedFilesBaseDir = generatedDir
         protoc {
             artifact = Protobuf.compiler
         }
-    }
-
-    tasks.clean.configure {
-        delete(generatedDir)
     }
 }
 
