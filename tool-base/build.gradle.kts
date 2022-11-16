@@ -30,8 +30,6 @@ import io.spine.internal.dependency.Grpc
 import io.spine.internal.dependency.JavaPoet
 import io.spine.internal.dependency.JavaX
 import io.spine.internal.dependency.Spine
-import io.spine.tools.mc.gradle.modelCompiler
-import io.spine.tools.mc.java.gradle.McJavaOptions
 
 buildscript {
     standardSpineSdkRepositories()
@@ -43,7 +41,6 @@ buildscript {
 plugins {
     `java-test-fixtures`
     id(mcJava.pluginId)
-//    id(protoData.pluginId)
     `detekt-code-analysis`
 }
 
@@ -52,8 +49,6 @@ dependencies {
     api(JavaX.annotations)
 
     val spine = Spine(project)
-//    protoData(spine.validation.java)
-
     api(spine.base)
     implementation(spine.validation.runtime)
 
@@ -70,44 +65,8 @@ dependencies {
     testImplementation(spine.testlib)
 }
 
-/**
- * Suppress the "legacy" validation from McJava in favour of tha based on ProtoData.
- */
-//modelCompiler {
-    // The below arrangement is "unusual" `java { }` because it conflicts with
-    // `java` of type `JavaPluginExtension` in the `Project`.
-
-    // Get nested `this` instead of `Project` instance.
-//    val mcOptions = (this@modelCompiler as ExtensionAware)
-//    val java = mcOptions.extensions.getByName("java") as McJavaOptions
-//    java.codegen {
-//        validation { skipValidation() }
-//    }
-//}
-
-//protoData {
-//    renderers(
-//        "io.spine.validation.java.PrintValidationInsertionPoints",
-//        "io.spine.validation.java.JavaValidationRenderer",
-//
-//        // Suppress warnings in the generated code.
-//        "io.spine.protodata.codegen.java.file.PrintBeforePrimaryDeclaration",
-//        "io.spine.protodata.codegen.java.suppress.SuppressRenderer"
-//    )
-//    plugins(
-//        "io.spine.validation.ValidationPlugin"
-//    )
-//}
-
 sourceSets {
     testFixtures {
         java.srcDirs("$projectDir/generated/testFixtures/grpc")
-    }
-}
-
-project.afterEvaluate {
-    @Suppress("UNUSED_VARIABLE")
-    val sourcesJar by tasks.getting {
-        (this as Jar).duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
 }
