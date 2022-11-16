@@ -26,8 +26,6 @@
 
 @file:Suppress("RemoveRedundantQualifierName") // To prevent IDEA replacing FQN imports.
 
-import com.google.protobuf.gradle.protobuf
-import com.google.protobuf.gradle.protoc
 import io.spine.internal.dependency.CheckerFramework
 import io.spine.internal.dependency.ErrorProne
 import io.spine.internal.dependency.FindBugs
@@ -62,6 +60,7 @@ buildscript {
     dependencies {
         classpath(io.spine.internal.dependency.Protobuf.GradlePlugin.lib)
         classpath(io.spine.internal.dependency.Spine.McJava.pluginLib)
+        classpath(io.spine.internal.dependency.Spine.ProtoData.pluginLib)
     }
 
     val spine = io.spine.internal.dependency.Spine(project)
@@ -87,6 +86,7 @@ plugins {
     errorprone
     jacoco
     `project-report`
+    `gradle-doctor`
 }
 
 spinePublishing {
@@ -129,7 +129,6 @@ subprojects {
     configureTests()
 
     val generatedDir = "$projectDir/generated"
-    configureProtoc()
     applyGeneratedDirectories(generatedDir)
 
     configureGitHubPages()
@@ -229,15 +228,6 @@ fun Subproject.configureTests() {
                 includeEngines("junit-jupiter")
             }
             configureLogging()
-        }
-    }
-}
-
-fun Subproject.configureProtoc() {
-    protobuf {
-        //generatedFilesBaseDir = generatedDir
-        protoc {
-            artifact = Protobuf.compiler
         }
     }
 }
