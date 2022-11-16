@@ -43,7 +43,7 @@ buildscript {
 plugins {
     `java-test-fixtures`
     id(mcJava.pluginId)
-    id(protoData.pluginId)
+//    id(protoData.pluginId)
     `detekt-code-analysis`
 }
 
@@ -52,7 +52,7 @@ dependencies {
     api(JavaX.annotations)
 
     val spine = Spine(project)
-    protoData(spine.validation.java)
+//    protoData(spine.validation.java)
 
     api(spine.base)
     implementation(spine.validation.runtime)
@@ -73,31 +73,31 @@ dependencies {
 /**
  * Suppress the "legacy" validation from McJava in favour of tha based on ProtoData.
  */
-modelCompiler {
+//modelCompiler {
     // The below arrangement is "unusual" `java { }` because it conflicts with
     // `java` of type `JavaPluginExtension` in the `Project`.
 
     // Get nested `this` instead of `Project` instance.
-    val mcOptions = (this@modelCompiler as ExtensionAware)
-    val java = mcOptions.extensions.getByName("java") as McJavaOptions
-    java.codegen {
-        validation { skipValidation() }
-    }
-}
+//    val mcOptions = (this@modelCompiler as ExtensionAware)
+//    val java = mcOptions.extensions.getByName("java") as McJavaOptions
+//    java.codegen {
+//        validation { skipValidation() }
+//    }
+//}
 
-protoData {
-    renderers(
-        "io.spine.validation.java.PrintValidationInsertionPoints",
-        "io.spine.validation.java.JavaValidationRenderer",
-
-        // Suppress warnings in the generated code.
-        "io.spine.protodata.codegen.java.file.PrintBeforePrimaryDeclaration",
-        "io.spine.protodata.codegen.java.suppress.SuppressRenderer"
-    )
-    plugins(
-        "io.spine.validation.ValidationPlugin"
-    )
-}
+//protoData {
+//    renderers(
+//        "io.spine.validation.java.PrintValidationInsertionPoints",
+//        "io.spine.validation.java.JavaValidationRenderer",
+//
+//        // Suppress warnings in the generated code.
+//        "io.spine.protodata.codegen.java.file.PrintBeforePrimaryDeclaration",
+//        "io.spine.protodata.codegen.java.suppress.SuppressRenderer"
+//    )
+//    plugins(
+//        "io.spine.validation.ValidationPlugin"
+//    )
+//}
 
 sourceSets {
     testFixtures {
