@@ -26,6 +26,9 @@
 
 @file:Suppress("RemoveRedundantQualifierName")
 
+import com.google.protobuf.gradle.generateProtoTasks
+import com.google.protobuf.gradle.protobuf
+
 import io.spine.internal.dependency.Grpc
 import io.spine.internal.dependency.JavaPoet
 import io.spine.internal.dependency.JavaX
@@ -68,5 +71,17 @@ dependencies {
 sourceSets {
     testFixtures {
         java.srcDirs("$projectDir/generated/testFixtures/grpc")
+    }
+}
+
+/**
+ * Force `generated` directory and Kotlin code generation.
+ */
+protobuf {
+    generatedFilesBaseDir = "$projectDir/generated"
+    generateProtoTasks {
+        for (task in all()) {
+            task.builtins.maybeCreate("kotlin")
+        }
     }
 }
