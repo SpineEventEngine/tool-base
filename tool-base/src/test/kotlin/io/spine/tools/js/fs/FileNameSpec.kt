@@ -23,37 +23,54 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package io.spine.tools.js.fs
 
-package io.spine.tools
-
-import com.google.common.truth.Truth.assertThat
-import java.io.File
-import java.util.function.Supplier
+import com.google.common.testing.NullPointerTester
+import com.google.protobuf.Any
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldStartWith
+import io.spine.testing.Assertions.assertIllegalArgument
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-class `'StandardTypeExtensions' should` {
+@DisplayName("`FileName` should")
+class FileNameSpec {
+
+    private val file = Any.getDescriptor().file
+    private val fileName = FileName.from(file)
 
     @Test
-    fun `provide title case version of 'String'`() {
-        assertThat("foo".titlecaseFirstChar())
-            .isEqualTo("Foo")
-        assertThat("Bar".titlecaseFirstChar())
-            .isEqualTo("Bar")
+    fun `handle 'null's`() {
+        NullPointerTester().testAllPublicStaticMethods(FileName::class.java)
     }
 
     @Test
-    fun `convert a 'String' 'Supplier' to absolute file`() {
-        val sup: Supplier<String> = Supplier { "." }
-
-        assertThat(sup.toAbsoluteFile().isAbsolute)
-            .isTrue()
+    fun `not accept names without extension`() {
+        assertIllegalArgument { FileName.of("no-extension") }
     }
 
     @Test
-    fun `tell if a file is a Protobuf source code file`() {
-        assertThat(File("mycode.proto").isProtoSource())
-            .isTrue()
-        assertThat(File("util.java").isProtoSource())
-            .isFalse()
+    fun `replace 'proto' extension with predefined suffix`() {
+        fileName.value() shouldBe "google/protobuf/any_pb.js"
+    }
+
+    @Test
+    fun `return path elements`() {
+        val pathElements = fileName.pathElements()
+
+        pathElements shouldContainExactly listOf(
+            "google", "protobuf", "any_pb.js"
+        )
+    }
+
+    @Test
+    fun `obtain relative path to source root dir`() {
+        fileName.pathToRoot() shouldStartWith "../../"
+    }
+
+    @Test
+    fun `obtain path from source root dir`() {
+        fileName.pathFromRoot() shouldBe "./google/protobuf/any_pb.js"
     }
 }

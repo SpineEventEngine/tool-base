@@ -23,52 +23,33 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package io.spine.tools.js.fs
 
-package io.spine.tools.code.manifest
-
-import com.google.common.truth.Truth.assertThat
-import com.google.common.truth.Truth.assertWithMessage
-import java.nio.file.Files.createFile
+import io.kotest.matchers.string.shouldEndWith
+import io.spine.code.fs.SourceCodeDirectory
+import io.spine.tools.code.SourceSetName.Companion.main
 import java.nio.file.Path
-import kotlin.io.path.outputStream
-import kotlin.io.path.readText
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
-class `'KManifest' should` {
+@DisplayName("`FsTypesExtensions` should")
+class FsTypesExtensionsSpec {
 
-    @Test
-    fun `load itself from resources`() {
-        val cls = KManifest::class.java
-        val manifest = KManifest.load(cls)
+    private lateinit var directory: SourceCodeDirectory
 
-        val nl = System.lineSeparator()
-        val visibleManifests = manifestsVisibleTo(cls).joinToString(nl)
-        assertWithMessage(
-            "Unable to load correct manifest for the class `${cls.name}`."
-                    + " Visible manifests are: $nl"
-                    + visibleManifests
-        )
-            .that(manifest.implementationTitle)
-            .isEqualTo("io.spine.tools:spine-tool-base")
-
-        assertThat(manifest.implementationVersion)
-            .isNotEmpty()
+    @BeforeEach
+    fun setUp(@TempDir projectDir: Path) {
+        directory = DefaultJsPaths.at(projectDir).generated().dir(main)
     }
 
     @Test
-    fun `print its content to string as if it were a resource file`(@TempDir tmpDir: Path) {
-        val cls = KManifest::class.java
-        val manifest = KManifest.load(cls)
+    fun `resolve JS files`() {
+        val rawName = "tasks_pb.js"
+        val fileName = FileName.of(rawName)
+        val resolved = directory.resolve(fileName)
 
-        val tmpFile = tmpDir.resolve("MANIFEST.MF")
-        createFile(tmpFile)
-        val stream = tmpFile.outputStream()
-        stream.use {
-            manifest.impl.write(it)
-        }
-
-        assertThat(manifest.toString())
-            .isEqualTo(tmpFile.readText())
+        resolved.toString() shouldEndWith rawName
     }
 }

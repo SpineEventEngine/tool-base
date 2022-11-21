@@ -26,34 +26,37 @@
 
 @file:Suppress("RemoveRedundantQualifierName")
 
+import com.google.protobuf.gradle.generateProtoTasks
+import com.google.protobuf.gradle.protobuf
+
 import io.spine.internal.dependency.Grpc
 import io.spine.internal.dependency.JavaPoet
 import io.spine.internal.dependency.JavaX
 import io.spine.internal.dependency.Spine
-import io.spine.tools.mc.gradle.modelCompiler
-import io.spine.tools.mc.java.gradle.McJavaOptions
+import io.spine.tools.mc.java.gradle.plugins.McJavaPlugin
 
 buildscript {
     standardSpineSdkRepositories()
     dependencies {
+        classpath(io.spine.internal.dependency.Protobuf.GradlePlugin.lib)
+        classpath(io.spine.internal.dependency.Spine.ProtoData.pluginLib)
         classpath(io.spine.internal.dependency.Spine.McJava.pluginLib)
     }
 }
 
 plugins {
+    protobuf
     `java-test-fixtures`
-    id(mcJava.pluginId)
-    id(protoData.pluginId)
     `detekt-code-analysis`
 }
+
+apply<McJavaPlugin>()
 
 dependencies {
     api(JavaPoet.lib)
     api(JavaX.annotations)
 
     val spine = Spine(project)
-    protoData(spine.validation.java)
-
     api(spine.base)
     implementation(spine.validation.runtime)
 
@@ -70,44 +73,85 @@ dependencies {
     testImplementation(spine.testlib)
 }
 
-/**
- * Suppress the "legacy" validation from McJava in favour of tha based on ProtoData.
- */
-modelCompiler {
-    // The below arrangement is "unusual" `java { }` because it conflicts with
-    // `java` of type `JavaPluginExtension` in the `Project`.
-
-    // Get nested `this` instead of `Project` instance.
-    val mcOptions = (this@modelCompiler as ExtensionAware)
-    val java = mcOptions.extensions.getByName("java") as McJavaOptions
-    java.codegen {
-        validation { skipValidation() }
-    }
-}
-
-protoData {
-    renderers(
-        "io.spine.validation.java.PrintValidationInsertionPoints",
-        "io.spine.validation.java.JavaValidationRenderer",
-
-        // Suppress warnings in the generated code.
-        "io.spine.protodata.codegen.java.file.PrintBeforePrimaryDeclaration",
-        "io.spine.protodata.codegen.java.suppress.SuppressRenderer"
-    )
-    plugins(
-        "io.spine.validation.ValidationPlugin"
-    )
-}
-
 sourceSets {
     testFixtures {
         java.srcDirs("$projectDir/generated/testFixtures/grpc")
     }
 }
 
-project.afterEvaluate {
-    @Suppress("UNUSED_VARIABLE")
-    val sourcesJar by tasks.getting {
-        (this as Jar).duplicatesStrategy = DuplicatesStrategy.INCLUDE
+val generatedDir = "$projectDir/generated"
+
+/**
+ * Force `generated` directory and Kotlin code generation.
+ */
+protobuf {
+    generatedFilesBaseDir = generatedDir
+    generateProtoTasks {
+        for (task in all()) {
+            task.builtins.maybeCreate("kotlin")
+        }
+    }
+}
+
+tasks.clean.configure {
+    delete(generatedDir)
+}
+
+applyGeneratedDirectories(generatedDir)
+
+/**
+ * Adds directories with the generated source code to source sets of the project and
+ * to IntelliJ IDEA module settings.
+ *
+ * @param generatedDir
+ *          the name of the root directory with the generated code
+ */
+fun Project.applyGeneratedDirectories(generatedDir: String) {
+    val generatedMain = "$generatedDir/main"
+    val generatedJava = "$generatedMain/java"
+    val generatedKotlin = "$generatedMain/kotlin"
+    val generatedGrpc = "$generatedMain/grpc"
+
+    val generatedTest = "$generatedDir/test"
+    val generatedTestJava = "$generatedTest/java"
+    val generatedTestKotlin = "$generatedTest/kotlin"
+    val generatedTestGrpc = "$generatedTest/grpc"
+
+    sourceSets {
+        main {
+            java.srcDirs(
+                generatedJava,
+                generatedGrpc,
+            )
+            kotlin.srcDirs(
+                generatedKotlin,
+            )
+        }
+        test {
+            java.srcDirs(
+                generatedTestJava,
+                generatedTestGrpc,
+            )
+            kotlin.srcDirs(
+                generatedTestKotlin,
+            )
+        }
+    }
+
+    idea {
+        module {
+            generatedSourceDirs.addAll(files(
+                generatedJava,
+                generatedKotlin,
+                generatedGrpc,
+            ))
+            testSources.from(
+                generatedTestJava,
+                generatedTestKotlin,
+                generatedTestGrpc,
+            )
+            isDownloadJavadoc = true
+            isDownloadSources = true
+        }
     }
 }

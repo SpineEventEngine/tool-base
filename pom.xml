@@ -10,7 +10,7 @@ all modules and does not describe the project structure per-subproject.
  -->
 <groupId>io.spine.tools</groupId>
 <artifactId>tool-base</artifactId>
-<version>2.0.0-SNAPSHOT.131</version>
+<version>2.0.0-SNAPSHOT.132</version>
 
 <inceptionYear>2015</inceptionYear>
 
@@ -44,13 +44,13 @@ all modules and does not describe the project structure per-subproject.
   <dependency>
     <groupId>io.spine</groupId>
     <artifactId>spine-base</artifactId>
-    <version>2.0.0-SNAPSHOT.130</version>
+    <version>2.0.0-SNAPSHOT.140</version>
     <scope>compile</scope>
   </dependency>
   <dependency>
     <groupId>io.spine.tools</groupId>
     <artifactId>spine-testlib</artifactId>
-    <version>2.0.0-SNAPSHOT.130</version>
+    <version>2.0.0-SNAPSHOT.140</version>
     <scope>compile</scope>
   </dependency>
   <dependency>
@@ -198,17 +198,17 @@ all modules and does not describe the project structure per-subproject.
   <dependency>
     <groupId>io.spine.tools</groupId>
     <artifactId>spine-mc-java-checks</artifactId>
-    <version>2.0.0-SNAPSHOT.110</version>
+    <version>2.0.0-SNAPSHOT.111</version>
     <scope>provided</scope>
   </dependency>
   <dependency>
     <groupId>io.spine.tools</groupId>
     <artifactId>spine-mc-java-plugins</artifactId>
-    <version>2.0.0-SNAPSHOT.110</version>
+    <version>2.0.0-SNAPSHOT.111</version>
   </dependency>
   <dependency>
     <groupId>io.spine.validation</groupId>
-    <artifactId>spine-validation-java</artifactId>
+    <artifactId>spine-validation-java-bundle</artifactId>
     <version>2.0.0-SNAPSHOT.70</version>
   </dependency>
   <dependency>

@@ -24,41 +24,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.code.manifest
+package io.spine.tools.java.code
 
-import org.junit.jupiter.api.BeforeEach
+import io.kotest.matchers.shouldBe
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-import com.google.common.truth.Truth.assertThat
-import io.spine.testing.TestValues.randomString
-
-internal class IvyDependencyTest {
-
-    private lateinit var org: String
-    private lateinit var name: String
-    private lateinit var rev: String
-
-    private lateinit var strForm: String
-
-    @BeforeEach
-    fun generateParts() {
-        org = randomString()
-        name = randomString()
-        rev = randomString()
-        strForm = "${IvyDependency.PREFIX} org=\"$org\" name=\"$name\" rev=\"$rev\""
-    }
+@DisplayName("`JavaClassName` should")
+internal class JavaClassNameSpec {
 
     @Test
-    fun `provide string form with all components`() {
-        val idep = IvyDependency(org, name, rev)
+    fun `generated Kotlin proto DSL`() {
+        val expected = Object::class.java.canonicalName
+        val className = javaClassName {
+            canonical = expected
+        }
 
-        assertThat(idep.toString()).isEqualTo(strForm)
-    }
-
-    @Test
-    fun `parse string representation`() {
-        val idep = IvyDependency.parse(strForm)
-
-        assertThat(idep).isEqualTo(IvyDependency(org, name, rev))
+        className.canonical shouldBe expected
     }
 }

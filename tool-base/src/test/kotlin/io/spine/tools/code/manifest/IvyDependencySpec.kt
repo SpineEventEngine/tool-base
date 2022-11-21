@@ -23,31 +23,41 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package io.spine.tools.js.fs
 
-import com.google.common.truth.Truth.assertThat
-import io.spine.code.fs.SourceCodeDirectory
-import io.spine.tools.code.SourceSetName.Companion.main
-import java.nio.file.Path
+package io.spine.tools.code.manifest
+
+import io.kotest.matchers.shouldBe
+import io.spine.testing.TestValues.randomString
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 
-class `'FsTypesExtensions' should` {
+internal class IvyDependencySpec {
 
-    private lateinit var directory: SourceCodeDirectory
+    private lateinit var org: String
+    private lateinit var name: String
+    private lateinit var rev: String
+
+    private lateinit var strForm: String
 
     @BeforeEach
-    fun setUp(@TempDir projectDir: Path) {
-        directory = DefaultJsPaths.at(projectDir).generated().dir(main)
+    fun generateParts() {
+        org = randomString()
+        name = randomString()
+        rev = randomString()
+        strForm = "${IvyDependency.PREFIX} org=\"$org\" name=\"$name\" rev=\"$rev\""
     }
 
     @Test
-    fun `resolve JS files`() {
-        val rawName = "tasks_pb.js"
-        val fileName = FileName.of(rawName)
-        val resolved = directory.resolve(fileName)
-        assertThat(resolved.toString())
-            .endsWith(rawName)
+    fun `provide string form with all components`() {
+        val idep = IvyDependency(org, name, rev)
+
+        idep.toString() shouldBe strForm
+    }
+
+    @Test
+    fun `parse string representation`() {
+        val idep = IvyDependency.parse(strForm)
+
+        idep shouldBe IvyDependency(org, name, rev)
     }
 }

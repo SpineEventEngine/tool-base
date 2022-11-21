@@ -24,29 +24,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.js.fs
+package io.spine.tools
 
-import com.google.common.truth.Truth.assertThat
-import io.spine.tools.code.SourceSetName
-import java.nio.file.Path
-import kotlin.io.path.invariantSeparatorsPathString
-import org.junit.jupiter.api.BeforeEach
+import io.kotest.matchers.shouldBe
+import java.io.File
+import java.util.function.Supplier
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 
-class `'DefaultJsPaths' should` {
+@DisplayName("`StandardTypeExtensions` should")
+class StandardTypeExtensionsSpec {
 
-    private lateinit var defaultPaths: DefaultJsPaths
-
-    @BeforeEach
-    fun createDefaults(@TempDir projectDir: Path) {
-        defaultPaths = DefaultJsPaths.at(projectDir)
+    @Test
+    fun `provide title case version of 'String'`() {
+        "foo".titlecaseFirstChar() shouldBe "Foo"
+        "Bar".titlecaseFirstChar() shouldBe "Bar"
     }
 
     @Test
-    fun `obtain 'js' directory for a source set`() {
-        val subDir = defaultPaths.generated().dir(SourceSetName.main)
-        val assertPath = assertThat(subDir.path().invariantSeparatorsPathString)
-        assertPath.contains("/main/js")
+    fun `convert a 'String' 'Supplier' to absolute file`() {
+        val sup: Supplier<String> = Supplier { "." }
+
+        sup.toAbsoluteFile().isAbsolute shouldBe true
+    }
+
+    @Test
+    fun `tell if a file is a Protobuf source code file`() {
+        File("mycode.proto").isProtoSource() shouldBe true
+        File("util.java").isProtoSource() shouldBe false
     }
 }
