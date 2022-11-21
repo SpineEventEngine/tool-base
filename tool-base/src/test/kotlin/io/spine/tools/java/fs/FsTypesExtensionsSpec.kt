@@ -23,50 +23,35 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package io.spine.tools.js.fs
+package io.spine.tools.java.fs
 
-import com.google.common.testing.NullPointerTester
-import com.google.common.truth.Truth.assertThat
-import com.google.protobuf.Any
-import io.spine.testing.Assertions.assertIllegalArgument
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
+import io.spine.code.java.PackageName
+import java.nio.file.Path
+import java.nio.file.Paths
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-class `'FileName' should` {
-
-    private val file = Any.getDescriptor().file
-    private val fileName = FileName.from(file)
+@DisplayName("`FsTypeExtensions` should")
+class FsTypeExtensionsSpec {
 
     @Test
-    fun `handle 'null's`() {
-        NullPointerTester().testAllPublicStaticMethods(FileName::class.java)
+    fun `convert Java package to a directory`() {
+        val javaPackage = PackageName.of(String::class.java)
+
+        javaPackage.toDirectory() shouldBe Paths.get("java/lang")
     }
 
     @Test
-    fun `not accept names without extension`() {
-        assertIllegalArgument { FileName.of("no-extension") }
-    }
+    fun `obtain a source code file from a path and file name`() {
+        val dir = Paths.get("some/dir/")
+        val typeName = "SomethingBlue"
+        val file = FileName.forType(typeName)
+        val resolved = dir.resolve(file)
 
-    @Test
-    fun `replace 'proto' extension with predefined suffix`() {
-        assertThat(fileName.value())
-            .isEqualTo("google/protobuf/any_pb.js")
-    }
-
-    @Test
-    fun `return path elements`() {
-        val pathElements = fileName.pathElements()
-        assertThat(pathElements)
-            .containsExactly("google", "protobuf", "any_pb.js")
-    }
-
-    @Test
-    fun `obtain relative path to source root dir`() {
-        assertThat(fileName.pathToRoot()).startsWith("../../")
-    }
-
-    @Test
-    fun `obtain path from source root dir`() {
-        assertThat(fileName.pathFromRoot())
-            .isEqualTo("./google/protobuf/any_pb.js")
+        resolved.path().map(Path::toString) shouldContainExactly listOf(
+            "some", "dir", "$typeName.java"
+        )
     }
 }

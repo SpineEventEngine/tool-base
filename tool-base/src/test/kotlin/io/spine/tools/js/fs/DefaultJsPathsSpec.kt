@@ -23,31 +23,32 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package io.spine.tools.java.fs
 
-import com.google.common.truth.Truth.assertThat
-import io.spine.code.java.PackageName
+package io.spine.tools.js.fs
+
+import io.kotest.matchers.string.shouldContain
+import io.spine.tools.code.SourceSetName
 import java.nio.file.Path
-import java.nio.file.Paths
+import kotlin.io.path.invariantSeparatorsPathString
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 
-class `'FsTypesExtensions' should` {
+@DisplayName("`DefaultJsPaths` should")
+class DefaultJsPathsSpec {
 
-    @Test
-    fun `convert Java package to a directory`() {
-        val javaPackage = PackageName.of(String::class.java)
+    private lateinit var defaultPaths: DefaultJsPaths
 
-        assertThat(javaPackage.toDirectory())
-            .isEqualTo(Paths.get("java/lang"))
+    @BeforeEach
+    fun createDefaults(@TempDir projectDir: Path) {
+        defaultPaths = DefaultJsPaths.at(projectDir)
     }
 
     @Test
-    fun `obtain a source code file from a path and file name`() {
-        val dir = Paths.get("some/dir/")
-        val typeName = "SomethingBlue"
-        val file = FileName.forType(typeName)
-        val resolved = dir.resolve(file)
-        assertThat(resolved.path().map(Path::toString))
-            .containsExactly("some", "dir", "$typeName.java")
+    fun `obtain 'js' directory for a source set`() {
+        val subDir = defaultPaths.generated().dir(SourceSetName.main)
+
+        subDir.path().invariantSeparatorsPathString shouldContain "/main/js"
     }
 }

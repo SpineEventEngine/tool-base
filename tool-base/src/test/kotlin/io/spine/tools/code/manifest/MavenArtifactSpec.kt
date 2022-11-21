@@ -26,19 +26,22 @@
 
 package io.spine.tools.code.manifest
 
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.shouldBe
 import io.spine.testing.TestValues.randomString
 import io.spine.tools.code.manifest.MavenArtifact.Companion.PREFIX
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-class `'MavenArtifact' should` {
+@DisplayName("`MavenArtifact` should")
+class MavenArtifactSpec {
 
     @Test
     fun `parse string form`() {
         val coordinates = "io.spine:spine-foo-bar:2.0.0-SNAPSHOT.91"
         val artifact = MavenArtifact.parse("maven:$coordinates")
-        assertThat(artifact.coordinates).isEqualTo(coordinates)
+
+        artifact.coordinates shouldBe coordinates
     }
 
     @Test
@@ -47,7 +50,8 @@ class `'MavenArtifact' should` {
         assertThrows<IllegalArgumentException> { MavenArtifact.parse(coordinates) }
         
         val parsed = MavenArtifact.parse(PREFIX + coordinates)
-        assertThat(parsed.coordinates).isEqualTo(coordinates)
+
+        parsed.coordinates shouldBe coordinates
     }
 
     @Test
@@ -80,9 +84,9 @@ class `'MavenArtifact' should` {
 
         val ma = MavenArtifact("$group:$name:$version")
 
-        assertThat(ma.group).isEqualTo(group)
-        assertThat(ma.name).isEqualTo(name)
-        assertThat(ma.version).isEqualTo(version)
+        ma.group shouldBe group
+        ma.name shouldBe name
+        ma.version shouldBe version
     }
 
     @Test
@@ -94,6 +98,6 @@ class `'MavenArtifact' should` {
         val coordinates = "$group:$name:$version"
         val ma = MavenArtifact(coordinates)
 
-        assertThat(ma.toString()).isEqualTo("$PREFIX$coordinates")
+        ma.toString() shouldBe "$PREFIX$coordinates"
     }
 }

@@ -25,29 +25,52 @@
  */
 package io.spine.tools.js.fs
 
-import com.google.common.truth.Truth.assertThat
-import io.spine.code.fs.SourceCodeDirectory
-import io.spine.tools.code.SourceSetName.Companion.main
-import java.nio.file.Path
-import org.junit.jupiter.api.BeforeEach
+import com.google.common.testing.NullPointerTester
+import com.google.protobuf.Any
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldStartWith
+import io.spine.testing.Assertions.assertIllegalArgument
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 
-class `'FsTypesExtensions' should` {
+@DisplayName("`FileName` should")
+class FileNameSpec {
 
-    private lateinit var directory: SourceCodeDirectory
+    private val file = Any.getDescriptor().file
+    private val fileName = FileName.from(file)
 
-    @BeforeEach
-    fun setUp(@TempDir projectDir: Path) {
-        directory = DefaultJsPaths.at(projectDir).generated().dir(main)
+    @Test
+    fun `handle 'null's`() {
+        NullPointerTester().testAllPublicStaticMethods(FileName::class.java)
     }
 
     @Test
-    fun `resolve JS files`() {
-        val rawName = "tasks_pb.js"
-        val fileName = FileName.of(rawName)
-        val resolved = directory.resolve(fileName)
-        assertThat(resolved.toString())
-            .endsWith(rawName)
+    fun `not accept names without extension`() {
+        assertIllegalArgument { FileName.of("no-extension") }
+    }
+
+    @Test
+    fun `replace 'proto' extension with predefined suffix`() {
+        fileName.value() shouldBe "google/protobuf/any_pb.js"
+    }
+
+    @Test
+    fun `return path elements`() {
+        val pathElements = fileName.pathElements()
+
+        pathElements shouldContainExactly listOf(
+            "google", "protobuf", "any_pb.js"
+        )
+    }
+
+    @Test
+    fun `obtain relative path to source root dir`() {
+        fileName.pathToRoot() shouldStartWith "../../"
+    }
+
+    @Test
+    fun `obtain path from source root dir`() {
+        fileName.pathFromRoot() shouldBe "./google/protobuf/any_pb.js"
     }
 }

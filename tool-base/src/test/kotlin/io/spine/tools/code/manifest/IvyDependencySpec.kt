@@ -24,29 +24,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.js.fs
+package io.spine.tools.code.manifest
 
-import com.google.common.truth.Truth.assertThat
-import io.spine.tools.code.SourceSetName
-import java.nio.file.Path
-import kotlin.io.path.invariantSeparatorsPathString
+import io.kotest.matchers.shouldBe
+import io.spine.testing.TestValues.randomString
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 
-class `'DefaultJsPaths' should` {
+internal class IvyDependencySpec {
 
-    private lateinit var defaultPaths: DefaultJsPaths
+    private lateinit var org: String
+    private lateinit var name: String
+    private lateinit var rev: String
+
+    private lateinit var strForm: String
 
     @BeforeEach
-    fun createDefaults(@TempDir projectDir: Path) {
-        defaultPaths = DefaultJsPaths.at(projectDir)
+    fun generateParts() {
+        org = randomString()
+        name = randomString()
+        rev = randomString()
+        strForm = "${IvyDependency.PREFIX} org=\"$org\" name=\"$name\" rev=\"$rev\""
     }
 
     @Test
-    fun `obtain 'js' directory for a source set`() {
-        val subDir = defaultPaths.generated().dir(SourceSetName.main)
-        val assertPath = assertThat(subDir.path().invariantSeparatorsPathString)
-        assertPath.contains("/main/js")
+    fun `provide string form with all components`() {
+        val idep = IvyDependency(org, name, rev)
+
+        idep.toString() shouldBe strForm
+    }
+
+    @Test
+    fun `parse string representation`() {
+        val idep = IvyDependency.parse(strForm)
+
+        idep shouldBe IvyDependency(org, name, rev)
     }
 }

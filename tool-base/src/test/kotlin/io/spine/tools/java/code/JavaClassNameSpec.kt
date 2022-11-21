@@ -26,7 +26,7 @@
 
 package io.spine.tools.java.code
 
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
@@ -39,6 +39,7 @@ internal class JavaClassNameSpec {
         val className = javaClassName {
             canonical = expected
         }
-        assertThat(className.canonical).isEqualTo(expected)
+
+        className.canonical shouldBe expected
     }
 }

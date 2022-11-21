@@ -27,43 +27,48 @@
 package io.spine.tools.code
 
 import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import io.spine.tools.code.CommonLanguages.Java
 import io.spine.tools.code.CommonLanguages.JavaScript
 import io.spine.tools.code.CommonLanguages.Kotlin
 import io.spine.tools.code.CommonLanguages.any
 import java.io.File
 import java.nio.file.Paths
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-class `'Language' should` {
+@DisplayName("`Language` should")
+class LanguageSpec {
 
     @Test
     fun `return its name in the string form`() {
-        assertThat(Kotlin.toString()).isEqualTo("Kotlin")
+        Kotlin.toString() shouldBe "Kotlin"
     }
 
     @Test
     fun `expose file pattern`() {
-        assertThat(Kotlin.fileExtensions).containsExactly("kt")
-        assertThat(Brainfuck().fileExtensions).containsExactly("b", "bf")
+        Kotlin.fileExtensions shouldContainExactly listOf("kt")
+
+        Brainfuck().fileExtensions shouldContainExactly listOf("b", "bf")
     }
 
     @Test
     fun `format a test line as comments`() {
-        assertThat(Java.comment("Hey!")).isEqualTo("/* Hey! */")
+        Java.comment("Hey!") shouldBe "/* Hey! */"
     }
 
     @Test
     fun `filter files by their extension`() {
         // Passing the directory, rather than file.
-        assertThat(JavaScript.matches(File("Windows"))).isFalse()
+        JavaScript.matches(File("Windows")) shouldBe false
 
         // Passing file with extension.
-        assertThat(JavaScript.matches(File("safari.swift"))).isFalse()
-        
-        assertThat(JavaScript.matches(File("mozilla.js"))).isTrue()
+        JavaScript.matches(File("safari.swift")) shouldBe false
+
+        JavaScript.matches(File("mozilla.js")) shouldBe true
     }
 
     @Test

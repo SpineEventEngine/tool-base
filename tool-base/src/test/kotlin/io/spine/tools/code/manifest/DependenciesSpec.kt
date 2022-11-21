@@ -26,12 +26,15 @@
 
 package io.spine.tools.code.manifest
 
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
 import io.spine.testing.TestValues.randomString
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-internal class `'Dependencies' should` {
+@DisplayName("`Dependencies` should")
+internal class DependenciesSpec {
 
     @Test
     fun `escapes quotes in string form`() {
@@ -45,7 +48,7 @@ internal class `'Dependencies' should` {
         val deps = Dependencies(listOf(ivyDep))
         val depsStr = deps.toString()
 
-        assertThat(depsStr).isEqualTo("\"${escaped}\"")
+        depsStr shouldBe "\"${escaped}\""
     }
 
     /**
@@ -59,7 +62,7 @@ internal class `'Dependencies' should` {
 
         @Test
         fun `empty string`() {
-            assertThat(Dependencies.parse("").list).isEmpty()
+            Dependencies.parse("").list shouldBe emptyList()
         }
 
         @Test
@@ -72,8 +75,8 @@ internal class `'Dependencies' should` {
 
             val deps = Dependencies.parse(depStr)
 
-            assertThat(deps.list).hasSize(1)
-            assertThat(deps.list[0]).isEqualTo(ma)
+            deps.list shouldHaveSize 1
+            deps.list[0] shouldBe ma
         }
 
         @Test
@@ -87,7 +90,7 @@ internal class `'Dependencies' should` {
             
             val parsed = Dependencies.parse(str).list
 
-            assertThat(parsed).isEqualTo(original)
+            parsed shouldBe original
         }
     }
 }
