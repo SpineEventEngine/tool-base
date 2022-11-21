@@ -26,34 +26,31 @@
 
 package io.spine.tools
 
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.shouldBe
 import java.io.File
 import java.util.function.Supplier
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-class `'StandardTypeExtensions' should` {
+@DisplayName("`StandardTypeExtensions` should")
+class StandardTypeExtensionsSpec {
 
     @Test
     fun `provide title case version of 'String'`() {
-        assertThat("foo".titlecaseFirstChar())
-            .isEqualTo("Foo")
-        assertThat("Bar".titlecaseFirstChar())
-            .isEqualTo("Bar")
+        "foo".titlecaseFirstChar() shouldBe "Foo"
+        "Bar".titlecaseFirstChar() shouldBe "Bar"
     }
 
     @Test
     fun `convert a 'String' 'Supplier' to absolute file`() {
         val sup: Supplier<String> = Supplier { "." }
 
-        assertThat(sup.toAbsoluteFile().isAbsolute)
-            .isTrue()
+        sup.toAbsoluteFile().isAbsolute shouldBe true
     }
 
     @Test
     fun `tell if a file is a Protobuf source code file`() {
-        assertThat(File("mycode.proto").isProtoSource())
-            .isTrue()
-        assertThat(File("util.java").isProtoSource())
-            .isFalse()
+        File("mycode.proto").isProtoSource() shouldBe true
+        File("util.java").isProtoSource() shouldBe false
     }
 }
