@@ -33,19 +33,24 @@ import io.spine.internal.dependency.Grpc
 import io.spine.internal.dependency.JavaPoet
 import io.spine.internal.dependency.JavaX
 import io.spine.internal.dependency.Spine
+import io.spine.tools.mc.java.gradle.plugins.McJavaPlugin
 
 buildscript {
     standardSpineSdkRepositories()
     dependencies {
+        classpath(io.spine.internal.dependency.Protobuf.GradlePlugin.lib)
+        classpath(io.spine.internal.dependency.Spine.ProtoData.pluginLib)
         classpath(io.spine.internal.dependency.Spine.McJava.pluginLib)
     }
 }
 
 plugins {
+    protobuf
     `java-test-fixtures`
-    id(mcJava.pluginId)
     `detekt-code-analysis`
 }
+
+apply<McJavaPlugin>()
 
 dependencies {
     api(JavaPoet.lib)
@@ -74,14 +79,79 @@ sourceSets {
     }
 }
 
+val generatedDir = "$projectDir/generated"
+
 /**
  * Force `generated` directory and Kotlin code generation.
  */
 protobuf {
-    generatedFilesBaseDir = "$projectDir/generated"
+    generatedFilesBaseDir = generatedDir
     generateProtoTasks {
         for (task in all()) {
             task.builtins.maybeCreate("kotlin")
+        }
+    }
+}
+
+tasks.clean.configure {
+    delete(generatedDir)
+}
+
+applyGeneratedDirectories(generatedDir)
+
+/**
+ * Adds directories with the generated source code to source sets of the project and
+ * to IntelliJ IDEA module settings.
+ *
+ * @param generatedDir
+ *          the name of the root directory with the generated code
+ */
+fun Project.applyGeneratedDirectories(generatedDir: String) {
+    val generatedMain = "$generatedDir/main"
+    val generatedJava = "$generatedMain/java"
+    val generatedKotlin = "$generatedMain/kotlin"
+    val generatedGrpc = "$generatedMain/grpc"
+
+    val generatedTest = "$generatedDir/test"
+    val generatedTestJava = "$generatedTest/java"
+    val generatedTestKotlin = "$generatedTest/kotlin"
+    val generatedTestGrpc = "$generatedTest/grpc"
+
+    sourceSets {
+        main {
+            java.srcDirs(
+                generatedJava,
+                generatedGrpc,
+            )
+            kotlin.srcDirs(
+                generatedKotlin,
+            )
+        }
+        test {
+            java.srcDirs(
+                generatedTestJava,
+                generatedTestGrpc,
+            )
+            kotlin.srcDirs(
+                generatedTestKotlin,
+            )
+        }
+    }
+
+    idea {
+        module {
+            generatedSourceDirs.addAll(files(
+                generatedJava,
+                generatedKotlin,
+                generatedGrpc,
+            ))
+            testSources.from(
+                generatedTestJava,
+                generatedTestKotlin,
+                generatedTestGrpc,
+            )
+            isDownloadJavadoc = true
+            isDownloadSources = true
         }
     }
 }

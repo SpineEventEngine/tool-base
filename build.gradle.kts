@@ -27,9 +27,6 @@
 @file:Suppress("RemoveRedundantQualifierName") // To prevent IDEA replacing FQN imports.
 
 import Build_gradle.Subproject
-import com.google.protobuf.gradle.protobuf
-import com.google.protobuf.gradle.generateProtoTasks
-import com.google.protobuf.gradle.protoc
 import io.spine.internal.dependency.CheckerFramework
 import io.spine.internal.dependency.ErrorProne
 import io.spine.internal.dependency.FindBugs
@@ -61,12 +58,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
     standardSpineSdkRepositories()
-    dependencies {
-        classpath(io.spine.internal.dependency.Protobuf.GradlePlugin.lib)
-        classpath(io.spine.internal.dependency.Spine.McJava.pluginLib)
-        classpath(io.spine.internal.dependency.Spine.ProtoData.pluginLib)
-    }
-
     val spine = io.spine.internal.dependency.Spine(project)
     io.spine.internal.gradle.doForceVersions(configurations)
     configurations {
@@ -86,7 +77,6 @@ plugins {
     `java-library`
     kotlin("jvm")
     idea
-    protobuf
     errorprone
     jacoco
     `project-report`
@@ -131,10 +121,6 @@ subprojects {
     configureKotlin(javaVersion)
 
     configureTests()
-
-    val generatedDir = "$projectDir/generated"
-    configureProtoc(generatedDir)
-    applyGeneratedDirectories(generatedDir)
 
     configureGitHubPages()
     configureTaskDependencies()
@@ -233,81 +219,6 @@ fun Subproject.configureTests() {
                 includeEngines("junit-jupiter")
             }
             configureLogging()
-        }
-    }
-}
-
-fun Subproject.configureProtoc(generatedDir: String) {
-    protobuf {
-        generatedFilesBaseDir = generatedDir
-        protoc {
-            artifact = Protobuf.compiler
-        }
-        generateProtoTasks {
-            for (task in all()) {
-                task.builtins.maybeCreate("kotlin")
-            }
-        }
-    }
-
-    tasks.clean.configure {
-        delete(generatedDir)
-    }
-}
-
-/**
- * Adds directories with the generated source code to source sets of the project and
- * to IntelliJ IDEA module settings.
- *
- * @param generatedDir
- *          the name of the root directory with the generated code
- */
-fun Subproject.applyGeneratedDirectories(generatedDir: String) {
-    val generatedMain = "$generatedDir/main"
-    val generatedJava = "$generatedMain/java"
-    val generatedKotlin = "$generatedMain/kotlin"
-    val generatedGrpc = "$generatedMain/grpc"
-
-    val generatedTest = "$generatedDir/test"
-    val generatedTestJava = "$generatedTest/java"
-    val generatedTestKotlin = "$generatedTest/kotlin"
-    val generatedTestGrpc = "$generatedTest/grpc"
-
-    sourceSets {
-        main {
-            java.srcDirs(
-                generatedJava,
-                generatedGrpc,
-            )
-            kotlin.srcDirs(
-                generatedKotlin,
-            )
-        }
-        test {
-            java.srcDirs(
-                generatedTestJava,
-                generatedTestGrpc,
-            )
-            kotlin.srcDirs(
-                generatedTestKotlin,
-            )
-        }
-    }
-
-    idea {
-        module {
-            generatedSourceDirs.addAll(files(
-                generatedJava,
-                generatedKotlin,
-                generatedGrpc,
-            ))
-            testSources.from(
-                generatedTestJava,
-                generatedTestKotlin,
-                generatedTestGrpc,
-            )
-            isDownloadJavadoc = true
-            isDownloadSources = true
         }
     }
 }
