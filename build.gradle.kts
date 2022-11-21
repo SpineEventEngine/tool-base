@@ -26,6 +26,10 @@
 
 @file:Suppress("RemoveRedundantQualifierName") // To prevent IDEA replacing FQN imports.
 
+import Build_gradle.Subproject
+import com.google.protobuf.gradle.protobuf
+import com.google.protobuf.gradle.generateProtoTasks
+import com.google.protobuf.gradle.protoc
 import io.spine.internal.dependency.CheckerFramework
 import io.spine.internal.dependency.ErrorProne
 import io.spine.internal.dependency.FindBugs
@@ -129,6 +133,7 @@ subprojects {
     configureTests()
 
     val generatedDir = "$projectDir/generated"
+    configureProtoc(generatedDir)
     applyGeneratedDirectories(generatedDir)
 
     configureGitHubPages()
@@ -229,6 +234,24 @@ fun Subproject.configureTests() {
             }
             configureLogging()
         }
+    }
+}
+
+fun Subproject.configureProtoc(generatedDir: String) {
+    protobuf {
+        generatedFilesBaseDir = generatedDir
+        protoc {
+            artifact = Protobuf.compiler
+        }
+        generateProtoTasks {
+            for (task in all()) {
+                task.builtins.maybeCreate("kotlin")
+            }
+        }
+    }
+
+    tasks.clean.configure {
+        delete(generatedDir)
     }
 }
 
