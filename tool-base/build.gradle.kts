@@ -155,3 +155,15 @@ fun Project.applyGeneratedDirectories(generatedDir: String) {
         }
     }
 }
+
+/**
+ * Make the `sourcesJar` task accept duplicated input which seems to occur
+ * somewhere inside either ProtoData or McJava.
+ */
+project.afterEvaluate {
+    @Suppress("UNUSED_VARIABLE")
+    val sourcesJar by tasks.getting {
+        this as Jar
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    }
+}
