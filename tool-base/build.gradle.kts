@@ -26,31 +26,18 @@
 
 @file:Suppress("RemoveRedundantQualifierName")
 
-import com.google.protobuf.gradle.generateProtoTasks
-import com.google.protobuf.gradle.protobuf
-
+import com.google.protobuf.gradle.id
 import io.spine.internal.dependency.Grpc
 import io.spine.internal.dependency.JavaPoet
 import io.spine.internal.dependency.JavaX
+import io.spine.internal.dependency.Protobuf
 import io.spine.internal.dependency.Spine
-import io.spine.tools.mc.java.gradle.plugins.McJavaPlugin
-
-buildscript {
-    standardSpineSdkRepositories()
-    dependencies {
-        classpath(io.spine.internal.dependency.Protobuf.GradlePlugin.lib)
-        classpath(io.spine.internal.dependency.Spine.ProtoData.pluginLib)
-        classpath(io.spine.internal.dependency.Spine.McJava.pluginLib)
-    }
-}
 
 plugins {
     protobuf
     `java-test-fixtures`
     `detekt-code-analysis`
 }
-
-apply<McJavaPlugin>()
 
 dependencies {
     api(JavaPoet.lib)
@@ -64,6 +51,7 @@ dependencies {
         Grpc.protobuf,
         Grpc.core,
         Grpc.stub,
+        "io.grpc:grpc-kotlin-stub:1.3.0",
         spine.validation.runtime
     ).forEach {
         testImplementation(it)
@@ -86,9 +74,25 @@ val generatedDir = "$projectDir/generated"
  */
 protobuf {
     generatedFilesBaseDir = generatedDir
-    generateProtoTasks {
-        for (task in all()) {
-            task.builtins.maybeCreate("kotlin")
+
+    protoc {
+        artifact = Protobuf.compiler
+    }
+
+    plugins {
+        id("grpc") {
+            artifact = Grpc.protobufPlugin
+        }
+        id("grpckt") {
+            artifact = "io.grpc:protoc-gen-grpc-kotlin:1.3.0:jdk8@jar"
+        }
+    }
+
+    generateProtoTasks.all().configureEach {
+        builtins.maybeCreate("kotlin")
+        plugins {
+            id("grpc")
+            id("grpckt")
         }
     }
 }

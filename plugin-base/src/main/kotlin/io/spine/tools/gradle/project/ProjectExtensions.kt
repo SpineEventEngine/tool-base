@@ -28,7 +28,7 @@
 
 package io.spine.tools.gradle.project
 
-import com.google.protobuf.gradle.ProtobufConvention
+import com.google.protobuf.gradle.ProtobufExtension
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.code.SourceSetName.Companion.main
 import io.spine.tools.code.SourceSetName.Companion.test
@@ -140,20 +140,18 @@ public fun Project.descriptorSetFile(ssn: SourceSetName): File {
  */
 private fun File.under(dir: Path): Path = dir.resolve(toString())
 
-@Suppress("DEPRECATION") /* We have to use `getConvention()` until
-        Protobuf Gradle Plugin migrates to new API. */
-public val Project.protobufConvention: ProtobufConvention
-    get() = convention.getPlugin(ProtobufConvention::class.java)
+public val Project.protobufExtension: ProtobufExtension
+    get() = extensions.getByType(ProtobufExtension::class.java)
 
 /**
  * Tells if the `generatedFilesBaseDir` is set to the default value.
  *
- * For the default value, please see [com.google.protobuf.gradle.ProtobufConfigurator] constructor.
+ * For the default value, please see [com.google.protobuf.gradle.ProtobufExtension].
  */
-internal val Project.conventionUsesDefaultGeneratedDir: Boolean
+internal val Project.usesDefaultGeneratedDir: Boolean
     get() {
-    val fromConvention = protobufConvention.protobuf.generatedFilesBaseDir
-    return fromConvention.equals("${buildDir}/generated/source/proto")
+    val fromExtension = protobufExtension.generatedFilesBaseDir
+    return fromExtension.equals("${buildDir}/generated/source/proto")
 }
 
 /**
@@ -162,7 +160,7 @@ internal val Project.conventionUsesDefaultGeneratedDir: Boolean
  */
 public val Project.generatedDir: Path
     get() {
-        if (conventionUsesDefaultGeneratedDir) {
+        if (usesDefaultGeneratedDir) {
             /*
                Ignore the default value specified by the plugin code because it "buries" the
                generated code under the `build` directory.
@@ -177,7 +175,7 @@ public val Project.generatedDir: Path
 
         /* If custom value was set by the programmer in the `protobuf` closure of the build
            script, use the specified path instead of the framework convention. */
-        val fromConvention = protobufConvention.protobuf.generatedFilesBaseDir
+        val fromConvention = protobufExtension.generatedFilesBaseDir
         return Paths.get(fromConvention)
     }
 

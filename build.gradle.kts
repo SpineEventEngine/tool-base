@@ -30,6 +30,7 @@ import Build_gradle.Subproject
 import io.spine.internal.dependency.CheckerFramework
 import io.spine.internal.dependency.ErrorProne
 import io.spine.internal.dependency.FindBugs
+import io.spine.internal.dependency.Grpc
 import io.spine.internal.dependency.Guava
 import io.spine.internal.dependency.JUnit
 import io.spine.internal.dependency.Protobuf
@@ -66,7 +67,7 @@ buildscript {
                 force(
                     spine.base,
                     spine.validation.java,
-                    io.spine.internal.dependency.Spine.ProtoData.pluginLib
+                    io.spine.internal.dependency.Protobuf.GradlePlugin.lib,
                 )
             }
         }
@@ -174,10 +175,16 @@ fun Subproject.forceConfigurations() {
         all {
             resolutionStrategy {
                 val spine = io.spine.internal.dependency.Spine(project)
+                val coroutinesVersion = "1.6.4"
                 force(
                     JUnit.runner,
                     spine.base,
                     spine.validation.runtime,
+                    Grpc.stub,
+                    "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutinesVersion",
+                    "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion",
+                    "org.jetbrains.kotlinx:kotlinx-coroutines-bom:$coroutinesVersion",
+                    "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:$coroutinesVersion"
                 )
             }
         }

@@ -31,9 +31,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.InlineMe;
 import com.google.protobuf.gradle.ExecutableLocator;
 import com.google.protobuf.gradle.GenerateProtoTask;
-import com.google.protobuf.gradle.ProtobufConfigurator;
-import com.google.protobuf.gradle.ProtobufConfigurator.GenerateProtoTaskCollection;
-import io.spine.tools.groovy.ConsumerClosure;
+import com.google.protobuf.gradle.ProtobufExtension;
+import com.google.protobuf.gradle.ProtobufExtension.GenerateProtoTaskCollection;
 import org.gradle.api.NamedDomainObjectContainer;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
@@ -43,11 +42,10 @@ import java.util.Collection;
 import static io.spine.tools.gradle.Artifact.PLUGIN_BASE_ID;
 import static io.spine.tools.gradle.ProtobufDependencies.gradlePlugin;
 import static io.spine.tools.gradle.ProtobufDependencies.protobufCompiler;
-import static io.spine.tools.gradle.project.Projects.getConventionUsesDefaultGeneratedDir;
 import static io.spine.tools.gradle.project.Projects.getGeneratedDir;
-import static io.spine.tools.gradle.project.Projects.getProtobufConvention;
+import static io.spine.tools.gradle.project.Projects.getProtobufExtension;
+import static io.spine.tools.gradle.project.Projects.getUsesDefaultGeneratedDir;
 import static io.spine.tools.gradle.task.Tasks.getDescriptorSetFile;
-import static io.spine.tools.groovy.ConsumerClosure.closure;
 import static org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME;
 
 /**
@@ -87,12 +85,11 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
     }
 
     private void applyTo(Project project) {
-        getProtobufConvention(project).protobuf(closure(
-                       (ProtobufConfigurator protobuf) -> configureProtobuf(project, protobuf)
-               ));
+        var protobuf = getProtobufExtension(project);
+        configureProtobuf(project, protobuf);
     }
 
-    private void configureProtobuf(Project project, ProtobufConfigurator protobuf) {
+    private void configureProtobuf(Project project, ProtobufExtension protobuf) {
         var helper = new Helper(this, project, protobuf);
         helper.configure();
     }
@@ -129,11 +126,11 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
 
         private final ProtocConfigurationPlugin plugin;
         private final Project project;
-        private final ProtobufConfigurator protobuf;
+        private final ProtobufExtension protobuf;
 
         private Helper(ProtocConfigurationPlugin plugin,
                        Project project,
-                       ProtobufConfigurator protobuf) {
+                       ProtobufExtension protobuf) {
             this.plugin = plugin;
             this.project = project;
             this.protobuf = protobuf;
@@ -143,34 +140,30 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
             setGeneratedFilesBaseDir();
             setProtocArtifact();
             configurePlugins();
-            protobuf.generateProtoTasks(closure(this::configureProtocTasks));
+            var tasks = protobuf.getGenerateProtoTasks();
+            configureProtocTasks(tasks);
         }
 
         private void setProtocArtifact() {
             var protocArtifact = protobufCompiler.withVersionFrom(versions).notation();
-            protobuf.protoc(closure(
-                    (ExecutableLocator locator) -> locator.setArtifact(protocArtifact)
-            ));
+            protobuf.protoc((ExecutableLocator locator) -> locator.setArtifact(protocArtifact));
         }
 
         /**
-         * Sets the {@code generatedFilesBaseDir} property of {@link ProtobufConfigurator}
+         * Sets the {@code generatedFilesBaseDir} property of {@link ProtobufExtension}
          * to the value used by the framework, if no custom value is supplied by the programmer.
          *
          * <p>Otherwise, the supplied value should be used.
          */
         private void setGeneratedFilesBaseDir() {
-            if (getConventionUsesDefaultGeneratedDir(project)) {
+            if (getUsesDefaultGeneratedDir(project)) {
                 var generatedFilesBaseDir = getGeneratedDir(project);
                 protobuf.setGeneratedFilesBaseDir(generatedFilesBaseDir.toString());
             }
         }
 
         private void configurePlugins() {
-            ConsumerClosure<NamedDomainObjectContainer<ExecutableLocator>> pluginConfig = closure(
-                    plugins -> plugin.configureProtocPlugins(plugins, project)
-            );
-            protobuf.plugins(pluginConfig);
+            protobuf.plugins(plugins -> plugin.configureProtocPlugins(plugins, project));
         }
 
         private void configureProtocTasks(GenerateProtoTaskCollection tasks) {
