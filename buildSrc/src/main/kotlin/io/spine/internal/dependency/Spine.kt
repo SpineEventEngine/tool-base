@@ -61,7 +61,7 @@ class Spine(p: ExtensionAware) {
          *
          * @see [ProtoData]
          */
-        const val protoData = "0.4.3"
+        const val protoData = "0.5.1"
 
         /**
          * The default version of `base` to use.
@@ -122,7 +122,7 @@ class Spine(p: ExtensionAware) {
          * The version of `validation` to use.
          * @see [Spine.validation]
          */
-        const val validation = "2.0.0-SNAPSHOT.70"
+        const val validation = "2.0.0-SNAPSHOT.71"
 
         /**
          * The version of Javadoc Tools to use.

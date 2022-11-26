@@ -28,8 +28,10 @@
 
 import Build_gradle.Subproject
 import io.spine.internal.dependency.CheckerFramework
+import io.spine.internal.dependency.Coroutines
 import io.spine.internal.dependency.ErrorProne
 import io.spine.internal.dependency.FindBugs
+import io.spine.internal.dependency.Grpc
 import io.spine.internal.dependency.Guava
 import io.spine.internal.dependency.JUnit
 import io.spine.internal.dependency.Protobuf
@@ -66,7 +68,7 @@ buildscript {
                 force(
                     spine.base,
                     spine.validation.java,
-                    io.spine.internal.dependency.Spine.ProtoData.pluginLib
+                    io.spine.internal.dependency.Protobuf.GradlePlugin.lib,
                 )
             }
         }
@@ -173,11 +175,16 @@ fun Subproject.forceConfigurations() {
         excludeProtobufLite()
         all {
             resolutionStrategy {
-                val spine = io.spine.internal.dependency.Spine(project)
+                val spine = Spine(project)
                 force(
                     JUnit.runner,
                     spine.base,
                     spine.validation.runtime,
+                    Grpc.stub,
+                    Coroutines.jdk8,
+                    Coroutines.core,
+                    Coroutines.bom,
+                    Coroutines.coreJvm,
                 )
             }
         }

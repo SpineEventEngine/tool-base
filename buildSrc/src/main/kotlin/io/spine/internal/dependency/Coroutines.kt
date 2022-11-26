@@ -26,8 +26,15 @@
 
 package io.spine.internal.dependency
 
-// https://github.com/google/auto
-object AutoValue {
-    private const val version = "1.9"
-    const val annotations = "com.google.auto.value:auto-value-annotations:${version}"
+/**
+ * Kotlin Coroutines.
+ * 
+ * @see <a href="https://github.com/Kotlin/kotlinx.coroutines">GitHub projecet</a>
+ */
+object Coroutines {
+    public const val version = "1.6.4"
+    public const val jdk8 = "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$version"
+    public const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
+    public const val bom = "org.jetbrains.kotlinx:kotlinx-coroutines-bom:$version"
+    public const val coreJvm = "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:$version"
 }

@@ -26,10 +26,17 @@
 
 package io.spine.internal.dependency
 
-// https://github.com/google/auto
-object AutoService {
-    private const val version = "1.0.1"
-    const val annotations = "com.google.auto.service:auto-service-annotations:${version}"
-    @Suppress("unused")
-    const val processor   = "com.google.auto.service:auto-service:${version}"
+/**
+ * gRPC-Kotlin/JVM.
+ *
+ * @see <a href="https://github.com/grpc/grpc-kotlin">GitHub project</a>
+ */
+object GrpcKotlin {
+    const val version = "1.3.0"
+    const val stub = "io.grpc:grpc-kotlin-stub:$version"
+
+    object ProtocPlugin {
+        const val id = "grpckt"
+        const val artifact = "io.grpc:protoc-gen-grpc-kotlin:$version:jdk8@jar"
+    }
 }
