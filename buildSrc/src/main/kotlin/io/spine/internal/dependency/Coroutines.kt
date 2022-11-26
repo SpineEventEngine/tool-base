@@ -31,7 +31,7 @@ package io.spine.internal.dependency
  * 
  * @see <a href="https://github.com/Kotlin/kotlinx.coroutines">GitHub projecet</a>
  */
-public object Coroutines {
+object Coroutines {
     public const val version = "1.6.4"
     public const val jdk8 = "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$version"
     public const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
