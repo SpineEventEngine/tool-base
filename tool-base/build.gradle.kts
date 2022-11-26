@@ -28,6 +28,7 @@
 
 import com.google.protobuf.gradle.id
 import io.spine.internal.dependency.Grpc
+import io.spine.internal.dependency.GrpcKotlin
 import io.spine.internal.dependency.JavaPoet
 import io.spine.internal.dependency.JavaX
 import io.spine.internal.dependency.Protobuf
@@ -51,7 +52,7 @@ dependencies {
         Grpc.protobuf,
         Grpc.core,
         Grpc.stub,
-        "io.grpc:grpc-kotlin-stub:1.3.0",
+        GrpcKotlin.stub,
         spine.validation.runtime
     ).forEach {
         testImplementation(it)
@@ -80,19 +81,19 @@ protobuf {
     }
 
     plugins {
-        id("grpc") {
-            artifact = Grpc.protobufPlugin
+        Grpc.ProtocPlugin.let {
+            id(it.id) { artifact = it.artifact }
         }
-        id("grpckt") {
-            artifact = "io.grpc:protoc-gen-grpc-kotlin:1.3.0:jdk8@jar"
+        GrpcKotlin.ProtocPlugin.let {
+            id(it.id) { artifact = it.artifact }
         }
     }
 
     generateProtoTasks.all().configureEach {
         builtins.maybeCreate("kotlin")
         plugins {
-            id("grpc")
-            id("grpckt")
+            id(Grpc.ProtocPlugin.id)
+            id(GrpcKotlin.ProtocPlugin.id)
         }
     }
 }
