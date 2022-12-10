@@ -31,7 +31,6 @@ import io.spine.tools.java.code.JavaPoetName;
 import io.spine.tools.java.code.TypeSpec;
 import io.spine.code.java.PackageName;
 import io.spine.code.java.SimpleClassName;
-import io.spine.code.proto.EntityIdField;
 import io.spine.type.MessageType;
 
 /**
@@ -42,7 +41,6 @@ abstract class AbstractEntityQuerySpec implements TypeSpec {
     private static final JavaPoetName queryBuilderType =
             JavaPoetName.of(SimpleClassName.create("QueryBuilder"));
 
-    @SuppressWarnings("DuplicateStringLiteralInspection")   // irrelevant coincidence.
     private static final JavaPoetName queryType =
             JavaPoetName.of(SimpleClassName.create("Query"));
 
