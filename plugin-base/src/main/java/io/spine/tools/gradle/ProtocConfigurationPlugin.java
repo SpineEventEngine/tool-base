@@ -164,15 +164,13 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
         /**
          * Configures all tasks of the protobuf Gradle plugin.
          *
-         * @param tasks a "live" view of the current Gradle tasks.
+         * @param tasks
+         *         a "live" view of the current Gradle tasks.
+         * @implNote We create a hard-copy of "live" view of matching Gradle tasks.
+         *         Otherwise, a {@code ConcurrentModificationException} is thrown upon an attempt to
+         *         insert a task into the Gradle lifecycle.
          */
         private void configureProtocTasks(TaskCollection<GenerateProtoTask> tasks) {
-            /*
-             *  Creating a hard-copy of "live" view of matching Gradle tasks.
-             *
-             *  Otherwise, a `ConcurrentModificationException` is thrown upon an attempt to
-             *  insert a task into the Gradle lifecycle.
-             */
             var allTasks = ImmutableList.copyOf(tasks);
             for (var task : allTasks) {
                 configureProtocTask(task);

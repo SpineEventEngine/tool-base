@@ -31,9 +31,9 @@ package io.spine.tools.gradle.protobuf
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.fs.DescriptorsDir
 import io.spine.tools.fs.DirectoryName
-import io.spine.tools.gradle.artifact
+import io.spine.tools.gradle.project.artifact
 import io.spine.tools.gradle.protobuf.ProtobufDependencies.sourceSetExtensionName
-import io.spine.tools.gradle.sourceSet
+import io.spine.tools.gradle.project.sourceSet
 import io.spine.tools.java.fs.DefaultJavaPaths
 import io.spine.tools.resolve
 import java.io.File

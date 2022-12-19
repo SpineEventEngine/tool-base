@@ -26,11 +26,13 @@
 
 @file:JvmName("Projects")
 
-package io.spine.tools.gradle
+package io.spine.tools.gradle.project
 
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.code.SourceSetName.Companion.main
 import io.spine.tools.code.SourceSetName.Companion.test
+import io.spine.tools.gradle.Artifact
+import io.spine.tools.gradle.ConfigurationName
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.plugins.JavaPluginExtension
