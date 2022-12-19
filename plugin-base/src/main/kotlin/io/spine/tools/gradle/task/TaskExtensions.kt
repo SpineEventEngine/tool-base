@@ -31,7 +31,7 @@ package io.spine.tools.gradle.task
 import com.google.protobuf.gradle.GenerateProtoTask
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.gradle.named
-import io.spine.tools.gradle.project.descriptorSetFile
+import io.spine.tools.gradle.protobuf.descriptorSetFile
 import java.io.File
 
 /** Obtains the descriptor set file associated with this task. */

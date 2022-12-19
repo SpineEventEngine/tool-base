@@ -52,7 +52,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static io.spine.tools.gradle.JavaConfigurationName.implementation;
 import static io.spine.tools.gradle.JavaConfigurationName.runtimeClasspath;
 import static io.spine.tools.gradle.JavaConfigurationName.testRuntimeClasspath;
-import static io.spine.tools.gradle.project.Projects.configuration;
+import static io.spine.tools.gradle.Projects.configuration;
 import static java.lang.String.format;
 
 @DisplayName("`DependantProject` should")

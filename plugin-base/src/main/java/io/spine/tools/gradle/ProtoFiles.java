@@ -28,7 +28,7 @@ package io.spine.tools.gradle;
 
 import io.spine.code.proto.FileSet;
 import io.spine.tools.code.SourceSetName;
-import io.spine.tools.gradle.project.Projects;
+import io.spine.tools.gradle.protobuf.Projects;
 import io.spine.tools.type.FileDescriptorSuperset;
 import io.spine.tools.type.MoreKnownTypes;
 import org.gradle.api.Project;
@@ -38,7 +38,7 @@ import java.io.File;
 import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static io.spine.tools.gradle.project.Projects.configuration;
+import static io.spine.tools.gradle.Projects.configuration;
 
 /**
  * Utilities for Gradle plugins performing code-generation based on {@code .proto} files.
