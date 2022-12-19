@@ -30,7 +30,6 @@ import com.google.protobuf.gradle.ExecutableLocator
 import com.google.protobuf.gradle.GenerateProtoTask
 import groovy.lang.Closure
 import io.spine.tools.groovy.ConsumerClosure.closure
-import java.lang.reflect.Field
 import org.gradle.api.Action
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
@@ -124,33 +123,50 @@ private class NewApi(override val project: Project): ProtobufGradlePluginFacade 
  */
 private class ConvApi(override val project: Project): ProtobufGradlePluginFacade {
 
+    /**
+     * The convention object attached to a Gradle Project by the Protobuf Gradle Plugin.
+     *
+     * This Groovy object has the type `ProtobufConvention` and is statically compiled.
+     */
     @Suppress("DEPRECATION") /* Still have to use until migration to v0.9.1 is complete. */
-    private val convention: Any = project.convention.plugins[conventionName]!!
+    private val convention: Any = project.convention.plugins["protobuf"]!!
+
+    /**
+     * The class of the
+     */
     private val conventionsClass = convention.javaClass
 
     /**
-     * The value of the `protobuf` field of the `ProtobufConvention` object.
+     * The value of the `ProtobufConvention.protobuf` property, which has
+     * the type `ProtobufConfigurator`. This is a statically compiled Groovy object.
      */
     private val protobufConfigurator: Any
-    private val protobufConfiguratorClass: Class<*>
 
     /**
-     * The field `ProtobufConfigurator.generatedFilesBaseDir`.
+     * The class of the `ProtobufConfigurator` for reflection access.
      */
-    private val generatedFilesBaseDirField: Field
+    private val protobufConfiguratorClass: Class<*>
 
     init {
-        val protobufField = conventionsClass.getField("protobuf")
-        protobufConfigurator = protobufField.get(convention)
+        // Accessor for the `ProtobufConvention.protobuf` property.
+        val getProtobuf = conventionsClass.getMethod("getProtobuf")
+        protobufConfigurator = getProtobuf.invoke(convention)
         protobufConfiguratorClass = protobufConfigurator.javaClass
-        generatedFilesBaseDirField = protobufConfiguratorClass.getField(
-            ConvApi.generatedFilesBaseDir
-        )
     }
 
     override var generatedFilesBaseDir: String
-        get() = generatedFilesBaseDirField.get(protobufConfigurator) as String
-        set(value) = generatedFilesBaseDirField.set(protobufConfigurator, value)
+        get() {
+            val getGeneratedFilesBaseDirField = protobufConfiguratorClass.getMethod(
+                "setGeneratedFilesBaseDir"
+            )
+            return getGeneratedFilesBaseDirField.invoke(protobufConfigurator) as String
+        }
+        set(value) {
+            val setGeneratedFilesBaseDirField = protobufConfiguratorClass.getMethod(
+                "setGeneratedFilesBaseDir"
+            )
+            setGeneratedFilesBaseDirField.invoke(protobufConfigurator, value)
+        }
 
     override val generateProtoTasksAll: TaskCollection<GenerateProtoTask>
         get() = project.tasks.withType(GenerateProtoTask::class.java)
@@ -167,10 +183,5 @@ private class ConvApi(override val project: Project): ProtobufGradlePluginFacade
             action.execute(l)
         }
         pluginsMethod.invoke(protobufConfigurator, closure)
-    }
-
-    companion object {
-        const val conventionName = "protobuf"
-        const val generatedFilesBaseDir = "generatedFilesBaseDir"
     }
 }
