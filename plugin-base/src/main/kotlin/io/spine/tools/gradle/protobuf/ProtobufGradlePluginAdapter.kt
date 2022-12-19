@@ -37,26 +37,34 @@ import org.gradle.api.Project
 import org.gradle.api.tasks.TaskCollection
 
 /**
- * Unified API for working with Protobuf Gradle Plugin before and after 0.9.0.
+ * Unified API for selected features of Protobuf Gradle Plugin for handling transition
+ * from versions before `0.9.0` to `0.9.1`.
  */
-internal interface ProtobufGradlePluginApi {
-    val project: Project
-    var generatedFilesBaseDir: String
-    val generateProtoTasksAll: TaskCollection<GenerateProtoTask>
-    fun protoc(action: Action<ExecutableLocator>)
-    fun plugins(action: Action<NamedDomainObjectContainer<ExecutableLocator>>)
+public interface ProtobufGradlePluginFacade {
+    public val project: Project
+    public var generatedFilesBaseDir: String
+    public val generateProtoTasksAll: TaskCollection<GenerateProtoTask>
+    public fun protoc(action: Action<ExecutableLocator>)
+    public fun plugins(action: Action<NamedDomainObjectContainer<ExecutableLocator>>)
 }
+
+/**
+ * Obtains the version-neutral API for selected features of Protobuf Gradle Plugin
+ * to serve the transition from plugin version from pre-`0.9.0` to `0.9.1`.
+ */
+public val Project.protobufPluginFacade: ProtobufGradlePluginFacade
+    get() = ProtobufGradlePluginAdapter(this)
 
 /**
  * The adapter for working with Protobuf Gradle Plugin in the given project.
  */
 internal class ProtobufGradlePluginAdapter(
     project: Project,
-    private val delegate: ProtobufGradlePluginApi = createDelegate(project)
-) : ProtobufGradlePluginApi by delegate {
+    private val delegate: ProtobufGradlePluginFacade = createDelegate(project)
+) : ProtobufGradlePluginFacade by delegate {
 
     companion object {
-        fun createDelegate(project: Project): ProtobufGradlePluginApi {
+        fun createDelegate(project: Project): ProtobufGradlePluginFacade {
             val newApi = NewApi.findExtension(project) != null
             return if (newApi) NewApi(project) else ConvApi(project)
         }
@@ -66,7 +74,7 @@ internal class ProtobufGradlePluginAdapter(
 /**
  * Adapter for the API of Protobuf Gradle Plugin after v0.9.0.
  */
-private class NewApi(override val project: Project): ProtobufGradlePluginApi {
+private class NewApi(override val project: Project): ProtobufGradlePluginFacade {
 
     private val extension: Any = findExtension(project)!!
     private val extensionClass: Class<*> = extension.javaClass
@@ -114,12 +122,11 @@ private class NewApi(override val project: Project): ProtobufGradlePluginApi {
 /**
  * Adapter for the API of Protobuf Gradle Plugin pre v0.9.0.
  */
-private class ConvApi(override val project: Project): ProtobufGradlePluginApi {
+private class ConvApi(override val project: Project): ProtobufGradlePluginFacade {
 
     @Suppress("DEPRECATION") /* Still have to use until migration to v0.9.1 is complete. */
-    private val convention: Any = project.convention.getByName(conventionName)
+    private val convention: Any = project.convention.plugins[conventionName]!!
     private val conventionsClass = convention.javaClass
-    private val fld: Field = conventionsClass.getField(ConvApi.generatedFilesBaseDir)
 
     /**
      * The value of the `protobuf` field of the `ProtobufConvention` object.
@@ -127,15 +134,23 @@ private class ConvApi(override val project: Project): ProtobufGradlePluginApi {
     private val protobufConfigurator: Any
     private val protobufConfiguratorClass: Class<*>
 
+    /**
+     * The field `ProtobufConfigurator.generatedFilesBaseDir`.
+     */
+    private val generatedFilesBaseDirField: Field
+
     init {
         val protobufField = conventionsClass.getField("protobuf")
         protobufConfigurator = protobufField.get(convention)
         protobufConfiguratorClass = protobufConfigurator.javaClass
+        generatedFilesBaseDirField = protobufConfiguratorClass.getField(
+            ConvApi.generatedFilesBaseDir
+        )
     }
 
     override var generatedFilesBaseDir: String
-        get() = fld.get(convention) as String
-        set(value) = fld.set(convention, value)
+        get() = generatedFilesBaseDirField.get(protobufConfigurator) as String
+        set(value) = generatedFilesBaseDirField.set(protobufConfigurator, value)
 
     override val generateProtoTasksAll: TaskCollection<GenerateProtoTask>
         get() = project.tasks.withType(GenerateProtoTask::class.java)
