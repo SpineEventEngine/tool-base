@@ -33,11 +33,12 @@ plugins {
 }
 
 dependencies {
-    api(gradleApi())
-    api(Protobuf.GradlePlugin.lib)
+    compileOnlyApi(gradleApi())
+    compileOnlyApi(Protobuf.GradlePlugin.lib)
     api(project(":tool-base"))
 
     testImplementation(project(":plugin-testlib"))
+    testImplementation(Protobuf.GradlePlugin.lib)
 }
 
 kotlin {
