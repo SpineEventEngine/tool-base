@@ -163,7 +163,7 @@ private class ConvApi(override val project: Project): ProtobufGradlePluginFacade
         }
         set(value) {
             val setGeneratedFilesBaseDirField = protobufConfiguratorClass.getMethod(
-                "setGeneratedFilesBaseDir"
+                "setGeneratedFilesBaseDir", String::class.java
             )
             setGeneratedFilesBaseDirField.invoke(protobufConfigurator, value)
         }
