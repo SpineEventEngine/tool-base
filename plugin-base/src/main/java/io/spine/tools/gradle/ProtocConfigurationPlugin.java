@@ -40,7 +40,7 @@ import org.gradle.api.tasks.TaskCollection;
 
 import static io.spine.tools.gradle.Artifact.PLUGIN_BASE_ID;
 import static io.spine.tools.gradle.protobuf.Projects.getGeneratedDir;
-import static io.spine.tools.gradle.protobuf.Projects.getProtobufGradlePluginAdapter;
+import static io.spine.tools.gradle.protobuf.ProtobufGradlePluginAdapterKt.getProtobufGradlePluginAdapter;
 import static io.spine.tools.gradle.protobuf.Projects.getUsesDefaultGeneratedDir;
 import static io.spine.tools.gradle.protobuf.ProtobufDependencies.gradlePlugin;
 import static io.spine.tools.gradle.protobuf.ProtobufDependencies.protobufCompiler;

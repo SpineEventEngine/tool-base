@@ -39,7 +39,7 @@ import org.gradle.api.tasks.TaskCollection
  * Unified API for selected features of Protobuf Gradle Plugin for handling transition
  * from versions before `0.9.0` to `0.9.1`.
  */
-public interface ProtobufGradlePluginFacade {
+public interface ProtobufGradlePluginAdapter {
     public val project: Project
     public var generatedFilesBaseDir: String
     public val generateProtoTasksAll: TaskCollection<GenerateProtoTask>
@@ -51,19 +51,19 @@ public interface ProtobufGradlePluginFacade {
  * Obtains the version-neutral API for selected features of Protobuf Gradle Plugin
  * to serve the transition from plugin version from pre-`0.9.0` to `0.9.1`.
  */
-public val Project.protobufPluginFacade: ProtobufGradlePluginFacade
-    get() = ProtobufGradlePluginAdapter(this)
+public val Project.protobufGradlePluginAdapter: ProtobufGradlePluginAdapter
+    get() = AdapterImpl(this)
 
 /**
  * The adapter for working with Protobuf Gradle Plugin in the given project.
  */
-internal class ProtobufGradlePluginAdapter(
+private class AdapterImpl(
     project: Project,
-    private val delegate: ProtobufGradlePluginFacade = createDelegate(project)
-) : ProtobufGradlePluginFacade by delegate {
+    private val delegate: ProtobufGradlePluginAdapter = createDelegate(project)
+) : ProtobufGradlePluginAdapter by delegate {
 
     companion object {
-        fun createDelegate(project: Project): ProtobufGradlePluginFacade {
+        fun createDelegate(project: Project): ProtobufGradlePluginAdapter {
             val newApi = NewApi.findExtension(project) != null
             return if (newApi) NewApi(project) else ConvApi(project)
         }
@@ -73,7 +73,7 @@ internal class ProtobufGradlePluginAdapter(
 /**
  * Adapter for the API of Protobuf Gradle Plugin after v0.9.0.
  */
-private class NewApi(override val project: Project): ProtobufGradlePluginFacade {
+private class NewApi(override val project: Project): ProtobufGradlePluginAdapter {
 
     private val extension: Any = findExtension(project)!!
     private val extensionClass: Class<*> = extension.javaClass
@@ -121,7 +121,7 @@ private class NewApi(override val project: Project): ProtobufGradlePluginFacade 
 /**
  * Adapter for the API of Protobuf Gradle Plugin pre v0.9.0.
  */
-private class ConvApi(override val project: Project): ProtobufGradlePluginFacade {
+private class ConvApi(override val project: Project): ProtobufGradlePluginAdapter {
 
     /**
      * The convention object attached to a Gradle Project by the Protobuf Gradle Plugin.

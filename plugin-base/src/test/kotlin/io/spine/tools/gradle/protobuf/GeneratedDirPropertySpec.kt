@@ -76,7 +76,7 @@ class GeneratedDirPropertySpec {
     @Test
     fun `take user-defined value specified in the 'protobuf' extension`() {
         val customPath = File("${project.projectDir}/protoGenerated").toPath()
-        val protobuf = ProtobufGradlePluginAdapter(project)
+        val protobuf = project.protobufGradlePluginAdapter
         protobuf.generatedFilesBaseDir = customPath.toString()
 
         project.generatedDir shouldBe customPath

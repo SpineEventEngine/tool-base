@@ -43,9 +43,6 @@ import org.gradle.api.Project
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.tasks.SourceSet
 
-internal val Project.protobufGradlePluginAdapter: ProtobufGradlePluginAdapter
-    get() = ProtobufGradlePluginAdapter(this)
-
 /**
  * Obtains the path to the generated code directory of this project.
  *
