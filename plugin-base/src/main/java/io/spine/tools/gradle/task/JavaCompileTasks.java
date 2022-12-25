@@ -31,13 +31,14 @@ import org.gradle.api.tasks.TaskCollection;
 import org.gradle.api.tasks.compile.JavaCompile;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Utilities for working with {@link JavaCompile} tasks.
+ * A collection of {@link JavaCompile} tasks in a project.
  */
-public final class JavaCompileTasks {
+public final class JavaCompileTasks implements Iterable<JavaCompile> {
 
     private final TaskCollection<JavaCompile> tasks;
 
@@ -64,5 +65,10 @@ public final class JavaCompileTasks {
             var compilerArgs = taskOptions.getCompilerArgs();
             compilerArgs.addAll(Arrays.asList(arguments));
         }
+    }
+
+    @Override
+    public Iterator<JavaCompile> iterator() {
+        return tasks.iterator();
     }
 }
