@@ -26,12 +26,9 @@
 
 package io.spine.tools.gradle.task;
 
-import io.spine.annotation.Internal;
-
 /**
  * A name of a Gradle task.
  */
-@Internal
 public interface TaskName {
 
     /**
