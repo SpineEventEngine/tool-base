@@ -26,49 +26,7 @@
 
 package io.spine.tools.gradle.task;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static io.spine.util.Preconditions2.checkNotEmptyOrBlank;
-
-/**
- * A name of a Gradle task.
- */
-public interface TaskName {
-
-    /**
-     * The value of the name.
-     *
-     * <p>If an enum implements this interface, it is expected to name its constants so that
-     * the {@link Enum#name()} obtains the name of the task.
-     */
-    String name();
-
-    /**
-     * Obtains a string value of this task name.
-     */
-    default String value() {
-        return name();
-    }
-
-    /**
-     * Obtains this task name as a path.
-     *
-     * <p>It is expected that the referred task belongs to the root project (a.k.a {@code :}).
-     *
-     * @return the name with a colon symbol ({@code :}) at the beginning
-     */
-    default String path() {
-        return ':' + name();
-    }
-
-    /**
-     * Creates a task with the given name.
-     *
-     * @throws IllegalArgumentException
-     *          if the given value is empty or blank
-     */
-    static TaskName of(String value) {
-        checkNotNull(value);
-        checkNotEmptyOrBlank(value);
-        return new DynamicTaskName(value);
-    }
+public enum StubName implements TaskName {
+    fiz,
+    buz
 }
