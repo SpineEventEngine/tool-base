@@ -34,17 +34,40 @@ import org.gradle.testkit.runner.GradleRunner
 /**
  * Allows to configure a Gradle project for testing needs.
  *
- * The project operates in the given directory and allows executing Gradle tasks.
+ * The project operates in the [given directory][setupAt] and allows executing Gradle tasks.
+ *
+ * The configuration of the project starts with the call to the [setupAt] method, which accepts
+ * the directory where the project would be placed. The method returns [GradleProjectSetup]
+ * which is used for tuning the project to be created.
+ *
+ * @see GradleProjectSetup
  */
 public class GradleProject internal constructor(setup: GradleProjectSetup) {
 
-    /** The arguments passed to [runner]. */
+    /**
+     * The name of the project directory which is used for identifying the project
+     * during debug time.
+     *
+     * If the project was loaded from resources, this value contains the name of
+     * the resource directory. Otherwise, it contains the short name of a temporary
+     * directory used for running the project.
+     *
+     * @see toString
+     */
+    public val directoryName: String
+
+    /**
+     * The arguments passed to [runner].
+     */
     private val arguments: RunnerArguments
 
-    /** The runner for executing tasks. */
+    /**
+     * The runner for executing tasks.
+     */
     public val runner: GradleRunner
 
     init {
+        directoryName = setup.resourceDir ?: setup.projectDir.name
         arguments = setup.arguments
         runner = GradleRunner.create()
             .withProjectDir(setup.projectDir)
@@ -61,7 +84,9 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
 
     public companion object {
 
-        /** The ID of a Java Gradle plugin. */
+        /**
+         * The ID of a Java Gradle plugin.
+         */
         public const val javaPlugin: String = "java"
 
         /**
@@ -101,7 +126,9 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
         }
     }
 
-    /** The directory of this project. */
+    /**
+     * The directory of this project.
+     */
     public val projectDir: File = runner.projectDir
 
     /**
@@ -124,6 +151,11 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
         val args = arguments.forTask(taskName)
         return runner.withArguments(args)
     }
+
+    /**
+     * Returns [directoryName].
+     */
+    override fun toString(): String = directoryName
 }
 
 /**
@@ -132,7 +164,7 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
  * If the [folder] is `null`, returns `false`.
  */
 private fun File.isIn(folder: File?) =
-    if(folder == null) {
+    if (folder == null) {
         false
     } else {
         this.absolutePath.startsWith(folder.absolutePath)

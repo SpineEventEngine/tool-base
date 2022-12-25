@@ -25,15 +25,18 @@
  */
 package io.spine.tools.gradle.testing
 
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotContain
 import io.spine.base.Identifier
 import io.spine.tools.gradle.task.JavaTaskName.Companion.compileJava
 import java.io.File
 import java.nio.file.Path
 import org.gradle.testkit.runner.TaskOutcome
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
@@ -57,8 +60,7 @@ class GradleProjectSpec {
     fun `be created with only project directory specified`() {
         val project = setup.create()
 
-        assertThat(project.projectDir)
-            .isEqualTo(projectDir)
+        project.projectDir shouldBe projectDir
     }
 
     @Test
@@ -70,13 +72,12 @@ class GradleProjectSpec {
         val project = setup.create()
 
         val buildResult = project.executeAndFail(compileJava)
-        assertNotNull(buildResult)
+        buildResult shouldNotBe null
 
         val compileTask = buildResult.task(compileJava.path())
-        assertNotNull(compileTask)
+        compileTask shouldNotBe null
 
-        assertThat(compileTask!!.outcome)
-            .isEqualTo(TaskOutcome.FAILED)
+        compileTask!!.outcome shouldBe TaskOutcome.FAILED
     }
 
     @Test
@@ -87,19 +88,45 @@ class GradleProjectSpec {
             .create()
 
         val buildScript = projectDir.resolve("build.gradle.kts")
-        assertThat(buildScript.readText())
-            .contains(replacement)
+
+        buildScript.readText() shouldContain replacement
 
         val noReplacementFile = projectDir
             .resolve("buildSrc")
             .resolve("no-replacement.txt")
 
-        assertThat(noReplacementFile.readText())
-            .doesNotContain(replacement)
+        noReplacementFile.readText() shouldNotContain  replacement
 
         val replacementFile = projectDir
             .resolve("src/main/java/acme/replacement.txt")
-        assertThat(replacementFile.readText())
-            .contains(replacement)
+
+        replacementFile.readText() shouldContain replacement
+    }
+
+    @Nested
+    @DisplayName("provide diagnostic `directoryName` property")
+    inner class DirectoryNameProperty {
+
+        @Test
+        fun `obtained from the the resource directory`() {
+            setup.fromResources(origin)
+            val project = setup.create()
+
+            project.directoryName shouldBe origin
+        }
+
+        @Test
+        fun `obtained from the temp directory name`() {
+            val project = setup.create()
+
+            project.directoryName shouldBe projectDir.name
+        }
+
+        @Test
+        fun `used in toString()`() {
+            val project = setup.create()
+
+            project.toString() shouldBe project.directoryName
+        }
     }
 }
