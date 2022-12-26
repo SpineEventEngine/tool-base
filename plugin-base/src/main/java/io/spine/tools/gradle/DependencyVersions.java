@@ -38,6 +38,7 @@ import java.util.Properties;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
+import static io.spine.tools.gradle.Artifact.PLUGIN_BASE_ID;
 import static io.spine.util.Exceptions.illegalStateWithCauseOf;
 import static java.lang.String.format;
 
@@ -48,6 +49,8 @@ import static java.lang.String.format;
  */
 @Internal
 public final class DependencyVersions {
+
+    static final DependencyVersions ofPluginBase = loadFor(PLUGIN_BASE_ID);
 
     private final ImmutableMap<String, String> versions;
 

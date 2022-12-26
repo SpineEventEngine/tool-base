@@ -26,7 +26,6 @@
 
 package io.spine.tools.gradle;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.InlineMe;
 import com.google.protobuf.gradle.ExecutableLocator;
@@ -38,7 +37,7 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.tasks.TaskCollection;
 
-import static io.spine.tools.gradle.Artifact.PLUGIN_BASE_ID;
+import static io.spine.tools.gradle.DependencyVersions.ofPluginBase;
 import static io.spine.tools.gradle.protobuf.Projects.getGeneratedDir;
 import static io.spine.tools.gradle.protobuf.ProtobufGradlePluginAdapterKt.getProtobufGradlePluginAdapter;
 import static io.spine.tools.gradle.protobuf.Projects.getUsesDefaultGeneratedDir;
@@ -56,9 +55,6 @@ import static org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME;
 @SuppressWarnings("AbstractClassNeverImplemented")
 // Implemented in language-specific parts of Model Compiler.
 public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
-
-    @VisibleForTesting
-    static final DependencyVersions versions = DependencyVersions.loadFor(PLUGIN_BASE_ID);
 
     /**
      * Tells if the source set of the given task contains {@code "test"} in its name.
@@ -140,7 +136,7 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
         }
 
         private void setProtocArtifact() {
-            var protocArtifact = protobufCompiler.withVersionFrom(versions).notation();
+            var protocArtifact = protobufCompiler.withVersionFrom(ofPluginBase).notation();
             protobuf.protoc((ExecutableLocator locator) -> locator.setArtifact(protocArtifact));
         }
 

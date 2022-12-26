@@ -35,7 +35,8 @@ import org.junit.jupiter.api.Test
 @DisplayName("plugin-base `DependencyVersions` should")
 internal class PluginBaseDependencyVersionsSpec {
 
-    private val versions: DependencyVersions = ProtocConfigurationPlugin.versions
+    private val versions: DependencyVersions =
+        DependencyVersions.ofPluginBase
 
     @Test
     @DisplayName("contain the version of Protobuf compiler")
