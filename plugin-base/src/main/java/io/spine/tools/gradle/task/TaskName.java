@@ -60,7 +60,7 @@ public interface TaskName {
     }
 
     /**
-     * Creates a task with the given name.
+     * Creates a task name with the given value.
      *
      * @throws IllegalArgumentException
      *          if the given value is empty or blank
