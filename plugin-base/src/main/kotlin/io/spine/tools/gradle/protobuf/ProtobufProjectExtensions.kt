@@ -53,7 +53,6 @@ import org.gradle.api.tasks.SourceSet
  *
  * Obtaining the value is done using reflection to avoid dependencies on both older and newer
  * versions of the API.
- *
  */
 public val Project.generatedFilesBaseDir: String
     get() = protobufGradlePluginAdapter.generatedFilesBaseDir
