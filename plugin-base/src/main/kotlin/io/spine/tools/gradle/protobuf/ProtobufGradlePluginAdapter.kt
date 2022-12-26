@@ -48,8 +48,8 @@ public interface ProtobufGradlePluginAdapter {
     public val project: Project
 
     /**
-     * The full name of the directory used by Protobuf Gradle Plugin
-     * for placing the source code files generated from `.proto` files.
+     * An absolute path to the directory used by Protobuf Gradle Plugin
+     * for placing generated source code files.
      *
      * Setting the value for this property would update the settings of the plugin.
      */
