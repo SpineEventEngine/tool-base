@@ -26,7 +26,6 @@
 
 package io.spine.tools.gradle.task;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static io.spine.util.Preconditions2.checkNotEmptyOrBlank;
 
 /**
@@ -67,7 +66,6 @@ public interface TaskName {
      *          if the given value is empty or blank
      */
     static TaskName of(String value) {
-        checkNotNull(value);
         checkNotEmptyOrBlank(value);
         return new DynamicTaskName(value);
     }
