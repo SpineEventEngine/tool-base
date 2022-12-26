@@ -37,8 +37,8 @@ import org.gradle.api.Project
 import org.gradle.api.tasks.TaskCollection
 
 /**
- * Unified API for selected features of Protobuf Gradle Plugin for handling transition
- * from versions before `v0.9.0` to `v0.9.1`.
+ * Unified API for selected features of Protobuf Gradle Plugin for handling
+ * transition from versions before `v0.9.0` to `v0.9.1`.
  */
 public interface ProtobufGradlePluginAdapter {
 
@@ -173,7 +173,7 @@ private class LegacyApi(override val project: Project): ProtobufGradlePluginAdap
      *
      * This Groovy object has the type `ProtobufConvention` and is statically compiled.
      */
-    @Suppress("DEPRECATION") /* Still have to use until migration to v0.9.1 is complete. */
+    @Suppress("DEPRECATION") /* Still have to use until migration to `v0.9.1` is complete. */
     private val convention: Any = project.convention.plugins["protobuf"]!!
 
     /**
