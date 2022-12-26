@@ -38,7 +38,7 @@ import org.gradle.api.tasks.TaskCollection
 
 /**
  * Unified API for selected features of Protobuf Gradle Plugin for handling transition
- * from versions before `0.9.0` to `0.9.1`.
+ * from versions before `v0.9.0` to `v0.9.1`.
  */
 public interface ProtobufGradlePluginAdapter {
 
@@ -73,7 +73,7 @@ public interface ProtobufGradlePluginAdapter {
 
 /**
  * Obtains the version-neutral API for selected features of Protobuf Gradle Plugin
- * to serve the transition from plugin version from pre-`0.9.0` to `0.9.1`.
+ * to serve the transition from plugin version from pre-`v0.9.0` to `v0.9.1`.
  */
 public val Project.protobufGradlePluginAdapter: ProtobufGradlePluginAdapter
     get() = AdapterImpl(this)
@@ -99,7 +99,7 @@ private class AdapterImpl(
  * a project.
  *
  * The closure accepts an instance of `GenerateProtoTaskCollection`, which is
- * a nested type under different classes in pre- and after- `0.9.0` versions of the plugin.
+ * a nested type under different classes in pre- and after- `v0.9.0` versions of the plugin.
  * The newer plugin API has it as `ProtobufExtension.GenerateProtoTaskCollection`, while
  * the legacy API has it as `ProtobufConfigurator.GenerateProtoTaskCollection`.
  * That's why the generic parameter of [ConsumerClosure] instance returned by this function
@@ -120,7 +120,7 @@ private fun configureAll(action: Action<GenerateProtoTask>): ConsumerClosure<Any
     }
 
 /**
- * Adapter for the API of Protobuf Gradle Plugin after `0.9.0`.
+ * Adapter for the API of Protobuf Gradle Plugin after `v0.9.0`.
  */
 private class NewApi(override val project: Project): ProtobufGradlePluginAdapter {
 
@@ -164,7 +164,7 @@ private class NewApi(override val project: Project): ProtobufGradlePluginAdapter
 }
 
 /**
- * Adapter for the API of Protobuf Gradle Plugin pre `0.9.0`.
+ * Adapter for the API of Protobuf Gradle Plugin pre `v0.9.0`.
  */
 private class LegacyApi(override val project: Project): ProtobufGradlePluginAdapter {
 
@@ -177,7 +177,7 @@ private class LegacyApi(override val project: Project): ProtobufGradlePluginAdap
     private val convention: Any = project.convention.plugins["protobuf"]!!
 
     /**
-     * The class of the
+     * The class of the `Convention` object added to the project by the plugin.
      */
     private val conventionsClass = convention.javaClass
 
