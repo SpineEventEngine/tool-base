@@ -116,7 +116,7 @@ private class NewApi(override val project: Project): ProtobufGradlePluginAdapter
             }
         }
         // Now pass the closure for the Protobuf Gradle plugin for being applied later.
-        generateProtoTasks.invoke(closure)
+        generateProtoTasks.invoke(extension, closure)
     }
 
     companion object {
@@ -209,6 +209,6 @@ private class ConvApi(override val project: Project): ProtobufGradlePluginAdapte
             }
         }
         // Now pass the closure for the Protobuf Gradle plugin for being applied later.
-        generateProtoTasks.invoke(closure)
+        generateProtoTasks.invoke(protobufConfigurator, closure)
     }
 }
