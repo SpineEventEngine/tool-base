@@ -40,10 +40,33 @@ import org.gradle.api.tasks.TaskCollection
  * from versions before `0.9.0` to `0.9.1`.
  */
 public interface ProtobufGradlePluginAdapter {
+
+    /**
+     * The project to which Protobuf Gradle Plugin is applied.
+     */
     public val project: Project
+
+    /**
+     * The full name of the directory used by Protobuf Gradle Plugin
+     * for placing the source code files generated from `.proto` files.
+     *
+     * Setting the value for this property would update the settings of the plugin.
+     */
     public var generatedFilesBaseDir: String
+
+    /**
+     * Allows to set the artifact to be used by the `protoc` compiler.
+     */
     public fun protoc(action: Action<ExecutableLocator>)
+
+    /**
+     * Allows to configure plugins of the compiler.
+     */
     public fun plugins(action: Action<NamedDomainObjectContainer<ExecutableLocator>>)
+
+    /**
+     * Configures `all()` [GenerateProtoTask] of the project using the given action.
+     */
     public fun configureProtoTasks(action: Action<GenerateProtoTask>)
 }
 
