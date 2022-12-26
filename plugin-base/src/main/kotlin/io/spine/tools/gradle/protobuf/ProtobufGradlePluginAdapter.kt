@@ -29,6 +29,7 @@ package io.spine.tools.gradle.protobuf
 import com.google.protobuf.gradle.ExecutableLocator
 import com.google.protobuf.gradle.GenerateProtoTask
 import groovy.lang.Closure
+import io.spine.tools.groovy.ConsumerClosure
 import io.spine.tools.groovy.ConsumerClosure.closure
 import org.gradle.api.Action
 import org.gradle.api.NamedDomainObjectContainer
@@ -88,13 +89,38 @@ private class AdapterImpl(
     companion object {
         fun createDelegate(project: Project): ProtobufGradlePluginAdapter {
             val newApi = NewApi.findExtension(project) != null
-            return if (newApi) NewApi(project) else ConvApi(project)
+            return if (newApi) NewApi(project) else LegacyApi(project)
         }
     }
 }
 
 /**
- * Adapter for the API of Protobuf Gradle Plugin after v0.9.0.
+ * Creates a closure that allows to configure `all()` instances of [GenerateProtoTask] in
+ * a project.
+ *
+ * The closure accepts an instance of `GenerateProtoTaskCollection`, which is
+ * a nested type under different classes in pre- and after- `0.9.0` versions of the plugin.
+ * The newer plugin API has it as `ProtobufExtension.GenerateProtoTaskCollection`, while
+ * the legacy API has it as `ProtobufConfigurator.GenerateProtoTaskCollection`.
+ * That's why the generic parameter of [ConsumerClosure] instance returned by this function
+ * is [Any] (instead of `GenerateProtoTaskCollection`).
+ *
+ * **Implementation note:** We obtain an instance of `all()` tasks via a reflection call
+ * on the closure argument, and then execute the given [action] on all the tasks, returned
+ * by the `all()` method.
+ */
+private fun configureAll(action: Action<GenerateProtoTask>): ConsumerClosure<Any> =
+    closure {
+        val all = it.javaClass.getMethod("all")
+        val allTasks = all.invoke(it)
+        @Suppress("UNCHECKED_CAST")
+        (allTasks as TaskCollection<GenerateProtoTask>).forEach { task ->
+            action.execute(task)
+        }
+    }
+
+/**
+ * Adapter for the API of Protobuf Gradle Plugin after `0.9.0`.
  */
 private class NewApi(override val project: Project): ProtobufGradlePluginAdapter {
 
@@ -124,20 +150,7 @@ private class NewApi(override val project: Project): ProtobufGradlePluginAdapter
 
     override fun configureProtoTasks(action: Action<GenerateProtoTask>) {
         val generateProtoTasks = extensionClass.getMethod("generateProtoTasks", Action::class.java)
-
-        // The actual type on which the closure operates (in newer API) is
-        // `ProtobufExtension.GenerateProtoTaskCollection`. We cannot use this type because
-        // it may not be available if older Gradle plugin is applied. We'd have
-        // `ProtobufConfigurator.GenerateProtoTaskCollection` instead. Therefore, we obtain
-        // an instance of `all()` tasks via a reflection call on the closure argument.
-        val closure = closure<Any> {
-            val all = it.javaClass.getMethod("all")
-            val allTasks = all.invoke(it)
-            @Suppress("UNCHECKED_CAST")
-            (allTasks as TaskCollection<GenerateProtoTask>).forEach { task ->
-                action.execute(task)
-            }
-        }
+        val closure = configureAll(action)
         // Now pass the closure for the Protobuf Gradle plugin for being applied later.
         generateProtoTasks.invoke(extension, closure)
     }
@@ -151,9 +164,9 @@ private class NewApi(override val project: Project): ProtobufGradlePluginAdapter
 }
 
 /**
- * Adapter for the API of Protobuf Gradle Plugin pre v0.9.0.
+ * Adapter for the API of Protobuf Gradle Plugin pre `0.9.0`.
  */
-private class ConvApi(override val project: Project): ProtobufGradlePluginAdapter {
+private class LegacyApi(override val project: Project): ProtobufGradlePluginAdapter {
 
     /**
      * The convention object attached to a Gradle Project by the Protobuf Gradle Plugin.
@@ -218,19 +231,7 @@ private class ConvApi(override val project: Project): ProtobufGradlePluginAdapte
         val generateProtoTasks = protobufConfiguratorClass.getMethod(
             "generateProtoTasks", Closure::class.java
         )
-        // The actual type on which the closure operates (in older API) is
-        // `ProtobufConfigurator.GenerateProtoTaskCollection`. We cannot use this type because
-        // in newer API type is no longer available, and we'd have
-        // `ProtobufExtension.GenerateProtoTaskCollection` instead. Therefore, we obtain
-        // an instance of `all()` tasks via a reflection call on the closure argument.
-        val closure = closure<Any> {
-            val all = it.javaClass.getMethod("all")
-            val allTasks = all.invoke(it)
-            @Suppress("UNCHECKED_CAST")
-            (allTasks as TaskCollection<GenerateProtoTask>).forEach { task ->
-                action.execute(task)
-            }
-        }
+        val closure = configureAll(action)
         // Now pass the closure for the Protobuf Gradle plugin for being applied later.
         generateProtoTasks.invoke(protobufConfigurator, closure)
     }
