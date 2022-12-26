@@ -47,9 +47,9 @@ import org.gradle.api.tasks.SourceSet
  * Obtains an absolute path to the generated code directory of this project.
  *
  * The implementation of the getter of the property handles the transition to newer versions of
- * the Protobuf Gradle Plugin. Starting from v0.9.0 the plugin uses a project extension instead
+ * the Protobuf Gradle Plugin. Starting from `v0.9.0` the plugin uses a project extension instead
  * of a Gradle convention object. This is so because using conventions were deprecated by Gradle
- * and is scheduled for removal in Gradle v8.0.
+ * and is scheduled for removal in Gradle `v8.0`.
  *
  * Obtaining the value is done using reflection to avoid dependencies on both older and newer
  * versions of the API.
