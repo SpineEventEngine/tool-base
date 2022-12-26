@@ -26,7 +26,6 @@
 
 package io.spine.tools.gradle;
 
-import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.InlineMe;
 import com.google.protobuf.gradle.ExecutableLocator;
 import com.google.protobuf.gradle.GenerateProtoTask;
@@ -35,14 +34,13 @@ import io.spine.tools.gradle.protobuf.ProtobufGradlePluginAdapter;
 import org.gradle.api.NamedDomainObjectContainer;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
-import org.gradle.api.tasks.TaskCollection;
 
 import static io.spine.tools.gradle.DependencyVersions.ofPluginBase;
 import static io.spine.tools.gradle.protobuf.Projects.getGeneratedDir;
-import static io.spine.tools.gradle.protobuf.ProtobufGradlePluginAdapterKt.getProtobufGradlePluginAdapter;
 import static io.spine.tools.gradle.protobuf.Projects.getUsesDefaultGeneratedDir;
 import static io.spine.tools.gradle.protobuf.ProtobufDependencies.gradlePlugin;
 import static io.spine.tools.gradle.protobuf.ProtobufDependencies.protobufCompiler;
+import static io.spine.tools.gradle.protobuf.ProtobufGradlePluginAdapterKt.getProtobufGradlePluginAdapter;
 import static io.spine.tools.gradle.task.Tasks.getDescriptorSetFile;
 import static org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME;
 
@@ -131,8 +129,7 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
             setGeneratedFilesBaseDir();
             setProtocArtifact();
             configurePlugins();
-            var tasks = protobuf.getGenerateProtoTasksAll();
-            configureProtocTasks(tasks);
+            protobuf.configureProtoTasks(this::configureProtocTask);
         }
 
         private void setProtocArtifact() {
@@ -155,22 +152,6 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
 
         private void configurePlugins() {
             protobuf.plugins(plugins -> plugin.configureProtocPlugins(plugins, project));
-        }
-
-        /**
-         * Configures all tasks of the protobuf Gradle plugin.
-         *
-         * @param tasks
-         *         a "live" view of the current Gradle tasks.
-         * @implNote We create a hard-copy of "live" view of matching Gradle tasks.
-         *         Otherwise, a {@code ConcurrentModificationException} is thrown upon an attempt to
-         *         insert a task into the Gradle lifecycle.
-         */
-        private void configureProtocTasks(TaskCollection<GenerateProtoTask> tasks) {
-            var allTasks = ImmutableList.copyOf(tasks);
-            for (var task : allTasks) {
-                configureProtocTask(task);
-            }
         }
 
         private void configureProtocTask(GenerateProtoTask protocTask) {
