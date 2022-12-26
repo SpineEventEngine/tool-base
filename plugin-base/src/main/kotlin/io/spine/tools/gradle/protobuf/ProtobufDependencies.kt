@@ -23,50 +23,35 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package io.spine.tools.gradle.protobuf
 
-package io.spine.tools.gradle.task;
-
-import static io.spine.util.Preconditions2.checkNotEmptyOrBlank;
+import io.spine.tools.gradle.PluginId
+import io.spine.tools.gradle.ThirdPartyDependency
+import io.spine.tools.proto.fs.Directory
 
 /**
- * A name of a Gradle task.
+ * A factory of Protobuf-related artifact specs.
  */
-public interface TaskName {
+public object ProtobufDependencies {
 
-    /**
-     * The value of the name.
-     *
-     * <p>If an enum implements this interface, it is expected to name its constants so that
-     * the {@link Enum#name()} obtains the name of the task.
-     */
-    String name();
+    private const val MAVEN_GROUP = "com.google.protobuf"
 
-    /**
-     * Obtains a string value of this task name.
-     */
-    default String value() {
-        return name();
-    }
+    /** The ID of the Protobuf Gradle plugin. */
+    @JvmField
+    public val gradlePlugin: PluginId = PluginId("com.google.protobuf")
 
-    /**
-     * Obtains this task name as a path.
-     *
-     * <p>It is expected that the referred task belongs to the root project (a.k.a {@code :}).
-     *
-     * @return the name with a colon symbol ({@code :}) at the beginning
-     */
-    default String path() {
-        return ':' + name();
-    }
+    /** The name of the `SourceSet` extension installed by the Protobuf Gradle plugin. */
+    @JvmField
+    public val sourceSetExtensionName: String = Directory.rootName()
 
-    /**
-     * Creates a task name with the given value.
-     *
-     * @throws IllegalArgumentException
-     *          if the given value is empty or blank
-     */
-    static TaskName of(String value) {
-        checkNotEmptyOrBlank(value);
-        return new DynamicTaskName(value);
-    }
+    /** The Protobuf Lite Java runtime library dependency. */
+    @JvmField
+    @Suppress("unused")
+    public val protobufLite: ThirdPartyDependency =
+        ThirdPartyDependency(MAVEN_GROUP, "protobuf-lite")
+
+    /** The dependency on Protobuf Compiler. */
+    @JvmField
+    public val protobufCompiler: ThirdPartyDependency =
+        ThirdPartyDependency(MAVEN_GROUP, "protoc")
 }

@@ -23,41 +23,39 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package io.spine.tools.gradle
 
-package io.spine.tools.gradle;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth8.assertThat;
-import static io.spine.tools.gradle.Artifact.PLUGIN_BASE_ID;
-import static io.spine.tools.gradle.Artifact.SPINE_TOOLS_GROUP;
-import static io.spine.tools.gradle.ProtobufDependencies.protobufCompiler;
+import io.kotest.matchers.optional.shouldBePresent
+import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.string.shouldMatch
+import io.spine.tools.gradle.protobuf.ProtobufDependencies.protobufCompiler
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 
 @DisplayName("plugin-base `DependencyVersions` should")
-class PluginBaseDependencyVersionsTest {
+internal class PluginBaseDependencyVersionsSpec {
+
+    private val versions: DependencyVersions =
+        DependencyVersions.ofPluginBase
 
     @Test
     @DisplayName("contain the version of Protobuf compiler")
-    void containProtoc() {
-        var versions = ProtocConfigurationPlugin.versions;
-        var version = versions.versionOf(protobufCompiler);
-        assertThat(version)
-                .isPresent();
-        assertThat(version.get())
-                .matches("3\\.\\d+\\.\\d+");
+    fun containProtoc() {
+        val version = versions.versionOf(protobufCompiler)
+
+        version shouldBePresent {
+            it shouldMatch "3\\.\\d+\\.\\d+"
+        }
     }
 
     @Test
     @DisplayName("contain the version the module itself")
-    void containOwnVersion() {
-        var versions = ProtocConfigurationPlugin.versions;
-        Dependency protoc = new ThirdPartyDependency(SPINE_TOOLS_GROUP, PLUGIN_BASE_ID);
-        var version = versions.versionOf(protoc);
-        assertThat(version)
-                .isPresent();
-        assertThat(version.get())
-                .isNotEmpty();
+    fun containOwnVersion() {
+        val protoc = ThirdPartyDependency(Artifact.SPINE_TOOLS_GROUP, Artifact.PLUGIN_BASE_ID)
+        val version = versions.versionOf(protoc)
+
+        version shouldBePresent {
+            it shouldNotBe ""
+        }
     }
 }

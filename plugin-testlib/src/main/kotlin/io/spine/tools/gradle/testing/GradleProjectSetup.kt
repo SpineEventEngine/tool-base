@@ -36,7 +36,8 @@ import org.gradle.api.logging.LogLevel
 /**
  * Customizes creation of a new [GradleProject].
  *
- * @apiNote We avoid builder pattern naming around this class to avoid the confusion associated with
+ * ### Note on method names of this class
+ * We avoid builder pattern naming around this class to avoid the confusion associated with
  * having a `build()` method in association with [GradleProject].
  *
  * This is caused by the fact that [GradleRunner][org.gradle.testkit.runner.GradleRunner] —

@@ -23,33 +23,30 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package io.spine.tools.gradle
+package io.spine.tools.gradle.task
 
-import io.spine.tools.proto.fs.Directory
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldStartWith
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 
-/**
- * A factory of Protobuf-related artifact specs.
- */
-public object ProtobufDependencies {
+@DisplayName("`TaskName` should")
+internal class TaskNameSpec {
 
-    private const val MAVEN_GROUP = "com.google.protobuf"
+    @Test
+    fun `obtain a name from an enum member`() {
+        StubName.fiz.toString() shouldBe "fiz"
+        StubName.buz.toString() shouldBe "buz"
+    }
 
-    /** The ID of the Protobuf Gradle plugin. */
-    @JvmField
-    public val gradlePlugin: PluginId = PluginId("com.google.protobuf")
+    @Test
+    fun `obtain task path`() {
+        StubName.fiz.path() shouldStartWith ":"
+    }
 
-    /** The name of the `SourceSet` extension installed by the Protobuf Gradle plugin. */
-    @JvmField
-    public val sourceSetExtensionName: String = Directory.rootName()
-
-    /** The Protobuf Lite Java runtime library dependency. */
-    @JvmField
-    @Suppress("unused")
-    public val protobufLite: ThirdPartyDependency =
-        ThirdPartyDependency(MAVEN_GROUP, "protobuf-lite")
-
-    /** The dependency on Protobuf Compiler. */
-    @JvmField
-    public val protobufCompiler: ThirdPartyDependency =
-        ThirdPartyDependency(MAVEN_GROUP, "protoc")
+    @Test
+    fun `create dynamic task name`() {
+        val expected = "dynamo"
+        TaskName.of(expected).name() shouldBe expected
+    }
 }

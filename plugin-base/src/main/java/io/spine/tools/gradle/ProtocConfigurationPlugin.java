@@ -26,25 +26,21 @@
 
 package io.spine.tools.gradle;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.InlineMe;
 import com.google.protobuf.gradle.ExecutableLocator;
 import com.google.protobuf.gradle.GenerateProtoTask;
 import com.google.protobuf.gradle.ProtobufExtension;
-import com.google.protobuf.gradle.ProtobufExtension.GenerateProtoTaskCollection;
+import io.spine.tools.gradle.protobuf.ProtobufGradlePluginAdapter;
 import org.gradle.api.NamedDomainObjectContainer;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 
-import java.util.Collection;
-
-import static io.spine.tools.gradle.Artifact.PLUGIN_BASE_ID;
-import static io.spine.tools.gradle.ProtobufDependencies.gradlePlugin;
-import static io.spine.tools.gradle.ProtobufDependencies.protobufCompiler;
-import static io.spine.tools.gradle.project.Projects.getGeneratedDir;
-import static io.spine.tools.gradle.project.Projects.getProtobufExtension;
-import static io.spine.tools.gradle.project.Projects.getUsesDefaultGeneratedDir;
+import static io.spine.tools.gradle.DependencyVersions.ofPluginBase;
+import static io.spine.tools.gradle.protobuf.Projects.getGeneratedDir;
+import static io.spine.tools.gradle.protobuf.Projects.getUsesDefaultGeneratedDir;
+import static io.spine.tools.gradle.protobuf.ProtobufDependencies.gradlePlugin;
+import static io.spine.tools.gradle.protobuf.ProtobufDependencies.protobufCompiler;
+import static io.spine.tools.gradle.protobuf.ProtobufGradlePluginAdapterKt.getProtobufGradlePluginAdapter;
 import static io.spine.tools.gradle.task.Tasks.getDescriptorSetFile;
 import static org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME;
 
@@ -57,9 +53,6 @@ import static org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME;
 @SuppressWarnings("AbstractClassNeverImplemented")
 // Implemented in language-specific parts of Model Compiler.
 public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
-
-    @VisibleForTesting
-    static final DependencyVersions versions = DependencyVersions.loadFor(PLUGIN_BASE_ID);
 
     /**
      * Tells if the source set of the given task contains {@code "test"} in its name.
@@ -85,11 +78,7 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
     }
 
     private void applyTo(Project project) {
-        var protobuf = getProtobufExtension(project);
-        configureProtobuf(project, protobuf);
-    }
-
-    private void configureProtobuf(Project project, ProtobufExtension protobuf) {
+        var protobuf = getProtobufGradlePluginAdapter(project);
         var helper = new Helper(this, project, protobuf);
         helper.configure();
     }
@@ -126,11 +115,11 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
 
         private final ProtocConfigurationPlugin plugin;
         private final Project project;
-        private final ProtobufExtension protobuf;
+        private final ProtobufGradlePluginAdapter protobuf;
 
         private Helper(ProtocConfigurationPlugin plugin,
                        Project project,
-                       ProtobufExtension protobuf) {
+                       ProtobufGradlePluginAdapter protobuf) {
             this.plugin = plugin;
             this.project = project;
             this.protobuf = protobuf;
@@ -140,12 +129,11 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
             setGeneratedFilesBaseDir();
             setProtocArtifact();
             configurePlugins();
-            var tasks = protobuf.getGenerateProtoTasks();
-            configureProtocTasks(tasks);
+            protobuf.configureProtoTasks(this::configureProtocTask);
         }
 
         private void setProtocArtifact() {
-            var protocArtifact = protobufCompiler.withVersionFrom(versions).notation();
+            var protocArtifact = protobufCompiler.withVersionFrom(ofPluginBase).notation();
             protobuf.protoc((ExecutableLocator locator) -> locator.setArtifact(protocArtifact));
         }
 
@@ -164,22 +152,6 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
 
         private void configurePlugins() {
             protobuf.plugins(plugins -> plugin.configureProtocPlugins(plugins, project));
-        }
-
-        private void configureProtocTasks(GenerateProtoTaskCollection tasks) {
-            // This is a "live" view of the current Gradle tasks.
-            Collection<GenerateProtoTask> tasksProxy = tasks.all();
-
-            /*
-             *  Creating a hard-copy of "live" view of matching Gradle tasks.
-             *
-             *  Otherwise, a `ConcurrentModificationException` is thrown upon an attempt to
-             *  insert a task into the Gradle lifecycle.
-             */
-            var allTasks = ImmutableList.copyOf(tasksProxy);
-            for (var task : allTasks) {
-                configureProtocTask(task);
-            }
         }
 
         private void configureProtocTask(GenerateProtoTask protocTask) {
