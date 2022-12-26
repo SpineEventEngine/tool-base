@@ -44,7 +44,7 @@ import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.tasks.SourceSet
 
 /**
- * Obtains the path to the generated code directory of this project.
+ * Obtains an absolute path to the generated code directory of this project.
  *
  * The implementation of the getter of the property handles the transition to newer versions of
  * the Protobuf Gradle Plugin. Starting from v0.9.0 the plugin uses a project extension instead
