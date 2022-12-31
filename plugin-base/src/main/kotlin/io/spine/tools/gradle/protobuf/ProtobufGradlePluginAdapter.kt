@@ -109,15 +109,22 @@ private class AdapterImpl(
  * on the closure argument, and then execute the given [action] on all the tasks, returned
  * by the `all()` method.
  */
-private fun configureAll(action: Action<GenerateProtoTask>): ConsumerClosure<Any> =
+private fun configureAllClosure(action: Action<GenerateProtoTask>): ConsumerClosure<Any> =
     closure {
-        val all = it.javaClass.getMethod("all")
-        val allTasks = all.invoke(it)
-        @Suppress("UNCHECKED_CAST")
-        (allTasks as TaskCollection<GenerateProtoTask>).forEach { task ->
-            action.execute(task)
-        }
+        configureAllAction(it, action)
     }
+
+private fun configureAllAction(
+    generateProtoTasksCollection: Any,
+    action: Action<GenerateProtoTask>
+) {
+    val all = generateProtoTasksCollection.javaClass.getMethod("all")
+    val allTasks = all.invoke(generateProtoTasksCollection)
+    @Suppress("UNCHECKED_CAST")
+    (allTasks as TaskCollection<GenerateProtoTask>).forEach { task ->
+        action.execute(task)
+    }
+}
 
 /**
  * Adapter for the API of Protobuf Gradle Plugin after `v0.9.0`.
@@ -150,9 +157,9 @@ private class NewApi(override val project: Project): ProtobufGradlePluginAdapter
 
     override fun configureProtoTasks(action: Action<GenerateProtoTask>) {
         val generateProtoTasks = extensionClass.getMethod("generateProtoTasks", Action::class.java)
-        val closure = configureAll(action)
+        val callAction = { genProtoTasks: Any -> configureAllAction(genProtoTasks, action) }
         // Now pass the closure for the Protobuf Gradle plugin for being applied later.
-        generateProtoTasks.invoke(extension, closure)
+        generateProtoTasks.invoke(extension, callAction)
     }
 
     companion object {
@@ -231,7 +238,7 @@ private class LegacyApi(override val project: Project): ProtobufGradlePluginAdap
         val generateProtoTasks = protobufConfiguratorClass.getMethod(
             "generateProtoTasks", Closure::class.java
         )
-        val closure = configureAll(action)
+        val closure = configureAllClosure(action)
         // Now pass the closure for the Protobuf Gradle plugin for being applied later.
         generateProtoTasks.invoke(protobufConfigurator, closure)
     }
