@@ -121,7 +121,7 @@ private fun configureAllAction(
     val all = generateProtoTasksCollection.javaClass.getMethod("all")
     val allTasks = all.invoke(generateProtoTasksCollection)
     @Suppress("UNCHECKED_CAST")
-    (allTasks as TaskCollection<GenerateProtoTask>).forEach { task ->
+    (allTasks as TaskCollection<GenerateProtoTask>).configureEach { task ->
         action.execute(task)
     }
 }
@@ -146,7 +146,7 @@ private class NewApi(override val project: Project): ProtobufGradlePluginAdapter
         }
 
     override fun protoc(action: Action<ExecutableLocator>) {
-        val setter = extensionClass.getMethod("protoc")
+        val setter = extensionClass.getMethod("protoc", Action::class.java)
         setter.invoke(extension, action)
     }
 
