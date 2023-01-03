@@ -157,7 +157,9 @@ private class NewApi(override val project: Project): ProtobufGradlePluginAdapter
 
     override fun configureProtoTasks(action: Action<GenerateProtoTask>) {
         val generateProtoTasks = extensionClass.getMethod("generateProtoTasks", Action::class.java)
-        val callAction = { genProtoTasks: Any -> configureAllAction(genProtoTasks, action) }
+        val callAction : Action<Any> = Action<Any> { genProtoTasks: Any ->
+            configureAllAction(genProtoTasks, action)
+        }
         // Now pass the closure for the Protobuf Gradle plugin for being applied later.
         generateProtoTasks.invoke(extension, callAction)
     }
