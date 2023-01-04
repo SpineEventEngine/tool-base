@@ -112,20 +112,6 @@ public abstract class Language internal constructor(
 /**
  * A C-like language.
  *
- * Supports double-slash comments (`// <comment body>`).
- */
-@Deprecated("Use `SlashAsteriskCommentLang` instead.")
-public class SlashCommentLanguage(
-    name: String,
-    fileExtensions: Iterable<String>
-) : Language(name, fileExtensions) {
-
-    override fun comment(line: String): String = "// $line"
-}
-
-/**
- * A C-like language.
- *
  * Supports slash-asterisk-asterisk-slash comments (`/* <comment body> */`).
  */
 public class SlashAsteriskCommentLang(
