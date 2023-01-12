@@ -160,7 +160,6 @@ private class NewApi(override val project: Project): ProtobufGradlePluginAdapter
         val callAction : Action<Any> = Action<Any> { genProtoTasks: Any ->
             configureAllAction(genProtoTasks, action)
         }
-        // Now pass the closure for the Protobuf Gradle plugin for being applied later.
         generateProtoTasks.invoke(extension, callAction)
     }
 
