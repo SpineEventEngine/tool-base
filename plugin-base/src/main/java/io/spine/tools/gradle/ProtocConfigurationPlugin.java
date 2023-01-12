@@ -26,7 +26,6 @@
 
 package io.spine.tools.gradle;
 
-import com.google.errorprone.annotations.InlineMe;
 import com.google.protobuf.gradle.ExecutableLocator;
 import com.google.protobuf.gradle.GenerateProtoTask;
 import com.google.protobuf.gradle.ProtobufExtension;
@@ -42,7 +41,6 @@ import static io.spine.tools.gradle.protobuf.ProtobufDependencies.gradlePlugin;
 import static io.spine.tools.gradle.protobuf.ProtobufDependencies.protobufCompiler;
 import static io.spine.tools.gradle.protobuf.ProtobufGradlePluginAdapterKt.getProtobufGradlePluginAdapter;
 import static io.spine.tools.gradle.task.Tasks.getDescriptorSetFile;
-import static org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME;
 
 /**
  * An abstract base for Gradle plugins that configure Protobuf compilation.
@@ -53,23 +51,6 @@ import static org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME;
 @SuppressWarnings("AbstractClassNeverImplemented")
 // Implemented in language-specific parts of Model Compiler.
 public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
-
-    /**
-     * Tells if the source set of the given task contains {@code "test"} in its name.
-     *
-     * @deprecated Please a name of the source set of the given task instead.
-     */
-    @SuppressWarnings("WeakerAccess") // This method is used by implementing classes.
-    @Deprecated
-    @InlineMe(
-            replacement = "protocTask.getSourceSet().getName().contains(TEST_SOURCE_SET_NAME)",
-            staticImports = "org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME"
-    )
-    protected static boolean isTestsTask(GenerateProtoTask protocTask) {
-        return protocTask.getSourceSet()
-                         .getName()
-                         .contains(TEST_SOURCE_SET_NAME);
-    }
 
     @Override
     public void apply(Project project) {
