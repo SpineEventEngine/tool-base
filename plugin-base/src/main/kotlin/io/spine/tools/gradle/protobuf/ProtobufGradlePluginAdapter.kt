@@ -26,6 +26,7 @@
 
 package io.spine.tools.gradle.protobuf
 
+import com.google.common.collect.ImmutableList
 import com.google.protobuf.gradle.ExecutableLocator
 import com.google.protobuf.gradle.GenerateProtoTask
 import groovy.lang.Closure
@@ -121,8 +122,10 @@ private fun configureAllAction(
     val all = generateProtoTasksCollection.javaClass.getMethod("all")
     val allTasks = all.invoke(generateProtoTasksCollection)
     @Suppress("UNCHECKED_CAST")
-    (allTasks as TaskCollection<GenerateProtoTask>).configureEach { task ->
-        action.execute(task)
+    val copyOfAllTasks = ImmutableList.copyOf(allTasks as TaskCollection<GenerateProtoTask>)
+    copyOfAllTasks.forEach { task: GenerateProtoTask ->
+        task.configure(closure { t: GenerateProtoTask -> action.execute(t) })
+        task.project.logger.debug("The task `${task.name}` was configured using action `$action`.")
     }
 }
 
@@ -160,7 +163,6 @@ private class NewApi(override val project: Project): ProtobufGradlePluginAdapter
         val callAction : Action<Any> = Action<Any> { genProtoTasks: Any ->
             configureAllAction(genProtoTasks, action)
         }
-        // Now pass the closure for the Protobuf Gradle plugin for being applied later.
         generateProtoTasks.invoke(extension, callAction)
     }
 
@@ -241,7 +243,6 @@ private class LegacyApi(override val project: Project): ProtobufGradlePluginAdap
             "generateProtoTasks", Closure::class.java
         )
         val closure = configureAllClosure(action)
-        // Now pass the closure for the Protobuf Gradle plugin for being applied later.
         generateProtoTasks.invoke(protobufConfigurator, closure)
     }
 }

@@ -69,9 +69,9 @@ public final class GradleTask {
      * Creates a builder for a new task.
      *
      * @param name
-     *          the name of the task
+     *         the name of the task
      * @param action
-     *          the configuration action for the task
+     *         the configuration action for the task
      */
     public static Builder newBuilder(TaskName name, Action<Task> action) {
         checkNotNull(name);
@@ -79,7 +79,9 @@ public final class GradleTask {
         return new Builder(name, action);
     }
 
-    /** Creates a new instance from the specified {@code Task}. */
+    /**
+     * Creates a new instance from the specified {@code Task}.
+     */
     public static GradleTask from(Task task) {
         checkNotNull(task);
         TaskName taskName = new DynamicTaskName(task.getName());
@@ -87,17 +89,23 @@ public final class GradleTask {
         return new GradleTask(task, taskName, project);
     }
 
-    /** Obtains the Gradle task itself. */
+    /**
+     * Obtains the Gradle task itself.
+     */
     public Task getTask() {
         return task;
     }
 
-    /** Obtains task name. */
+    /**
+     * Obtains the task name.
+     */
     public TaskName getName() {
         return name;
     }
 
-    /** Obtains the project of the task. */
+    /**
+     * Obtains the project of the task.
+     */
     public Project getProject() {
         return project;
     }
@@ -142,7 +150,8 @@ public final class GradleTask {
          * as the newly created instance of {@link GradleTask} must be put to
          * a certain place in the Gradle build lifecycle.
          *
-         * @param target the name of the task, serving as "before" anchor
+         * @param target
+         *         the name of the task, serving as "before" anchor
          * @return the current instance of {@code Builder}
          */
         public Builder insertBeforeTask(TaskName target) {
@@ -162,7 +171,8 @@ public final class GradleTask {
          * as the newly created instance of {@link GradleTask} must be put
          * to a certain place in the Gradle build lifecycle.
          *
-         * @param target the name of the task, serving as "after" anchor
+         * @param target
+         *         the name of the task, serving as "after" anchor
          * @return the current instance of {@code Builder}
          */
         public Builder insertAfterTask(TaskName target) {
@@ -190,7 +200,8 @@ public final class GradleTask {
          * one task with such name exists. Though the fallback is never handled and there is
          * no guarantee that the task will get into the Gradle task graph.
          *
-         * @param target the name of the tasks, serving as "after" anchor
+         * @param target
+         *         the name of the tasks, serving as "after" anchor
          * @return the current instance of {@code Builder}
          */
         public Builder insertAfterAllTasks(TaskName target) {
@@ -222,7 +233,8 @@ public final class GradleTask {
          *
          * <p>Multiple invocations appends the new files to the existing ones.
          *
-         * @param inputs the task input files
+         * @param inputs
+         *         the task input files
          * @return the current instance of {@code Builder}
          */
         public Builder withInputFiles(FileCollection inputs) {
@@ -264,7 +276,8 @@ public final class GradleTask {
          *
          * <p>Note that a task is not skipped if its {@link #withInputFiles inputs} are changes.
          *
-         * @param outputs the task output files
+         * @param outputs
+         *         the task output files
          * @return the current instance of {@code Builder}
          */
         public Builder withOutputFiles(FileCollection outputs) {
@@ -275,29 +288,44 @@ public final class GradleTask {
         }
 
         /**
-         * Builds an instance of {@link GradleTask} and inserts it to the project
-         * build lifecycle according to the "before" and "after" tasks specified in the builder.
+         * Builds an instance of {@link GradleTask} and inserts it to the project,
+         * if the task with the given name does not exist, specifying the task
+         * lifecycle according to the "before" and "after" tasks specified in the builder.
          *
-         * @param project the target Gradle project
+         * @param project
+         *         the target Gradle project
          * @return the newly created Gradle task
+         * @throws org.gradle.api.InvalidUserDataException
+         *         if the task with the {@linkplain #getName() name} already exists
          */
         @CanIgnoreReturnValue
         public GradleTask applyNowTo(Project project) {
-            var errMsg = "Project is not specified for the new Gradle task: ";
-            checkNotNull(project, errMsg + name);
+            checkNotNull(project, "Project is not specified for the new Gradle task: `%s`.", name);
+            checkDependencies();
+            var log = project.getLogger();
+            var projectName = project.getDisplayName();
+            var taskName = name.name();
+            log.debug("Creating task `{}` in the project `{}`.", taskName, projectName);
+            Task newTask;
+            try {
+                newTask = project.task(taskName);
+            } catch (@SuppressWarnings("OverlyBroadCatchBlock") Exception e) {
+                log.error("Failed to create task `{}` in the project `{}`.", taskName, projectName);
+                throw new IllegalStateException(e);
+            }
+            newTask.doLast(action);
+            dependTask(newTask, project);
+            addTaskIO(newTask);
+            var result = new GradleTask(newTask, name, project);
+            return result;
+        }
 
+        private void checkDependencies() {
             if (dependenciesRequired() && !dependenciesPresent()) {
                 var exceptionMsg = "Either the previous or the following task must be set. " +
                         "Call `allowNoDependencies()` to skip task dependencies setup.";
                 throw new IllegalStateException(exceptionMsg);
             }
-
-            var newTask = project.task(name.name())
-                                 .doLast(action);
-            dependTask(newTask, project);
-            addTaskIO(newTask);
-            var result = new GradleTask(newTask, name, project);
-            return result;
         }
 
         private boolean dependenciesRequired() {
@@ -306,8 +334,8 @@ public final class GradleTask {
 
         private boolean dependenciesPresent() {
             return followingTask != null
-                || previousTask != null
-                || previousTaskOfAllProjects != null;
+                    || previousTask != null
+                    || previousTaskOfAllProjects != null;
         }
 
         private void dependTask(Task task, Project project) {
@@ -328,7 +356,8 @@ public final class GradleTask {
         private void dependTaskOnAllProjects(Task task, Project rootProject) {
             var prevTaskName = previousTaskOfAllProjects.name();
             ProjectHierarchy.applyToAll(rootProject, project -> {
-                var existingTask = project.getTasks().findByName(prevTaskName);
+                var existingTask = project.getTasks()
+                                          .findByName(prevTaskName);
                 if (existingTask != null) {
                     task.dependsOn(existingTask);
                 }
