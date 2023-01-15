@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2023, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,30 +24,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.internal.dependency
+package io.spine.tools.gradle.protobuf
 
-// https://github.com/protocolbuffers/protobuf
-@Suppress("MemberVisibilityCanBePrivate") // used directly from outside
-object Protobuf {
-    private const val group = "com.google.protobuf"
-    const val version       = "3.21.12"
-    val libs = listOf(
-        "${group}:protobuf-java:${version}",
-        "${group}:protobuf-java-util:${version}",
-        "${group}:protobuf-kotlin:${version}"
-    )
-    const val compiler = "${group}:protoc:${version}"
+import io.spine.tools.gradle.protobuf.ProtobufDependencies.sourceSetExtensionName
+import org.gradle.api.file.SourceDirectorySet
+import org.gradle.api.tasks.SourceSet
 
-    // https://github.com/google/protobuf-gradle-plugin/releases
-    object GradlePlugin {
-        /**
-         * The version of this plugin is already specified in `buildSrc/build.gradle.kts` file.
-         * Thus, when applying the plugin in projects build files, only the [id] should be used.
-         *
-         * When changing the version, also change the version used in the `build.gradle.kts`.
-         */
-        const val version = "0.9.1"
-        const val id = "com.google.protobuf"
-        const val lib = "${group}:protobuf-gradle-plugin:${version}"
-    }
+/**
+ * Tells if this [SourceSet] contains `.proto` files.
+ *
+ * @return true if there is [protoDirectorySet] available in this source set, _and_ the set has
+ *         at least one file. Otherwise, false.
+ */
+public fun SourceSet.containsProtoFiles(): Boolean {
+    val protoDirectorySet = protoDirectorySet()
+        ?: return false // no `proto` extension at all.
+    val isEmpty = protoDirectorySet.files.isEmpty()
+    return !isEmpty
+}
+
+/**
+ * Obtains a [SourceDirectorySet] containing `.proto` files in this [SourceSet].
+ *
+ * @return the directory set or `null`, if there is no `proto` extension added to this `SourceSet`
+ *         by the Protobuf Gradle Plugin.
+ * @see ProtobufDependencies.sourceSetExtensionName
+ */
+public fun SourceSet.protoDirectorySet(): SourceDirectorySet? {
+    return extensions.getByName(sourceSetExtensionName)
+        .let { ext -> ext as? SourceDirectorySet }
 }
