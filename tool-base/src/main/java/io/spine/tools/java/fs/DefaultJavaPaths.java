@@ -26,6 +26,7 @@
 
 package io.spine.tools.java.fs;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.errorprone.annotations.Immutable;
 import io.spine.code.fs.AbstractDirectory;
 import io.spine.tools.code.SourceSetName;
@@ -67,7 +68,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Immutable
 public final class DefaultJavaPaths extends DefaultPaths {
 
+    @VisibleForTesting
     static final String ROOT_NAME = "java";
+
+    @VisibleForTesting
+    static final String GENERATED_PROTO_DIR = "generated-proto";
+
+    @VisibleForTesting
+    static final String GRPC_DIR = "grpc";
+
+    @VisibleForTesting
+    static final String SPINE_DIR_NAME = "spine";
 
     private DefaultJavaPaths(Path projectDir) {
         super(projectDir);
@@ -114,6 +125,14 @@ public final class DefaultJavaPaths extends DefaultPaths {
         public SourceDir dir(SourceSetName ssn) {
             return subDir(ssn, ROOT_NAME);
         }
+
+        /**
+         * Obtains the directory for code generated for the source set with the given name by
+         * the custom Spine code generator.
+         */
+        public SourceDir spine(SourceSetName ssn) {
+            return subDir(ssn, SPINE_DIR_NAME);
+        }
     }
 
     /**
@@ -122,7 +141,7 @@ public final class DefaultJavaPaths extends DefaultPaths {
     public static final class GeneratedProto extends SourceRoot {
 
         private GeneratedProto(AbstractDirectory parent) {
-            super(parent, "build/generated-proto");
+            super(parent, "build/" + GENERATED_PROTO_DIR);
         }
 
         /**
@@ -134,11 +153,13 @@ public final class DefaultJavaPaths extends DefaultPaths {
         }
 
         /**
-         * Obtains the directory for code generated for the source set with the given name by
-         * the custom Spine code generator.
+         * Do not use. See deprecation note.
+         *
+         * @deprecated Please use {@link GeneratedJava#spine(SourceSetName)} instead.
          */
+        @Deprecated
         public SourceDir spine(SourceSetName ssn) {
-            return subDir(ssn, "spine");
+            return subDir(ssn, SPINE_DIR_NAME);
         }
 
         /**
@@ -146,7 +167,7 @@ public final class DefaultJavaPaths extends DefaultPaths {
          * the gRPC code generator.
          */
         public SourceDir grpc(SourceSetName ssn) {
-            return subDir(ssn, "grpc");
+            return subDir(ssn, GRPC_DIR);
         }
     }
 }

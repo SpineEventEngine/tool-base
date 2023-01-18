@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2023, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.java.js;
+package io.spine.tools.java.fs;
 
-import io.spine.tools.java.fs.DefaultJavaPaths;
+import io.spine.tools.fs.DirectoryName;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -35,6 +35,9 @@ import java.nio.file.Path;
 import static com.google.common.truth.Truth8.assertThat;
 import static io.spine.tools.code.SourceSetName.main;
 import static io.spine.tools.code.SourceSetName.test;
+import static io.spine.tools.java.fs.DefaultJavaPaths.GENERATED_PROTO_DIR;
+import static io.spine.tools.java.fs.DefaultJavaPaths.GRPC_DIR;
+import static io.spine.tools.java.fs.DefaultJavaPaths.SPINE_DIR_NAME;
 
 @DisplayName("`DefaultJavaPaths` should")
 @SuppressWarnings("DuplicateStringLiteralInspection")
@@ -42,13 +45,19 @@ class DefaultJavaPathsTest {
 
     private static final Path projectPath = Path.of("/test-path");
 
+    private static final String JAVA_DIR = DefaultJavaPaths.ROOT_NAME;
+    private static final String GENERATED_DIR = DirectoryName.generated.value();
+    private static final String BUILD_DIR = "build";
+    private static final String TEST_DIR = "test";
+    private static final String MAIN_DIR = "main";
+
     @Test
     @DisplayName("obtain `build` dir")
     void build() {
         var paths = DefaultJavaPaths.at(projectPath);
         assertThat(paths.buildRoot()
                         .path())
-                .isEqualTo(projectPath.resolve("build"));
+                .isEqualTo(projectPath.resolve(BUILD_DIR));
     }
 
     @Test
@@ -57,7 +66,7 @@ class DefaultJavaPathsTest {
         var paths = DefaultJavaPaths.at(projectPath);
         assertThat(paths.generated()
                         .path())
-                .isEqualTo(projectPath.resolve("generated"));
+                .isEqualTo(projectPath.resolve(GENERATED_DIR));
     }
 
     @Test
@@ -67,23 +76,22 @@ class DefaultJavaPathsTest {
         assertThat(paths.generatedProto()
                         .java(main)
                         .path())
-                .isEqualTo(projectPath.resolve("build")
-                                      .resolve("generated-proto")
-                                      .resolve("main")
-                                      .resolve("java"));
+                .isEqualTo(projectPath.resolve(BUILD_DIR)
+                                      .resolve(GENERATED_PROTO_DIR)
+                                      .resolve(MAIN_DIR)
+                                      .resolve(JAVA_DIR));
     }
 
     @Test
-    @DisplayName("obtain `spine` subdir in `generated-proto` dir")
+    @DisplayName("obtain `spine` subdir in `generated` dir")
     void generatedSpine() {
         var paths = DefaultJavaPaths.at(projectPath);
-        assertThat(paths.generatedProto()
+        assertThat(paths.generated()
                         .spine(test)
                         .path())
-                .isEqualTo(projectPath.resolve("build")
-                                      .resolve("generated-proto")
-                                      .resolve("test")
-                                      .resolve("spine"));
+                .isEqualTo(projectPath.resolve(GENERATED_DIR)
+                                      .resolve(TEST_DIR)
+                                      .resolve(SPINE_DIR_NAME));
     }
 
     @Test
@@ -93,9 +101,9 @@ class DefaultJavaPathsTest {
         assertThat(paths.generatedProto()
                         .grpc(test)
                         .path())
-                .isEqualTo(projectPath.resolve("build")
-                                      .resolve("generated-proto")
-                                      .resolve("test")
-                                      .resolve("grpc"));
+                .isEqualTo(projectPath.resolve(BUILD_DIR)
+                                      .resolve(GENERATED_PROTO_DIR)
+                                      .resolve(TEST_DIR)
+                                      .resolve(GRPC_DIR));
     }
 }
