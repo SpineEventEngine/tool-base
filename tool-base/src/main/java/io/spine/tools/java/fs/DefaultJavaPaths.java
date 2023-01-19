@@ -68,6 +68,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Immutable
 public final class DefaultJavaPaths extends DefaultPaths {
 
+    @SuppressWarnings("DuplicateStringLiteralInspection") // Used as a method name elsewhere.
+    public static final String BUILD_DIR = "build";
+
     public static final String GENERATED_PROTO_DIR = "generated-proto";
 
     @VisibleForTesting
@@ -140,7 +143,7 @@ public final class DefaultJavaPaths extends DefaultPaths {
     public static final class GeneratedProto extends SourceRoot {
 
         private GeneratedProto(AbstractDirectory parent) {
-            super(parent, "build/" + GENERATED_PROTO_DIR);
+            super(parent, BUILD_DIR + '/' + GENERATED_PROTO_DIR);
         }
 
         /**

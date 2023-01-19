@@ -37,6 +37,7 @@ import static io.spine.tools.code.SourceSetName.main;
 import static io.spine.tools.code.SourceSetName.test;
 import static io.spine.tools.java.fs.DefaultJavaPaths.GENERATED_PROTO_DIR;
 import static io.spine.tools.java.fs.DefaultJavaPaths.GRPC_DIR;
+import static io.spine.tools.java.fs.DefaultJavaPaths.BUILD_DIR;
 import static io.spine.tools.java.fs.DefaultJavaPaths.SPINE_DIR_NAME;
 
 @DisplayName("`DefaultJavaPaths` should")
@@ -47,7 +48,6 @@ class DefaultJavaPathsTest {
 
     private static final String JAVA_DIR = DefaultJavaPaths.ROOT_NAME;
     private static final String GENERATED_DIR = DirectoryName.generated.value();
-    private static final String BUILD_DIR = "build";
     private static final String TEST_DIR = "test";
     private static final String MAIN_DIR = "main";
 

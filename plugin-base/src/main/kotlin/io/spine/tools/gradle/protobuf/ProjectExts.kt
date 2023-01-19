@@ -35,6 +35,8 @@ import io.spine.tools.gradle.project.artifact
 import io.spine.tools.gradle.project.sourceSet
 import io.spine.tools.gradle.protobuf.ProtobufDependencies.sourceSetExtensionName
 import io.spine.tools.java.fs.DefaultJavaPaths
+import io.spine.tools.java.fs.DefaultJavaPaths.BUILD_DIR
+import io.spine.tools.java.fs.DefaultJavaPaths.GENERATED_PROTO_DIR
 import io.spine.tools.resolve
 import java.io.File
 import java.nio.file.Path
@@ -55,6 +57,15 @@ import org.gradle.api.tasks.SourceSet
  */
 public val Project.generatedFilesBaseDir: String
     get() = protobufGradlePluginAdapter.generatedFilesBaseDir
+
+/**
+ * Obtains `generated-proto` directory of this project.
+ */
+public val Project.generatedProtoDir: Path
+    get() {
+        val result = projectDir.resolve(BUILD_DIR).resolve(GENERATED_PROTO_DIR).toPath()
+        return result
+    }
 
 /**
  * Obtains the path to the directory which will be used for placing files generated
