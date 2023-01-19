@@ -28,17 +28,12 @@ package io.spine.tools.gradle;
 
 import com.google.protobuf.gradle.ExecutableLocator;
 import com.google.protobuf.gradle.GenerateProtoTask;
-import com.google.protobuf.gradle.ProtobufExtension;
 import io.spine.tools.gradle.protobuf.ProtobufGradlePluginAdapter;
 import org.gradle.api.NamedDomainObjectContainer;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 
-import static io.spine.tools.gradle.DependencyVersions.ofPluginBase;
-import static io.spine.tools.gradle.protobuf.Projects.getGeneratedDir;
-import static io.spine.tools.gradle.protobuf.Projects.getUsesDefaultGeneratedDir;
 import static io.spine.tools.gradle.protobuf.ProtobufDependencies.gradlePlugin;
-import static io.spine.tools.gradle.protobuf.ProtobufDependencies.protobufCompiler;
 import static io.spine.tools.gradle.protobuf.ProtobufGradlePluginAdapterKt.getProtobufGradlePluginAdapter;
 import static io.spine.tools.gradle.task.Tasks.getDescriptorSetFile;
 
@@ -90,7 +85,10 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
     }
 
     /**
-     * Configures Protobuf Gradle plugin.
+     * Configures Protobuf Gradle plugin invoking configuration callbacks — such as
+     * {@link #configureProtocPlugins(NamedDomainObjectContainer, Project) configureProtocPlugins()}
+     * or {@link #customizeTask(GenerateProtoTask) customizeTask()} — provided by the classes
+     * derived from {@link ProtocConfigurationPlugin}.
      */
     private static class Helper {
 
@@ -107,28 +105,8 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
         }
 
         private void configure() {
-            setGeneratedFilesBaseDir();
-            setProtocArtifact();
             configurePlugins();
             protobuf.configureProtoTasks(this::configureProtocTask);
-        }
-
-        private void setProtocArtifact() {
-            var protocArtifact = protobufCompiler.withVersionFrom(ofPluginBase).notation();
-            protobuf.protoc((ExecutableLocator locator) -> locator.setArtifact(protocArtifact));
-        }
-
-        /**
-         * Sets the {@code generatedFilesBaseDir} property of {@link ProtobufExtension}
-         * to the value used by the framework, if no custom value is supplied by the programmer.
-         *
-         * <p>Otherwise, the supplied value should be used.
-         */
-        private void setGeneratedFilesBaseDir() {
-            if (getUsesDefaultGeneratedDir(project)) {
-                var generatedFilesBaseDir = getGeneratedDir(project);
-                protobuf.setGeneratedFilesBaseDir(generatedFilesBaseDir.toString());
-            }
         }
 
         private void configurePlugins() {
