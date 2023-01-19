@@ -35,6 +35,7 @@ import io.spine.tools.gradle.project.artifact
 import io.spine.tools.gradle.protobuf.ProtobufDependencies.sourceSetExtensionName
 import io.spine.tools.gradle.project.sourceSet
 import io.spine.tools.java.fs.DefaultJavaPaths
+import io.spine.tools.java.fs.DefaultJavaPaths.GENERATED_PROTO_DIR
 import io.spine.tools.resolve
 import java.io.File
 import java.nio.file.Path
@@ -71,19 +72,19 @@ public val Project.generatedDir: Path
     get() {
         if (usesDefaultGeneratedDir) {
             /*
-               Ignore the default value specified by the plugin code because it "buries" the
-               generated code under the `build` directory.
+               Ignore the default value set to Protobuf Gradle Plugin by ProtoData because
+               it "buries" the generated code under the `build` directory.
 
                We want the generated code more visible, and place it at the root of the project,
                so it is seen as a "sibling" with the `src` directory.
 
-               This is the convention of our framework.
+               This is the convention of the Spine SDK.
             */
             return projectDir.resolve(DirectoryName.generated).toPath()
         }
 
         /* If custom value was set by the programmer in the `protobuf` closure of the build
-           script, use the specified path instead of the framework convention. */
+           script, use the specified path instead of our convention. */
         val fromExtension = generatedFilesBaseDir
         return Paths.get(fromExtension)
     }
@@ -97,7 +98,11 @@ public val Project.generatedDir: Path
  */
 internal val Project.usesDefaultGeneratedDir: Boolean
     get() {
-        return generatedFilesBaseDir == "${buildDir}/generated/source/proto"
+        val defaultFromProtobufPlugin =
+            generatedFilesBaseDir == "${buildDir}/generated/source/proto"
+        val defaultFromProtoData =
+            generatedFilesBaseDir == "${buildDir}/$GENERATED_PROTO_DIR"
+        return defaultFromProtobufPlugin || defaultFromProtoData
     }
 
 /**
