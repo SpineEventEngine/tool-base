@@ -113,6 +113,49 @@ public fun Project.descriptorSetFile(ssn: SourceSetName): File {
 }
 
 /**
+ * Obtains a directory under `build/generated-proto/java` for the source set with the given name.
+ */
+public fun Project.generatedProtoJavaDir(ss: SourceSetName): Path =
+    generatedProto(ss).resolve(DirectoryName.java)
+
+/**
+ * Obtains a directory under `build/generated-proto/grpc` for the source set with the given name.
+ */
+public fun Project.generatedProtoGrpcDir(ss: SourceSetName): Path =
+    generatedProto(ss).resolve(DirectoryName.grpc)
+
+/**
+ * Obtains the directory containing generated Java source code for the specified source set.
+ */
+public fun Project.generatedJavaDir(ss: SourceSetName): Path =
+    generated(ss).resolve(DirectoryName.java)
+
+/**
+ * Obtains the directory with the generated gRPC code for the specified source set.
+ */
+public fun Project.generatedGrpcDir(ss: SourceSetName): Path =
+    generated(ss).resolve(DirectoryName.grpc)
+
+/**
+ * Obtains the path to the source set under `$projectDir/generated`.
+ */
+public fun Project.generated(ss: SourceSetName): Path {
+    return generatedDir.resolve(ss.value)
+}
+
+/**
+ * Obtains the path to the source set under `build/generated-proto`.
+ */
+public fun Project.generatedProto(ss: SourceSetName): Path {
+    return generatedProtoDir.resolve(ss.value)
+}
+
+/**
  * Obtains the path to this file resolved under the passed directory.
  */
 private fun File.under(dir: Path): Path = dir.resolve(toString())
+
+/**
+ * Obtains a path to the subdirectory with the given name for this path.
+ */
+private fun Path.resolve(dir: DirectoryName): Path = this.resolve(dir.value())
