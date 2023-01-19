@@ -43,8 +43,14 @@ public fun Supplier<String>.toAbsoluteFile(): File = Files2.toAbsolute(get())
 /** Adds relative name to this directory. */
 public fun File.resolve(dir: DirectoryName): File = resolve(dir.value())
 
+/** Adds relative directory to this directory. */
+public operator fun File.div(dir: DirectoryName): File = resolve(dir)
+
 /** Adds relative name to this directory. */
 public fun Path.resolve(dir: DirectoryName): Path = resolve(dir.value())
+
+/** Adds relative name to this directory. */
+public operator fun Path.div(dir: DirectoryName): Path = resolve(dir)
 
 /** Tells if this is a Protobuf source code file. */
 public fun File.isProtoSource(): Boolean = extension == "proto"

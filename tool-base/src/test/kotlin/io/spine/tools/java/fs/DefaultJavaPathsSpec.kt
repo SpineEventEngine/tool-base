@@ -27,13 +27,15 @@ package io.spine.tools.java.fs
 
 import io.kotest.matchers.shouldBe
 import io.spine.tools.code.SourceSetName
+import io.spine.tools.code.SourceSetName.Companion.test
+import io.spine.tools.div
 import io.spine.tools.fs.DirectoryName
 import io.spine.tools.fs.DirectoryName.build
 import io.spine.tools.fs.DirectoryName.generatedProto
 import io.spine.tools.fs.DirectoryName.grpc
 import io.spine.tools.fs.DirectoryName.spine
-import io.spine.tools.resolve
 import java.nio.file.Path
+import kotlin.io.path.div
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
@@ -43,13 +45,17 @@ internal class DefaultJavaPathsSpec {
     @Test
     fun `obtain 'build' dir`() {
         val paths = DefaultJavaPaths.at(projectPath)
-        paths.buildRoot().path() shouldBe projectPath.resolve(build)
+        paths.buildRoot().path() shouldBe
+
+                projectPath / build
     }
 
     @Test
     fun `obtain 'generated' dir`() {
         val paths = DefaultJavaPaths.at(projectPath)
-        paths.generated().path() shouldBe projectPath.resolve(GENERATED_DIR)
+        paths.generated().path() shouldBe
+
+                projectPath / GENERATED_DIR
     }
 
     @Test
@@ -58,21 +64,16 @@ internal class DefaultJavaPathsSpec {
 
         paths.generatedProto().java(SourceSetName.main).path() shouldBe
 
-                projectPath.resolve(build.value())
-                    .resolve(generatedProto.value())
-                    .resolve(MAIN_DIR)
-                    .resolve(JAVA_DIR)
+                projectPath / build / generatedProto / MAIN_DIR / JAVA_DIR
     }
 
     @Test
     fun `obtain 'spine' subdir in 'generated' dir`() {
         val paths = DefaultJavaPaths.at(projectPath)
 
-        paths.generated().spine(SourceSetName.test).path() shouldBe
+        paths.generated().spine(test).path() shouldBe
 
-                projectPath.resolve(GENERATED_DIR)
-                    .resolve(TEST_DIR)
-                    .resolve(spine.value())
+                projectPath/ GENERATED_DIR / TEST_DIR / spine
     }
 
     @Test
@@ -80,11 +81,9 @@ internal class DefaultJavaPathsSpec {
     fun generatedGrpc() {
         val paths = DefaultJavaPaths.at(projectPath)
 
-        paths.generatedProto().grpc(SourceSetName.test).path() shouldBe
-                projectPath.resolve(build)
-                    .resolve(generatedProto)
-                    .resolve(TEST_DIR)
-                    .resolve(grpc)
+        paths.generatedProto().grpc(test).path() shouldBe
+
+                projectPath / build / generatedProto / TEST_DIR/ grpc
     }
 
     companion object {
