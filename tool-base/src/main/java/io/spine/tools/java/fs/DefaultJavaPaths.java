@@ -68,11 +68,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Immutable
 public final class DefaultJavaPaths extends DefaultPaths {
 
-    @VisibleForTesting
-    static final String ROOT_NAME = "java";
+    public static final String GENERATED_PROTO_DIR = "generated-proto";
 
     @VisibleForTesting
-    static final String GENERATED_PROTO_DIR = "generated-proto";
+    static final String ROOT_NAME = "java";
 
     @VisibleForTesting
     static final String GRPC_DIR = "grpc";
