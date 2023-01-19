@@ -23,87 +23,75 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package io.spine.tools.java.fs
 
-package io.spine.tools.java.fs;
-
-import io.spine.tools.fs.DirectoryName;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-import java.nio.file.Path;
-
-import static com.google.common.truth.Truth8.assertThat;
-import static io.spine.tools.code.SourceSetName.main;
-import static io.spine.tools.code.SourceSetName.test;
-import static io.spine.tools.java.fs.DefaultJavaPaths.GENERATED_PROTO_DIR;
-import static io.spine.tools.java.fs.DefaultJavaPaths.GRPC_DIR;
-import static io.spine.tools.java.fs.DefaultJavaPaths.BUILD_DIR;
-import static io.spine.tools.java.fs.DefaultJavaPaths.SPINE_DIR_NAME;
+import io.kotest.matchers.shouldBe
+import io.spine.tools.code.SourceSetName
+import io.spine.tools.fs.DirectoryName
+import io.spine.tools.fs.DirectoryName.build
+import io.spine.tools.fs.DirectoryName.generatedProto
+import io.spine.tools.fs.DirectoryName.grpc
+import io.spine.tools.fs.DirectoryName.spine
+import io.spine.tools.resolve
+import java.nio.file.Path
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 
 @DisplayName("`DefaultJavaPaths` should")
-@SuppressWarnings("DuplicateStringLiteralInspection")
-class DefaultJavaPathsTest {
-
-    private static final Path projectPath = Path.of("/test-path");
-
-    private static final String JAVA_DIR = DefaultJavaPaths.ROOT_NAME;
-    private static final String GENERATED_DIR = DirectoryName.generated.value();
-    private static final String TEST_DIR = "test";
-    private static final String MAIN_DIR = "main";
+internal class DefaultJavaPathsSpec {
 
     @Test
-    @DisplayName("obtain `build` dir")
-    void build() {
-        var paths = DefaultJavaPaths.at(projectPath);
-        assertThat(paths.buildRoot()
-                        .path())
-                .isEqualTo(projectPath.resolve(BUILD_DIR));
+    fun `obtain 'build' dir`() {
+        val paths = DefaultJavaPaths.at(projectPath)
+        paths.buildRoot().path() shouldBe projectPath.resolve(build)
     }
 
     @Test
-    @DisplayName("obtain `generated` dir")
-    void generated() {
-        var paths = DefaultJavaPaths.at(projectPath);
-        assertThat(paths.generated()
-                        .path())
-                .isEqualTo(projectPath.resolve(GENERATED_DIR));
+    fun `obtain 'generated' dir`() {
+        val paths = DefaultJavaPaths.at(projectPath)
+        paths.generated().path() shouldBe projectPath.resolve(GENERATED_DIR)
     }
 
     @Test
-    @DisplayName("obtain `java` subdir in `generated-proto` dir")
-    void generatedJava() {
-        var paths = DefaultJavaPaths.at(projectPath);
-        assertThat(paths.generatedProto()
-                        .java(main)
-                        .path())
-                .isEqualTo(projectPath.resolve(BUILD_DIR)
-                                      .resolve(GENERATED_PROTO_DIR)
-                                      .resolve(MAIN_DIR)
-                                      .resolve(JAVA_DIR));
+    fun `obtain 'java' subdir in 'generated-proto' dir`() {
+        val paths = DefaultJavaPaths.at(projectPath)
+
+        paths.generatedProto().java(SourceSetName.main).path() shouldBe
+
+                projectPath.resolve(build.value())
+                    .resolve(generatedProto.value())
+                    .resolve(MAIN_DIR)
+                    .resolve(JAVA_DIR)
     }
 
     @Test
-    @DisplayName("obtain `spine` subdir in `generated` dir")
-    void generatedSpine() {
-        var paths = DefaultJavaPaths.at(projectPath);
-        assertThat(paths.generated()
-                        .spine(test)
-                        .path())
-                .isEqualTo(projectPath.resolve(GENERATED_DIR)
-                                      .resolve(TEST_DIR)
-                                      .resolve(SPINE_DIR_NAME));
+    fun `obtain 'spine' subdir in 'generated' dir`() {
+        val paths = DefaultJavaPaths.at(projectPath)
+
+        paths.generated().spine(SourceSetName.test).path() shouldBe
+
+                projectPath.resolve(GENERATED_DIR)
+                    .resolve(TEST_DIR)
+                    .resolve(spine.value())
     }
 
     @Test
     @DisplayName("obtain `grpc` subdir in `generated-proto` dir")
-    void generatedGrpc() {
-        var paths = DefaultJavaPaths.at(projectPath);
-        assertThat(paths.generatedProto()
-                        .grpc(test)
-                        .path())
-                .isEqualTo(projectPath.resolve(BUILD_DIR)
-                                      .resolve(GENERATED_PROTO_DIR)
-                                      .resolve(TEST_DIR)
-                                      .resolve(GRPC_DIR));
+    fun generatedGrpc() {
+        val paths = DefaultJavaPaths.at(projectPath)
+
+        paths.generatedProto().grpc(SourceSetName.test).path() shouldBe
+                projectPath.resolve(build)
+                    .resolve(generatedProto)
+                    .resolve(TEST_DIR)
+                    .resolve(grpc)
+    }
+
+    companion object {
+        private val projectPath = Path.of("/test-path")
+        private val JAVA_DIR = DirectoryName.java.value()
+        private val GENERATED_DIR = DirectoryName.generated.value()
+        private const val TEST_DIR = "test"
+        private const val MAIN_DIR = "main"
     }
 }
