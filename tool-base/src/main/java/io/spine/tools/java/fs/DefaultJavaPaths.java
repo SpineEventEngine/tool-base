@@ -26,11 +26,11 @@
 
 package io.spine.tools.java.fs;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.errorprone.annotations.Immutable;
 import io.spine.code.fs.AbstractDirectory;
 import io.spine.tools.code.SourceSetName;
 import io.spine.tools.fs.DefaultPaths;
+import io.spine.tools.fs.DirectoryName;
 import io.spine.tools.fs.Generated;
 import io.spine.tools.fs.SourceDir;
 import io.spine.tools.fs.SourceRoot;
@@ -40,6 +40,9 @@ import java.io.File;
 import java.nio.file.Path;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static io.spine.tools.fs.DirectoryName.build;
+import static io.spine.tools.fs.DirectoryName.generatedProto;
+import static io.spine.tools.fs.DirectoryName.grpc;
 
 /**
  * A default directory structure for a Spine-based Java project.
@@ -68,19 +71,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Immutable
 public final class DefaultJavaPaths extends DefaultPaths {
 
-    @SuppressWarnings("DuplicateStringLiteralInspection") // Used as a method name elsewhere.
-    public static final String BUILD_DIR = "build";
-
-    public static final String GENERATED_PROTO_DIR = "generated-proto";
-
-    @VisibleForTesting
-    static final String ROOT_NAME = "java";
-
-    @VisibleForTesting
-    static final String GRPC_DIR = "grpc";
-
-    @VisibleForTesting
-    static final String SPINE_DIR_NAME = "spine";
+    private static final String BUILD_DIR = build.value();
+    private static final String GENERATED_PROTO_DIR = generatedProto.value();
+    private static final String ROOT_NAME = DirectoryName.java.value();
+    private static final String GRPC_DIR = grpc.value();
+    private static final String SPINE_DIR_NAME = DirectoryName.spine.value();
 
     private DefaultJavaPaths(Path projectDir) {
         super(projectDir);
