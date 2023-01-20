@@ -27,12 +27,10 @@ package io.spine.tools.java.fs
 
 import io.kotest.matchers.shouldBe
 import io.spine.tools.code.SourceSetName
-import io.spine.tools.code.SourceSetName.Companion.test
 import io.spine.tools.div
 import io.spine.tools.fs.DirectoryName
 import io.spine.tools.fs.DirectoryName.build
 import io.spine.tools.fs.DirectoryName.generatedProto
-import io.spine.tools.fs.DirectoryName.grpc
 import java.nio.file.Path
 import kotlin.io.path.div
 import org.junit.jupiter.api.DisplayName
@@ -66,21 +64,10 @@ internal class DefaultJavaPathsSpec {
                 projectPath / build / generatedProto / MAIN_DIR / JAVA_DIR
     }
 
-    @Test
-    @DisplayName("obtain `grpc` subdir in `generated-proto` dir")
-    fun generatedGrpc() {
-        val paths = DefaultJavaPaths.at(projectPath)
-
-        paths.generatedProto().grpc(test).path() shouldBe
-
-                projectPath / build / generatedProto / TEST_DIR/ grpc
-    }
-
     companion object {
         private val projectPath = Path.of("/test-path")
         private val JAVA_DIR = DirectoryName.java.value()
         private val GENERATED_DIR = DirectoryName.generated.value()
-        private const val TEST_DIR = "test"
         private const val MAIN_DIR = "main"
     }
 }

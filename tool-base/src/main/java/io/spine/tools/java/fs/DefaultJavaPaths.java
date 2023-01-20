@@ -42,7 +42,6 @@ import java.nio.file.Path;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static io.spine.tools.fs.DirectoryName.build;
 import static io.spine.tools.fs.DirectoryName.generatedProto;
-import static io.spine.tools.fs.DirectoryName.grpc;
 
 /**
  * A default directory structure for a Spine-based Java project.
@@ -74,7 +73,6 @@ public final class DefaultJavaPaths extends DefaultPaths {
     private static final String BUILD_DIR = build.value();
     private static final String GENERATED_PROTO_DIR = generatedProto.value();
     private static final String ROOT_NAME = DirectoryName.java.value();
-    private static final String GRPC_DIR = grpc.value();
     private static final String SPINE_DIR_NAME = DirectoryName.spine.value();
 
     private DefaultJavaPaths(Path projectDir) {
@@ -151,14 +149,6 @@ public final class DefaultJavaPaths extends DefaultPaths {
         @Deprecated
         public SourceDir spine(SourceSetName ssn) {
             return subDir(ssn, SPINE_DIR_NAME);
-        }
-
-        /**
-         * Obtains the directory for code generated for the source set with the given name by
-         * the gRPC code generator.
-         */
-        public SourceDir grpc(SourceSetName ssn) {
-            return subDir(ssn, GRPC_DIR);
         }
     }
 }
