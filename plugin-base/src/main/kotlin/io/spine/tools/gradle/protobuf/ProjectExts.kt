@@ -31,14 +31,15 @@ package io.spine.tools.gradle.protobuf
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.fs.DescriptorsDir
 import io.spine.tools.fs.DirectoryName
+import io.spine.tools.fs.DirectoryName.build
+import io.spine.tools.fs.DirectoryName.generatedProto
 import io.spine.tools.gradle.project.artifact
-import io.spine.tools.gradle.protobuf.ProtobufDependencies.sourceSetExtensionName
 import io.spine.tools.gradle.project.sourceSet
+import io.spine.tools.gradle.protobuf.ProtobufDependencies.sourceSetExtensionName
 import io.spine.tools.java.fs.DefaultJavaPaths
 import io.spine.tools.resolve
 import java.io.File
 import java.nio.file.Path
-import java.nio.file.Paths
 import org.gradle.api.Project
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.tasks.SourceSet
@@ -58,6 +59,15 @@ public val Project.generatedFilesBaseDir: String
     get() = protobufGradlePluginAdapter.generatedFilesBaseDir
 
 /**
+ * Obtains `generated-proto` directory of this project.
+ */
+public val Project.generatedProtoDir: Path
+    get() {
+        val result = projectDir.resolve(build).resolve(generatedProto).toPath()
+        return result
+    }
+
+/**
  * Obtains the path to the directory which will be used for placing files generated
  * from proto definitions.
  *
@@ -69,35 +79,8 @@ public val Project.generatedFilesBaseDir: String
  */
 public val Project.generatedDir: Path
     get() {
-        if (usesDefaultGeneratedDir) {
-            /*
-               Ignore the default value specified by the plugin code because it "buries" the
-               generated code under the `build` directory.
-
-               We want the generated code more visible, and place it at the root of the project,
-               so it is seen as a "sibling" with the `src` directory.
-
-               This is the convention of our framework.
-            */
-            return projectDir.resolve(DirectoryName.generated).toPath()
-        }
-
-        /* If custom value was set by the programmer in the `protobuf` closure of the build
-           script, use the specified path instead of the framework convention. */
-        val fromExtension = generatedFilesBaseDir
-        return Paths.get(fromExtension)
-    }
-
-
-/**
- * Tells if the `generatedFilesBaseDir` is set to the default value.
- *
- * For the default value, please see the constructor of
- * [com.google.protobuf.gradle.ProtobufExtension].
- */
-internal val Project.usesDefaultGeneratedDir: Boolean
-    get() {
-        return generatedFilesBaseDir == "${buildDir}/generated/source/proto"
+        val resolved = projectDir.resolve(DirectoryName.generated).toPath()
+        return resolved
     }
 
 /**
@@ -127,6 +110,44 @@ public fun Project.descriptorSetFile(ssn: SourceSetName): File {
     val dir = descriptorsDir.forSourceSet(ssn.value)
     val path = descriptorSetFile.under(dir)
     return path.toFile()
+}
+
+/**
+ * Obtains a directory under `build/generated-proto/java` for the source set with the given name.
+ */
+public fun Project.generatedProtoJavaDir(ssn: SourceSetName): Path =
+    generatedProto(ssn).resolve(DirectoryName.java)
+
+/**
+ * Obtains a directory under `build/generated-proto/grpc` for the source set with the given name.
+ */
+public fun Project.generatedProtoGrpcDir(ssn: SourceSetName): Path =
+    generatedProto(ssn).resolve(DirectoryName.grpc)
+
+/**
+ * Obtains the directory containing generated Java source code for the specified source set.
+ */
+public fun Project.generatedJavaDir(ssn: SourceSetName): Path =
+    generated(ssn).resolve(DirectoryName.java)
+
+/**
+ * Obtains the directory with the generated gRPC code for the specified source set.
+ */
+public fun Project.generatedGrpcDir(ssn: SourceSetName): Path =
+    generated(ssn).resolve(DirectoryName.grpc)
+
+/**
+ * Obtains the path to the source set under `$projectDir/generated`.
+ */
+public fun Project.generated(ssn: SourceSetName): Path {
+    return generatedDir.resolve(ssn.value)
+}
+
+/**
+ * Obtains the path to the source set under `build/generated-proto`.
+ */
+public fun Project.generatedProto(ssn: SourceSetName): Path {
+    return generatedProtoDir.resolve(ssn.value)
 }
 
 /**

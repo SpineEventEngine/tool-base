@@ -30,11 +30,23 @@ import io.spine.annotation.Internal;
 
 /**
  * Enumerates default names for project structure directories.
+ *
+ * <p>The purpose of this enumeration is to use the {@link #value()} method
+ * of its members instead of string constants.
  */
 public enum DirectoryName {
 
     /** Contains Java source code. */
     java,
+
+    /** Contains JavaScript source code. */
+    js,
+
+    /** Contains Dart source code. */
+    dart,
+
+    /** Contains Kotlin source code. */
+    kotlin,
 
     /** Root directory for source code. */
     src,
@@ -54,6 +66,9 @@ public enum DirectoryName {
      * <p>Contains {@link #main} and {@link #test}.
      */
     generated,
+
+    /** The root directory for the intermediate generated code used by ProtoData. */
+    generatedProto("generated-proto"),
 
     /** Spine-specific generated code. */
     spine,

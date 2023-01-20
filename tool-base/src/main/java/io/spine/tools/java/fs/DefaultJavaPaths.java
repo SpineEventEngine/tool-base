@@ -30,6 +30,7 @@ import com.google.errorprone.annotations.Immutable;
 import io.spine.code.fs.AbstractDirectory;
 import io.spine.tools.code.SourceSetName;
 import io.spine.tools.fs.DefaultPaths;
+import io.spine.tools.fs.DirectoryName;
 import io.spine.tools.fs.Generated;
 import io.spine.tools.fs.SourceDir;
 import io.spine.tools.fs.SourceRoot;
@@ -39,6 +40,8 @@ import java.io.File;
 import java.nio.file.Path;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static io.spine.tools.fs.DirectoryName.build;
+import static io.spine.tools.fs.DirectoryName.generatedProto;
 
 /**
  * A default directory structure for a Spine-based Java project.
@@ -67,7 +70,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Immutable
 public final class DefaultJavaPaths extends DefaultPaths {
 
-    static final String ROOT_NAME = "java";
+    private static final String BUILD_DIR = build.value();
+    private static final String GENERATED_PROTO_DIR = generatedProto.value();
+    private static final String ROOT_NAME = DirectoryName.java.value();
+    private static final String SPINE_DIR_NAME = DirectoryName.spine.value();
 
     private DefaultJavaPaths(Path projectDir) {
         super(projectDir);
@@ -122,7 +128,7 @@ public final class DefaultJavaPaths extends DefaultPaths {
     public static final class GeneratedProto extends SourceRoot {
 
         private GeneratedProto(AbstractDirectory parent) {
-            super(parent, "build/generated-proto");
+            super(parent, BUILD_DIR + '/' + GENERATED_PROTO_DIR);
         }
 
         /**
@@ -134,19 +140,15 @@ public final class DefaultJavaPaths extends DefaultPaths {
         }
 
         /**
-         * Obtains the directory for code generated for the source set with the given name by
-         * the custom Spine code generator.
+         * Do not use. See deprecation note.
+         *
+         * @deprecated Please use (Kotlin code): {@code
+         * io.spine.tools.gradle.protobuf.Project.generatedDir.resolve(DirectoryName.spine)}
+         * instead.
          */
+        @Deprecated
         public SourceDir spine(SourceSetName ssn) {
-            return subDir(ssn, "spine");
-        }
-
-        /**
-         * Obtains the directory for code generated for the source set with the given name by
-         * the gRPC code generator.
-         */
-        public SourceDir grpc(SourceSetName ssn) {
-            return subDir(ssn, "grpc");
+            return subDir(ssn, SPINE_DIR_NAME);
         }
     }
 }

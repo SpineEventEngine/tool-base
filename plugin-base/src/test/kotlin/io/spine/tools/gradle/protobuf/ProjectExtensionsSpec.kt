@@ -47,8 +47,6 @@ import org.junit.jupiter.api.io.TempDir
 
 /**
  * Tests for extensions of [Project] related to Protobuf.
- *
- * @see [GeneratedDirPropertySpec]
  */
 @DisplayName("`Project` extensions for Protobuf should")
 class ProjectExtensionsSpec {
