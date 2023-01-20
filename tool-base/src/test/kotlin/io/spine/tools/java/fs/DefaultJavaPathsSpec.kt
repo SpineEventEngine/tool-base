@@ -33,7 +33,6 @@ import io.spine.tools.fs.DirectoryName
 import io.spine.tools.fs.DirectoryName.build
 import io.spine.tools.fs.DirectoryName.generatedProto
 import io.spine.tools.fs.DirectoryName.grpc
-import io.spine.tools.fs.DirectoryName.spine
 import java.nio.file.Path
 import kotlin.io.path.div
 import org.junit.jupiter.api.DisplayName
@@ -65,15 +64,6 @@ internal class DefaultJavaPathsSpec {
         paths.generatedProto().java(SourceSetName.main).path() shouldBe
 
                 projectPath / build / generatedProto / MAIN_DIR / JAVA_DIR
-    }
-
-    @Test
-    fun `obtain 'spine' subdir in 'generated' dir`() {
-        val paths = DefaultJavaPaths.at(projectPath)
-
-        paths.generated().spine(test).path() shouldBe
-
-                projectPath/ GENERATED_DIR / TEST_DIR / spine
     }
 
     @Test

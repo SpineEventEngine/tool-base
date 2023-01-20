@@ -122,14 +122,6 @@ public final class DefaultJavaPaths extends DefaultPaths {
         public SourceDir dir(SourceSetName ssn) {
             return subDir(ssn, ROOT_NAME);
         }
-
-        /**
-         * Obtains the directory for code generated for the source set with the given name by
-         * the custom Spine code generator.
-         */
-        public SourceDir spine(SourceSetName ssn) {
-            return subDir(ssn, SPINE_DIR_NAME);
-        }
     }
 
     /**
@@ -152,7 +144,9 @@ public final class DefaultJavaPaths extends DefaultPaths {
         /**
          * Do not use. See deprecation note.
          *
-         * @deprecated Please use {@link GeneratedJava#spine(SourceSetName)} instead.
+         * @deprecated Please use (Kotlin code): {@code
+         * io.spine.tools.gradle.protobuf.Project.generatedDir.resolve(DirectoryName.spine)}
+         * instead.
          */
         @Deprecated
         public SourceDir spine(SourceSetName ssn) {
