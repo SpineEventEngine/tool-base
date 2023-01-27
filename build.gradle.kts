@@ -34,6 +34,7 @@ import io.spine.internal.dependency.FindBugs
 import io.spine.internal.dependency.Grpc
 import io.spine.internal.dependency.Guava
 import io.spine.internal.dependency.JUnit
+import io.spine.internal.dependency.Kotlin
 import io.spine.internal.dependency.Protobuf
 import io.spine.internal.dependency.Spine
 import io.spine.internal.dependency.Truth
@@ -65,10 +66,12 @@ buildscript {
     configurations {
         all {
             resolutionStrategy {
+                @Suppress("DEPRECATION")
                 force(
                     spine.base,
                     spine.validation.java,
                     io.spine.internal.dependency.Protobuf.GradlePlugin.lib,
+                    io.spine.internal.dependency.Kotlin.stdLibJdk8
                 )
             }
         }
@@ -176,6 +179,8 @@ fun Subproject.forceConfigurations() {
         all {
             resolutionStrategy {
                 val spine = Spine(project)
+                @Suppress("DEPRECATION") /* Still need to force `Kotlin.stdLibJdk8` until full
+                  migration to Kotlin 1.8.0. */
                 force(
                     JUnit.runner,
                     spine.base,
@@ -185,6 +190,7 @@ fun Subproject.forceConfigurations() {
                     Coroutines.core,
                     Coroutines.bom,
                     Coroutines.coreJvm,
+                    Kotlin.stdLibJdk8
                 )
             }
         }
