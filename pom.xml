@@ -10,7 +10,7 @@ all modules and does not describe the project structure per-subproject.
  -->
 <groupId>io.spine.tools</groupId>
 <artifactId>tool-base</artifactId>
-<version>2.0.0-SNAPSHOT.157</version>
+<version>2.0.0-SNAPSHOT.160</version>
 
 <inceptionYear>2015</inceptionYear>
 
@@ -38,19 +38,19 @@ all modules and does not describe the project structure per-subproject.
   <dependency>
     <groupId>io.spine</groupId>
     <artifactId>spine-base</artifactId>
-    <version>2.0.0-SNAPSHOT.150</version>
+    <version>2.0.0-SNAPSHOT.162</version>
     <scope>compile</scope>
   </dependency>
   <dependency>
     <groupId>io.spine.tools</groupId>
     <artifactId>spine-testlib</artifactId>
-    <version>2.0.0-SNAPSHOT.150</version>
+    <version>2.0.0-SNAPSHOT.162</version>
     <scope>compile</scope>
   </dependency>
   <dependency>
     <groupId>io.spine.validation</groupId>
     <artifactId>spine-validation-java-runtime</artifactId>
-    <version>2.0.0-SNAPSHOT.80</version>
+    <version>2.0.0-SNAPSHOT.81</version>
     <scope>compile</scope>
   </dependency>
   <dependency>
@@ -168,13 +168,13 @@ all modules and does not describe the project structure per-subproject.
   <dependency>
     <groupId>com.google.protobuf</groupId>
     <artifactId>protobuf-gradle-plugin</artifactId>
-    <version>0.9.1</version>
+    <version>0.9.2</version>
     <scope>provided</scope>
   </dependency>
   <dependency>
     <groupId>com.google.protobuf</groupId>
     <artifactId>protoc</artifactId>
-    <version>3.21.12</version>
+    <version>3.22.0</version>
   </dependency>
   <dependency>
     <groupId>com.puppycrawl.tools</groupId>
