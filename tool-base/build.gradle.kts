@@ -38,7 +38,6 @@ import io.spine.internal.gradle.protobuf.setup
 plugins {
     protobuf
     `java-test-fixtures`
-    `detekt-code-analysis`
 }
 
 dependencies {
