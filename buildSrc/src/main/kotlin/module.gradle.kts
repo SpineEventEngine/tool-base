@@ -24,7 +24,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import Module_gradle.Subproject
 import io.spine.internal.dependency.CheckerFramework
 import io.spine.internal.dependency.Coroutines
 import io.spine.internal.dependency.ErrorProne
@@ -32,7 +31,6 @@ import io.spine.internal.dependency.FindBugs
 import io.spine.internal.dependency.Grpc
 import io.spine.internal.dependency.Guava
 import io.spine.internal.dependency.JUnit
-import io.spine.internal.dependency.Kotlin
 import io.spine.internal.dependency.Spine
 import io.spine.internal.dependency.Truth
 import io.spine.internal.gradle.VersionWriter
@@ -59,7 +57,6 @@ import org.gradle.kotlin.dsl.`java-library`
 import org.gradle.kotlin.dsl.kotlin
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 
 plugins {
     `java-library`
@@ -94,9 +91,9 @@ project.run {
 }
 
 
-typealias Subproject = Project
+typealias Module = Project
 
-fun Subproject.addDependencies() {
+fun Module.addDependencies() {
     dependencies {
         errorprone(ErrorProne.core)
 
@@ -113,15 +110,13 @@ fun Subproject.addDependencies() {
     }
 }
 
-fun Subproject.forceConfigurations() {
+fun Module.forceConfigurations() {
     with(configurations) {
         forceVersions()
         excludeProtobufLite()
         all {
             resolutionStrategy {
                 val spine = Spine(project)
-                @Suppress("DEPRECATION") /* Still need to force `Kotlin.stdLibJdk8` until full
-                  migration to Kotlin 1.8.0. */
                 force(
                     JUnit.runner,
                     spine.base,
@@ -131,7 +126,6 @@ fun Subproject.forceConfigurations() {
                     Coroutines.core,
                     Coroutines.bom,
                     Coroutines.coreJvm,
-                    Kotlin.stdLibJdk8
                 )
             }
         }
@@ -139,7 +133,7 @@ fun Subproject.forceConfigurations() {
     }
 }
 
-fun Subproject.configureJava(javaVersion: JavaLanguageVersion) {
+fun Module.configureJava(javaVersion: JavaLanguageVersion) {
     java {
         toolchain.languageVersion.set(javaVersion)
     }
@@ -151,7 +145,7 @@ fun Subproject.configureJava(javaVersion: JavaLanguageVersion) {
     }
 }
 
-fun Subproject.configureKotlin(javaVersion: JavaLanguageVersion) {
+fun Module.configureKotlin(javaVersion: JavaLanguageVersion) {
     kotlin {
         applyJvmToolchain(javaVersion.asInt())
         explicitApi()
@@ -165,7 +159,7 @@ fun Subproject.configureKotlin(javaVersion: JavaLanguageVersion) {
     }
 }
 
-fun Subproject.configureTests() {
+fun Module.configureTests() {
     tasks {
         registerTestTasks()
         test.configure {
@@ -177,7 +171,7 @@ fun Subproject.configureTests() {
     }
 }
 
-fun Subproject.configureGitHubPages() {
+fun Module.configureGitHubPages() {
     updateGitHubPages(Spine.DefaultVersion.javadocTools) {
         allowInternalJavadoc.set(true)
         rootFolder.set(rootDir)
