@@ -28,7 +28,6 @@ package io.spine.internal.gradle.protobuf
 
 import com.google.protobuf.gradle.GenerateProtoTask
 import java.io.File
-import java.lang.System.lineSeparator
 import org.gradle.api.Task
 import org.gradle.configurationcache.extensions.capitalized
 import org.gradle.kotlin.dsl.get
@@ -139,17 +138,4 @@ private fun Task.deleteComGoogle(generatedDir: String, ssn: String, language: St
 private fun processResourceTaskName(sourceSetName: String): String {
     val infix = if (sourceSetName == "main") "" else sourceSetName.capitalized()
     return "process${infix}Resources"
-}
-
-/**
- * Obtains the path to this source code file, starting from `buildSrc`.
- */
-private object SourcePath {
-
-    val value: String
-        get() {
-            val thisClass = SourcePath::class.java
-            val filePath  = thisClass.`package`.name.replace('.', '/') + "/ProtoTaskExtensions.kt"
-            return "buildSrc/src/main/kotlin/$filePath"
-        }
 }
