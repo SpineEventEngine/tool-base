@@ -62,13 +62,13 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 
 plugins {
-    java
     `java-library`
     kotlin("jvm")
     id("net.ltgt.errorprone")
-    jacoco
+    id("detekt-code-analysis")
     id("pmd-settings")
     id("write-manifest")
+    jacoco
     `project-report`
     idea
 }
