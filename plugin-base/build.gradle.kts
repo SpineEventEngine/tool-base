@@ -26,7 +26,6 @@
 
 import io.spine.internal.dependency.Protobuf
 import io.spine.internal.gradle.WriteVersions
-import io.spine.internal.gradle.protobuf.setup
 
 plugins {
     `detekt-code-analysis`
@@ -43,13 +42,6 @@ dependencies {
 
 kotlin {
     explicitApi()
-}
-
-protobuf {
-    val generatedDir by extra("$projectDir/generated")
-    generateProtoTasks.all().configureEach {
-        setup(generatedDir)
-    }
 }
 
 tasks {
