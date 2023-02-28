@@ -36,6 +36,7 @@ import org.gradle.api.Action
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskCollection
+import io.spine.tools.gradle.debug
 
 /**
  * Unified API for selected features of Protobuf Gradle Plugin for handling
@@ -125,7 +126,9 @@ private fun configureAllAction(
     val copyOfAllTasks = ImmutableList.copyOf(allTasks as TaskCollection<GenerateProtoTask>)
     copyOfAllTasks.forEach { task: GenerateProtoTask ->
         task.configure(closure { t: GenerateProtoTask -> action.execute(t) })
-        task.project.logger.debug("The task `${task.name}` was configured using action `$action`.")
+        task.project.logger.debug {
+            "The task `${task.name}` was configured using action `$action`."
+        }
     }
 }
 
