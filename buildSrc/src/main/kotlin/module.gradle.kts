@@ -90,7 +90,6 @@ project.run {
     configureTaskDependencies()
 }
 
-
 typealias Module = Project
 
 fun Module.addDependencies() {

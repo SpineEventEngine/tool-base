@@ -26,10 +26,6 @@
 
 import io.spine.internal.dependency.Spine
 
-plugins {
-    `detekt-code-analysis`
-}
-
 dependencies {
     api(gradleApi())
     api(gradleTestKit())

@@ -76,6 +76,7 @@ public inline fun Logger.error(message: () -> String) {
  *         the action
  * @return the result of invoking the action.
  */
+@Suppress("ImplicitDefaultLocale", "MagicNumber") // intended in `String.format()` below.
 public inline fun <T> Logger.logTime(action: String, fn: () -> T): T {
     val startNs = System.nanoTime()
     val result = fn()
