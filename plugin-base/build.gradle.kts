@@ -27,10 +27,6 @@
 import io.spine.internal.dependency.Protobuf
 import io.spine.internal.gradle.WriteVersions
 
-plugins {
-    `detekt-code-analysis`
-}
-
 dependencies {
     compileOnlyApi(gradleApi())
     compileOnlyApi(Protobuf.GradlePlugin.lib)
