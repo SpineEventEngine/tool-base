@@ -27,8 +27,9 @@
 package io.spine.tools.gradle.testing
 
 import com.google.common.testing.NullPointerTester
-import com.google.common.truth.Truth.assertThat
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotContain
 import io.spine.tools.gradle.task.JavaTaskName.Companion.compileJava
 import java.io.File
 import org.gradle.api.logging.LogLevel
@@ -45,6 +46,9 @@ class GradleProjectSetupSpec {
     private lateinit var projectDir: File
     private lateinit var setup: GradleProjectSetup
 
+    private val commandLineArgs: String
+        get() = setup.arguments.forTask(compileJava).toString()
+    
     @BeforeEach
     fun setup(@TempDir projectDir: File) {
         this.projectDir = projectDir
@@ -63,28 +67,24 @@ class GradleProjectSetupSpec {
 
     @Test
     fun `have 'debug' turned off by default`() {
-        assertThat(setup.debug)
-            .isFalse()
+        setup.debug shouldBe false
     }
 
     @Test
     fun `do not require 'buildSrc' directory by default`() {
-        assertThat(setup.buildSrcCopy)
-            .isNull()
+        setup.buildSrcCopy shouldBe null
     }
 
     @Test
     fun `enable debug mode`() {
         setup.enableRunnerDebug()
-        assertThat(setup.debug)
-            .isTrue()
+        setup.debug shouldBe true
     }
 
     @Test
     fun `add plugin under test classpath`() {
         setup.withPluginClasspath()
-        assertThat(setup.addPluginUnderTestClasspath)
-            .isTrue()
+        setup.addPluginUnderTestClasspath shouldBe true
     }
 
     @Nested
@@ -112,14 +112,11 @@ class GradleProjectSetupSpec {
         val name = "cowboy"
         val value = "bebop"
         setup.withProperty(name, value)
-        
-        val assertArgs = assertCommandLineArgs()
-        assertArgs.contains(name)
-        assertArgs.contains(value)
-    }
 
-    private fun commandLineArgs() = setup.arguments.forTask(compileJava).toString()
-    private fun assertCommandLineArgs() = assertThat(commandLineArgs())
+        val args = commandLineArgs
+        args shouldContain name
+        args shouldContain value
+    }
 
     @Nested
     inner class `turn logging level` {
@@ -128,13 +125,13 @@ class GradleProjectSetupSpec {
 
         @Test
         fun `having it off by default`() {
-            assertCommandLineArgs().doesNotContain(debugOption)
+            commandLineArgs shouldNotContain debugOption
         }
 
         @Test
         fun `when instructed`() {
             setup.withLoggingLevel(LogLevel.DEBUG)
-            assertCommandLineArgs().contains(debugOption)
+            commandLineArgs shouldContain debugOption
         }
     }
 
@@ -149,16 +146,19 @@ class GradleProjectSetupSpec {
         @Test
         fun `passed as 'vararg'`() {
             setup.withOptions(options[0], options[1])
-            assertCommandLineArgs().run {
-                contains(options[0])
-                contains(options[1])
-            }
+
+            val args = commandLineArgs
+            args shouldContain options[0]
+            args shouldContain options[1]
         }
 
         @Test
         fun `pass as 'Iterable'`() {
             setup.withOptions(options)
-            options.forEach { assertCommandLineArgs().contains(it) }
+            val args = commandLineArgs
+            options.forEach {
+                args shouldContain it
+            }
         }
     }
 }

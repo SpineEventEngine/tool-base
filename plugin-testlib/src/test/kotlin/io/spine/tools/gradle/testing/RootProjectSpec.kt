@@ -26,7 +26,7 @@
 
 package io.spine.tools.gradle.testing
 
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
@@ -35,7 +35,6 @@ class RootProjectSpec {
 
     @Test
     fun `locate the project root`() {
-        assertThat(RootProject.dir().exists())
-            .isTrue()
+        RootProject.dir().exists() shouldBe true
     }
 }

@@ -26,7 +26,7 @@
 
 package io.spine.tools.gradle.testing
 
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.shouldBe
 import java.nio.file.Paths
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -77,8 +77,7 @@ class BuildSrcCopySpec {
 
     @Test
     fun `copy 'build' dir by default`() {
-        assertThat(BuildSrcCopy().includeBuildDir)
-            .isTrue()
+        BuildSrcCopy().includeBuildDir shouldBe true
     }
 
     private fun assertIsSourceCode(path: String) {
