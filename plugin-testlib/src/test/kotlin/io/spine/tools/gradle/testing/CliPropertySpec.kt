@@ -26,7 +26,7 @@
 
 package io.spine.tools.gradle.testing
 
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -51,7 +51,6 @@ class CliPropertySpec {
 
     @Test
     fun `provide prefixed command like argument`() {
-        assertThat(CliProperty("foo", "bar").argument())
-            .isEqualTo("-Pfoo=bar")
+        CliProperty("foo", "bar").argument() shouldBe "-Pfoo=bar"
     }
 }

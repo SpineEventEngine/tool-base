@@ -28,6 +28,7 @@ package io.spine.tools.gradle.testing
 
 import com.google.common.testing.NullPointerTester
 import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.shouldBe
 import io.spine.tools.gradle.task.JavaTaskName.Companion.compileJava
 import java.io.File
 import org.gradle.api.logging.LogLevel
@@ -57,8 +58,7 @@ class GradleProjectSetupSpec {
 
     @Test
     fun `provide project directory`() {
-        assertThat(setup.projectDir)
-            .isEqualTo(projectDir)
+        setup.projectDir shouldBe projectDir
     }
 
     @Test
