@@ -27,6 +27,8 @@
 package io.spine.tools.gradle.testing
 
 import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.collections.shouldNotContain
 import io.spine.tools.gradle.task.JavaTaskName.Companion.compileJava
 import io.spine.tools.gradle.testing.CliOption.Companion.noDaemon
 import io.spine.tools.gradle.testing.CliOption.Companion.stacktrace
@@ -79,12 +81,12 @@ class RunnerArgumentsSpec {
     @Test
     fun `turn off stacktrace output`() {
         val args = RunnerArguments().noStacktrace().forTask(compileJava)
-        assertThat(args).doesNotContain(stacktrace.argument())
+        args shouldNotContain stacktrace.argument()
     }
 
     @Test
     fun `turn off daemons mode`() {
         val args = RunnerArguments().noDaemon().forTask(compileJava)
-        assertThat(args).contains(noDaemon.argument())
+        args shouldContain noDaemon.argument()
     }
 }

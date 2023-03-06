@@ -28,7 +28,7 @@ package io.spine.tools.gradle.task;
 
 /**
  * This enum mimics Gradle tasks defined by the Spine Model Compiler for Java
- * for the purposes of {@link GradleTaskBuilderTest}.
+ * for the purposes of {@link GradleTaskBuilderSpec}.
  */
 enum GivenTaskName implements TaskName {
 

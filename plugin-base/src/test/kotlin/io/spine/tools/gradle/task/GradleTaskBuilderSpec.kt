@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2023, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,169 +23,139 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package io.spine.tools.gradle.task
 
-package io.spine.tools.gradle.task;
-
-import com.google.common.collect.ImmutableList;
-import io.spine.tools.gradle.testing.NoOp;
-import org.checkerframework.checker.nullness.qual.Nullable;
-import org.gradle.api.Project;
-import org.gradle.api.tasks.TaskInputs;
-import org.gradle.testfixtures.ProjectBuilder;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
-
-import static com.google.common.truth.Truth.assertThat;
-import static io.spine.testing.Assertions.assertIllegalState;
-import static io.spine.tools.gradle.task.BaseTaskName.clean;
-import static io.spine.tools.gradle.task.GivenTaskName.annotateProto;
-import static io.spine.tools.gradle.task.GivenTaskName.preClean;
-import static io.spine.tools.gradle.task.GivenTaskName.verifyModel;
-import static io.spine.tools.gradle.task.JavaTaskName.classes;
-import static io.spine.tools.gradle.task.JavaTaskName.compileJava;
-import static io.spine.tools.gradle.task.ProtobufTaskName.generateProto;
-import static io.spine.tools.gradle.task.ProtobufTaskName.generateTestProto;
-import static io.spine.tools.gradle.testing.GradleProject.javaPlugin;
-import static io.spine.tools.gradle.testing.NoOp.action;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import com.google.common.collect.ImmutableList
+import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import io.spine.testing.Assertions.assertIllegalState
+import io.spine.tools.gradle.task.GivenTaskName.annotateProto
+import io.spine.tools.gradle.task.GivenTaskName.preClean
+import io.spine.tools.gradle.task.GivenTaskName.verifyModel
+import io.spine.tools.gradle.task.JavaTaskName.Companion.classes
+import io.spine.tools.gradle.task.JavaTaskName.Companion.compileJava
+import io.spine.tools.gradle.task.ProtobufTaskName.Companion.generateProto
+import io.spine.tools.gradle.task.ProtobufTaskName.Companion.generateTestProto
+import io.spine.tools.gradle.testing.GradleProject
+import io.spine.tools.gradle.testing.NoOp
+import java.io.File
+import org.gradle.api.Project
+import org.gradle.testfixtures.ProjectBuilder
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 
 /**
- * Tests {@link GradleTask.Builder}.
+ * Tests [GradleTask.Builder].
  */
 @DisplayName("`GradleTask.Builder` should")
-class GradleTaskBuilderTest {
+internal class GradleTaskBuilderSpec {
 
-    private Project project;
+    private lateinit var project: Project
 
     @BeforeEach
-    void setUp() {
-        project = ProjectBuilder.builder()
-                                .build();
-        project.getPluginManager()
-               .apply(javaPlugin);
+    fun setUp() {
+        project = ProjectBuilder.builder().build().also {
+            it.pluginManager.apply(GradleProject.javaPlugin)
+        }
     }
 
     @Test
-    @DisplayName("create task dependant on all tasks of given name")
-    void createTaskDependantOnAllTasksOfGivenName() {
-        var subProject = ProjectBuilder.builder()
-                .withParent(project)
-                .build();
-        subProject.getPluginManager()
-                  .apply(javaPlugin);
-        var task = GradleTask.newBuilder(annotateProto, NoOp.action())
-                .insertAfterAllTasks(compileJava)
-                .applyNowTo(subProject);
-        var subProjectTasks = subProject.getTasks();
-        var newTask = subProjectTasks.findByName(task.getName().name());
-        assertThat(newTask)
-                .isNotNull();
-        Collection<?> dependencies = newTask.getDependsOn();
-
+    fun `create task dependant on all tasks of given name`() {
+        val subProject = ProjectBuilder.builder()
+            .withParent(project)
+            .build()
+        subProject.pluginManager
+            .apply(GradleProject.javaPlugin)
+        val task = GradleTask.newBuilder(annotateProto, NoOp.action())
+            .insertAfterAllTasks(compileJava)
+            .applyNowTo(subProject)
+        val subProjectTasks = subProject.tasks
+        val newTask = subProjectTasks.findByName(task.name.name())
+        newTask shouldNotBe null
+        val dependencies: Collection<*> = newTask!!.dependsOn
         assertThat(dependencies)
-                .containsAtLeast(
-                        subProjectTasks.findByName(compileJava.name()),
-                        project.getTasks()
-                               .findByName(compileJava.name())
-                );
+            .containsAtLeast(
+                subProjectTasks.findByName(compileJava.name()),
+                project.tasks.findByName(compileJava.name())
+            )
     }
 
     @Test
-    @DisplayName("create task and insert before other")
-    void createTaskAndInsertBeforeOther() {
+    fun `create task and insert before other`() {
         GradleTask.newBuilder(verifyModel, NoOp.action())
-              .insertBeforeTask(classes)
-              .applyNowTo(project);
-        var tasks = project.getTasks();
-
-        var classes = tasks.findByName(JavaTaskName.classes.name());
-        assertThat(classes)
-                .isNotNull();
-
-        var verifyModelTask = tasks.findByName(verifyModel.name());
-        assertThat(classes.getDependsOn())
-                .contains(verifyModelTask);
+            .insertBeforeTask(classes)
+            .applyNowTo(project)
+        val tasks = project.tasks
+        val classes = tasks.findByName(classes.name())
+        classes shouldNotBe null
+        val verifyModelTask = tasks.findByName(verifyModel.name)
+        classes!!.dependsOn shouldContain verifyModelTask
     }
 
     @Test
-    @DisplayName("create task and insert after other")
-    void createTaskAndInsertAfterOther() {
+    fun `create task and insert after other`() {
         GradleTask.newBuilder(verifyModel, NoOp.action())
-              .insertAfterTask(compileJava)
-              .applyNowTo(project);
-        var tasks = project.getTasks();
-
-        var compileJavaTask = tasks.findByName(compileJava.name());
-        assertThat(compileJavaTask)
-                .isNotNull();
-        var verifyModelTask = tasks.findByName(verifyModel.name());
-
-        assertThat(verifyModelTask)
-                .isNotNull();
-        assertThat(verifyModelTask.getDependsOn())
-                .contains(compileJavaTask.getName());
+            .insertAfterTask(compileJava)
+            .applyNowTo(project)
+        val tasks = project.tasks
+        val compileJavaTask = tasks.findByName(compileJava.name())
+        compileJavaTask shouldNotBe null
+        val verifyModelTask = tasks.findByName(verifyModel.name)
+        verifyModelTask shouldNotBe null
+        verifyModelTask!!.dependsOn shouldContain compileJavaTask!!.name
     }
 
     @Test
-    @DisplayName("ignore task dependency if no such task found")
-    void ignoreTaskDependencyIfNoSuchTaskFound() {
+    fun `ignore task dependency if no such task found`() {
         GradleTask.newBuilder(generateTestProto, NoOp.action())
-              .insertAfterAllTasks(generateProto)
-              .applyNowTo(project);
-        var tasks = project.getTasks();
+            .insertAfterAllTasks(generateProto)
+            .applyNowTo(project)
+        val tasks = project.tasks
 
-        var generateProtoTask = tasks.findByName(generateProto.name());
-        assertThat(generateProtoTask)
-                .isNull();
-
-        var generateTestProtoTask = tasks.findByName(generateTestProto.name());
-        assertThat(generateTestProtoTask)
-                .isNotNull();
+        val generateProtoTask = tasks.findByName(generateProto.name())
+        generateProtoTask shouldBe null
+        val generateTestProtoTask = tasks.findByName(generateTestProto.name())
+        generateTestProtoTask shouldNotBe null
     }
 
     @Test
-    @DisplayName("not allow tasks without any connection to task graph")
-    void notAllowTasksWithoutAnyConnectionToTaskGraph() {
-        var builder = GradleTask.newBuilder(verifyModel, action());
-        assertIllegalState(() -> builder.applyNowTo(project));
+    fun `not allow tasks without any connection to task graph`() {
+        val builder = GradleTask.newBuilder(verifyModel, NoOp.action())
+        assertIllegalState { builder.applyNowTo(project) }
     }
 
     @Test
     @DisplayName("return build task description")
-    void returnBuildTaskDescription() {
-        var desc = GradleTask.newBuilder(preClean, NoOp.action())
-                .insertBeforeTask(clean)
-                .applyNowTo(project);
-        assertThat(desc.getName())
-                .isEqualTo(preClean);
-        assertThat(desc.getProject())
-                .isEqualTo(project);
+    fun returnBuildTaskDescription() {
+        val desc = GradleTask.newBuilder(preClean, NoOp.action())
+            .insertBeforeTask(BaseTaskName.clean)
+            .applyNowTo(project)
+
+        desc.name shouldBe preClean
+        desc.project shouldBe project
     }
 
     @Test
-    @DisplayName("create task with given inputs")
-    void createTaskWithGivenInputs() throws IOException {
-        var input = new File(".").getAbsoluteFile();
-        var files = project.getLayout().files(input);
+    fun `create task with given inputs`() {
+        val input = File(".").absoluteFile
+        val files = project.layout.files(input)
         GradleTask.newBuilder(preClean, NoOp.action())
-              .insertBeforeTask(clean)
-              .withInputFiles(files)
-              .applyNowTo(project);
-        var task = project.getTasks()
-                          .findByPath(preClean.name());
-        assertNotNull(task);
-        @Nullable TaskInputs inputs = task.getInputs();
-        assertNotNull(inputs);
+            .insertBeforeTask(BaseTaskName.clean)
+            .withInputFiles(files)
+            .applyNowTo(project)
 
-        var inputFiles = ImmutableList.copyOf(inputs.getFiles().getFiles());
-        assertThat(inputFiles)
-                .hasSize(1);
-        assertThat(inputFiles.get(0).getCanonicalFile())
-                .isEqualTo(input.getCanonicalFile());
+        val task = project.tasks.findByPath(preClean.name)
+        task shouldNotBe null
+        val inputs = task!!.inputs
+        inputs shouldNotBe null
+        val inputFiles = ImmutableList.copyOf(
+            inputs.files.files
+        )
+        inputFiles shouldHaveSize 1
+        inputFiles[0]!!.canonicalFile shouldBe input.canonicalFile
     }
 }
