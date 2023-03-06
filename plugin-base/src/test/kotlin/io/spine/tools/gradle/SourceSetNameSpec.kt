@@ -26,16 +26,18 @@
 
 package io.spine.tools.gradle
 
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.shouldBe
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.code.SourceSetName.Companion.main
 import io.spine.tools.titlecaseFirstChar
 import org.gradle.api.tasks.SourceSet.MAIN_SOURCE_SET_NAME
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-class `'SourceSetName' should` {
+@DisplayName("`SourceSetName` should")
+class SourceSetNameSpec {
 
     @Test
     fun `reject empty values`() {
@@ -49,8 +51,7 @@ class `'SourceSetName' should` {
 
     @Test
     fun `expose the value`() {
-        assertThat(main.value)
-            .isEqualTo(MAIN_SOURCE_SET_NAME)
+        main.value shouldBe MAIN_SOURCE_SET_NAME
     }
 
     @Nested
@@ -58,15 +59,13 @@ class `'SourceSetName' should` {
 
         @Test
         fun `of 'main' as empty string`() {
-            assertThat(main.toInfix())
-                .isEmpty()
+            main.toInfix() shouldBe ""
         }
 
         @Test
         fun `as value in 'TitleCase'`() {
             val customName = "customName"
-            assertThat(SourceSetName(customName).toInfix())
-                .isEqualTo(customName.titlecaseFirstChar())
+            SourceSetName(customName).toInfix() shouldBe customName.titlecaseFirstChar()
         }
     }
 
@@ -75,15 +74,13 @@ class `'SourceSetName' should` {
 
         @Test
         fun `of 'main' as empty string`() {
-            assertThat(main.toPrefix())
-                .isEmpty()
+            main.toPrefix() shouldBe ""
         }
 
         @Test
         fun `as value`() {
             val mySourceSetName = "mySourceSetName"
-            assertThat(SourceSetName(mySourceSetName).toPrefix())
-                .isEqualTo(mySourceSetName)
+            SourceSetName(mySourceSetName).toPrefix() shouldBe mySourceSetName
         }
     }
 }
