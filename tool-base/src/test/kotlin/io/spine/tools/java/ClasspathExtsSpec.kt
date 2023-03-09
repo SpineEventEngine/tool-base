@@ -32,21 +32,23 @@ import java.io.File.pathSeparator
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-@DisplayName("Kotlin extension for `String` in `io.spine.tools.java` should")
-internal class StringExtsSpec {
+@DisplayName("Kotlin extension for `Classpath` should")
+internal class ClasspathExtsSpec {
 
     @Test
-    fun `format classpath string`() {
-        val entries = listOf(
+    fun `print classpath string`() {
+        val items = listOf(
             "/some/path/fiz.jar",
             "/another/path/buz.jar"
         )
-        val classpath = entries.joinToString(pathSeparator)
+        val cp = items.joinToString(pathSeparator)
 
-        classpath.formatClasspath() shouldBe
+        val classpath = parseClasspath(cp)
+
+        classpath.printItems() shouldBe
         """
-            ${entries[0]}:
-            ${entries[1]}
+            ${items[0]}:
+            ${items[1]}
         """.ti()
     }
 }

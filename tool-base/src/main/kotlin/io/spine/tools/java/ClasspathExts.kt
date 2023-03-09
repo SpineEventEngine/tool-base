@@ -24,17 +24,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@file:JvmName("Strings")
+@file:JvmName("Classpaths")
 
 package io.spine.tools.java
 
+import io.spine.tools.java.code.Classpath
+import io.spine.tools.java.code.classpath
 import java.io.File.pathSeparator
 import java.lang.System.lineSeparator
 
 /**
- * Formats the string containing a Java `classpath` putting each entry on a separate line.
+ * Creates a new instance of [Classpath] parsing its items
+ * from the given string.
  */
-public fun String.formatClasspath(): String {
-    return split(pathSeparator).joinToString(pathSeparator + lineSeparator())
+public fun parseClasspath(cp: String): Classpath {
+    val items = cp.split(pathSeparator)
+    return classpath {
+        item.addAll(items)
+    }
+}
+
+/**
+ * Prints classpath to a text block putting each item on a separate line
+ * finished with [pathSeparator].
+ */
+public fun Classpath.printItems(): String {
+    return itemList.joinToString(pathSeparator + lineSeparator())
 }
 
