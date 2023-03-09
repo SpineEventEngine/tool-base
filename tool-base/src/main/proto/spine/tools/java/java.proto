@@ -45,6 +45,9 @@ message JavaClassName {
 // A container for the Java classpath items.
 message Classpath {
 
-    // An absolute OS-dependent path to a particular classpath JAR.
-    repeated string jar = 1 [(required) = true];
+    // An OS-dependent path to a classpath item.
+    //
+    // A path could be relative or absolute.
+    //
+    repeated string item = 1 [(required) = true];
 }
