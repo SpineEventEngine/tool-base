@@ -76,8 +76,6 @@ val generatedDir = "$projectDir/generated"
  * Force `generated` directory and Kotlin code generation.
  */
 protobuf {
-    generatedFilesBaseDir = generatedDir
-
     protoc {
         artifact = Protobuf.compiler
     }
