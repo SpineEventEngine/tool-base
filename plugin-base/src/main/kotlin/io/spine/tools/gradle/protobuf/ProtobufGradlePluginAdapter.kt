@@ -29,15 +29,14 @@ package io.spine.tools.gradle.protobuf
 import com.google.common.collect.ImmutableList
 import com.google.protobuf.gradle.ExecutableLocator
 import com.google.protobuf.gradle.GenerateProtoTask
-import com.google.protobuf.gradle.ProtobufExtension
 import groovy.lang.Closure
+import io.spine.tools.gradle.debug
 import io.spine.tools.groovy.ConsumerClosure
 import io.spine.tools.groovy.ConsumerClosure.closure
 import org.gradle.api.Action
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskCollection
-import io.spine.tools.gradle.debug
 
 /**
  * Unified API for selected features of Protobuf Gradle Plugin for handling
