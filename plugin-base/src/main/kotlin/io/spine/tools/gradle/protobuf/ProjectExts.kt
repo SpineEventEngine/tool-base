@@ -51,6 +51,19 @@ public val Project.protobufExtension: ProtobufExtension?
     get() = extensions.findByType(ProtobufExtension::class.java)
 
 /**
+ * Obtains the directory where the Protobuf Gradle Plugin should place the generated code.
+ *
+ * The directory is fixed to be `$buildDir/generated/source/proto` and cannot be
+ * changed by the settings of the plugin. Even though [ProtobufExtension] has a property
+ * [generatedFilesBaseDir][ProtobufExtension.getGeneratedFilesBaseDir], which is supposed
+ * to be used for this purpose, it is declared with `@PackageScope` and thus cannot be
+ * accessed from outside the plugin. The Protobuf Gradle Plugin (at v0.9.2) does not
+ * modify the value of the property either.
+ */
+public val Project.generatedSourceProtoDir: Path
+    get() = buildDir.resolve("generated/source/proto").toPath()
+
+/**
  * Obtains an absolute path to the generated code directory of this project.
  *
  * The implementation of the getter of the property handles the transition to newer versions of
@@ -71,13 +84,9 @@ public val Project.generatedFilesBaseDir: String
 /**
  * Obtains `generated-proto` directory of this project.
  */
-@Deprecated("Use `generatedDir` instead.", ReplaceWith("generatedDir"))
+@Deprecated("Use `generatedSourceProtoDir` instead.", ReplaceWith("generatedSourceProtoDir"))
 public val Project.generatedProtoDir: Path
-    get() {
-        @Suppress("DEPRECATION")
-        val result = projectDir.resolve(build).resolve(DirectoryName.generatedProto).toPath()
-        return result
-    }
+    get() = generatedSourceProtoDir
 
 /**
  * Obtains the path to the directory which will be used for placing files generated
