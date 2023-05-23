@@ -32,7 +32,6 @@ import com.google.protobuf.gradle.ProtobufExtension
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.fs.DescriptorsDir
 import io.spine.tools.fs.DirectoryName
-import io.spine.tools.fs.DirectoryName.build
 import io.spine.tools.gradle.project.artifact
 import io.spine.tools.gradle.project.sourceSet
 import io.spine.tools.gradle.protobuf.ProtobufDependencies.sourceSetExtensionName
