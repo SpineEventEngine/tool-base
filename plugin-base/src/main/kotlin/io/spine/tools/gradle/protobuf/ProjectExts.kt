@@ -56,7 +56,10 @@ import org.gradle.api.tasks.SourceSet
  */
 @Deprecated("Use `generatedDir` instead.", ReplaceWith("generatedDir"))
 public val Project.generatedFilesBaseDir: String
-    get() = protobufGradlePluginAdapter.generatedFilesBaseDir
+    get() {
+        @Suppress("DEPRECATION")
+        return protobufGradlePluginAdapter.generatedFilesBaseDir
+    }
 
 /**
  * Obtains `generated-proto` directory of this project.

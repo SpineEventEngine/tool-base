@@ -55,6 +55,11 @@ public interface ProtobufGradlePluginAdapter {
      *
      * Setting the value for this property would update the settings of the plugin.
      */
+    @Deprecated(
+        message = "Use `project.generated.toString()` instead.",
+        replaceWith = ReplaceWith("project.generated.toString()"),
+        level = DeprecationLevel.WARNING
+    )
     public var generatedFilesBaseDir: String
 
     /**
@@ -140,6 +145,11 @@ private class NewApi(override val project: Project): ProtobufGradlePluginAdapter
     private val extension: Any = findExtension(project)!!
     private val extensionClass: Class<*> = extension.javaClass
 
+    @Deprecated(
+        message = "Use `project.generated.toString()` instead.",
+        replaceWith = ReplaceWith("project.generated.toString()"),
+        level = DeprecationLevel.WARNING
+    )
     override var generatedFilesBaseDir: String
         get() {
             val getter = extensionClass.getMethod("getGeneratedFilesBaseDir")
@@ -213,6 +223,11 @@ private class LegacyApi(override val project: Project): ProtobufGradlePluginAdap
         protobufConfiguratorClass = protobufConfigurator.javaClass
     }
 
+    @Deprecated(
+        message = "Use `project.generated.toString()` instead.",
+        replaceWith = ReplaceWith("project.generated.toString()"),
+        level = DeprecationLevel.WARNING
+    )
     override var generatedFilesBaseDir: String
         get() {
             val getGeneratedFilesBaseDirField = protobufConfiguratorClass.getMethod(
