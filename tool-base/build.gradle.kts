@@ -33,6 +33,7 @@ import io.spine.internal.dependency.JavaPoet
 import io.spine.internal.dependency.JavaX
 import io.spine.internal.dependency.Protobuf
 import io.spine.internal.dependency.Spine
+import io.spine.internal.dependency.Validation
 import io.spine.internal.gradle.protobuf.setup
 
 plugins {
@@ -44,22 +45,23 @@ dependencies {
     api(JavaPoet.lib)
     api(JavaX.annotations)
 
-    val spine = Spine(project)
-    api(spine.base)
-    implementation(spine.validation.runtime)
+    api(Spine.base)
+
+    implementation(Spine.logging)
+    implementation(Validation.runtime)
 
     listOf(
         Grpc.protobuf,
         Grpc.core,
         Grpc.stub,
         GrpcKotlin.stub,
-        spine.validation.runtime
+        Validation.runtime
     ).forEach {
         testImplementation(it)
         testFixturesImplementation(it)
     }
 
-    testImplementation(spine.testlib)
+    testImplementation(Spine.testlib)
 }
 
 sourceSets {
