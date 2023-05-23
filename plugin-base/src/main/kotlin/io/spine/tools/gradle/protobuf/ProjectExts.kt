@@ -28,6 +28,7 @@
 
 package io.spine.tools.gradle.protobuf
 
+import com.google.protobuf.gradle.ProtobufExtension
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.fs.DescriptorsDir
 import io.spine.tools.fs.DirectoryName
@@ -42,6 +43,12 @@ import java.nio.file.Path
 import org.gradle.api.Project
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.tasks.SourceSet
+
+/**
+ * Obtains the extension of Protobuf Gradle Plugin in the given project.
+ */
+public val Project.protobufExtension: ProtobufExtension?
+    get() = extensions.findByType(ProtobufExtension::class.java)
 
 /**
  * Obtains an absolute path to the generated code directory of this project.

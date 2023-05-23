@@ -29,6 +29,7 @@ package io.spine.tools.gradle.protobuf
 import com.google.common.collect.ImmutableList
 import com.google.protobuf.gradle.ExecutableLocator
 import com.google.protobuf.gradle.GenerateProtoTask
+import com.google.protobuf.gradle.ProtobufExtension
 import groovy.lang.Closure
 import io.spine.tools.groovy.ConsumerClosure
 import io.spine.tools.groovy.ConsumerClosure.closure
@@ -42,6 +43,10 @@ import io.spine.tools.gradle.debug
  * Unified API for selected features of Protobuf Gradle Plugin for handling
  * transition from versions before `v0.9.0` to `v0.9.1`.
  */
+@Deprecated(
+    message = "Use `com.google.protobuf.gradle.ProtobufExtension` directly instead.",
+    level = DeprecationLevel.WARNING
+)
 public interface ProtobufGradlePluginAdapter {
 
     /**
@@ -82,12 +87,19 @@ public interface ProtobufGradlePluginAdapter {
  * Obtains the version-neutral API for selected features of Protobuf Gradle Plugin
  * to serve the transition from plugin version from pre-`v0.9.0` to `v0.9.1`.
  */
+@Deprecated(
+    message = "Use `com.google.protobuf.gradle.ProtobufExtension` directly instead.",
+    replaceWith = ReplaceWith("protobufExtension"),
+    level = DeprecationLevel.WARNING
+)
+@Suppress("DEPRECATION")
 public val Project.protobufGradlePluginAdapter: ProtobufGradlePluginAdapter
     get() = AdapterImpl(this)
 
 /**
  * The adapter for working with Protobuf Gradle Plugin in the given project.
  */
+@Suppress("DEPRECATION")
 private class AdapterImpl(
     project: Project,
     private val delegate: ProtobufGradlePluginAdapter = createDelegate(project)
@@ -140,6 +152,7 @@ private fun configureAllAction(
 /**
  * Adapter for the API of Protobuf Gradle Plugin after `v0.9.0`.
  */
+@Suppress("DEPRECATION")
 private class NewApi(override val project: Project): ProtobufGradlePluginAdapter {
 
     private val extension: Any = findExtension(project)!!
@@ -190,6 +203,7 @@ private class NewApi(override val project: Project): ProtobufGradlePluginAdapter
 /**
  * Adapter for the API of Protobuf Gradle Plugin pre `v0.9.0`.
  */
+@Suppress("DEPRECATION")
 private class LegacyApi(override val project: Project): ProtobufGradlePluginAdapter {
 
     /**
