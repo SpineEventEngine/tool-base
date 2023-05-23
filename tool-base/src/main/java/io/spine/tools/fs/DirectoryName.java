@@ -67,7 +67,12 @@ public enum DirectoryName {
      */
     generated,
 
-    /** The root directory for the intermediate generated code used by ProtoData. */
+    /**
+     * The root directory for the intermediate generated code used by ProtoData.
+     *
+     * @deprecated Please use {@link #generated} instead.
+     */
+    @Deprecated
     generatedProto("generated-proto"),
 
     /** Spine-specific generated code. */
