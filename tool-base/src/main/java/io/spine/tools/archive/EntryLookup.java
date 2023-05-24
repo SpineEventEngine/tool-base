@@ -39,7 +39,7 @@ import static com.google.common.io.ByteStreams.toByteArray;
 import static io.spine.util.Exceptions.illegalStateWithCauseOf;
 
 /**
- * A process of an entry lookup inside of an archive.
+ * A process of an entry lookup inside an archive.
  */
 final class EntryLookup implements Closeable {
 

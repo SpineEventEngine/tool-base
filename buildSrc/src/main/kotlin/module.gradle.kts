@@ -32,11 +32,10 @@ import io.spine.internal.dependency.Grpc
 import io.spine.internal.dependency.Guava
 import io.spine.internal.dependency.JUnit
 import io.spine.internal.dependency.Spine
+import io.spine.internal.dependency.Validation
 import io.spine.internal.dependency.Truth
 import io.spine.internal.gradle.VersionWriter
 import io.spine.internal.gradle.checkstyle.CheckStyleConfig
-import io.spine.internal.gradle.excludeProtobufLite
-import io.spine.internal.gradle.forceVersions
 import io.spine.internal.gradle.github.pages.updateGitHubPages
 import io.spine.internal.gradle.javac.configureErrorProne
 import io.spine.internal.gradle.javac.configureJavac
@@ -115,11 +114,11 @@ fun Module.forceConfigurations() {
         excludeProtobufLite()
         all {
             resolutionStrategy {
-                val spine = Spine(project)
                 force(
                     JUnit.runner,
-                    spine.base,
-                    spine.validation.runtime,
+                    Spine.base,
+                    Spine.logging,
+                    Validation.runtime,
                     Grpc.stub,
                     Coroutines.jdk8,
                     Coroutines.core,
@@ -171,7 +170,7 @@ fun Module.configureTests() {
 }
 
 fun Module.configureGitHubPages() {
-    updateGitHubPages(Spine.DefaultVersion.javadocTools) {
+    updateGitHubPages(Spine.ArtifactVersion.javadocTools) {
         allowInternalJavadoc.set(true)
         rootFolder.set(rootDir)
     }

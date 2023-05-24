@@ -35,15 +35,14 @@ import io.spine.internal.gradle.standardToSpineSdk
 
 buildscript {
     standardSpineSdkRepositories()
-    val spine = io.spine.internal.dependency.Spine(project)
-    io.spine.internal.gradle.doForceVersions(configurations)
+    doForceVersions(configurations)
     configurations {
         all {
             resolutionStrategy {
                 @Suppress("DEPRECATION")
                 force(
-                    spine.base,
-                    spine.validation.java,
+                    io.spine.internal.dependency.Spine.base,
+                    io.spine.internal.dependency.Validation.java,
                     io.spine.internal.dependency.Protobuf.GradlePlugin.lib,
                     io.spine.internal.dependency.Kotlin.stdLibJdk8
                 )

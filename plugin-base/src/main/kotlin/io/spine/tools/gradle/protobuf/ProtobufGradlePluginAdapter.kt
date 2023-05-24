@@ -30,18 +30,22 @@ import com.google.common.collect.ImmutableList
 import com.google.protobuf.gradle.ExecutableLocator
 import com.google.protobuf.gradle.GenerateProtoTask
 import groovy.lang.Closure
+import io.spine.tools.gradle.debug
 import io.spine.tools.groovy.ConsumerClosure
 import io.spine.tools.groovy.ConsumerClosure.closure
 import org.gradle.api.Action
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskCollection
-import io.spine.tools.gradle.debug
 
 /**
  * Unified API for selected features of Protobuf Gradle Plugin for handling
  * transition from versions before `v0.9.0` to `v0.9.1`.
  */
+@Deprecated(
+    message = "Use `com.google.protobuf.gradle.ProtobufExtension` directly instead.",
+    level = DeprecationLevel.WARNING
+)
 public interface ProtobufGradlePluginAdapter {
 
     /**
@@ -55,6 +59,11 @@ public interface ProtobufGradlePluginAdapter {
      *
      * Setting the value for this property would update the settings of the plugin.
      */
+    @Deprecated(
+        message = "Use `project.generated.toString()` instead.",
+        replaceWith = ReplaceWith("project.generated.toString()"),
+        level = DeprecationLevel.WARNING
+    )
     public var generatedFilesBaseDir: String
 
     /**
@@ -77,12 +86,19 @@ public interface ProtobufGradlePluginAdapter {
  * Obtains the version-neutral API for selected features of Protobuf Gradle Plugin
  * to serve the transition from plugin version from pre-`v0.9.0` to `v0.9.1`.
  */
+@Deprecated(
+    message = "Use `com.google.protobuf.gradle.ProtobufExtension` directly instead.",
+    replaceWith = ReplaceWith("protobufExtension"),
+    level = DeprecationLevel.WARNING
+)
+@Suppress("DEPRECATION")
 public val Project.protobufGradlePluginAdapter: ProtobufGradlePluginAdapter
     get() = AdapterImpl(this)
 
 /**
  * The adapter for working with Protobuf Gradle Plugin in the given project.
  */
+@Suppress("DEPRECATION")
 private class AdapterImpl(
     project: Project,
     private val delegate: ProtobufGradlePluginAdapter = createDelegate(project)
@@ -135,11 +151,17 @@ private fun configureAllAction(
 /**
  * Adapter for the API of Protobuf Gradle Plugin after `v0.9.0`.
  */
+@Suppress("DEPRECATION")
 private class NewApi(override val project: Project): ProtobufGradlePluginAdapter {
 
     private val extension: Any = findExtension(project)!!
     private val extensionClass: Class<*> = extension.javaClass
 
+    @Deprecated(
+        message = "Use `project.generated.toString()` instead.",
+        replaceWith = ReplaceWith("project.generated.toString()"),
+        level = DeprecationLevel.WARNING
+    )
     override var generatedFilesBaseDir: String
         get() {
             val getter = extensionClass.getMethod("getGeneratedFilesBaseDir")
@@ -180,6 +202,7 @@ private class NewApi(override val project: Project): ProtobufGradlePluginAdapter
 /**
  * Adapter for the API of Protobuf Gradle Plugin pre `v0.9.0`.
  */
+@Suppress("DEPRECATION")
 private class LegacyApi(override val project: Project): ProtobufGradlePluginAdapter {
 
     /**
@@ -213,6 +236,11 @@ private class LegacyApi(override val project: Project): ProtobufGradlePluginAdap
         protobufConfiguratorClass = protobufConfigurator.javaClass
     }
 
+    @Deprecated(
+        message = "Use `project.generated.toString()` instead.",
+        replaceWith = ReplaceWith("project.generated.toString()"),
+        level = DeprecationLevel.WARNING
+    )
     override var generatedFilesBaseDir: String
         get() {
             val getGeneratedFilesBaseDirField = protobufConfiguratorClass.getMethod(

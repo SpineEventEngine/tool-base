@@ -23,38 +23,47 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package io.spine.tools.java.fs
 
-import io.kotest.matchers.shouldBe
-import io.spine.tools.div
-import io.spine.tools.fs.DirectoryName
-import io.spine.tools.fs.DirectoryName.build
-import java.nio.file.Path
-import kotlin.io.path.div
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Test
+import java.io.File
+import org.gradle.kotlin.dsl.getValue
+import org.gradle.kotlin.dsl.getting
+import org.gradle.kotlin.dsl.jacoco
+import org.gradle.testing.jacoco.tasks.JacocoReport
 
-@DisplayName("`DefaultJavaPaths` should")
-internal class DefaultJavaPathsSpec {
+plugins {
+    jacoco
+}
 
-    @Test
-    fun `obtain 'build' dir`() {
-        val paths = DefaultJavaPaths.at(projectPath)
-        paths.buildRoot().path() shouldBe
+/**
+ * Configures [JacocoReport] task to run in a Kotlin KMM project for `commonMain` and `jvmMain`
+ * source sets.
+ *
+ * This script plugin must be applied using the following construct at the end of
+ * a `build.gradle.kts` file of a module:
+ *
+ * ```kotlin
+ * apply(plugin="jacoco-kmm-jvm")
+ * ```
+ * Please do not apply this script plugin in the `plugins {}` block because `jacocoTestReport`
+ * task is not yet available at this stage.
+ */
+private val about = ""
 
-                projectPath / build
-    }
+/**
+ * Configure Jacoco task with custom input from this KMM project.
+ */
+val jacocoTestReport: JacocoReport by tasks.getting(JacocoReport::class) {
 
-    @Test
-    fun `obtain 'generated' dir`() {
-        val paths = DefaultJavaPaths.at(projectPath)
-        paths.generated().path() shouldBe
+    val classFiles = File("${buildDir}/classes/kotlin/jvm/")
+        .walkBottomUp()
+        .toSet()
+    classDirectories.setFrom(classFiles)
 
-                projectPath / GENERATED_DIR
-    }
+    val coverageSourceDirs = arrayOf(
+        "src/commonMain",
+        "src/jvmMain"
+    )
+    sourceDirectories.setFrom(files(coverageSourceDirs))
 
-    companion object {
-        private val projectPath = Path.of("/test-path")
-        private val GENERATED_DIR = DirectoryName.generated.value()
-    }
+    executionData.setFrom(files("${buildDir}/jacoco/jvmTest.exec"))
 }

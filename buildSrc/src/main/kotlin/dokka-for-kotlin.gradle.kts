@@ -24,17 +24,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.internal.dependency
+import org.jetbrains.dokka.gradle.DokkaTask
 
-// https://github.com/jk1/Gradle-License-Report
-@Suppress("unused")
-object LicenseReport {
-    private const val version = "1.16"
-    const val lib = "com.github.jk1:gradle-license-report:${version}"
+plugins {
+    id("org.jetbrains.dokka") // Cannot use `Dokka` dependency object here yet.
+}
 
-    object GradlePlugin {
-        const val version = LicenseReport.version
-        const val id = "com.github.jk1.dependency-license-report"
-        const val lib = LicenseReport.lib
-    }
+dependencies {
+    useDokkaWithSpineExtensions()
+}
+
+tasks.withType<DokkaTask>().configureEach {
+    configureForKotlin()
 }
