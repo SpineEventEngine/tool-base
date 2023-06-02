@@ -26,6 +26,7 @@
 
 package io.spine.tools.gradle;
 
+import com.google.common.collect.ImmutableList;
 import com.google.protobuf.gradle.ExecutableLocator;
 import com.google.protobuf.gradle.GenerateProtoTask;
 import com.google.protobuf.gradle.ProtobufExtension;
@@ -121,11 +122,11 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
         }
 
         private void configureProtocTasks(GenerateProtoTaskCollection tasks) {
-            Action<GenerateProtoTask> taskAction = task -> {
-                configureDescriptorSetGeneration(task);
-                plugin.customizeTask(task);
-            };
-            tasks.all().configureEach(taskAction);
+            var protocTasks = ImmutableList.copyOf(tasks.all());
+            protocTasks.forEach(t -> {
+                configureDescriptorSetGeneration(t);
+                plugin.customizeTask(t);
+            });
         }
 
         private static void configureDescriptorSetGeneration(GenerateProtoTask protocTask) {
