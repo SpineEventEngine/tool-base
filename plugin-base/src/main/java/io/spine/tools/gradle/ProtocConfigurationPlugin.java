@@ -121,6 +121,19 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
             protobuf.plugins(plugins -> plugin.configureProtocPlugins(plugins, project));
         }
 
+        /**
+         * {@linkplain ProtocConfigurationPlugin#customizeTask Customizes} the Protoc tasks in the
+         * given collection.
+         *
+         * <p>This method copies all the tasks from the given collection into a separate list,
+         * iterates over the list, and applies the plugin-implementation-specific customization
+         * to each task. The method does the extra copying in order to allow the plugin
+         * implementations to add new tasks to the project.
+         * Since the {@code GenerateProtoTaskCollection} is a live collection, adding new tasks
+         * to the project may cause concurrent modification issues, which are hard to debug.
+         *
+         * @param tasks Protobuf code generation tasks from {@code protobuf.generateProtoTasks}.
+         */
         private void configureProtocTasks(GenerateProtoTaskCollection tasks) {
             var protocTasks = ImmutableList.copyOf(tasks.all());
             protocTasks.forEach(t -> {
