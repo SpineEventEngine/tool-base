@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2023, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import io.spine.internal.dependency.JavaPoet
 import io.spine.internal.dependency.JavaX
 import io.spine.internal.dependency.Protobuf
 import io.spine.internal.dependency.Spine
+import io.spine.internal.dependency.Validation
 import io.spine.internal.gradle.protobuf.setup
 
 plugins {
@@ -44,22 +45,23 @@ dependencies {
     api(JavaPoet.lib)
     api(JavaX.annotations)
 
-    val spine = Spine(project)
-    api(spine.base)
-    implementation(spine.validation.runtime)
+    api(Spine.base)
+
+    implementation(Spine.logging)
+    implementation(Validation.runtime)
 
     listOf(
         Grpc.protobuf,
         Grpc.core,
         Grpc.stub,
         GrpcKotlin.stub,
-        spine.validation.runtime
+        Validation.runtime
     ).forEach {
         testImplementation(it)
         testFixturesImplementation(it)
     }
 
-    testImplementation(spine.testlib)
+    testImplementation(Spine.testlib)
 }
 
 sourceSets {
@@ -74,8 +76,6 @@ val generatedDir = "$projectDir/generated"
  * Force `generated` directory and Kotlin code generation.
  */
 protobuf {
-    generatedFilesBaseDir = generatedDir
-
     protoc {
         artifact = Protobuf.compiler
     }
@@ -95,7 +95,7 @@ protobuf {
             id(Grpc.ProtocPlugin.id)
             id(GrpcKotlin.ProtocPlugin.id)
         }
-        setup(generatedDir)
+        setup()
     }
 }
 

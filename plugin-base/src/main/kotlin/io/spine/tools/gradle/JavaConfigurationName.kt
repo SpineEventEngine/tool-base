@@ -34,7 +34,9 @@ import io.spine.tools.code.SourceSetName.Companion.test
 /**
  * Names of Java project configurations used by the Spine Gradle plugins.
  *
- * @see <a href="https://docs.gradle.org/current/userguide/managing_dependency_configurations.html">Gradle documentation</a>
+ * @see
+ * <a href="https://docs.gradle.org/current/userguide/managing_dependency_configurations.html">
+ *     Gradle documentation</a>
  */
 public class JavaConfigurationName(value: String, sourceSetName: SourceSetName) :
     SourceSetBasedName(value, sourceSetName), ConfigurationName {

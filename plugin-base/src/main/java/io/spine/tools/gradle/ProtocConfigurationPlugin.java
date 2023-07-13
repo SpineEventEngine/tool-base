@@ -26,16 +26,21 @@
 
 package io.spine.tools.gradle;
 
+import com.google.common.collect.ImmutableList;
 import com.google.protobuf.gradle.ExecutableLocator;
 import com.google.protobuf.gradle.GenerateProtoTask;
-import io.spine.tools.gradle.protobuf.ProtobufGradlePluginAdapter;
+import com.google.protobuf.gradle.ProtobufExtension;
+import com.google.protobuf.gradle.ProtobufExtension.GenerateProtoTaskCollection;
+import org.gradle.api.Action;
 import org.gradle.api.NamedDomainObjectContainer;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 
+import static io.spine.tools.gradle.protobuf.Projects.getProtobufExtension;
 import static io.spine.tools.gradle.protobuf.ProtobufDependencies.gradlePlugin;
-import static io.spine.tools.gradle.protobuf.ProtobufGradlePluginAdapterKt.getProtobufGradlePluginAdapter;
 import static io.spine.tools.gradle.task.Tasks.getDescriptorSetFile;
+import static java.lang.String.format;
+import static java.util.Objects.requireNonNull;
 
 /**
  * An abstract base for Gradle plugins that configure Protobuf compilation.
@@ -54,7 +59,10 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
     }
 
     private void applyTo(Project project) {
-        var protobuf = getProtobufGradlePluginAdapter(project);
+        var protobuf = getProtobufExtension(project);
+        requireNonNull(protobuf, () ->
+                format("Protobuf extension not found in the project `%s`.", project.getName())
+        );
         var helper = new Helper(this, project, protobuf);
         helper.configure();
     }
@@ -94,11 +102,11 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
 
         private final ProtocConfigurationPlugin plugin;
         private final Project project;
-        private final ProtobufGradlePluginAdapter protobuf;
+        private final ProtobufExtension protobuf;
 
         private Helper(ProtocConfigurationPlugin plugin,
                        Project project,
-                       ProtobufGradlePluginAdapter protobuf) {
+                       ProtobufExtension protobuf) {
             this.plugin = plugin;
             this.project = project;
             this.protobuf = protobuf;
@@ -106,16 +114,32 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
 
         private void configure() {
             configurePlugins();
-            protobuf.configureProtoTasks(this::configureProtocTask);
+            protobuf.generateProtoTasks(this::configureProtocTasks);
         }
 
         private void configurePlugins() {
             protobuf.plugins(plugins -> plugin.configureProtocPlugins(plugins, project));
         }
 
-        private void configureProtocTask(GenerateProtoTask protocTask) {
-            configureDescriptorSetGeneration(protocTask);
-            plugin.customizeTask(protocTask);
+        /**
+         * {@linkplain ProtocConfigurationPlugin#customizeTask Customizes} the Protoc tasks in the
+         * given collection.
+         *
+         * <p>This method copies all the tasks from the given collection into a separate list,
+         * iterates over the list, and applies the plugin-implementation-specific customization
+         * to each task. The method does the extra copying in order to allow the plugin
+         * implementations to add new tasks to the project.
+         * Since the {@code GenerateProtoTaskCollection} is a live collection, adding new tasks
+         * to the project may cause concurrent modification issues, which are hard to debug.
+         *
+         * @param tasks Protobuf code generation tasks from {@code protobuf.generateProtoTasks}.
+         */
+        private void configureProtocTasks(GenerateProtoTaskCollection tasks) {
+            var protocTasks = ImmutableList.copyOf(tasks.all());
+            protocTasks.forEach(t -> {
+                configureDescriptorSetGeneration(t);
+                plugin.customizeTask(t);
+            });
         }
 
         private static void configureDescriptorSetGeneration(GenerateProtoTask protocTask) {

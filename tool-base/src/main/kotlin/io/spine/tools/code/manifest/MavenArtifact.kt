@@ -54,8 +54,9 @@ public data class MavenArtifact(val coordinates: String) : Dependency {
 
     init {
         val parts = coordinates.split(SEPARATOR)
-        require(parts.size == 3) {
-            "Maven coordinates must have 3 parts. Encountered: `$coordinates`."
+        require(parts.size == STRING_NOTATION_PARTS_COUNT) {
+            "Maven coordinates must have $STRING_NOTATION_PARTS_COUNT parts. " +
+                    "Encountered: `$coordinates`."
         }
 
         fun requireNonEmpty(value: String, propName: String): String {
@@ -83,6 +84,16 @@ public data class MavenArtifact(val coordinates: String) : Dependency {
          * The separator between [group], [name], and [version] parts of Maven coordinates.
          */
         public const val SEPARATOR: String = ":"
+
+
+        /**
+         * Number of parts in a Gradle-style notation representing a Maven artifact.
+         *
+         * For the sake of simplicity, we expect that a notation always has exactly 3 parts,
+         * the group ID, the artifact name, and the version. Other possible configurations
+         * are not supported
+         */
+        private const val STRING_NOTATION_PARTS_COUNT = 3
 
         /**
          * Obtains the instance from the given string representation.

@@ -53,6 +53,7 @@ internal data class IvyDependency(val org: String, val name: String, val rev: St
 
         private val pattern = " org=\"(.+)\" name=\"(.+)\" rev=\"(.+)\"".toRegex()
 
+        @Suppress("MagicNumber") // OK for regex group names.
         fun parse(value: String): IvyDependency {
             require(value.startsWith(PREFIX))
             val def = value.substring(PREFIX.length)
