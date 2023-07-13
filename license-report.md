@@ -1,6 +1,6 @@
 
 
-# Dependencies of `io.spine.tools:spine-plugin-base:2.0.0-SNAPSHOT.171`
+# Dependencies of `io.spine.tools:spine-plugin-base:2.0.0-SNAPSHOT.172`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -629,12 +629,12 @@
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Fri Jun 02 15:47:50 EEST 2023** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Thu Jul 13 23:00:04 WEST 2023** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:spine-plugin-testlib:2.0.0-SNAPSHOT.171`
+# Dependencies of `io.spine.tools:spine-plugin-testlib:2.0.0-SNAPSHOT.172`
 
 ## Runtime
 1.  **Group** : com.google.auto.value. **Name** : auto-value-annotations. **Version** : 1.10.1.
@@ -1364,12 +1364,12 @@ This report was generated on **Fri Jun 02 15:47:50 EEST 2023** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Fri Jun 02 15:47:50 EEST 2023** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Thu Jul 13 23:00:04 WEST 2023** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:spine-tool-base:2.0.0-SNAPSHOT.171`
+# Dependencies of `io.spine.tools:spine-tool-base:2.0.0-SNAPSHOT.172`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -2037,4 +2037,4 @@ This report was generated on **Fri Jun 02 15:47:50 EEST 2023** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Fri Jun 02 15:47:51 EEST 2023** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Thu Jul 13 23:00:04 WEST 2023** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
