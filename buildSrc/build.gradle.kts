@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2023, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,7 +80,7 @@ val guavaVersion = "31.1-jre"
  * @see <a href="https://github.com/tbroyer/gradle-errorprone-plugin/releases">
  *     Error Prone Gradle Plugin Releases</a>
  */
-val errorPronePluginVersion = "3.0.1"
+val errorPronePluginVersion = "3.1.0"
 
 /**
  * The version of Protobuf Gradle Plugin.
@@ -107,7 +107,7 @@ val dokkaVersion = "1.8.10"
  *
  * @see <a href="https://github.com/detekt/detekt/releases">Detekt Releases</a>
  */
-val detektVersion = "1.22.0"
+val detektVersion = "1.23.0"
 
 /**
  * @see [io.spine.internal.dependency.Kotest]
@@ -117,7 +117,7 @@ val kotestJvmPluginVersion = "0.4.10"
 /**
  * @see [io.spine.internal.dependency.Kover]
  */
-val koverVersion = "0.7.0-Beta"
+val koverVersion = "0.7.2"
 
 configurations.all {
     resolutionStrategy {
