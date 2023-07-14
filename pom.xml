@@ -38,7 +38,7 @@ all modules and does not describe the project structure per-subproject.
   <dependency>
     <groupId>io.spine</groupId>
     <artifactId>spine-base</artifactId>
-    <version>2.0.0-SNAPSHOT.180</version>
+    <version>2.0.0-SNAPSHOT.182</version>
     <scope>compile</scope>
   </dependency>
   <dependency>
@@ -50,13 +50,13 @@ all modules and does not describe the project structure per-subproject.
   <dependency>
     <groupId>io.spine.tools</groupId>
     <artifactId>spine-testlib</artifactId>
-    <version>2.0.0-SNAPSHOT.183</version>
+    <version>2.0.0-SNAPSHOT.184</version>
     <scope>compile</scope>
   </dependency>
   <dependency>
     <groupId>io.spine.validation</groupId>
     <artifactId>spine-validation-java-runtime</artifactId>
-    <version>2.0.0-SNAPSHOT.81</version>
+    <version>2.0.0-SNAPSHOT.97</version>
     <scope>compile</scope>
   </dependency>
   <dependency>
