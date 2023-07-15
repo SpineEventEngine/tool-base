@@ -32,6 +32,7 @@ import io.spine.internal.dependency.GrpcKotlin
 import io.spine.internal.dependency.JavaPoet
 import io.spine.internal.dependency.JavaX
 import io.spine.internal.dependency.Protobuf
+import io.spine.internal.dependency.Roaster
 import io.spine.internal.dependency.Spine
 import io.spine.internal.dependency.Validation
 import io.spine.internal.gradle.protobuf.setup
@@ -42,8 +43,10 @@ plugins {
 }
 
 dependencies {
-    api(JavaPoet.lib)
     api(JavaX.annotations)
+    api(JavaPoet.lib)
+    api(Roaster.api)
+    api(Roaster.jdt)
 
     api(Spine.base)
 
