@@ -47,7 +47,7 @@ internal class ClasspathExtsSpec {
 
         classpath.printItems() shouldBe
         """
-            ${items[0]}:
+            ${items[0]}$pathSeparator
             ${items[1]}
         """.ti()
     }
