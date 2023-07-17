@@ -51,4 +51,32 @@ internal class ClasspathExtsSpec {
             ${items[1]}
         """.ti()
     }
+
+    @Test
+    fun `filter JAR files`() {
+        val items = listOf(
+            "/some/path/fiz.jar",
+            "/another/path/buz.jar",
+            "/yet/another/path/baz.class"
+        )
+        val cp = items.joinToString(pathSeparator)
+
+        val classpath = parseClasspath(cp)
+
+        classpath.jars() shouldBe listOf(items[0], items[1])
+    }
+
+    @Test
+    fun `provide shortcut for obtaining all items`() {
+        val items = listOf(
+            "/some/path/foo.jar",
+            "/another/path/biz.jar",
+            "/yet/another/path/bar.class"
+        )
+        val cp = items.joinToString(pathSeparator)
+
+        val classpath = parseClasspath(cp)
+
+        classpath.items() shouldBe items
+    }
 }

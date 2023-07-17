@@ -52,3 +52,20 @@ public fun Classpath.printItems(): String {
     return itemList.joinToString(pathSeparator + lineSeparator())
 }
 
+/**
+ * Obtains all items of this classpath.
+ *
+ * This method is a shortcut for [Classpath.getItemList].
+ *
+ * @see [jars]
+ */
+public fun Classpath.items(): List<String> = itemList
+
+/**
+ * Obtains [items] of the classpath which are JAR files.
+ *
+ * @see [items]
+ */
+public fun Classpath.jars(): List<String> {
+    return itemList.filter { it.endsWith(".jar") }
+}
