@@ -24,46 +24,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.File
-import org.gradle.kotlin.dsl.getValue
-import org.gradle.kotlin.dsl.getting
-import org.gradle.kotlin.dsl.jacoco
-import org.gradle.testing.jacoco.tasks.JacocoReport
+package io.spine.tools.java
 
-plugins {
-    jacoco
-}
+import org.jboss.forge.roaster.model.JavaDoc
 
 /**
- * Configures [JacocoReport] task to run in a Kotlin KMM project for `commonMain` and `jvmMain`
- * source sets.
+ * Obtains the full text of the Javadoc and normalizes it.
  *
- * This script plugin must be applied using the following construct at the end of
- * a `build.gradle.kts` file of a module:
+ * This extension function should be used instead of [JavaDoc.getFullText] to avoid
+ * issues with extra spaces that implementers of the `JavaDoc` interface may add.
  *
- * ```kotlin
- * apply(plugin="jacoco-kmm-jvm")
- * ```
- * Please do not apply this script plugin in the `plugins {}` block because `jacocoTestReport`
- * task is not yet available at this stage.
+ * The following actions are performed:
+ *  1. All double spaces are replaced with single spaces.
+ *  2. All `} .` are replaced with `}.`.
  */
-private val about = ""
-
-/**
- * Configure Jacoco task with custom input from this KMM project.
- */
-val jacocoTestReport: JacocoReport by tasks.getting(JacocoReport::class) {
-
-    val classFiles = File("${buildDir}/classes/kotlin/jvm/")
-        .walkBottomUp()
-        .toSet()
-    classDirectories.setFrom(classFiles)
-
-    val coverageSourceDirs = arrayOf(
-        "src/commonMain",
-        "src/jvmMain"
-    )
-    sourceDirectories.setFrom(files(coverageSourceDirs))
-
-    executionData.setFrom(files("${buildDir}/jacoco/jvmTest.exec"))
+public fun JavaDoc<*>.fullTextNormalized(): String {
+    val normalized = fullText
+        .replace("  ", " ")
+        .replace("} .", "}.")
+    return normalized
 }

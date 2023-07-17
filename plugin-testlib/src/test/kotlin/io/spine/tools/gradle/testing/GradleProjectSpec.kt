@@ -59,7 +59,6 @@ class GradleProjectSpec {
     @Test
     fun `be created with only project directory specified`() {
         val project = setup.create()
-
         project.projectDir shouldBe projectDir
     }
 
@@ -107,26 +106,28 @@ class GradleProjectSpec {
     @DisplayName("provide diagnostic `directoryName` property")
     inner class DirectoryNameProperty {
 
-        @Test
-        fun `obtained from the the resource directory`() {
-            setup.fromResources(origin)
-            val project = setup.create()
+        private lateinit var project: GradleProject
 
-            project.directoryName shouldBe origin
+        @BeforeEach
+        fun createProject() {
+            project = setup.create()
         }
 
         @Test
         fun `obtained from the temp directory name`() {
-            val project = setup.create()
-
             project.directoryName shouldBe projectDir.name
         }
 
         @Test
         fun `used in toString()`() {
-            val project = setup.create()
-
             project.toString() shouldBe project.directoryName
+        }
+
+        @Test
+        fun `obtained from the the resource directory`() {
+            setup.fromResources(origin)
+            val project = setup.create()
+            project.directoryName shouldBe origin
         }
     }
 }

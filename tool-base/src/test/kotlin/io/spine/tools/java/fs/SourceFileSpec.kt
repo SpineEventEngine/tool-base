@@ -26,7 +26,6 @@
 package io.spine.tools.java.fs
 
 import com.google.common.testing.NullPointerTester
-import com.google.common.truth.Truth.assertThat
 import com.google.protobuf.DescriptorProtos.DescriptorProto
 import com.google.protobuf.DescriptorProtos.EnumDescriptorProto
 import com.google.protobuf.DescriptorProtos.FileDescriptorProto
@@ -37,6 +36,8 @@ import com.google.protobuf.Descriptors.FileDescriptor
 import com.google.protobuf.Descriptors.ServiceDescriptor
 import com.google.protobuf.Empty
 import io.grpc.protobuf.ProtoServiceDescriptorSupplier
+import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.shouldBe
 import io.spine.option.EntityOption
 import io.spine.test.code.NoOuterClassnameSourceFileTest.NoOuterClassnameMessage
 import io.spine.test.code.SourceFile.NestedMessage
@@ -79,7 +80,7 @@ internal class SourceFileSpec {
         val sourceFile = SourceFile.forMessage(messageType)
         val path = Paths.get(expectedPath)
 
-        assertThat(sourceFile.path()).isEqualTo(path)
+        sourceFile.path() shouldBe path
     }
 
     @Test
@@ -128,8 +129,7 @@ internal class SourceFileSpec {
         }
 
         private fun assertContains(sourceFile: SourceFile, path: String) {
-            assertThat(sourceFile.path())
-                .contains(Paths.get(path))
+            sourceFile.path() shouldContain Paths.get(path)
         }
     }
 

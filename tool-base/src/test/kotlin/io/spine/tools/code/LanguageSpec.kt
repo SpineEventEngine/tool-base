@@ -96,7 +96,7 @@ class LanguageSpec {
 
         private fun assertMatches(file: String) {
             val path = Paths.get(file)
-            assertThat(cpp.matches(path)).isTrue()
+            cpp.matches(path) shouldBe true
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2023, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,33 +24,59 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.testing
+package io.spine.tools.java
 
 import io.kotest.matchers.shouldBe
+import io.spine.string.ti
+import java.io.File.pathSeparator
 import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 
-@DisplayName("`CliProperty` should")
-class CliPropertySpec {
+@DisplayName("Kotlin extension for `Classpath` should")
+internal class ClasspathExtsSpec {
 
-    @Nested
-    inner class `prohibit illegal arguments` {
+    @Test
+    fun `print classpath string`() {
+        val items = listOf(
+            "/some/path/fiz.jar",
+            "/another/path/buz.jar"
+        )
+        val cp = items.joinToString(pathSeparator)
 
-        @Test
-        fun `empty name`() {
-            assertThrows<IllegalArgumentException> { CliProperty("", "value")  }
-        }
+        val classpath = parseClasspath(cp)
 
-        @Test
-        fun `blank name`() {
-            assertThrows<IllegalArgumentException> { CliProperty(" ", "fiz")  }
-        }
+        classpath.printItems() shouldBe
+        """
+            ${items[0]}$pathSeparator
+            ${items[1]}
+        """.ti()
     }
 
     @Test
-    fun `provide prefixed command like argument`() {
-        CliProperty("foo", "bar").argument() shouldBe "-Pfoo=bar"
+    fun `filter JAR files`() {
+        val items = listOf(
+            "/some/path/fiz.jar",
+            "/another/path/buz.jar",
+            "/yet/another/path/baz.class"
+        )
+        val cp = items.joinToString(pathSeparator)
+
+        val classpath = parseClasspath(cp)
+
+        classpath.jars() shouldBe listOf(items[0], items[1])
+    }
+
+    @Test
+    fun `provide shortcut for obtaining all items`() {
+        val items = listOf(
+            "/some/path/foo.jar",
+            "/another/path/biz.jar",
+            "/yet/another/path/bar.class"
+        )
+        val cp = items.joinToString(pathSeparator)
+
+        val classpath = parseClasspath(cp)
+
+        classpath.items() shouldBe items
     }
 }

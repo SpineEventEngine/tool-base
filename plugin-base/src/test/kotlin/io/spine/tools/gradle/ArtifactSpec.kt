@@ -25,7 +25,7 @@
  */
 package io.spine.tools.gradle
 
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
@@ -41,13 +41,13 @@ internal class ArtifactSpec {
             name = expectedName
             version = "2.0.0"
         }
-        assertThat(artifact.notation()).isEqualTo("group:name:2.0.0")
+        artifact.notation() shouldBe "group:name:2.0.0"
     }
 
     @Test
     fun `allow classifier for an artifact`() {
         val expectedClassifier = "de-class"
-        assertThat(Artifact.newBuilder().setClassifier(expectedClassifier).classifier)
-            .isEqualTo(expectedClassifier)
+        Artifact.newBuilder().setClassifier(expectedClassifier).classifier shouldBe
+                expectedClassifier
     }
 }

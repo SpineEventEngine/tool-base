@@ -25,21 +25,19 @@
  */
 package io.spine.tools.gradle
 
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-
-import com.google.common.truth.Truth.assertThat
 
 /**
  * This test suite guards against accidental refactoring enum names coming
  * in the [ProtocPluginName] enum in small caps to uppercase (as it's customary for enums).
  */
 @DisplayName("`ProtocPluginName` should")
-internal class ProtocPluginNameTest {
+internal class ProtocPluginNameSpec {
 
     @Test
     fun `have 'kotlin' name`() {
-        assertThat(ProtocPluginName.kotlin.name)
-            .isEqualTo("kotlin")
+        ProtocPluginName.kotlin.name shouldBe "kotlin"
     }
 }

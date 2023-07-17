@@ -24,50 +24,48 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.Kotest
-import io.spine.internal.dependency.Spine
-import io.spine.internal.dependency.JUnit
-import io.spine.internal.gradle.kotlin.applyJvmToolchain
-import io.spine.internal.gradle.kotlin.setFreeCompilerArgs
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+@file:JvmName("Classpaths")
 
-plugins {
-    id("java-module")
-    kotlin("jvm")
-    id("io.kotest")
-    id("org.jetbrains.kotlinx.kover")
-    id("detekt-code-analysis")
-    id("dokka-for-kotlin")
-}
+package io.spine.tools.java
 
-kotlin {
-    applyJvmToolchain(BuildSettings.javaVersion.asInt())
-    explicitApi()
-}
+import io.spine.tools.java.code.Classpath
+import io.spine.tools.java.code.classpath
+import java.io.File.pathSeparator
+import java.lang.System.lineSeparator
 
-dependencies {
-    testImplementation(Spine.testlib)
-    testImplementation(Kotest.frameworkEngine)
-    testImplementation(Kotest.datatest)
-    testImplementation(Kotest.runnerJUnit5Jvm)
-    testImplementation(JUnit.runner)
-}
-
-tasks {
-    withType<KotlinCompile>().configureEach {
-        kotlinOptions.jvmTarget = BuildSettings.javaVersion.toString()
-        setFreeCompilerArgs()
+/**
+ * Creates a new instance of [Classpath] parsing its items
+ * from the given string.
+ */
+public fun parseClasspath(cp: String): Classpath {
+    val items = cp.split(pathSeparator)
+    return classpath {
+        item.addAll(items)
     }
 }
 
-kover {
-    useJacocoTool()
+/**
+ * Prints classpath to a text block putting each item on a separate line
+ * finished with [pathSeparator].
+ */
+public fun Classpath.printItems(): String {
+    return itemList.joinToString(pathSeparator + lineSeparator())
 }
 
-koverReport {
-    defaults {
-        xml {
-            onCheck = true
-        }
-    }
+/**
+ * Obtains all items of this classpath.
+ *
+ * This method is a shortcut for [Classpath.getItemList].
+ *
+ * @see [jars]
+ */
+public fun Classpath.items(): List<String> = itemList
+
+/**
+ * Obtains [items] of the classpath which are JAR files.
+ *
+ * @see [items]
+ */
+public fun Classpath.jars(): List<String> {
+    return itemList.filter { it.endsWith(".jar") }
 }

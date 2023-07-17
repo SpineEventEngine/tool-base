@@ -26,7 +26,7 @@
 
 package io.spine.tools.gradle.task
 
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.shouldBe
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.code.SourceSetName.Companion.main
 import io.spine.tools.code.SourceSetName.Companion.test
@@ -36,30 +36,30 @@ import io.spine.tools.gradle.task.JavaTaskName.Companion.compileTestJava
 import io.spine.tools.gradle.task.JavaTaskName.Companion.processResources
 import io.spine.tools.gradle.task.JavaTaskName.Companion.processTestResources
 import io.spine.tools.gradle.task.JavaTaskName.Companion.testClasses
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-class `'JavaTaskName' should` {
+@DisplayName("`JavaTaskName` should")
+class JavaTaskNameSpec {
 
     @Nested
     inner class `provide 'compileJava' task for` {
 
         @Test
         fun `'main' source set`() {
-            assertThat(compileJava(main).name())
-                .isEqualTo("compileJava")
+            compileJava(main).name() shouldBe "compileJava"
         }
 
         @Test
         fun `'test' source set`() {
-            assertThat(compileJava(test).name())
-                .isEqualTo("compileTestJava")
+            compileJava(test).name() shouldBe "compileTestJava"
         }
 
         @Test
         fun `custom source set`() {
-            assertThat(compileJava(SourceSetName("somethingSpecial")).name())
-                .isEqualTo("compileSomethingSpecialJava")
+            compileJava(SourceSetName("somethingSpecial")).name() shouldBe
+                    "compileSomethingSpecialJava"
         }
     }
 
@@ -68,20 +68,17 @@ class `'JavaTaskName' should` {
 
         @Test
         fun `'main' source set`() {
-            assertThat(classes(main).name())
-                .isEqualTo("classes")
+            classes(main).name() shouldBe "classes"
         }
 
         @Test
         fun `'test' source set`() {
-            assertThat(classes(test).name())
-                .isEqualTo("testClasses")
+            classes(test).name() shouldBe "testClasses"
         }
 
         @Test
         fun `custom source set`() {
-            assertThat(classes(SourceSetName("blueWaterline")).name())
-                .isEqualTo("blueWaterlineClasses")
+            classes(SourceSetName("blueWaterline")).name() shouldBe "blueWaterlineClasses"
         }
     }
 
@@ -90,30 +87,27 @@ class `'JavaTaskName' should` {
 
         @Test
         fun `'main' source set`() {
-            assertThat(processResources(main).name())
-                .isEqualTo("processResources")
+            processResources(main).name() shouldBe "processResources"
         }
 
         @Test
         fun `'test' source set`() {
-            assertThat(processResources(test).name())
-                .isEqualTo("processTestResources")
+            processResources(test).name() shouldBe "processTestResources"
         }
 
         @Test
         fun `custom source set`() {
-            assertThat(processResources(SourceSetName("goldMine")).name())
-                .isEqualTo("processGoldMineResources")
+            processResources(SourceSetName("goldMine")).name() shouldBe "processGoldMineResources"
         }
     }
 
     @Test
     fun `expose properties for compatibility with the previous versions`() {
-        assertThat(compileJava).isEqualTo(compileJava(main))
-        assertThat(compileTestJava).isEqualTo(compileJava(test))
-        assertThat(classes).isEqualTo(classes(main))
-        assertThat(testClasses).isEqualTo(classes(test))
-        assertThat(processResources).isEqualTo(processResources(main))
-        assertThat(processTestResources).isEqualTo(processResources(test))
+        compileJava shouldBe compileJava(main)
+        compileTestJava shouldBe compileJava(test)
+        classes shouldBe classes(main)
+        testClasses shouldBe classes(test)
+        processResources shouldBe processResources(main)
+        processTestResources shouldBe processResources(test)
     }
 }

@@ -26,7 +26,7 @@
 
 package io.spine.tools.gradle.testing
 
-import com.google.common.truth.Truth.assertThat
+import io.kotest.matchers.shouldBe
 import java.io.File
 import java.nio.file.Path
 import org.junit.jupiter.api.BeforeEach
@@ -53,8 +53,7 @@ class ReplacementSpec {
 
     @Test
     fun `allow empty values-to-replace-with`() {
-        assertThat(Replacement("sometoken", "").value)
-            .isEmpty()
+        Replacement("sometoken", "").value shouldBe ""
     }
 
     @Nested
@@ -90,8 +89,7 @@ class ReplacementSpec {
         private fun File.assertReplaced(token: String, value: String) {
             val text = this.readText()
             val expected = TEXT.replace(token, value)
-            assertThat(text)
-                .isEqualTo(expected)
+            text shouldBe expected
         }
     }
 }
