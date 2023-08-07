@@ -61,12 +61,11 @@ public class JavadocText extends StringTypeValue {
      */
     @SuppressWarnings("unused") /* Part of the public API. */
     public JavadocText inPreTags() {
-        var inTags = new StringBuilder(OPENING_PRE)
-                .append(LINE_SEPARATOR)
-                .append(JavadocEscaper.escape(value()))
-                .append(CLOSING_PRE)
-                .append(LINE_SEPARATOR)
-                .toString();
+        var inTags = OPENING_PRE +
+                LINE_SEPARATOR +
+                JavadocEscaper.escape(value()) +
+                CLOSING_PRE +
+                LINE_SEPARATOR;
         return new JavadocText(inTags);
     }
 
