@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2023, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,22 +39,22 @@ class LanguageTest {
     @Test
     @DisplayName("`any()` language")
     void anyLang() {
-        assertMatches(CommonLanguages.any(), "anything_will.do");
+        assertMatches(AnyLanguage.instance(), "anything_will.do");
     }
 
     @Test
     void kotlin() {
-        assertMatches(CommonLanguages.kotlin(), "my.kt");
+        assertMatches(Kotlin.lang(), "my.kt");
     }
 
     @Test
     void java() {
-        assertMatches(CommonLanguages.java(), "pure.java");
+        assertMatches(Java.lang(), "pure.java");
     }
 
     @Test
     void javaScript() {
-        assertMatches(CommonLanguages.javaScript(), "wild.js");
+        assertMatches(JavaScript.lang(), "wild.js");
     }
 
     private static void assertMatches(Language language, String file) {

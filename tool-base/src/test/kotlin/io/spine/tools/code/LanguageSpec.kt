@@ -29,10 +29,6 @@ package io.spine.tools.code
 import com.google.common.truth.Truth.assertThat
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
-import io.spine.tools.code.CommonLanguages.Java
-import io.spine.tools.code.CommonLanguages.JavaScript
-import io.spine.tools.code.CommonLanguages.Kotlin
-import io.spine.tools.code.CommonLanguages.any
 import java.io.File
 import java.nio.file.Paths
 import org.junit.jupiter.api.DisplayName
@@ -52,7 +48,7 @@ class LanguageSpec {
     fun `expose file pattern`() {
         Kotlin.fileExtensions shouldContainExactly listOf("kt")
 
-        Brainfuck().fileExtensions shouldContainExactly listOf("b", "bf")
+        Brainfuck.fileExtensions shouldContainExactly listOf("b", "bf")
     }
 
     @Test
@@ -73,13 +69,14 @@ class LanguageSpec {
 
     @Test
     fun `throw 'UnsupportedOperationException' for the synthetic 'any' language`() {
-        assertThrows<UnsupportedOperationException> { any.comment("kaboom") }
+        assertThrows<UnsupportedOperationException> { AnyLanguage.comment("kaboom") }
     }
 
     @Nested
     inner class `support more than one file extension` {
 
-        private val cpp = SlashAsteriskCommentLang("C++", listOf(".HPP", ".cc", ".CPP", "h"))
+        private val cpp =
+            object : SlashAsteriskCommentLang("C++", listOf(".HPP", ".cc", ".CPP", "h")) {}
 
         @Test
         fun `sorting and lower-casing them on initialization`() {
@@ -105,6 +102,6 @@ class LanguageSpec {
  * [Brainfuck](https://en.wikipedia.org/wiki/Brainfuck) is an esoteric programming language
  * created in 1993 by Urban Müller.
  */
-private class Brainfuck: Language("Brainfuck", listOf(".b", ".bf")) {
+private object Brainfuck: Language("Brainfuck", listOf(".b", ".bf")) {
     override fun comment(line: String): String = "[ $line ]"
 }

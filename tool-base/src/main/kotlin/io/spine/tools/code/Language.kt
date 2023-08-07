@@ -34,8 +34,16 @@ import java.nio.file.Path
  * A programming language or a specific syntax.
  *
  * For example, `"Java"`, `"Python 3.x"`, etc.
+ *
+ * This abstract class is supposed to be extended by an `object` to make it a singleton
+ * and a typed [Language] instance.
+ *
+ * @see Java
+ * @see Kotlin
+ * @see JavaScript
+ * @see AnyLanguage
  */
-public abstract class Language internal constructor(
+public abstract class Language protected constructor(
 
     /**
      * Label to distinguish the language.
@@ -114,7 +122,7 @@ public abstract class Language internal constructor(
  *
  * Supports slash-asterisk-asterisk-slash comments (`/* <comment body> */`).
  */
-public class SlashAsteriskCommentLang(
+public abstract class SlashAsteriskCommentLang(
     name: String,
     fileExtensions: Iterable<String>
 ) : Language(name, fileExtensions) {
@@ -129,6 +137,7 @@ public class SlashAsteriskCommentLang(
  * by either extending the class directly, or using one of its existing subtypes, such as
  * [SlashAsteriskCommentLang].
  */
+@Deprecated("Please use typed `Language` objects instead.")
 public object CommonLanguages {
 
     /**
@@ -143,21 +152,90 @@ public object CommonLanguages {
      */
     @get:JvmName("any")
     @JvmStatic
-    public val any: Language = object : Language("any language", listOf(""), Glob.any) {
-        override fun comment(line: String): String {
-            throw UnsupportedOperationException("`$name` does not support comments.")
-        }
-    }
+    @Deprecated(
+        "Use `io.spine.tools.code.AnyLanguage` instead.",
+        ReplaceWith("io.spine.tools.code.AnyLanguage")
+    )
+    public val any: Language = AnyLanguage
 
     @get:JvmName("kotlin")
     @JvmStatic
-    public val Kotlin: Language = SlashAsteriskCommentLang("Kotlin", listOf("kt"))
+    @Deprecated(
+        "Use `io.spine.tools.code.Kotlin` instead.",
+        ReplaceWith("io.spine.tools.code.Kotlin")
+    )
+    public val Kotlin: Language = io.spine.tools.code.Kotlin
 
     @get:JvmName("java")
     @JvmStatic
-    public val Java: Language = SlashAsteriskCommentLang("Java", listOf("java"))
+    @Deprecated(
+        "Use `io.spine.tools.code.Java` instead.",
+        ReplaceWith("io.spine.tools.code.Java")
+    )
+    public val Java: Language = io.spine.tools.code.Java
 
     @get:JvmName("javaScript")
     @JvmStatic
-    public val JavaScript: Language = SlashAsteriskCommentLang("JavaScript", listOf("js"))
+    @Deprecated(
+        "Use `io.spine.tools.code.JavaScript` instead.",
+        ReplaceWith("io.spine.tools.code.JavaScript")
+    )
+    public val JavaScript: Language = io.spine.tools.code.JavaScript
+}
+
+/**
+ * This object indicates that any programming language can be accepted.
+ *
+ * Intended to be used for filtering source files by language via file name conventions.
+ * If no filtering required, but a [Language] is needed, use `CommonLanguages.any`.
+ *
+ * Does not support [comments][Language.comment].
+ */
+public object AnyLanguage: Language("any language", listOf(""), Glob.any) {
+    override fun comment(line: String): String {
+        throw UnsupportedOperationException("`$name` does not support comments.")
+    }
+
+    /**
+     * Returns the typed instance of this language for usage in Java code.
+     */
+    @JvmStatic
+    public fun instance(): AnyLanguage = this
+}
+
+/**
+ * A typed [Language] for Java.
+ */
+@Suppress("ACCIDENTAL_OVERRIDE")
+public object Java: SlashAsteriskCommentLang("Java", listOf("java")) {
+
+    /**
+     * Returns the typed instance of this language for usage in Java code.
+     */
+    @JvmStatic
+    public fun lang(): Java = this
+}
+
+/**
+ * A typed [Language] for Kotlin.
+ */
+public object Kotlin: SlashAsteriskCommentLang("Kotlin", listOf("kt")) {
+
+    /**
+     * Returns the typed instance of this language for usage in Java code.
+     */
+    @JvmStatic
+    public fun lang(): Kotlin = this
+}
+
+/**
+ * A typed [Language] for JavaScript.
+ */
+public object JavaScript: SlashAsteriskCommentLang("JavaScript", listOf("js")) {
+
+    /**
+     * Returns the typed instance of this language for usage in Java code.
+     */
+    @JvmStatic
+    public fun lang(): JavaScript = this
 }
