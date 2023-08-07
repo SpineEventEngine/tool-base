@@ -118,6 +118,7 @@ fun Module.forceConfigurations() {
                     JUnit.runner,
                     Spine.base,
                     Spine.Logging.lib,
+                    Spine.Logging.floggerApi,
                     Validation.runtime,
                     Grpc.stub,
                     Coroutines.jdk8,

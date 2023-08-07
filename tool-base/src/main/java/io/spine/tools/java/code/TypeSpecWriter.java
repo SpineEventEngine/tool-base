@@ -27,18 +27,20 @@
 package io.spine.tools.java.code;
 
 import com.squareup.javapoet.JavaFile;
-import io.spine.logging.Logging;
+import io.spine.logging.WithLogging;
 import io.spine.tools.code.Indent;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static java.lang.String.format;
+
 /**
  * Writes the {@link TypeSpec} to a file.
  */
 @SuppressWarnings("unused") /* Part of the public API. */
-public final class TypeSpecWriter implements Logging {
+public final class TypeSpecWriter implements WithLogging {
 
     private final TypeSpec spec;
     private final Indent indent;
@@ -60,12 +62,12 @@ public final class TypeSpecWriter implements Logging {
      */
     public void write(Path outputDir) {
         try {
-            _debug().log("Creating the output directory `%s`.", outputDir);
+            logger().atDebug().log(() -> format("Creating the output directory `%s`.", outputDir));
             Files.createDirectories(outputDir);
 
             var typeSpec = this.spec.toPoet();
             var className = typeSpec.name;
-            _debug().log("Writing `%s.java`.", className);
+            logger().atDebug().log(() -> format("Writing `%s.java`.", className));
 
             var packageName = this.spec.packageName().value();
             var indentLevel = indent.at(1).toString();
@@ -74,7 +76,7 @@ public final class TypeSpecWriter implements Logging {
                     .indent(indentLevel)
                     .build();
             javaFile.writeTo(outputDir);
-            _debug().log("File `%s.java` written successfully.", className);
+            logger().atDebug().log(() -> format("File `%s.java` written successfully.", className));
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

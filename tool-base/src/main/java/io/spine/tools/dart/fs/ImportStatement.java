@@ -27,7 +27,7 @@
 package io.spine.tools.dart.fs;
 
 import com.google.errorprone.annotations.Immutable;
-import io.spine.logging.Logging;
+import io.spine.logging.WithLogging;
 import io.spine.tools.code.Element;
 import io.spine.tools.fs.ExternalModule;
 import io.spine.tools.fs.ExternalModules;
@@ -48,7 +48,7 @@ import static java.util.regex.Pattern.compile;
  * A source code line with an import statement.
  */
 @Immutable
-final class ImportStatement implements Element, Logging {
+final class ImportStatement implements Element, WithLogging {
 
     @Regex(2)
     private static final Pattern PATTERN = compile("import [\"']([^:]+)[\"'] as (.+);");
@@ -127,12 +127,12 @@ final class ImportStatement implements Element, Logging {
      * to the file of this source line.
      */
     private Path importRelativeTo(Path libPath) {
-        var debug = _debug();
-        debug.log("Import statement found in line: `%s`.", text);
+        var debug = logger().atDebug();
+        debug.log(() -> format("Import statement found in line: `%s`.", text));
         var absolutePath = sourceDirectory.resolve(importPathAsDeclared).normalize();
-        debug.log("Resolved against this file: `%s`.", absolutePath);
+        debug.log(() -> format("Resolved against this file: `%s`.", absolutePath));
         var relativePath = libPath.relativize(absolutePath);
-        debug.log("Relative path: `%s`.", relativePath);
+        debug.log(() -> format("Relative path: `%s`.", relativePath));
         return relativePath;
     }
 
@@ -141,7 +141,7 @@ final class ImportStatement implements Element, Logging {
                 "import 'package:%s/%s' as %s;",
                 module.name(), relativePath, importAlias
         );
-        _debug().log("Replacing with `%s`.", resolved);
+        logger().atDebug().log(() -> format("Replacing with `%s`.", resolved));
         return new ImportStatement(sourceDirectory, resolved);
     }
 

@@ -26,7 +26,7 @@
 
 package io.spine.tools.gradle.project;
 
-import io.spine.logging.Logging;
+import io.spine.logging.WithLogging;
 import io.spine.tools.gradle.GradlePlugin;
 import io.spine.tools.gradle.PluginScript;
 import org.gradle.api.Plugin;
@@ -35,11 +35,12 @@ import org.gradle.api.Project;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.lang.String.format;
 
 /**
  * An implementation of {@link PluginTarget} based on a Gradle {@link Project}.
  */
-public final class PlugableProject implements PluginTarget, Logging {
+public final class PlugableProject implements PluginTarget, WithLogging {
 
     private final Project project;
 
@@ -75,7 +76,9 @@ public final class PlugableProject implements PluginTarget, Logging {
             var pluginManager = project.getPluginManager();
             pluginManager.apply(plugin.implementationClass());
         } else {
-            _debug().log("Plugin `%s` is already applied.", plugin.className());
+            logger().atDebug().log(() -> format(
+                "Plugin `%s` is already applied.", plugin.className()
+            ));
         }
     }
 
