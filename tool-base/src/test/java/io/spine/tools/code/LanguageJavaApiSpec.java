@@ -24,21 +24,49 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.internal.dependency
+package io.spine.tools.code;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import java.nio.file.Paths;
+
+import static com.google.common.truth.Truth.assertWithMessage;
 
 /**
- * Dependencies on ProtoData modules.
+ * This test suite verifies that the Java API for [Language] works as expected.
  *
- * See [`SpineEventEngine/ProtoData`](https://github.com/SpineEventEngine/ProtoData/).
+ * <p>For the rest of the tests, please see {@link LanguageKotlinApiSpec}.
  */
-@Suppress("unused", "ConstPropertyName")
-object ProtoData {
-    const val version = "0.9.9"
-    const val group = "io.spine.protodata"
-    const val compiler = "$group:protodata-compiler:$version"
+@DisplayName("`Language` Java API should expose")
+class LanguageJavaApiSpec {
 
-    const val codegenJava = "io.spine.protodata:protodata-codegen-java:$version"
+    @Test
+    void anyLanguage() {
+        var anyLanguage = AnyLanguage.willDo();
+        assertMatches(anyLanguage, "anything_will.do");
+        assertMatches(anyLanguage, "foo.bar");
+    }
 
-    const val pluginId = "io.spine.protodata"
-    const val pluginLib = "${Spine.group}:protodata:$version"
+    @Test
+    void kotlin() {
+        assertMatches(Kotlin.lang(), "my.kt");
+    }
+
+    @Test
+    void java() {
+        assertMatches(Java.lang(), "pure.java");
+    }
+
+    @Test
+    void javaScript() {
+        assertMatches(JavaScript.lang(), "wild.js");
+    }
+
+    private static void assertMatches(Language language, String file) {
+        var path = Paths.get(file);
+        assertWithMessage("The language `%s` should recognize the file `%s`.", language, file)
+                .that(language.matches(path))
+                .isTrue();
+    }
 }

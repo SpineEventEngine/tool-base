@@ -29,7 +29,7 @@ package io.spine.tools.type;
 import com.google.common.collect.ImmutableSet;
 import com.google.protobuf.DescriptorProtos.FileDescriptorSet;
 import io.spine.code.proto.FileDescriptorSetReader;
-import io.spine.logging.Logging;
+import io.spine.logging.WithLogging;
 import io.spine.tools.archive.ArchiveEntry;
 import io.spine.tools.archive.ArchiveFile;
 
@@ -49,12 +49,13 @@ import static com.google.common.collect.Sets.newHashSet;
 import static io.spine.code.proto.FileDescriptors.DESC_EXTENSION;
 import static io.spine.tools.archive.ArchiveFile.isArchive;
 import static io.spine.util.Exceptions.illegalStateWithCauseOf;
+import static java.lang.String.format;
 import static java.util.stream.Collectors.toSet;
 
 /**
  * A set of {@code FileDescriptorSet}s.
  */
-public final class FileDescriptorSuperset implements Logging {
+public final class FileDescriptorSuperset implements WithLogging {
 
     private final Set<FileDescriptorSet> descriptors;
 
@@ -84,7 +85,7 @@ public final class FileDescriptorSuperset implements Logging {
 
     public void addFromDependency(File dependencyFile) {
         checkNotNull(dependencyFile);
-        _debug().log("Loading descriptors from `%s`.", dependencyFile);
+        logger().atDebug().log(() -> format("Loading descriptors from `%s`.", dependencyFile));
         readDependency(dependencyFile)
                 .forEach(this::addFiles);
     }
@@ -112,7 +113,9 @@ public final class FileDescriptorSuperset implements Logging {
         checkState(descriptorFiles != null,
                    "Unable to load descriptor files from the directory: `%s`.", directory);
         if (descriptorFiles.length == 0) {
-            _debug().log("No descriptors found in the directory: `%s`.", directory);
+            logger().atDebug().log(() -> format(
+                "No descriptors found in the directory: `%s`.", directory
+            ));
             return ImmutableSet.of();
         } else {
             var result =
@@ -131,8 +134,9 @@ public final class FileDescriptorSuperset implements Logging {
                        .map(ArchiveEntry::asDescriptorSet)
                        .collect(toImmutableSet());
         if (!result.isEmpty()) {
-            _debug().log("Found %d descriptor set file(s) in archive `%s`.",
-                         result.size(), archiveFile);
+            logger().atDebug().log(() -> format(
+                "Found %d descriptor set file(s) in archive `%s`.", result.size(), archiveFile
+            ));
         }
         return result;
     }
@@ -140,7 +144,7 @@ public final class FileDescriptorSuperset implements Logging {
     private FileDescriptorSet read(File file) {
         checkArgument(file.exists(), "File does not exist: `%s`.", file);
         var path = file.toPath();
-        _debug().log("Reading descriptors from file `%s`.", file);
+        logger().atDebug().log(() -> format("Reading descriptors from file `%s`.", file));
         try {
             var bytes = Files.readAllBytes(path);
             return FileDescriptorSetReader.parse(bytes);

@@ -26,9 +26,9 @@
 
 package io.spine.tools.gradle;
 
-import io.spine.tools.code.Indent;
 import io.spine.code.proto.FileSet;
-import io.spine.logging.Logging;
+import io.spine.logging.WithLogging;
+import io.spine.tools.code.Indent;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
@@ -42,7 +42,7 @@ import static io.spine.tools.StandardTypes.toAbsoluteFile;
 /**
  * Abstract base for code generation actions.
  */
-public abstract class CodeGenerationAction implements Action<Task>, Logging {
+public abstract class CodeGenerationAction implements Action<Task>, WithLogging {
 
     /**
      * Source Gradle project.

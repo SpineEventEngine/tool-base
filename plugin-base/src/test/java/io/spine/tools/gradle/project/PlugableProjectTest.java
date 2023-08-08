@@ -28,7 +28,7 @@ package io.spine.tools.gradle.project;
 
 import com.google.common.testing.NullPointerTester;
 import io.spine.io.Resource;
-import io.spine.logging.Logging;
+import io.spine.logging.Level;
 import io.spine.testing.TempDir;
 import io.spine.testing.logging.LoggingTest;
 import io.spine.tools.gradle.GradlePlugin;
@@ -47,6 +47,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.google.common.testing.NullPointerTester.Visibility.PACKAGE;
 import static com.google.common.truth.Truth.assertThat;
+import static io.spine.logging.JvmLoggerKt.toJavaLogging;
 import static io.spine.tools.gradle.GradlePlugin.implementedIn;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -96,7 +97,7 @@ class PlugableProjectTest {
         private GradlePlugin<?> plugin;
 
         LogOnDuplicate() {
-            super(PlugableProject.class, Logging.debugLevel());
+            super(PlugableProject.class, toJavaLogging(Level.Companion.getDEBUG()));
         }
 
         @BeforeEach

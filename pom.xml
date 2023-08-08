@@ -10,7 +10,7 @@ all modules and does not describe the project structure per-subproject.
  -->
 <groupId>io.spine.tools</groupId>
 <artifactId>tool-base</artifactId>
-<version>2.0.0-SNAPSHOT.172</version>
+<version>2.0.0-SNAPSHOT.180</version>
 
 <inceptionYear>2015</inceptionYear>
 
@@ -26,7 +26,7 @@ all modules and does not describe the project structure per-subproject.
   <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
-    <version>31.1-jre</version>
+    <version>32.1.1-jre</version>
     <scope>compile</scope>
   </dependency>
   <dependency>
@@ -38,13 +38,13 @@ all modules and does not describe the project structure per-subproject.
   <dependency>
     <groupId>io.spine</groupId>
     <artifactId>spine-base</artifactId>
-    <version>2.0.0-SNAPSHOT.182</version>
+    <version>2.0.0-SNAPSHOT.186</version>
     <scope>compile</scope>
   </dependency>
   <dependency>
     <groupId>io.spine</groupId>
     <artifactId>spine-logging</artifactId>
-    <version>2.0.0-SNAPSHOT.186</version>
+    <version>2.0.0-SNAPSHOT.199</version>
     <scope>compile</scope>
   </dependency>
   <dependency>
@@ -56,7 +56,7 @@ all modules and does not describe the project structure per-subproject.
   <dependency>
     <groupId>io.spine.validation</groupId>
     <artifactId>spine-validation-java-runtime</artifactId>
-    <version>2.0.0-SNAPSHOT.97</version>
+    <version>2.0.0-SNAPSHOT.99</version>
     <scope>compile</scope>
   </dependency>
   <dependency>
@@ -80,37 +80,37 @@ all modules and does not describe the project structure per-subproject.
   <dependency>
     <groupId>org.jetbrains.kotlin</groupId>
     <artifactId>kotlin-stdlib-jdk8</artifactId>
-    <version>1.8.10</version>
+    <version>1.8.22</version>
     <scope>compile</scope>
   </dependency>
   <dependency>
     <groupId>com.google.guava</groupId>
     <artifactId>guava-testlib</artifactId>
-    <version>31.1-jre</version>
+    <version>32.1.1-jre</version>
     <scope>test</scope>
   </dependency>
   <dependency>
     <groupId>com.google.truth</groupId>
     <artifactId>truth</artifactId>
-    <version>1.1.3</version>
+    <version>1.1.5</version>
     <scope>test</scope>
   </dependency>
   <dependency>
     <groupId>com.google.truth.extensions</groupId>
     <artifactId>truth-java8-extension</artifactId>
-    <version>1.1.3</version>
+    <version>1.1.5</version>
     <scope>test</scope>
   </dependency>
   <dependency>
     <groupId>com.google.truth.extensions</groupId>
     <artifactId>truth-proto-extension</artifactId>
-    <version>1.1.3</version>
+    <version>1.1.5</version>
     <scope>test</scope>
   </dependency>
   <dependency>
     <groupId>io.grpc</groupId>
     <artifactId>grpc-core</artifactId>
-    <version>1.53.0</version>
+    <version>1.57.0</version>
     <scope>test</scope>
   </dependency>
   <dependency>
@@ -122,13 +122,13 @@ all modules and does not describe the project structure per-subproject.
   <dependency>
     <groupId>io.grpc</groupId>
     <artifactId>grpc-protobuf</artifactId>
-    <version>1.53.0</version>
+    <version>1.57.0</version>
     <scope>test</scope>
   </dependency>
   <dependency>
     <groupId>io.grpc</groupId>
     <artifactId>grpc-stub</artifactId>
-    <version>1.53.0</version>
+    <version>1.57.0</version>
     <scope>test</scope>
   </dependency>
   <dependency>
@@ -140,19 +140,19 @@ all modules and does not describe the project structure per-subproject.
   <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter-api</artifactId>
-    <version>5.9.3</version>
+    <version>5.10.0</version>
     <scope>test</scope>
   </dependency>
   <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter-engine</artifactId>
-    <version>5.9.3</version>
+    <version>5.10.0</version>
     <scope>test</scope>
   </dependency>
   <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter-params</artifactId>
-    <version>5.9.3</version>
+    <version>5.10.0</version>
     <scope>test</scope>
   </dependency>
   <dependency>
@@ -164,18 +164,18 @@ all modules and does not describe the project structure per-subproject.
   <dependency>
     <groupId>com.google.errorprone</groupId>
     <artifactId>error_prone_annotations</artifactId>
-    <version>2.18.0</version>
+    <version>2.20.0</version>
     <scope>provided</scope>
   </dependency>
   <dependency>
     <groupId>com.google.errorprone</groupId>
     <artifactId>error_prone_core</artifactId>
-    <version>2.18.0</version>
+    <version>2.20.0</version>
   </dependency>
   <dependency>
     <groupId>com.google.errorprone</groupId>
     <artifactId>error_prone_type_annotations</artifactId>
-    <version>2.18.0</version>
+    <version>2.20.0</version>
     <scope>provided</scope>
   </dependency>
   <dependency>
@@ -207,7 +207,7 @@ all modules and does not describe the project structure per-subproject.
   <dependency>
     <groupId>io.grpc</groupId>
     <artifactId>protoc-gen-grpc-java</artifactId>
-    <version>1.53.0</version>
+    <version>1.57.0</version>
   </dependency>
   <dependency>
     <groupId>io.grpc</groupId>
@@ -222,7 +222,7 @@ all modules and does not describe the project structure per-subproject.
   <dependency>
     <groupId>org.checkerframework</groupId>
     <artifactId>checker-qual</artifactId>
-    <version>3.27.0</version>
+    <version>3.36.0</version>
     <scope>provided</scope>
   </dependency>
   <dependency>
@@ -238,17 +238,17 @@ all modules and does not describe the project structure per-subproject.
   <dependency>
     <groupId>org.jetbrains.kotlin</groupId>
     <artifactId>kotlin-compiler-embeddable</artifactId>
-    <version>1.8.10</version>
+    <version>1.8.22</version>
   </dependency>
   <dependency>
     <groupId>org.jetbrains.kotlin</groupId>
     <artifactId>kotlin-klib-commonizer-embeddable</artifactId>
-    <version>1.8.10</version>
+    <version>1.8.22</version>
   </dependency>
   <dependency>
     <groupId>org.jetbrains.kotlin</groupId>
     <artifactId>kotlin-scripting-compiler-embeddable</artifactId>
-    <version>1.8.10</version>
+    <version>1.8.22</version>
   </dependency>
 </dependencies>
 
