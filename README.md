@@ -25,4 +25,4 @@ The modules of this repository are built with Java 11.
 [codecov-badge]: https://codecov.io/gh/SpineEventEngine/tool-base/branch/master/graph/badge.svg
 [license-badge]: https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat
 [license]: http://www.apache.org/licenses/LICENSE-2.0
-[codecov]: https://codecov.io/gh/SpineEventEngine/time
+[codecov]: https://codecov.io/gh/SpineEventEngine/tool-base
