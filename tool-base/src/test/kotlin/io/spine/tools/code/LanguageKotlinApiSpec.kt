@@ -36,8 +36,13 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
+/**
+ * This test suite verifies that the Kotlin API for [Language] works as expected.
+ *
+ * For Java-related part of the API, see [LanguageJavaApiSpec].
+ */
 @DisplayName("`Language` should")
-class LanguageSpec {
+class LanguageKotlinApiSpec {
 
     @Test
     fun `return its name in the string form`() {

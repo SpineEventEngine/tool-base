@@ -201,7 +201,7 @@ public object AnyLanguage: Language("any language", listOf(""), Glob.any) {
      * Returns the typed instance of this language for usage in Java code.
      */
     @JvmStatic
-    public fun instance(): AnyLanguage = this
+    public fun willDo(): AnyLanguage = this
 }
 
 /**

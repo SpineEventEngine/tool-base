@@ -33,13 +33,19 @@ import java.nio.file.Paths;
 
 import static com.google.common.truth.Truth.assertWithMessage;
 
+/**
+ * This test suite verifies that the Java API for [Language] works as expected.
+ *
+ * <p>For the rest of the tests, please see {@link LanguageKotlinApiSpec}.
+ */
 @DisplayName("`Language` Java API should expose")
-class LanguageTest {
+class LanguageJavaApiSpec {
 
     @Test
-    @DisplayName("`any()` language")
-    void anyLang() {
-        assertMatches(AnyLanguage.instance(), "anything_will.do");
+    void anyLanguage() {
+        var anyLanguage = AnyLanguage.willDo();
+        assertMatches(anyLanguage, "anything_will.do");
+        assertMatches(anyLanguage, "foo.bar");
     }
 
     @Test
