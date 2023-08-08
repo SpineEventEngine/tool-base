@@ -43,7 +43,8 @@ import java.nio.file.Path
  * @see JavaScript
  * @see AnyLanguage
  */
-public abstract class Language protected constructor(
+public abstract class Language
+protected constructor(
 
     /**
      * Label to distinguish the language.
