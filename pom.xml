@@ -10,7 +10,7 @@ all modules and does not describe the project structure per-subproject.
  -->
 <groupId>io.spine.tools</groupId>
 <artifactId>tool-base</artifactId>
-<version>2.0.0-SNAPSHOT.180</version>
+<version>2.0.0-SNAPSHOT.181</version>
 
 <inceptionYear>2015</inceptionYear>
 
@@ -44,7 +44,7 @@ all modules and does not describe the project structure per-subproject.
   <dependency>
     <groupId>io.spine</groupId>
     <artifactId>spine-logging</artifactId>
-    <version>2.0.0-SNAPSHOT.199</version>
+    <version>2.0.0-SNAPSHOT.201</version>
     <scope>compile</scope>
   </dependency>
   <dependency>
@@ -164,7 +164,7 @@ all modules and does not describe the project structure per-subproject.
   <dependency>
     <groupId>com.google.errorprone</groupId>
     <artifactId>error_prone_annotations</artifactId>
-    <version>2.20.0</version>
+    <version>2.21.1</version>
     <scope>provided</scope>
   </dependency>
   <dependency>
@@ -175,7 +175,7 @@ all modules and does not describe the project structure per-subproject.
   <dependency>
     <groupId>com.google.errorprone</groupId>
     <artifactId>error_prone_type_annotations</artifactId>
-    <version>2.20.0</version>
+    <version>2.21.1</version>
     <scope>provided</scope>
   </dependency>
   <dependency>
