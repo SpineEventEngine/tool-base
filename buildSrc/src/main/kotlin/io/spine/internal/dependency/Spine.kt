@@ -59,7 +59,7 @@ object Spine {
          *
          * @see <a href="https://github.com/SpineEventEngine/logging">spine-logging</a>
          */
-        const val logging = "2.0.0-SNAPSHOT.199"
+        const val logging = "2.0.0-SNAPSHOT.201"
 
         /**
          * The version of [Spine.testlib].
