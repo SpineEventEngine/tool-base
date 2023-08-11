@@ -45,7 +45,7 @@ object Spine {
          *
          * @see <a href="https://github.com/SpineEventEngine/base">spine-base</a>
          */
-        const val base = "2.0.0-SNAPSHOT.186"
+        const val base = "2.0.0-SNAPSHOT.187"
 
         /**
          * The version of [Spine.reflect].
@@ -59,7 +59,7 @@ object Spine {
          *
          * @see <a href="https://github.com/SpineEventEngine/logging">spine-logging</a>
          */
-        const val logging = "2.0.0-SNAPSHOT.201"
+        const val logging = "2.0.0-SNAPSHOT.202"
 
         /**
          * The version of [Spine.testlib].
@@ -124,7 +124,7 @@ object Spine {
          *
          * @see <a href="https://github.com/SpineEventEngine/tool-base">spine-tool-base</a>
          */
-        const val toolBase = "2.0.0-SNAPSHOT.180"
+        const val toolBase = "2.0.0-SNAPSHOT.181"
 
         /**
          * The version of [Spine.javadocTools].
