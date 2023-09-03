@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2023, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,10 @@
  */
 package io.spine.tools.gradle
 
+import io.kotest.matchers.optional.shouldBePresent
 import io.kotest.matchers.shouldBe
+import io.spine.testing.TestValues.randomString
+import java.util.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
@@ -36,12 +39,62 @@ internal class ArtifactSpec {
     fun `provide builder fun`() {
         val expectedGroup = "group"
         val expectedName = "name"
+        val expectedVersion = "2.0.0"
         val artifact = artifact {
             group = expectedGroup
             name = expectedName
-            version = "2.0.0"
+            version = expectedVersion
+
+            // Check that builder fun is not broken.
+            group shouldBe expectedGroup
+            name shouldBe expectedName
+            version shouldBe expectedVersion
         }
-        artifact.notation() shouldBe "group:name:2.0.0"
+
+        with(artifact)  {
+            group() shouldBe expectedGroup
+            name() shouldBe expectedName
+            version() shouldBe expectedVersion
+            classifier() shouldBe Optional.empty()
+            extension() shouldBe Optional.empty()
+        }
+    }
+
+    @Test
+    fun `support 'extension'`() {
+        val expectedExtension = randomString()
+        val artifact = artifact {
+            group = randomString()
+            name = randomString()
+            version = randomString()
+            extension = expectedExtension
+
+            // Check that builder fun is not broken.
+            extension shouldBe expectedExtension
+        }
+
+        artifact.extension() shouldBePresent {
+            it shouldBe expectedExtension
+        }
+    }
+
+    @Test
+    fun `support 'classifier'`() {
+        val expectedClassifier = randomString()
+        val artifact = artifact {
+            group = randomString()
+            name = randomString()
+            version = randomString()
+
+            classifier = expectedClassifier
+
+            // Check that builder fun is not broken.
+            classifier shouldBe expectedClassifier
+        }
+
+        artifact.classifier() shouldBePresent {
+            it shouldBe expectedClassifier
+        }
     }
 
     @Test

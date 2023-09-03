@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2023, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.gradle.api.artifacts.Dependency;
 
 import java.io.File;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -150,6 +151,41 @@ public final class Artifact {
                   .append(extension);
         }
         return result.toString();
+    }
+
+    /**
+     * Obtains a Maven group of this artifact.
+     */
+    public String group() {
+        return group;
+    }
+
+    /**
+     * Obtains a Maven name of this artifact.
+     */
+    public String name() {
+        return name;
+    }
+
+    /**
+     * Obtains a Maven version of this artifact.
+     */
+    public String version() {
+        return version;
+    }
+
+    /**
+     * Obtains a Maven classifier of this artifact.
+     */
+    public Optional<String> classifier() {
+        return Optional.ofNullable(classifier);
+    }
+
+    /**
+     * Obtains a Maven extension of this artifact.
+     */
+    public Optional<String> extension() {
+        return Optional.ofNullable(extension);
     }
 
     @Override
