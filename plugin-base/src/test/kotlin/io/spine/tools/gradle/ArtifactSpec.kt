@@ -25,10 +25,10 @@
  */
 package io.spine.tools.gradle
 
+import io.kotest.matchers.optional.shouldBeEmpty
 import io.kotest.matchers.optional.shouldBePresent
 import io.kotest.matchers.shouldBe
 import io.spine.testing.TestValues.randomString
-import java.util.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
@@ -55,8 +55,9 @@ internal class ArtifactSpec {
             group() shouldBe expectedGroup
             name() shouldBe expectedName
             version() shouldBe expectedVersion
-            classifier() shouldBe Optional.empty()
-            extension() shouldBe Optional.empty()
+
+            classifier().shouldBeEmpty()
+            extension().shouldBeEmpty()
         }
     }
 
