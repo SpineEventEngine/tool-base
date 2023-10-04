@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2023, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,10 +64,10 @@ class LanguageKotlinApiSpec {
     @Test
     fun `filter files by their extension`() {
         // Passing the directory, rather than file.
-        JavaScript.matches(File("Windows")) shouldBe false
+        Protobuf.matches(File("Windows")) shouldBe false
 
         // Passing file with extension.
-        JavaScript.matches(File("safari.swift")) shouldBe false
+        TypeScript.matches(File("safari.swift")) shouldBe false
 
         JavaScript.matches(File("mozilla.js")) shouldBe true
     }
@@ -99,6 +99,17 @@ class LanguageKotlinApiSpec {
         private fun assertMatches(file: String) {
             val path = Paths.get(file)
             cpp.matches(path) shouldBe true
+        }
+    }
+
+    @Test
+    fun `'TypeScript' should recognise all the files`() {
+        with(TypeScript) {
+            matches(File("foo.ts")) shouldBe true
+            matches(File("jQuery.d.ts")) shouldBe true
+            matches(File("jQuery.js")) shouldBe true
+            matches(File("bar.map")) shouldBe true
+            matches(File("Main.java")) shouldBe false
         }
     }
 }
