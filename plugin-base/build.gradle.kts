@@ -32,8 +32,9 @@ dependencies {
     compileOnlyApi(gradleApi())
     compileOnlyApi(Protobuf.GradlePlugin.lib)
     api(project(":tool-base"))
-    implementation(Spine.logging)
+    implementation(Spine.Logging.lib)
 
+    testRuntimeOnly(Spine.Logging.backend)
     testImplementation(project(":plugin-testlib"))
     testImplementation(Protobuf.GradlePlugin.lib)
 }

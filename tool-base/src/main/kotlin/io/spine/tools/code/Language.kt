@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2023, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,10 +38,11 @@ import java.nio.file.Path
  * This abstract class is supposed to be extended by an `object` to make it a singleton
  * and a typed [Language] instance.
  *
+ * @see Protobuf
  * @see Java
  * @see Kotlin
  * @see JavaScript
- * @see AnyLanguage
+ * @see TypeScript
  */
 public abstract class Language
 protected constructor(
@@ -132,59 +133,6 @@ public abstract class SlashAsteriskCommentLang(
 }
 
 /**
- * A collection of commonly used [Language]s.
- *
- * If this prepared set is not enough, users are encouraged to create custom [Language] types
- * by either extending the class directly, or using one of its existing subtypes, such as
- * [SlashAsteriskCommentLang].
- */
-@Deprecated("Please use typed `Language` objects instead.")
-public object CommonLanguages {
-
-    /**
-     * Any language will do.
-     *
-     * This instance indicates that any programming language can be accepted.
-     *
-     * Intended to be used for filtering source files by language via file name conventions.
-     * If no filtering required, but a [Language] is needed, use `CommonLanguages.any`.
-     *
-     * Does not support [comments][Language.comment].
-     */
-    @get:JvmName("any")
-    @JvmStatic
-    @Deprecated(
-        "Use `io.spine.tools.code.AnyLanguage` instead.",
-        ReplaceWith("io.spine.tools.code.AnyLanguage")
-    )
-    public val any: Language = AnyLanguage
-
-    @get:JvmName("kotlin")
-    @JvmStatic
-    @Deprecated(
-        "Use `io.spine.tools.code.Kotlin` instead.",
-        ReplaceWith("io.spine.tools.code.Kotlin")
-    )
-    public val Kotlin: Language = io.spine.tools.code.Kotlin
-
-    @get:JvmName("java")
-    @JvmStatic
-    @Deprecated(
-        "Use `io.spine.tools.code.Java` instead.",
-        ReplaceWith("io.spine.tools.code.Java")
-    )
-    public val Java: Language = io.spine.tools.code.Java
-
-    @get:JvmName("javaScript")
-    @JvmStatic
-    @Deprecated(
-        "Use `io.spine.tools.code.JavaScript` instead.",
-        ReplaceWith("io.spine.tools.code.JavaScript")
-    )
-    public val JavaScript: Language = io.spine.tools.code.JavaScript
-}
-
-/**
  * This object indicates that any programming language can be accepted.
  *
  * Intended to be used for filtering source files by language via file name conventions.
@@ -192,7 +140,7 @@ public object CommonLanguages {
  *
  * Does not support [comments][Language.comment].
  */
-public object AnyLanguage: Language("any language", listOf(""), Glob.any) {
+public object AnyLanguage : Language("any language", listOf(""), Glob.any) {
     override fun comment(line: String): String {
         throw UnsupportedOperationException("`$name` does not support comments.")
     }
@@ -205,10 +153,22 @@ public object AnyLanguage: Language("any language", listOf(""), Glob.any) {
 }
 
 /**
+ * A typed [Language] for Protocol Buffers.
+ */
+public object Protobuf : SlashAsteriskCommentLang("Protobuf", listOf("proto")) {
+
+    /**
+     * Returns the typed instance of this language for usage in Java code.
+     */
+    @JvmStatic
+    public fun lang(): Protobuf = this
+}
+
+/**
  * A typed [Language] for Java.
  */
 @Suppress("ACCIDENTAL_OVERRIDE")
-public object Java: SlashAsteriskCommentLang("Java", listOf("java")) {
+public object Java : SlashAsteriskCommentLang("Java", listOf("java")) {
 
     /**
      * Returns the typed instance of this language for usage in Java code.
@@ -232,11 +192,27 @@ public object Kotlin: SlashAsteriskCommentLang("Kotlin", listOf("kt")) {
 /**
  * A typed [Language] for JavaScript.
  */
-public object JavaScript: SlashAsteriskCommentLang("JavaScript", listOf("js")) {
+public object JavaScript : SlashAsteriskCommentLang("JavaScript", listOf("js")) {
 
     /**
      * Returns the typed instance of this language for usage in Java code.
      */
     @JvmStatic
     public fun lang(): JavaScript = this
+}
+
+/**
+ * A typed [Language] for TypeScript.
+ *
+ * @see <a href="https://stackoverflow.com/questions/37063569/typescript-various-file-extensions-explained">
+ *     TypeScript file extensions explained</a>
+ */
+public object TypeScript :
+    SlashAsteriskCommentLang("TypeScript", listOf("ts", "d.ts", "js", "map")) {
+
+    /**
+    * Returns the typed instance of this language for usage in Java code.
+    */
+    @JvmStatic
+    public fun lang(): TypeScript = this
 }
