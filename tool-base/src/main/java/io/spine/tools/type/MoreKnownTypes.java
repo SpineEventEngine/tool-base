@@ -26,11 +26,9 @@
 
 package io.spine.tools.type;
 
-import com.google.common.collect.ImmutableSet;
 import io.spine.code.proto.FileSet;
 import io.spine.code.proto.TypeSet;
 import io.spine.type.KnownTypes;
-import io.spine.validate.ExternalConstraints;
 
 import java.io.File;
 
@@ -58,8 +56,8 @@ public final class MoreKnownTypes {
      *
      * @param descriptorSetFile
      *         the descriptor file to read
-     * @implNote This operation is potentially time-consuming. Minimize calls to this method
-     *           if possible.
+     * @implNote This operation is potentially time-consuming.
+     *           Minimize calls to this method if possible.
      */
     public static void extendWith(File descriptorSetFile) {
         checkNotNull(descriptorSetFile);
@@ -72,10 +70,6 @@ public final class MoreKnownTypes {
     /**
      * Extents {@link KnownTypes} with the types from the specified files.
      *
-     * <p>Triggers external constraints
-     * {@link ExternalConstraints#updateFrom(ImmutableSet) update} with updated
-     * known message types.
-     *
      * @param protoFiles
      *         the files to get the types for extension
      */
@@ -83,10 +77,5 @@ public final class MoreKnownTypes {
         checkNotNull(protoFiles);
         var types = TypeSet.from(protoFiles);
         KnownTypes.Holder.extendWith(types);
-        var messageTypes =
-                KnownTypes.instance()
-                          .asTypeSet()
-                          .messageTypes();
-        ExternalConstraints.updateFrom(messageTypes);
     }
 }
