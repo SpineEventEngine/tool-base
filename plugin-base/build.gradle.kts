@@ -34,7 +34,6 @@ dependencies {
     api(project(":tool-base"))
     implementation(Spine.Logging.lib)
 
-    testRuntimeOnly(Spine.Logging.backend)
     testImplementation(project(":plugin-testlib"))
     testImplementation(Protobuf.GradlePlugin.lib)
 }

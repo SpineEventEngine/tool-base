@@ -54,24 +54,21 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
      *
      * @see toString
      */
-    public val directoryName: String
+    public val directoryName: String = setup.resourceDir ?: setup.projectDir.name
 
     /**
      * The arguments passed to [runner].
      */
-    private val arguments: RunnerArguments
+    private val arguments: RunnerArguments = setup.arguments
 
     /**
      * The runner for executing tasks.
      */
-    public val runner: GradleRunner
+    public val runner: GradleRunner = GradleRunner.create()
+        .withProjectDir(setup.projectDir)
+        .withDebug(setup.debug)
 
     init {
-        directoryName = setup.resourceDir ?: setup.projectDir.name
-        arguments = setup.arguments
-        runner = GradleRunner.create()
-            .withProjectDir(setup.projectDir)
-            .withDebug(setup.debug)
         if (setup.addPluginUnderTestClasspath) {
             runner.withPluginClasspath()
         }
@@ -87,7 +84,13 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
         /**
          * The ID of a Java Gradle plugin.
          */
+        @Suppress("ConstPropertyName") // https://bit.ly/kotlin-prop-names
         public const val javaPlugin: String = "java"
+
+        /**
+         * The ID of Protobuf Gradle Plugin.
+         */
+        public const val protobufPlugin: String = "com.google.protobuf"
 
         /**
          * Starts creation of a new the project.

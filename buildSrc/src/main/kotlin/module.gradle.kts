@@ -31,6 +31,7 @@ import io.spine.internal.dependency.FindBugs
 import io.spine.internal.dependency.Grpc
 import io.spine.internal.dependency.Guava
 import io.spine.internal.dependency.JUnit
+import io.spine.internal.dependency.Kotlin
 import io.spine.internal.dependency.Spine
 import io.spine.internal.dependency.Validation
 import io.spine.internal.dependency.Truth
@@ -114,11 +115,12 @@ fun Module.forceConfigurations() {
         excludeProtobufLite()
         all {
             resolutionStrategy {
+                @Suppress("DEPRECATION") // To force `Kotlin.stdLibJdk7` version.
                 force(
+                    Kotlin.stdLibJdk7,
                     JUnit.runner,
                     Spine.base,
                     Spine.Logging.lib,
-                    Spine.Logging.backend,
                     Validation.runtime,
                     Grpc.stub,
                     Coroutines.jdk8,
