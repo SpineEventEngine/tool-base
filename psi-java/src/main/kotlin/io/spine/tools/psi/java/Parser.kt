@@ -30,7 +30,10 @@ import com.intellij.ide.highlighter.JavaFileType
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiJavaFile
+import java.io.File
 import java.time.Instant
+import com.intellij.openapi.vfs.local.CoreLocalFileSystem
+import com.intellij.psi.PsiManager
 import java.util.*
 
 /**
@@ -42,6 +45,14 @@ public class Parser(private val project: Project) {
         PsiFileFactory.getInstance(project)
     }
 
+    private val localFileSystem by lazy {
+        CoreLocalFileSystem()
+    }
+
+    private val psiManager by lazy {
+        PsiManager.getInstance(project)
+    }
+
     /**
      * Creates a new instance of [PsiJavaFile] with the given code and auto-generated name.
      *
@@ -51,13 +62,33 @@ public class Parser(private val project: Project) {
         syntheticFile(javaSource)
 
     /**
+     * Parses the given file and returns the corresponding [PsiJavaFile].
+     */
+    public fun parse(file: File): PsiJavaFile {
+        require(file.toString().endsWith(FILE_SUFFIX)) {
+            "The file `$file` must have the `$FILE_SUFFIX` extension."
+        }
+        require(file.exists()) {
+            "The file `$file` does not exist."
+        }
+        val found = localFileSystem.findFileByIoFile(file)
+        require(found != null) {
+            "Unable to locate the file `$file` in the local file system."
+        }
+        psiManager.findFile(found)?.let {
+            return it as PsiJavaFile
+        }
+        error("Unable to parse the file `$file`.")
+    }
+
+    /**
      * Creates a new instance of `PsiJavaFile` with the given content, auto-generated name, and
      * the current time as the modification timestamp.
      *
      * The instance also has the event system enabled to allow obtaining `VirtualFile` instance.
      */
     private fun syntheticFile(javaSource: String): PsiJavaFile {
-        val fileName = "__to_parse_${UUID.randomUUID()}__.java"
+        val fileName = "__to_parse_${UUID.randomUUID()}__$FILE_SUFFIX"
         val modificationStamp = Instant.now().toEpochMilli()
         val file = fileFactory.createFileFromText(
             fileName,
@@ -67,5 +98,9 @@ public class Parser(private val project: Project) {
             true /* `eventSystemEnabled` */
         )
         return file as PsiJavaFile
+    }
+
+    private companion object {
+        const val FILE_SUFFIX = ".java"
     }
 }
