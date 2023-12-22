@@ -38,6 +38,9 @@ import org.junit.jupiter.api.BeforeAll
 /**
  * Abstract base for test suites of parsing Java files.
  */
+@Suppress(
+    "UtilityClassWithPublicConstructor" // Adds `@BeforeAll` and `@AfterAll` for derived classes.
+)
 abstract class ParsingTest {
 
     companion object {
