@@ -33,7 +33,6 @@ import com.intellij.core.CoreApplicationEnvironment.registerExtensionPoint
 import com.intellij.core.JavaCoreApplicationEnvironment
 import com.intellij.ide.highlighter.JavaClassFileType
 import com.intellij.lang.MetaLanguage
-import com.intellij.lang.jvm.facade.JvmElementProvider
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.extensions.ExtensionPointName
