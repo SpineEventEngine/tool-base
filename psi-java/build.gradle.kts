@@ -1,4 +1,5 @@
 import io.spine.internal.dependency.IntelliJ
+import io.spine.internal.dependency.Spine
 
 repositories {
     intellijReleases
@@ -11,4 +12,7 @@ dependencies {
     api(IntelliJ.Platform.util)
     api(IntelliJ.JavaPsi.api)
     api(IntelliJ.JavaPsi.impl)
+
+    testImplementation(Spine.base)
+    testImplementation(Spine.testlib)
 }

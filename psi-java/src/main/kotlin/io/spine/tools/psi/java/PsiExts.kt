@@ -31,6 +31,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiJavaFile
 
 private val documentManager: FileDocumentManager
     get() = FileDocumentManager.getInstance()
@@ -60,3 +61,51 @@ private val PsiElement.document: Document
  */
 public val PsiClass.lineNumber: Int
     get() = document.getLineNumber(textOffset)
+
+/**
+ * Locates a class by its simple name in the given Java file.
+ *
+ * If a class is nested, the simple name must include the names of all the enclosing classes
+ * from outermost to innermost.
+ */
+public fun PsiJavaFile.locate(vararg simpleName: String): PsiClass? =
+    locate(simpleName.asIterable())
+
+/**
+ * Locates a class by its simple name in the given Java file.
+ *
+ * If a class is nested, the simple name must include the names of all the enclosing classes
+ * from outermost to innermost.
+ */
+@Suppress("ReturnCount")
+public fun PsiJavaFile.locate(simpleName: Iterable<String>): PsiClass? {
+    val names = simpleName.toMutableList()
+    require(names.isNotEmpty()) {
+        "The list of simple class names must not be empty."
+    }
+    // There's only one top level class in a Java file.
+    val topLevel = classes.first()
+    if (topLevel.name != names[0]) {
+        // The top level class in the file does not match the first simple name.
+        // No need to look further.
+        return null
+    }
+    if (names.size == 1) {
+        return topLevel
+    }
+    // Proceed to nested classes.
+    names.removeAt(0)
+
+    var currentClass = topLevel
+
+    while(currentClass != null) {
+        currentClass.innerClasses.firstOrNull { it.name == names[0] }?.let {
+            if (names.size == 1) {
+                return it
+            }
+            names.removeAt(0)
+            currentClass = it
+        } ?: return null // None of the nested classes matches the next simple name.
+    }
+    return null
+}
