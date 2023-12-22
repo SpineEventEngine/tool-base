@@ -50,7 +50,7 @@ dependencies {
 
     api(Spine.base)
 
-    implementation(Spine.logging)
+    implementation(Spine.Logging.lib)
     implementation(Validation.runtime)
 
     listOf(

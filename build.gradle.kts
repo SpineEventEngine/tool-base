@@ -67,6 +67,8 @@ spinePublishing {
         "plugin-base",
         "plugin-testlib",
         "tool-base",
+        "psi",
+        "psi-java",
     )
     destinations = with(PublishingRepos) {
         setOf(

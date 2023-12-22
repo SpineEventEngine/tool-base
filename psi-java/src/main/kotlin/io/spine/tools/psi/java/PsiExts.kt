@@ -24,12 +24,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "tool-base"
+package io.spine.tools.psi.java
 
-include(
-    "tool-base",
-    "plugin-base",
-    "plugin-testlib",
-    "psi",
-    "psi-java"
-)
+import com.intellij.openapi.editor.Document
+import com.intellij.openapi.fileEditor.FileDocumentManager
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiClass
+import com.intellij.psi.PsiElement
+
+private val documentManager: FileDocumentManager
+    get() = FileDocumentManager.getInstance()
+
+private val PsiElement.virtualFile: VirtualFile
+    get() {
+        val vf = containingFile.virtualFile
+        check(vf != null) {
+            "Unable to obtain a virtual file for `${containingFile.name}`."
+        }
+        return vf
+    }
+
+private val PsiElement.document: Document
+    get() {
+        val doc = documentManager.getDocument(virtualFile)
+        check(doc != null) {
+            "Unable to obtain a document for `${virtualFile.name}`."
+        }
+        return doc
+    }
+
+/**
+ * Obtains the line number of the class declaration in the containing file.
+ *
+ * @return the line where the name identifier of the class is placed.
+ */
+public val PsiClass.lineNumber: Int
+    get() = document.getLineNumber(textOffset)

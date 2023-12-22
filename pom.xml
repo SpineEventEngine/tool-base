@@ -30,6 +30,18 @@ all modules and does not describe the project structure per-subproject.
     <scope>compile</scope>
   </dependency>
   <dependency>
+    <groupId>com.jetbrains.intellij.java</groupId>
+    <artifactId>java-psi</artifactId>
+    <version>213.7172.53</version>
+    <scope>compile</scope>
+  </dependency>
+  <dependency>
+    <groupId>com.jetbrains.intellij.java</groupId>
+    <artifactId>java-psi-impl</artifactId>
+    <version>213.7172.53</version>
+    <scope>compile</scope>
+  </dependency>
+  <dependency>
     <groupId>com.jetbrains.intellij.platform</groupId>
     <artifactId>core</artifactId>
     <version>213.7172.53</version>

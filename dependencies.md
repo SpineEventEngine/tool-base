@@ -651,7 +651,7 @@
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu Dec 21 22:42:24 WET 2023** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Thu Dec 21 23:57:59 WET 2023** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -1408,7 +1408,7 @@ This report was generated on **Thu Dec 21 22:42:24 WET 2023** using [Gradle-Lice
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu Dec 21 22:42:24 WET 2023** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Thu Dec 21 23:57:59 WET 2023** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -2040,7 +2040,7 @@ This report was generated on **Thu Dec 21 22:42:24 WET 2023** using [Gradle-Lice
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu Dec 21 22:42:53 WET 2023** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Thu Dec 21 23:57:59 WET 2023** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -2048,6 +2048,14 @@ This report was generated on **Thu Dec 21 22:42:53 WET 2023** using [Gradle-Lice
 # Dependencies of `io.spine.tools:spine-psi-java:2.0.0-SNAPSHOT.190`
 
 ## Runtime
+1.  **Group** : be.cyberelf.nanoxml. **Name** : nanoxml. **Version** : 2.2.3.
+     * **Project URL:** [http://nanoxml.cyberelf.be/](http://nanoxml.cyberelf.be/)
+     * **License:** [The zlib/libpng License](http://www.opensource.org/licenses/zlib-license.html)
+
+1.  **Group** : com.fasterxml. **Name** : aalto-xml. **Version** : 1.3.0.
+     * **Project URL:** [https://github.com/FasterXML/aalto-xml](https://github.com/FasterXML/aalto-xml)
+     * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
      * **Project URL:** [http://findbugs.sourceforge.net/](http://findbugs.sourceforge.net/)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -2067,13 +2075,66 @@ This report was generated on **Thu Dec 21 22:42:53 WET 2023** using [Gradle-Lice
 1.  **Group** : com.google.guava. **Name** : listenablefuture. **Version** : 9999.0-empty-to-avoid-conflict-with-guava.
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : com.jetbrains.intellij.java. **Name** : java-psi. **Version** : 213.7172.53.**No license information found**
+1.  **Group** : com.jetbrains.intellij.java. **Name** : java-psi-impl. **Version** : 213.7172.53.**No license information found**
+1.  **Group** : com.jetbrains.intellij.platform. **Name** : core. **Version** : 213.7172.53.**No license information found**
+1.  **Group** : com.jetbrains.intellij.platform. **Name** : core-impl. **Version** : 213.7172.53.**No license information found**
+1.  **Group** : com.jetbrains.intellij.platform. **Name** : extensions. **Version** : 213.7172.53.**No license information found**
+1.  **Group** : com.jetbrains.intellij.platform. **Name** : util. **Version** : 213.7172.53.**No license information found**
+1.  **Group** : com.jetbrains.intellij.platform. **Name** : util-base. **Version** : 213.7172.53.**No license information found**
+1.  **Group** : com.jetbrains.intellij.platform. **Name** : util-class-loader. **Version** : 213.7172.53.**No license information found**
+1.  **Group** : com.jetbrains.intellij.platform. **Name** : util-rt. **Version** : 213.7172.53.**No license information found**
+1.  **Group** : com.jetbrains.intellij.platform. **Name** : util-text-matching. **Version** : 213.7172.53.**No license information found**
+1.  **Group** : com.jetbrains.intellij.platform. **Name** : util-xml-dom. **Version** : 213.7172.53.**No license information found**
+1.  **Group** : dk.brics. **Name** : automaton. **Version** : 1.12-1.
+     * **Project URL:** [http://www.brics.dk/automaton](http://www.brics.dk/automaton)
+     * **License:** [BSD](http://www.opensource.org/licenses/bsd-license.php)
+
+1.  **Group** : one.util. **Name** : streamex. **Version** : 0.7.3.
+     * **Project URL:** [https://github.com/amaembo/streamex](https://github.com/amaembo/streamex)
+     * **License:** [Apache License, Version 2.0](${license.url})
+
+1.  **Group** : org.apache.commons. **Name** : commons-compress. **Version** : 1.21.
+     * **Project URL:** [https://commons.apache.org/proper/commons-compress/](https://commons.apache.org/proper/commons-compress/)
+     * **License:** [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.checkerframework. **Name** : checker-qual. **Version** : 3.40.0.
      * **Project URL:** [https://checkerframework.org/](https://checkerframework.org/)
      * **License:** [The MIT License](http://opensource.org/licenses/MIT)
 
+1.  **Group** : org.codehaus.woodstox. **Name** : stax2-api. **Version** : 4.2.
+     * **Project URL:** [http://github.com/FasterXML/stax2-api](http://github.com/FasterXML/stax2-api)
+     * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+     * **License:** [The BSD License](http://www.opensource.org/licenses/bsd-license.php)
+
 1.  **Group** : org.jetbrains. **Name** : annotations. **Version** : 24.0.1.
      * **Project URL:** [https://github.com/JetBrains/java-annotations](https://github.com/JetBrains/java-annotations)
      * **License:** [The Apache Software License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains. **Name** : annotations-java5. **Version** : 20.1.0.
+     * **Project URL:** [https://github.com/JetBrains/java-annotations](https://github.com/JetBrains/java-annotations)
+     * **License:** [The Apache Software License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.intellij.deps. **Name** : asm-all. **Version** : 9.2.**No license information found**
+1.  **Group** : org.jetbrains.intellij.deps. **Name** : jdom. **Version** : 2.0.6.**No license information found**
+1.  **Group** : org.jetbrains.intellij.deps. **Name** : log4j. **Version** : 1.2.17.2.
+     * **Project URL:** [http://logging.apache.org/log4j/1.2/](http://logging.apache.org/log4j/1.2/)
+     * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.intellij.deps. **Name** : trove4j. **Version** : 1.0.20200330.
+     * **Project URL:** [https://github.com/JetBrains/intellij-deps-trove4j](https://github.com/JetBrains/intellij-deps-trove4j)
+     * **License:** [GNU LESSER GENERAL PUBLIC LICENSE 2.1](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html)
+
+1.  **Group** : org.jetbrains.intellij.deps.fastutil. **Name** : intellij-deps-fastutil. **Version** : 8.5.4-9.**No license information found**
+1.  **Group** : org.jetbrains.intellij.deps.jna. **Name** : jna. **Version** : 5.9.0.26.
+     * **Project URL:** [https://github.com/JetBrains/intellij-deps-jna](https://github.com/JetBrains/intellij-deps-jna)
+     * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+     * **License:** [LGPL-2.1-or-later](https://www.gnu.org/licenses/old-licenses/lgpl-2.1)
+
+1.  **Group** : org.jetbrains.intellij.deps.jna. **Name** : jna-platform. **Version** : 5.9.0.26.
+     * **Project URL:** [https://github.com/JetBrains/intellij-deps-jna](https://github.com/JetBrains/intellij-deps-jna)
+     * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+     * **License:** [LGPL-2.1-or-later](https://www.gnu.org/licenses/old-licenses/lgpl-2.1)
 
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib. **Version** : 1.9.20.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
@@ -2087,10 +2148,29 @@ This report was generated on **Thu Dec 21 22:42:53 WET 2023** using [Gradle-Lice
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-bom. **Version** : 1.6.4.**No license information found**
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-core. **Version** : 1.6.4.**No license information found**
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-core-jvm. **Version** : 1.6.4.
+     * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
+     * **License:** [The Apache Software License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-jdk8. **Version** : 1.6.4.
+     * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
+     * **License:** [The Apache Software License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.lz4. **Name** : lz4-pure-java. **Version** : 1.8.0.
+     * **Project URL:** [https://github.com/lz4/lz4-java](https://github.com/lz4/lz4-java)
+     * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : oro. **Name** : oro. **Version** : 2.0.8.**No license information found**
 ## Compile, tests, and tooling
 1.  **Group** : aopalliance. **Name** : aopalliance. **Version** : 1.0.
      * **Project URL:** [http://aopalliance.sourceforge.net](http://aopalliance.sourceforge.net)
      * **License:** Public Domain
+
+1.  **Group** : be.cyberelf.nanoxml. **Name** : nanoxml. **Version** : 2.2.3.
+     * **Project URL:** [http://nanoxml.cyberelf.be/](http://nanoxml.cyberelf.be/)
+     * **License:** [The zlib/libpng License](http://www.opensource.org/licenses/zlib-license.html)
 
 1.  **Group** : com.beust. **Name** : jcommander. **Version** : 1.48.
      * **Project URL:** [http://beust.com/jcommander](http://beust.com/jcommander)
@@ -2099,6 +2179,10 @@ This report was generated on **Thu Dec 21 22:42:53 WET 2023** using [Gradle-Lice
 1.  **Group** : com.beust. **Name** : jcommander. **Version** : 1.82.
      * **Project URL:** [https://jcommander.org](https://jcommander.org)
      * **License:** [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : com.fasterxml. **Name** : aalto-xml. **Version** : 1.3.0.
+     * **Project URL:** [https://github.com/FasterXML/aalto-xml](https://github.com/FasterXML/aalto-xml)
+     * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : com.github.ben-manes.caffeine. **Name** : caffeine. **Version** : 3.0.5.
      * **Project URL:** [https://github.com/ben-manes/caffeine](https://github.com/ben-manes/caffeine)
@@ -2190,6 +2274,17 @@ This report was generated on **Thu Dec 21 22:42:53 WET 2023** using [Gradle-Lice
 1.  **Group** : com.google.truth.extensions. **Name** : truth-proto-extension. **Version** : 1.1.5.
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : com.jetbrains.intellij.java. **Name** : java-psi. **Version** : 213.7172.53.**No license information found**
+1.  **Group** : com.jetbrains.intellij.java. **Name** : java-psi-impl. **Version** : 213.7172.53.**No license information found**
+1.  **Group** : com.jetbrains.intellij.platform. **Name** : core. **Version** : 213.7172.53.**No license information found**
+1.  **Group** : com.jetbrains.intellij.platform. **Name** : core-impl. **Version** : 213.7172.53.**No license information found**
+1.  **Group** : com.jetbrains.intellij.platform. **Name** : extensions. **Version** : 213.7172.53.**No license information found**
+1.  **Group** : com.jetbrains.intellij.platform. **Name** : util. **Version** : 213.7172.53.**No license information found**
+1.  **Group** : com.jetbrains.intellij.platform. **Name** : util-base. **Version** : 213.7172.53.**No license information found**
+1.  **Group** : com.jetbrains.intellij.platform. **Name** : util-class-loader. **Version** : 213.7172.53.**No license information found**
+1.  **Group** : com.jetbrains.intellij.platform. **Name** : util-rt. **Version** : 213.7172.53.**No license information found**
+1.  **Group** : com.jetbrains.intellij.platform. **Name** : util-text-matching. **Version** : 213.7172.53.**No license information found**
+1.  **Group** : com.jetbrains.intellij.platform. **Name** : util-xml-dom. **Version** : 213.7172.53.**No license information found**
 1.  **Group** : com.puppycrawl.tools. **Name** : checkstyle. **Version** : 10.12.1.
      * **Project URL:** [https://checkstyle.org/](https://checkstyle.org/)
      * **License:** [LGPL-2.1+](http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt)
@@ -2205,6 +2300,10 @@ This report was generated on **Thu Dec 21 22:42:53 WET 2023** using [Gradle-Lice
 1.  **Group** : commons-collections. **Name** : commons-collections. **Version** : 3.2.2.
      * **Project URL:** [http://commons.apache.org/collections/](http://commons.apache.org/collections/)
      * **License:** [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : dk.brics. **Name** : automaton. **Version** : 1.12-1.
+     * **Project URL:** [http://www.brics.dk/automaton](http://www.brics.dk/automaton)
+     * **License:** [BSD](http://www.opensource.org/licenses/bsd-license.php)
 
 1.  **Group** : info.picocli. **Name** : picocli. **Version** : 4.7.4.
      * **Project URL:** [https://picocli.info](https://picocli.info)
@@ -2345,6 +2444,10 @@ This report was generated on **Thu Dec 21 22:42:53 WET 2023** using [Gradle-Lice
      * **Project URL:** [http://saxon.sourceforge.net/](http://saxon.sourceforge.net/)
      * **License:** [Mozilla Public License Version 1.0](http://www.mozilla.org/MPL/MPL-1.0.txt)
 
+1.  **Group** : one.util. **Name** : streamex. **Version** : 0.7.3.
+     * **Project URL:** [https://github.com/amaembo/streamex](https://github.com/amaembo/streamex)
+     * **License:** [Apache License, Version 2.0](${license.url})
+
 1.  **Group** : org.antlr. **Name** : antlr4-runtime. **Version** : 4.11.1.
      * **Project URL:** [https://www.antlr.org/](https://www.antlr.org/)
      * **License:** [BSD-3-Clause](https://www.antlr.org/license.html)
@@ -2352,6 +2455,10 @@ This report was generated on **Thu Dec 21 22:42:53 WET 2023** using [Gradle-Lice
 1.  **Group** : org.antlr. **Name** : antlr4-runtime. **Version** : 4.7.2.
      * **Project URL:** [http://www.antlr.org](http://www.antlr.org)
      * **License:** [The BSD License](http://www.antlr.org/license.html)
+
+1.  **Group** : org.apache.commons. **Name** : commons-compress. **Version** : 1.21.
+     * **Project URL:** [https://commons.apache.org/proper/commons-compress/](https://commons.apache.org/proper/commons-compress/)
+     * **License:** [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : org.apache.commons. **Name** : commons-lang3. **Version** : 3.8.1.
      * **Project URL:** [http://commons.apache.org/proper/commons-lang/](http://commons.apache.org/proper/commons-lang/)
@@ -2373,6 +2480,11 @@ This report was generated on **Thu Dec 21 22:42:53 WET 2023** using [Gradle-Lice
 1.  **Group** : org.checkerframework. **Name** : checker-qual. **Version** : 3.40.0.
      * **Project URL:** [https://checkerframework.org/](https://checkerframework.org/)
      * **License:** [The MIT License](http://opensource.org/licenses/MIT)
+
+1.  **Group** : org.codehaus.woodstox. **Name** : stax2-api. **Version** : 4.2.
+     * **Project URL:** [http://github.com/FasterXML/stax2-api](http://github.com/FasterXML/stax2-api)
+     * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+     * **License:** [The BSD License](http://www.opensource.org/licenses/bsd-license.php)
 
 1.  **Group** : org.hamcrest. **Name** : hamcrest. **Version** : 2.2.
      * **Project URL:** [http://hamcrest.org/JavaHamcrest/](http://hamcrest.org/JavaHamcrest/)
@@ -2404,9 +2516,30 @@ This report was generated on **Thu Dec 21 22:42:53 WET 2023** using [Gradle-Lice
      * **Project URL:** [https://github.com/JetBrains/java-annotations](https://github.com/JetBrains/java-annotations)
      * **License:** [The Apache Software License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains. **Name** : annotations-java5. **Version** : 20.1.0.
+     * **Project URL:** [https://github.com/JetBrains/java-annotations](https://github.com/JetBrains/java-annotations)
+     * **License:** [The Apache Software License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.intellij.deps. **Name** : asm-all. **Version** : 9.2.**No license information found**
+1.  **Group** : org.jetbrains.intellij.deps. **Name** : jdom. **Version** : 2.0.6.**No license information found**
+1.  **Group** : org.jetbrains.intellij.deps. **Name** : log4j. **Version** : 1.2.17.2.
+     * **Project URL:** [http://logging.apache.org/log4j/1.2/](http://logging.apache.org/log4j/1.2/)
+     * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.intellij.deps. **Name** : trove4j. **Version** : 1.0.20200330.
      * **Project URL:** [https://github.com/JetBrains/intellij-deps-trove4j](https://github.com/JetBrains/intellij-deps-trove4j)
      * **License:** [GNU LESSER GENERAL PUBLIC LICENSE 2.1](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html)
+
+1.  **Group** : org.jetbrains.intellij.deps.fastutil. **Name** : intellij-deps-fastutil. **Version** : 8.5.4-9.**No license information found**
+1.  **Group** : org.jetbrains.intellij.deps.jna. **Name** : jna. **Version** : 5.9.0.26.
+     * **Project URL:** [https://github.com/JetBrains/intellij-deps-jna](https://github.com/JetBrains/intellij-deps-jna)
+     * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+     * **License:** [LGPL-2.1-or-later](https://www.gnu.org/licenses/old-licenses/lgpl-2.1)
+
+1.  **Group** : org.jetbrains.intellij.deps.jna. **Name** : jna-platform. **Version** : 5.9.0.26.
+     * **Project URL:** [https://github.com/JetBrains/intellij-deps-jna](https://github.com/JetBrains/intellij-deps-jna)
+     * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+     * **License:** [LGPL-2.1-or-later](https://www.gnu.org/licenses/old-licenses/lgpl-2.1)
 
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-compiler-embeddable. **Version** : 1.8.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
@@ -2469,6 +2602,16 @@ This report was generated on **Thu Dec 21 22:42:53 WET 2023** using [Gradle-Lice
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-bom. **Version** : 1.6.4.**No license information found**
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-core. **Version** : 1.6.4.**No license information found**
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-core-jvm. **Version** : 1.6.4.
+     * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
+     * **License:** [The Apache Software License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-jdk8. **Version** : 1.6.4.
+     * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
+     * **License:** [The Apache Software License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-html-jvm. **Version** : 0.8.1.
      * **Project URL:** [https://github.com/Kotlin/kotlinx.html](https://github.com/Kotlin/kotlinx.html)
      * **License:** [The Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -2503,6 +2646,10 @@ This report was generated on **Thu Dec 21 22:42:53 WET 2023** using [Gradle-Lice
 1.  **Group** : org.junit.platform. **Name** : junit-platform-engine. **Version** : 1.10.0.
      * **Project URL:** [https://junit.org/junit5/](https://junit.org/junit5/)
      * **License:** [Eclipse Public License v2.0](https://www.eclipse.org/legal/epl-v20.html)
+
+1.  **Group** : org.lz4. **Name** : lz4-pure-java. **Version** : 1.8.0.
+     * **Project URL:** [https://github.com/lz4/lz4-java](https://github.com/lz4/lz4-java)
+     * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : org.opentest4j. **Name** : opentest4j. **Version** : 1.3.0.
      * **Project URL:** [https://github.com/ota4j-team/opentest4j](https://github.com/ota4j-team/opentest4j)
@@ -2545,10 +2692,11 @@ This report was generated on **Thu Dec 21 22:42:53 WET 2023** using [Gradle-Lice
      * **Project URL:** [https://github.com/xmlresolver/xmlresolver](https://github.com/xmlresolver/xmlresolver)
      * **License:** [Apache License version 2.0](https://www.apache.org/licenses/LICENSE-2.0)
 
+1.  **Group** : oro. **Name** : oro. **Version** : 2.0.8.**No license information found**
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu Dec 21 22:42:53 WET 2023** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Thu Dec 21 23:58:02 WET 2023** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -3247,4 +3395,4 @@ This report was generated on **Thu Dec 21 22:42:53 WET 2023** using [Gradle-Lice
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu Dec 21 22:42:54 WET 2023** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Thu Dec 21 23:58:02 WET 2023** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).

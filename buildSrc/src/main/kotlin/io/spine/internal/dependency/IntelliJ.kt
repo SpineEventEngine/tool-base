@@ -24,12 +24,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "tool-base"
+@file:Suppress("ConstPropertyName")
 
-include(
-    "tool-base",
-    "plugin-base",
-    "plugin-testlib",
-    "psi",
-    "psi-java"
-)
+package io.spine.internal.dependency
+
+/**
+ * The components of the IntelliJ Platform.
+ *
+ * Make sure to add the `intellijReleases` and `jetBrainsCacheRedirector`
+ * repositories to your project. See `kotlin/Repositories.kt` for details.
+ */
+object IntelliJ {
+
+    /**
+     * The version of the IntelliJ platform.
+     *
+     * This is the version used by Kotlin compiler `1.9.21`.
+     * Advance this version with caution because it may break the setup of
+     * IntelliJ platform standalone execution.
+     */
+    const val version = "213.7172.53"
+
+    object Platform {
+        private const val group = "com.jetbrains.intellij.platform"
+        const val core = "$group:core:$version"
+        const val util = "$group:util:$version"
+    }
+
+    object JavaPsi {
+        private const val group = "com.jetbrains.intellij.java"
+        const val api = "$group:java-psi:$version"
+        const val impl = "$group:java-psi-impl:$version"
+    }
+}

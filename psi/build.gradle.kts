@@ -24,12 +24,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "tool-base"
+import io.spine.internal.dependency.IntelliJ
 
-include(
-    "tool-base",
-    "plugin-base",
-    "plugin-testlib",
-    "psi",
-    "psi-java"
-)
+repositories {
+    intellijReleases
+    jetBrainsCacheRedirector
+}
+
+dependencies {
+    api(IntelliJ.Platform.core)
+    api(IntelliJ.Platform.util)
+}
