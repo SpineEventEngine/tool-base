@@ -31,6 +31,7 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import io.spine.io.Resource
+import io.spine.string.Separator
 import io.spine.tools.psi.IdeaStandaloneExecution
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -71,7 +72,7 @@ abstract class ParsingTest {
             val resource = Resource.file(fileName, this::class.java.classLoader)
             val code = resource.read()
                 .lineSequence()
-                .joinToString(separator = System.lineSeparator())
+                .joinToString(separator = Separator.LF.value) // as required by PSI.
             return code
         }
     }
