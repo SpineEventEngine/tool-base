@@ -58,10 +58,11 @@ import java.nio.file.attribute.BasicFileAttributes
  * Original code is in `org.jetbrains.kotlin.cli.jvm.modules.CoreJrtFileSystem`.
  */
 internal class JrtFileSystem : DeprecatedVirtualFileSystem() {
+
     private val roots =
-        createMap<String, CoreJrtVirtualFile?> { jdkHomePath ->
+        createMap<String, JrtVirtualFile?> { jdkHomePath ->
             val fileSystem = globalJrtFsCache[jdkHomePath] ?: return@createMap null
-            CoreJrtVirtualFile(this, jdkHomePath, fileSystem.getPath(""), parent = null)
+            JrtVirtualFile(this, jdkHomePath, fileSystem.getPath(""), parent = null)
         }
 
     override fun getProtocol(): String = StandardFileSystems.JRT_PROTOCOL
@@ -80,6 +81,7 @@ internal class JrtFileSystem : DeprecatedVirtualFileSystem() {
 
     override fun refreshAndFindFileByPath(path: String): VirtualFile? = findFileByPath(path)
 
+    @Suppress("unused") // reserved for future use.
     fun clearRoots() {
         roots.clear()
     }
@@ -87,9 +89,6 @@ internal class JrtFileSystem : DeprecatedVirtualFileSystem() {
     companion object {
         private fun loadJrtFsJar(jdkHome: File): File? =
             File(jdkHome, "lib/jrt-fs.jar").takeIf(File::exists)
-
-        fun isModularJdk(jdkHome: File): Boolean =
-            loadJrtFsJar(jdkHome) != null
 
         fun splitPath(path: String): Pair<String, String> {
             val separator = path.indexOf(URLUtil.JAR_SEPARATOR)
@@ -129,18 +128,18 @@ internal class JrtFileSystem : DeprecatedVirtualFileSystem() {
 }
 
 @Suppress("TooManyFunctions") // Implementing `VirtualFile` requires it.
-private class CoreJrtVirtualFile(
-    private val virtualFileSystem: JrtFileSystem,
+private class JrtVirtualFile(
+    private val fileSystem: JrtFileSystem,
     private val jdkHomePath: String,
     private val path: Path,
-    private val parent: CoreJrtVirtualFile?,
+    private val parent: JrtVirtualFile?,
 ) : VirtualFile() {
 
     // TODO: catch IOException?
     private val attributes: BasicFileAttributes
         get() = readAttributes(path, BasicFileAttributes::class.java)
 
-    override fun getFileSystem(): VirtualFileSystem = virtualFileSystem
+    override fun getFileSystem(): VirtualFileSystem = fileSystem
 
     override fun getName(): String =
         path.fileName.toString()
@@ -169,8 +168,8 @@ private class CoreJrtVirtualFile(
         return when {
             paths.isEmpty() -> EMPTY_ARRAY
             else -> paths.map { path ->
-                CoreJrtVirtualFile(
-                    virtualFileSystem,
+                JrtVirtualFile(
+                    fileSystem,
                     jdkHomePath,
                     path,
                     parent = this
@@ -202,7 +201,7 @@ private class CoreJrtVirtualFile(
     override fun getModificationStamp(): Long = 0
 
     override fun equals(other: Any?): Boolean =
-        other is CoreJrtVirtualFile && path == other.path && fileSystem == other.fileSystem
+        other is JrtVirtualFile && path == other.path && fileSystem == other.fileSystem
 
     override fun hashCode(): Int =
         path.hashCode()

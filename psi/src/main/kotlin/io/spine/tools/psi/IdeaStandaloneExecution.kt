@@ -20,7 +20,7 @@ public object IdeaStandaloneExecution {
     // Copy-pasted from com.intellij.openapi.util.BuildNumber#FALLBACK_VERSION
     private const val FALLBACK_IDEA_BUILD_NUMBER = "999.SNAPSHOT"
 
-    private var configured: Boolean = false;
+    private var configured: Boolean = false
 
     /**
      * Sets up the environment for the standalone execution of the IntelliJ IDEA modules

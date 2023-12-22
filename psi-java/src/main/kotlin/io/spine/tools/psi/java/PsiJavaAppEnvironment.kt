@@ -105,10 +105,6 @@ private object IdeaExtensionPoints {
         registerPoint(JavaModuleSystem.EP_NAME)
     }
 
-    fun registerVersionSpecificProjectExtensionPoints(area: ExtensionsArea) = with(area) {
-        registerPoint(JvmElementProvider.EP_NAME)
-    }
-
     private inline fun <reified T: Any> ExtensionsArea.registerPoint(name: ExtensionPointName<T>) =
         registerExtensionPoint(this, name, T::class.java)
 }
