@@ -39,7 +39,7 @@ import java.util.*
 /**
  * Utilities for converting Java source code into [PsiJavaFile].
  */
-public class Parser(private val project: Project) {
+public class Parser(public val project: Project) {
 
     private val fileFactory by lazy {
         PsiFileFactory.getInstance(project)
