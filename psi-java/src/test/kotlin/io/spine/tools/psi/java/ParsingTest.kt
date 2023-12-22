@@ -34,9 +34,10 @@ import io.spine.io.Resource
 import io.spine.tools.psi.IdeaStandaloneExecution
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.DisplayName
 
-@DisplayName("Parsing should")
+/**
+ * Abstract base for test suites of parsing Java files.
+ */
 abstract class ParsingTest {
 
     companion object {
