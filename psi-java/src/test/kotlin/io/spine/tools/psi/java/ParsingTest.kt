@@ -69,7 +69,10 @@ abstract class ParsingTest {
 
         fun readResource(fileName: String): String {
             val resource = Resource.file(fileName, this::class.java.classLoader)
-            return resource.read()
+            val code = resource.read()
+                .lineSequence()
+                .joinToString(separator = System.lineSeparator())
+            return code
         }
     }
 }
