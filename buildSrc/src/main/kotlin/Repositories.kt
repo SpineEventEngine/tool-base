@@ -24,4 +24,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.190")
+import org.gradle.kotlin.dsl.maven
+import org.gradle.api.artifacts.dsl.RepositoryHandler
+import org.gradle.api.artifacts.repositories.MavenArtifactRepository
+
+val RepositoryHandler.intellijReleases: MavenArtifactRepository
+    get() = maven("https://www.jetbrains.com/intellij-repository/releases")
+
+val RepositoryHandler.jetBrainsCacheRedirector: MavenArtifactRepository
+    get() = maven("https://cache-redirector.jetbrains.com/intellij-dependencies")

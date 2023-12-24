@@ -24,4 +24,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.190")
+package given.java.source;
+
+/**
+ * This source code is used Java source code parsing tests.
+ */
+public class ClassWithNested {
+
+    public static class InnerOne {
+
+        private class NonStaticInner {
+            private int value;
+        }
+    }
+
+    private class InterimInner {
+        private String value;
+    }
+
+    public static class InnerTwo {
+
+        public static enum MyEnum {
+            ONE, TWO, THREE
+        }
+
+        @Subscribe
+        public static @Nullable MyEnum pickOne(int seed) {
+            return MyEnum.ONE;
+        }
+    }
+}

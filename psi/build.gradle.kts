@@ -24,4 +24,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.190")
+import io.spine.internal.dependency.IntelliJ
+
+repositories {
+    intellijReleases
+    jetBrainsCacheRedirector
+}
+
+dependencies {
+    api(IntelliJ.Platform.core)
+    api(IntelliJ.Platform.util)
+}

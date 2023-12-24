@@ -24,4 +24,51 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.190")
+package io.spine.tools.psi.java
+
+import java.io.File
+import io.kotest.matchers.shouldNotBe
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.io.TempDir
+
+@DisplayName("Parsing of existing Java file should")
+class FileParsingSpec: ParsingTest() {
+
+    companion object {
+
+        lateinit var file: File
+        private const val fileName = "FileOnDisk.java"
+
+        @BeforeAll
+        @JvmStatic
+        fun createFile(@TempDir tempDir: File) {
+            file = tempDir.resolve(fileName)
+            val code = readResource(fileName)
+            file.writeText(code)
+        }
+    }
+
+    @Test
+    fun `parse existing file`() {
+        val psiFile = parser.parse(file)
+        psiFile shouldNotBe null
+    }
+
+    @Test
+    fun `require file to have proper extension`() {
+        assertThrows<IllegalArgumentException> {
+            parser.parse(File("file.txt"))
+        }
+    }
+
+    @Test
+    fun `not parse non-existing file`() {
+        val nonExistingFile = File("non-existing-file.java")
+        assertThrows<IllegalArgumentException> {
+            parser.parse(nonExistingFile)
+        }
+    }
+}

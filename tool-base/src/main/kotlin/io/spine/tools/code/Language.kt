@@ -55,11 +55,11 @@ protected constructor(
     /**
      * Extensions of source code files on this language with or without the leading dot.
      *
-     * Some languages may have more than one type of files, e.g. header files ".h" for C source
+     * Some languages may have more than one type of files, e.g., header files ".h" for C source
      * code files (".c"). Also, conventions for some languages allow alternative extensions,
      * e.g. ".cc" and ".cpp" for C++.
      *
-     * The passed values are converted to lower case.
+     * The passed values are converted to the lower case.
      */
     fileExtensions: Iterable<String>,
 
@@ -74,21 +74,16 @@ protected constructor(
     /**
      * The extension of source code files in this language without the leading dot.
      */
-    public val fileExtensions: List<String>
+    public val fileExtensions: List<String> = fileExtensions
+        .map { it.replaceFirst(".", "") }
+        .map { it.lowercase() }
+        .toMutableList()
+        .sorted()
 
     /**
      * Pattern which source code files must match.
      */
-    private val filePattern: Glob
-
-    init {
-        this.fileExtensions = fileExtensions
-            .map { it.replaceFirst(".", "") }
-            .map { it.lowercase() }
-            .toMutableList()
-            .sorted()
-        this.filePattern = filePattern ?: Glob.extension(this.fileExtensions)
-    }
+    private val filePattern: Glob = filePattern ?: Glob.extension(this.fileExtensions)
 
     /**
      * Creates a syntactically valid one-line comment in this language.
