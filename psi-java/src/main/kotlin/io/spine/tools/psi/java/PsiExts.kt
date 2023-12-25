@@ -26,33 +26,9 @@
 
 package io.spine.tools.psi.java
 
-import com.intellij.openapi.editor.Document
-import com.intellij.openapi.fileEditor.FileDocumentManager
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiClass
-import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiJavaFile
-
-private val documentManager: FileDocumentManager
-    get() = FileDocumentManager.getInstance()
-
-private val PsiElement.virtualFile: VirtualFile
-    get() {
-        val vf = containingFile.virtualFile
-        check(vf != null) {
-            "Unable to obtain a virtual file for `${containingFile.name}`."
-        }
-        return vf
-    }
-
-private val PsiElement.document: Document
-    get() {
-        val doc = documentManager.getDocument(virtualFile)
-        check(doc != null) {
-            "Unable to obtain a document for `${virtualFile.name}`."
-        }
-        return doc
-    }
+import io.spine.tools.psi.document
 
 /**
  * Obtains the line number of the class declaration in the containing file.
