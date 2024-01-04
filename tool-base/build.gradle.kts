@@ -51,7 +51,6 @@ dependencies {
     api(Spine.base)
 
     implementation(Spine.Logging.lib)
-    implementation(Validation.runtime)
 
     listOf(
         Grpc.protobuf,
