@@ -49,7 +49,6 @@ dependencies {
     api(Roaster.jdt)
 
     api(Spine.base)
-    api(Validation.runtime)
 
     implementation(Spine.Logging.lib)
 
