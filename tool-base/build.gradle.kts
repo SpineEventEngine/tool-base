@@ -49,6 +49,7 @@ dependencies {
     api(Roaster.jdt)
 
     api(Spine.base)
+    api(Validation.runtime)
 
     implementation(Spine.Logging.lib)
 
@@ -57,7 +58,6 @@ dependencies {
         Grpc.core,
         Grpc.stub,
         GrpcKotlin.stub,
-        Validation.runtime
     ).forEach {
         testImplementation(it)
         testFixturesImplementation(it)
