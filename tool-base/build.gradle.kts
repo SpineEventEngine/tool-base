@@ -34,7 +34,6 @@ import io.spine.internal.dependency.JavaX
 import io.spine.internal.dependency.Protobuf
 import io.spine.internal.dependency.Roaster
 import io.spine.internal.dependency.Spine
-import io.spine.internal.dependency.Validation
 import io.spine.internal.gradle.protobuf.setup
 
 plugins {
