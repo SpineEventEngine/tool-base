@@ -45,6 +45,7 @@
      * **Project URL:** [http://github.com/square/javapoet/](http://github.com/square/javapoet/)
      * **License:** [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : io.spine.validation. **Name** : spine-validation-java-runtime. **Version** : 2.0.0-SNAPSHOT.124.**No license information found**
 1.  **Group** : javax.annotation. **Name** : javax.annotation-api. **Version** : 1.3.2.
      * **Project URL:** [http://jcp.org/en/jsr/detail?id=250](http://jcp.org/en/jsr/detail?id=250)
      * **License:** [CDDL + GPLv2 with classpath exception](https://github.com/javaee/javax.annotation/blob/master/LICENSE)
@@ -368,6 +369,7 @@
      * **Project URL:** [https://github.com/kotest/kotest](https://github.com/kotest/kotest)
      * **License:** [Apache-2.0](https://opensource.org/licenses/Apache-2.0)
 
+1.  **Group** : io.spine.validation. **Name** : spine-validation-java-runtime. **Version** : 2.0.0-SNAPSHOT.124.**No license information found**
 1.  **Group** : javax.annotation. **Name** : javax.annotation-api. **Version** : 1.3.2.
      * **Project URL:** [http://jcp.org/en/jsr/detail?id=250](http://jcp.org/en/jsr/detail?id=250)
      * **License:** [CDDL + GPLv2 with classpath exception](https://github.com/javaee/javax.annotation/blob/master/LICENSE)
@@ -636,7 +638,7 @@
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu Jan 04 23:03:43 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Fri Jan 05 14:21:01 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -748,6 +750,7 @@ This report was generated on **Thu Jan 04 23:03:43 WET 2024** using [Gradle-Lice
      * **Project URL:** [https://github.com/kotest/kotest](https://github.com/kotest/kotest)
      * **License:** [Apache-2.0](https://opensource.org/licenses/Apache-2.0)
 
+1.  **Group** : io.spine.validation. **Name** : spine-validation-java-runtime. **Version** : 2.0.0-SNAPSHOT.124.**No license information found**
 1.  **Group** : javax.annotation. **Name** : javax.annotation-api. **Version** : 1.3.2.
      * **Project URL:** [http://jcp.org/en/jsr/detail?id=250](http://jcp.org/en/jsr/detail?id=250)
      * **License:** [CDDL + GPLv2 with classpath exception](https://github.com/javaee/javax.annotation/blob/master/LICENSE)
@@ -1127,6 +1130,7 @@ This report was generated on **Thu Jan 04 23:03:43 WET 2024** using [Gradle-Lice
      * **Project URL:** [https://github.com/kotest/kotest](https://github.com/kotest/kotest)
      * **License:** [Apache-2.0](https://opensource.org/licenses/Apache-2.0)
 
+1.  **Group** : io.spine.validation. **Name** : spine-validation-java-runtime. **Version** : 2.0.0-SNAPSHOT.124.**No license information found**
 1.  **Group** : javax.annotation. **Name** : javax.annotation-api. **Version** : 1.3.2.
      * **Project URL:** [http://jcp.org/en/jsr/detail?id=250](http://jcp.org/en/jsr/detail?id=250)
      * **License:** [CDDL + GPLv2 with classpath exception](https://github.com/javaee/javax.annotation/blob/master/LICENSE)
@@ -1391,7 +1395,7 @@ This report was generated on **Thu Jan 04 23:03:43 WET 2024** using [Gradle-Lice
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu Jan 04 23:03:44 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Fri Jan 05 14:21:01 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -2023,7 +2027,7 @@ This report was generated on **Thu Jan 04 23:03:44 WET 2024** using [Gradle-Lice
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu Jan 04 23:03:44 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Fri Jan 05 14:21:01 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -2730,7 +2734,7 @@ This report was generated on **Thu Jan 04 23:03:44 WET 2024** using [Gradle-Lice
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu Jan 04 23:03:44 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Fri Jan 05 14:21:01 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -2780,6 +2784,7 @@ This report was generated on **Thu Jan 04 23:03:44 WET 2024** using [Gradle-Lice
      * **Project URL:** [http://github.com/square/javapoet/](http://github.com/square/javapoet/)
      * **License:** [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : io.spine.validation. **Name** : spine-validation-java-runtime. **Version** : 2.0.0-SNAPSHOT.124.**No license information found**
 1.  **Group** : javax.annotation. **Name** : javax.annotation-api. **Version** : 1.3.2.
      * **Project URL:** [http://jcp.org/en/jsr/detail?id=250](http://jcp.org/en/jsr/detail?id=250)
      * **License:** [CDDL + GPLv2 with classpath exception](https://github.com/javaee/javax.annotation/blob/master/LICENSE)
@@ -3415,4 +3420,4 @@ This report was generated on **Thu Jan 04 23:03:44 WET 2024** using [Gradle-Lice
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu Jan 04 23:03:44 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Fri Jan 05 14:21:02 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
