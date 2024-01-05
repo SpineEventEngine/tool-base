@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,11 +39,11 @@ option (internal_all) = true;
 // A full name of a Protobuf message type.
 message ProtoTypeName {
 
-    string value = 1 [(required) = true];
+    string value = 1; // required.
 }
 
 // A full name of a Protobuf option.
 message ProtoOption {
 
-    string name = 1 [(required) = true];
+    string name = 1; // required.
 }

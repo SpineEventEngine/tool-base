@@ -34,7 +34,6 @@ import io.spine.internal.dependency.JavaX
 import io.spine.internal.dependency.Protobuf
 import io.spine.internal.dependency.Roaster
 import io.spine.internal.dependency.Spine
-import io.spine.internal.dependency.Validation
 import io.spine.internal.gradle.protobuf.setup
 
 plugins {
@@ -51,14 +50,12 @@ dependencies {
     api(Spine.base)
 
     implementation(Spine.Logging.lib)
-    implementation(Validation.runtime)
 
     listOf(
         Grpc.protobuf,
         Grpc.core,
         Grpc.stub,
         GrpcKotlin.stub,
-        Validation.runtime
     ).forEach {
         testImplementation(it)
         testFixturesImplementation(it)
