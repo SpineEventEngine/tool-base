@@ -143,7 +143,7 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
     }
 
     /**
-     * Executes the task with the given name and returns failed build result.
+     * Executes the task with the given name and returns the failed build result.
      */
     @CanIgnoreReturnValue
     public fun executeAndFail(task: TaskName): BuildResult {
