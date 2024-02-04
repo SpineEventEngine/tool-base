@@ -30,6 +30,7 @@ import com.intellij.psi.PsiJavaFile
 import java.io.File
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldStartWith
+import io.spine.tools.psi.readResource
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested

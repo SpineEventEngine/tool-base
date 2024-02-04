@@ -1,5 +1,5 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,35 +24,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.psi.java
+package io.spine.tools.psi
 
-import com.intellij.openapi.project.Project
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
+import io.spine.io.Resource
 
 /**
- * Abstract base for test suites of parsing Java files.
+ * Reads a text file from resources of this module by the given name.
+ *
+ * Line numbers of the loaded text are converted to `\n` to be compatible with PSI.
  */
-@Suppress(
-    "UtilityClassWithPublicConstructor" // Adds `@BeforeAll` and `@AfterAll` for derived classes.
-)
-abstract class ParsingTest {
-
-    companion object {
-
-        lateinit var project: Project
-
-        @JvmStatic
-        @BeforeAll
-        fun setupIdea() {
-            Environment.setup()
-            project = Environment.project
-        }
-
-        @JvmStatic
-        @AfterAll
-        fun dispose() {
-            Environment.close()
-        }
-    }
+internal fun readResource(fileName: String): String {
+    val resource = Resource.file(fileName, object{}.javaClass.classLoader)
+    val loaded = resource.read()
+    val code = loaded.convertLineSeparators()
+    return code
 }

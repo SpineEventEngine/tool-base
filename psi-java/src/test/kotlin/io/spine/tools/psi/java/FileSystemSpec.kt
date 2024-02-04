@@ -27,6 +27,7 @@
 package io.spine.tools.psi.java
 
 import io.kotest.matchers.shouldNotBe
+import io.spine.tools.psi.readResource
 import java.io.File
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
