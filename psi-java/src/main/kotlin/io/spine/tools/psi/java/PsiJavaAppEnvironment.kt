@@ -43,7 +43,6 @@ import com.intellij.psi.JavaModuleSystem
 import com.intellij.psi.augment.PsiAugmentProvider
 import com.intellij.psi.impl.compiled.ClsCustomNavigationPolicy
 import com.intellij.psi.impl.smartPointers.SmartPointerAnchorProvider
-import com.intellij.psi.impl.source.tree.TreeCopyHandler
 import com.intellij.psi.meta.MetaDataContributor
 import io.spine.tools.psi.java.IdeaExtensionPoints.registerVersionSpecificAppExtensionPoints
 
@@ -91,7 +90,6 @@ public class PsiJavaAppEnvironment private constructor(
             registerPoint(ContainerProvider.EP_NAME)
             registerPoint(MetaLanguage.EP_NAME)
             registerPoint(SmartPointerAnchorProvider.EP_NAME)
-            registerPoint(TreeCopyHandler.EP_NAME)
         }
 
         private inline fun <reified T: Any> registerPoint(name: ExtensionPointName<T>) =
