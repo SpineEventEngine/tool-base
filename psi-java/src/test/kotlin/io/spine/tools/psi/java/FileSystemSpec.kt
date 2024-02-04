@@ -1,5 +1,5 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,16 +26,16 @@
 
 package io.spine.tools.psi.java
 
-import java.io.File
 import io.kotest.matchers.shouldNotBe
+import java.io.File
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.io.TempDir
 
-@DisplayName("Parsing of existing Java file should")
-class FileParsingSpec: ParsingTest() {
+@DisplayName("`FileSystem` should")
+internal class FileSystemSpec : ParsingTest() {
 
     companion object {
 
@@ -52,23 +52,23 @@ class FileParsingSpec: ParsingTest() {
     }
 
     @Test
-    fun `parse existing file`() {
-        val psiFile = parser.parse(file)
+    fun `load existing file`() {
+        val psiFile = FileSystem.load(file)
         psiFile shouldNotBe null
     }
 
     @Test
     fun `require file to have proper extension`() {
         assertThrows<IllegalArgumentException> {
-            parser.parse(File("file.txt"))
+            FileSystem.load(File("file.txt"))
         }
     }
 
     @Test
-    fun `not parse non-existing file`() {
+    fun `reject non-existing file`() {
         val nonExistingFile = File("non-existing-file.java")
         assertThrows<IllegalArgumentException> {
-            parser.parse(nonExistingFile)
+            FileSystem.load(nonExistingFile)
         }
     }
 }

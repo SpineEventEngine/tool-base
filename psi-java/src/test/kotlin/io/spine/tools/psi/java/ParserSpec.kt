@@ -26,43 +26,47 @@
 
 package io.spine.tools.psi.java
 
-import com.intellij.openapi.project.Project
-import io.spine.io.Resource
-import io.spine.string.Separator
-import io.spine.tools.psi.convertLineSeparators
-import org.junit.jupiter.api.AfterAll
+import com.intellij.psi.PsiJavaFile
+import java.io.File
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldStartWith
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
 
-/**
- * Abstract base for test suites of parsing Java files.
- */
-@Suppress(
-    "UtilityClassWithPublicConstructor" // Adds `@BeforeAll` and `@AfterAll` for derived classes.
-)
-abstract class ParsingTest {
+@DisplayName("`Parser` should")
+class ParserSpec : ParsingTest() {
 
     companion object {
 
-        lateinit var project: Project
+        lateinit var parser: Parser
+        lateinit var code: String
 
         @JvmStatic
         @BeforeAll
         fun setupIdea() {
             Environment.setup()
-            project = Environment.project
+            parser = Parser(Environment.project)
+            code = readResource("FileOnDisk.java")
+        }
+    }
+
+    @Nested inner class
+    `parse loaded Java code` {
+
+        @Test
+        fun `providing synthetic file name`() {
+            val psiJavaFile = parser.parse(code)
+            psiJavaFile.name shouldStartWith "__to_parse_"
         }
 
-        @JvmStatic
-        @AfterAll
-        fun dispose() {
-            Environment.close()
-        }
+        @Test
+        fun `using passed file reference`() {
+            val file = File("path/to/file.java")
+            val psiJavaFile: PsiJavaFile = parser.parse(code, file)
 
-        fun readResource(fileName: String): String {
-            val resource = Resource.file(fileName, this::class.java.classLoader)
-            val loaded = resource.read()
-            val code = loaded.convertLineSeparators()
-            return code
+            psiJavaFile.name shouldContain file.toString()
         }
     }
 }
