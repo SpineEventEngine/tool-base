@@ -46,6 +46,7 @@ class NestedParsingSpec: ParsingTest() {
         @BeforeAll
         @JvmStatic
         fun parseFile() {
+            val parser = Parser(project)
             val code = readResource("$topLevelClass.java")
             file = parser.parse(code)
         }
