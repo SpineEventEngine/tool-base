@@ -65,6 +65,12 @@ public object Environment : Closeable {
             return _project!!
         }
 
+    /**
+     * Initializes the PSI environment, making it [open][isOpen].
+     *
+     * The method checks for the [status][isOpen], so repeated calls are allowed.
+     * It is also thread-safe.
+     */
     public fun setup() {
         if (isOpen) {
             return
