@@ -36,7 +36,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 @DisplayName("Parsing of nested classes should")
-class NestedParsingSpec: ParsingTest() {
+class NestedParsingSpec: PsiTest() {
 
     companion object {
 

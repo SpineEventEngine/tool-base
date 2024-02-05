@@ -31,12 +31,12 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 
 /**
- * Abstract base for test suites of parsing Java files.
+ * Abstract base for test suites which need PSI [Environment].
  */
 @Suppress(
     "UtilityClassWithPublicConstructor" // Adds `@BeforeAll` and `@AfterAll` for derived classes.
 )
-abstract class ParsingTest {
+abstract class PsiTest {
 
     companion object {
 
