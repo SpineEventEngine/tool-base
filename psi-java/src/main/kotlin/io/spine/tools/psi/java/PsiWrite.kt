@@ -74,14 +74,21 @@ public object PsiWrite {
         return CoreCommandProcessor.getInstance()
     }
 
+    /**
+     * Obtains the instance of [PsiElementFactory] to be used for
+     * the current [project][Environment.project].
+     */
     public val elementFactory: PsiElementFactory by lazy {
         JavaPsiFacade.getElementFactory(project)
     }
 
+    /**
+     * Executes the given [Runnable] as a PSI modification
+     * [command][CommandProcessor.executeCommand].
+     */
     @JvmStatic
     public fun execute(runnable: Runnable) {
-        commandProcessor.executeCommand(project, runnable,
-            "ProtoData Annotating Command", "ProtoData Group of Annotation Operations")
+        commandProcessor.executeCommand(project, runnable, null, null)
     }
 
     private fun init() {
