@@ -1,5 +1,5 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,8 +32,6 @@ import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiJavaFile
 import java.io.File
 import java.time.Instant
-import com.intellij.openapi.vfs.local.CoreLocalFileSystem
-import com.intellij.psi.PsiManager
 import java.util.*
 
 /**
@@ -45,40 +43,19 @@ public class Parser(public val project: Project) {
         PsiFileFactory.getInstance(project)
     }
 
-    private val localFileSystem by lazy {
-        CoreLocalFileSystem()
-    }
-
-    private val psiManager by lazy {
-        PsiManager.getInstance(project)
-    }
-
     /**
      * Creates a new instance of [PsiJavaFile] with the given code and auto-generated name.
      *
      * The file is not saved to the disk.
+     *
+     * @param javaSource
+     *         the previously loaded source code.
+     * @param file
+     *         the file to use when creating [PsiJavaFile] instance.
+     *         If `null` a synthetic file name will be used.
      */
-    public fun parse(javaSource: String): PsiJavaFile =
-        syntheticFile(javaSource)
-
-    /**
-     * Parses the given file and returns the corresponding [PsiJavaFile].
-     */
-    public fun parse(file: File): PsiJavaFile {
-        require(file.toString().endsWith(FILE_SUFFIX)) {
-            "The file `$file` must have the `$FILE_SUFFIX` extension."
-        }
-        require(file.exists()) {
-            "The file `$file` does not exist."
-        }
-        val found = localFileSystem.findFileByIoFile(file)
-        require(found != null) {
-            "Unable to locate the file `$file` in the local file system."
-        }
-        psiManager.findFile(found)?.let {
-            return it as PsiJavaFile
-        }
-        error("Unable to parse the file `$file`.")
+    public fun parse(javaSource: String, file: File? = null): PsiJavaFile {
+        return fromFromCode(javaSource, file)
     }
 
     /**
@@ -87,20 +64,21 @@ public class Parser(public val project: Project) {
      *
      * The instance also has the event system enabled to allow obtaining `VirtualFile` instance.
      */
-    private fun syntheticFile(javaSource: String): PsiJavaFile {
-        val fileName = "__to_parse_${UUID.randomUUID()}__$FILE_SUFFIX"
-        val modificationStamp = Instant.now().toEpochMilli()
-        val file = fileFactory.createFileFromText(
+    private fun fromFromCode(javaSource: String, file: File?): PsiJavaFile {
+        val fileName = file?.canonicalPath ?: "__to_parse_${UUID.randomUUID()}__$FILE_SUFFIX"
+        val fromFile = file?.lastModified() ?: 0
+        val modificationStamp = if (fromFile == 0L) Instant.now().toEpochMilli() else fromFile
+        val psiFile = fileFactory.createFileFromText(
             fileName,
             JavaFileType.INSTANCE,
             javaSource,
             modificationStamp,
             true /* `eventSystemEnabled` */
         )
-        return file as PsiJavaFile
+        return psiFile as PsiJavaFile
     }
 
-    private companion object {
+    internal companion object {
         const val FILE_SUFFIX = ".java"
     }
 }

@@ -131,7 +131,6 @@ fun Module.forceConfigurations() {
                 )
             }
         }
-
     }
 }
 

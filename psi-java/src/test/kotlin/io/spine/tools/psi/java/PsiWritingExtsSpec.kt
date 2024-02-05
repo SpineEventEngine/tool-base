@@ -1,5 +1,5 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,4 +24,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.195")
+package io.spine.tools.psi.java
+
+import io.kotest.matchers.string.shouldContain
+import io.spine.tools.psi.readResource
+import java.io.File
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+
+@DisplayName("PSI writing extensions should")
+class PsiWritingExtsSpec: PsiTest() {
+
+    private val parser by lazy {
+        Parser(Environment.project)
+    }
+
+    @Test
+    fun `annotate a method`() {
+        val fileName = "FileOnDisk.java"
+        val code = readResource(fileName)
+        val file = parser.parse(code, File(fileName))
+        val mainMethod = file.classes.first().findMethodsByName("main", false).first()
+        val annotationCode = "@SuppressWarnings(\"ALL\")"
+        mainMethod.annotate(annotationCode)
+
+        file.text shouldContain annotationCode
+    }
+}

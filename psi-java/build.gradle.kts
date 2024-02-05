@@ -7,6 +7,7 @@ repositories {
 }
 
 dependencies {
+    api(Spine.base)
     api(project(":psi"))
     api(IntelliJ.Platform.core)
     api(IntelliJ.Platform.util)

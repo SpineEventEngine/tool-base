@@ -1,5 +1,5 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,21 +29,25 @@ package io.spine.tools.psi.java
 import com.intellij.DynamicBundle.LanguageBundleEP
 import com.intellij.codeInsight.ContainerProvider
 import com.intellij.codeInsight.runner.JavaMainMethodProvider
-import com.intellij.core.CoreApplicationEnvironment.registerExtensionPoint
+import com.intellij.core.CoreApplicationEnvironment
 import com.intellij.core.JavaCoreApplicationEnvironment
 import com.intellij.ide.highlighter.JavaClassFileType
 import com.intellij.lang.MetaLanguage
+import com.intellij.mock.MockFileDocumentManagerImpl
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.editor.Document
+import com.intellij.openapi.editor.impl.DocumentImpl
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.extensions.ExtensionsArea
+import com.intellij.openapi.fileEditor.FileDocumentManager
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileSystem
 import com.intellij.psi.FileContextProvider
 import com.intellij.psi.JavaModuleSystem
 import com.intellij.psi.augment.PsiAugmentProvider
 import com.intellij.psi.impl.compiled.ClsCustomNavigationPolicy
 import com.intellij.psi.impl.smartPointers.SmartPointerAnchorProvider
-import com.intellij.psi.impl.source.tree.TreeCopyHandler
 import com.intellij.psi.meta.MetaDataContributor
 import io.spine.tools.psi.java.IdeaExtensionPoints.registerVersionSpecificAppExtensionPoints
 
@@ -56,6 +60,16 @@ public class PsiJavaAppEnvironment private constructor(
 
     init {
         registerFileType(JavaClassFileType.INSTANCE, "sig")
+        replaceFileDocumentManager()
+    }
+
+    private fun replaceFileDocumentManager() {
+        // Remove the registration of `MockFileDocumentManagerImpl`.
+        application.picoContainer.unregisterComponent(FileDocumentManager::class.java.name)
+        registerApplicationService(
+            FileDocumentManager::class.java,
+            UncachingDocumentManager()
+        )
     }
 
     override fun createJrtFileSystem(): VirtualFileSystem {
@@ -82,19 +96,18 @@ public class PsiJavaAppEnvironment private constructor(
 
         private fun registerAppExtensionPoints() {
             @Suppress("UnstableApiUsage")
-            registerPoint(LanguageBundleEP.EP_NAME)
-            registerPoint(FileContextProvider.EP_NAME)
+            register(LanguageBundleEP.EP_NAME)
+            register(FileContextProvider.EP_NAME)
             @Suppress("UnstableApiUsage")
-            registerPoint(MetaDataContributor.EP_NAME)
-            registerPoint(PsiAugmentProvider.EP_NAME)
-            registerPoint(JavaMainMethodProvider.EP_NAME)
-            registerPoint(ContainerProvider.EP_NAME)
-            registerPoint(MetaLanguage.EP_NAME)
-            registerPoint(SmartPointerAnchorProvider.EP_NAME)
-            registerPoint(TreeCopyHandler.EP_NAME)
+            register(MetaDataContributor.EP_NAME)
+            register(PsiAugmentProvider.EP_NAME)
+            register(JavaMainMethodProvider.EP_NAME)
+            register(ContainerProvider.EP_NAME)
+            register(MetaLanguage.EP_NAME)
+            register(SmartPointerAnchorProvider.EP_NAME)
         }
 
-        private inline fun <reified T: Any> registerPoint(name: ExtensionPointName<T>) =
+        private inline fun <reified T : Any> register(name: ExtensionPointName<T>) =
             registerApplicationExtensionPoint(name, T::class.java)
     }
 }
@@ -102,10 +115,23 @@ public class PsiJavaAppEnvironment private constructor(
 private object IdeaExtensionPoints {
 
     fun registerVersionSpecificAppExtensionPoints(area: ExtensionsArea) = with(area) {
-        registerPoint(ClsCustomNavigationPolicy.EP_NAME)
-        registerPoint(JavaModuleSystem.EP_NAME)
+        register(ClsCustomNavigationPolicy.EP_NAME)
+        register(JavaModuleSystem.EP_NAME)
     }
 
-    private inline fun <reified T: Any> ExtensionsArea.registerPoint(name: ExtensionPointName<T>) =
-        registerExtensionPoint(this, name, T::class.java)
+    private inline fun <reified T : Any> ExtensionsArea.register(name: ExtensionPointName<T>) =
+        CoreApplicationEnvironment.registerExtensionPoint(this, name, T::class.java)
+}
+
+/**
+ * A hack around [MockFileDocumentManagerImpl] which makes [getCachedDocument]
+ * delegate to [getDocument] to force creation of the document in a modified
+ * `VirtualFile`, to handle the update to a `VirtualFile` which corresponds to
+ * [dynamically created][Parser.parse] `PsiJavaFile`.
+ */
+private class UncachingDocumentManager : MockFileDocumentManagerImpl(null, { DocumentImpl(it) }) {
+
+    override fun getCachedDocument(file: VirtualFile): Document? {
+        return super.getDocument(file)
+    }
 }

@@ -24,4 +24,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.195")
+package io.spine.tools.psi.java
+
+import com.intellij.openapi.project.Project
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
+
+/**
+ * Abstract base for test suites which need PSI [Environment].
+ */
+@Suppress(
+    "UtilityClassWithPublicConstructor" // Adds `@BeforeAll` and `@AfterAll` for derived classes.
+)
+abstract class PsiTest {
+
+    companion object {
+
+        lateinit var project: Project
+
+        @JvmStatic
+        @BeforeAll
+        fun setupIdea() {
+            Environment.setUp()
+            project = Environment.project
+        }
+
+        @JvmStatic
+        @AfterAll
+        fun dispose() {
+            Environment.close()
+        }
+    }
+}

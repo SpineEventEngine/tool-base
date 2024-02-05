@@ -1,5 +1,5 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,4 +24,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.195")
+package io.spine.tools.psi.java
+
+import com.intellij.psi.PsiMethod
+import io.spine.tools.psi.java.PsiWrite.elementFactory
+
+/**
+ * Annotates this method using the given annotation code.
+ */
+public fun PsiMethod.annotate(annotationCode: String) {
+    val annotation = elementFactory.createAnnotationFromText(annotationCode, containingClass)
+    PsiWrite.execute {
+        with(modifierList) {
+            addBefore(annotation, firstChild)
+        }
+    }
+}

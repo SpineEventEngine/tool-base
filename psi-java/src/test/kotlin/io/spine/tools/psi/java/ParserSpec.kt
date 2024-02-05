@@ -26,54 +26,48 @@
 
 package io.spine.tools.psi.java
 
-import com.intellij.core.JavaCoreProjectEnvironment
-import com.intellij.openapi.Disposable
-import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.Disposer
-import io.spine.io.Resource
-import io.spine.string.Separator
-import io.spine.tools.psi.IdeaStandaloneExecution
-import org.junit.jupiter.api.AfterAll
+import com.intellij.psi.PsiJavaFile
+import java.io.File
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldStartWith
+import io.spine.tools.psi.readResource
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
 
-/**
- * Abstract base for test suites of parsing Java files.
- */
-@Suppress(
-    "UtilityClassWithPublicConstructor" // Adds `@BeforeAll` and `@AfterAll` for derived classes.
-)
-abstract class ParsingTest {
+@DisplayName("`Parser` should")
+class ParserSpec : PsiTest() {
 
     companion object {
 
-        lateinit var project: Project
         lateinit var parser: Parser
-        private lateinit var rootDisposable: Disposable
+        lateinit var code: String
 
         @JvmStatic
         @BeforeAll
         fun setupIdea() {
-            IdeaStandaloneExecution.setup()
-            rootDisposable = Disposer.newDisposable()
-            val appEnvironment = PsiJavaAppEnvironment.create(rootDisposable)
-            val environment = JavaCoreProjectEnvironment(rootDisposable, appEnvironment)
+            Environment.setUp()
+            parser = Parser(Environment.project)
+            code = readResource("FileOnDisk.java")
+        }
+    }
 
-            project = environment.project
-            parser = Parser(project)
+    @Nested inner class
+    `parse loaded Java code` {
+
+        @Test
+        fun `providing synthetic file name`() {
+            val psiJavaFile = parser.parse(code)
+            psiJavaFile.name shouldStartWith "__to_parse_"
         }
 
-        @JvmStatic
-        @AfterAll
-        fun dispose() {
-            rootDisposable.dispose()
-        }
+        @Test
+        fun `using passed file reference`() {
+            val file = File("path/to/file.java")
+            val psiJavaFile: PsiJavaFile = parser.parse(code, file)
 
-        fun readResource(fileName: String): String {
-            val resource = Resource.file(fileName, this::class.java.classLoader)
-            val code = resource.read()
-                .lineSequence()
-                .joinToString(separator = Separator.LF.value) // as required by PSI.
-            return code
+            psiJavaFile.name shouldContain file.toString()
         }
     }
 }
