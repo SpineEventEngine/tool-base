@@ -118,20 +118,18 @@ public object PsiWrite {
     }
 }
 
-private inline fun <reified T : Any> registerDynamic(name: ExtensionPointName<T>) {
-    CoreApplicationEnvironment.registerApplicationDynamicExtensionPoint(name.name, T::class.java)
+private inline fun <reified T : Any> registerWithName(pointName: String) {
+    CoreApplicationEnvironment.registerApplicationDynamicExtensionPoint(pointName, T::class.java)
 }
+private inline fun <reified T : Any> registerDynamic(point: ExtensionPointName<T>) =
+    registerWithName<T>(point.name)
 
-private inline fun <reified T : Any> registerDynamic(name: ProjectExtensionPointName<T>) {
-    CoreApplicationEnvironment.registerApplicationDynamicExtensionPoint(name.name, T::class.java)
-}
+private inline fun <reified T : Any> registerDynamic(point: ProjectExtensionPointName<T>) =
+    registerWithName<T>(point.name)
 
-private inline fun <reified T : Any> MockProject.registerServiceImpl(impl: Class<out T>) {
+private inline fun <reified T : Any> MockProject.registerServiceImpl(impl: Class<out T>) =
     registerService(T::class.java, impl)
-}
 
 private inline fun <reified T : Any> MockProject.registerPoint(
     point: ProjectExtensionPointName<T>
-) {
-    CoreApplicationEnvironment.registerExtensionPoint(extensionArea, point.name, T::class.java)
-}
+) = CoreApplicationEnvironment.registerExtensionPoint(extensionArea, point.name, T::class.java)
