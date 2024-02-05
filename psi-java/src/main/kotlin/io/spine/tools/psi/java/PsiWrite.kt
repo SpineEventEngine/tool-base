@@ -96,7 +96,7 @@ public object PsiWrite {
             return
         }
 
-        Environment.setup()
+        Environment.setUp()
 
         synchronized(lock) {
             extensionArea // Force initialization of `ExtensionArea` static.

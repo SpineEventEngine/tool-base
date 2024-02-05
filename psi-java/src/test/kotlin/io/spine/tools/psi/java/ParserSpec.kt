@@ -47,7 +47,7 @@ class ParserSpec : PsiTest() {
         @JvmStatic
         @BeforeAll
         fun setupIdea() {
-            Environment.setup()
+            Environment.setUp()
             parser = Parser(Environment.project)
             code = readResource("FileOnDisk.java")
         }

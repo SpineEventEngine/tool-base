@@ -34,12 +34,12 @@ import com.intellij.openapi.application.TransactionGuardImpl
 import com.intellij.openapi.util.Disposer
 import io.spine.io.Closeable
 import io.spine.tools.psi.IdeaStandaloneExecution
-import io.spine.tools.psi.java.Environment.setup
+import io.spine.tools.psi.java.Environment.setUp
 
 /**
  * An environment for working with IntelliJ PSI.
  *
- * Before using PSI, please call [setup].
+ * Before using PSI, please call [setUp].
  */
 public object Environment : Closeable {
 
@@ -54,7 +54,7 @@ public object Environment : Closeable {
     /**
      * Obtains the project initialized in this environment.
      *
-     * @throws IllegalStateException if accessed before [setup] or after [close] is called.
+     * @throws IllegalStateException if accessed before [setUp] or after [close] is called.
      */
     public val project: MockProject
         get() {
@@ -71,7 +71,7 @@ public object Environment : Closeable {
      * The method checks for the [status][isOpen], so repeated calls are allowed.
      * It is also thread-safe.
      */
-    public fun setup() {
+    public fun setUp() {
         if (isOpen) {
             return
         }

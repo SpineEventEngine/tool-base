@@ -45,7 +45,7 @@ abstract class PsiTest {
         @JvmStatic
         @BeforeAll
         fun setupIdea() {
-            Environment.setup()
+            Environment.setUp()
             project = Environment.project
         }
 
