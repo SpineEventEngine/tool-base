@@ -60,7 +60,7 @@ public object Environment : Closeable {
         get() {
             check(_project != null) {
                 "PSI environment is not set up." +
-                        " Please call `Environment.setup()` before accessing PSI."
+                        " Please call `Environment.setUp()` before accessing PSI."
             }
             return _project!!
         }
