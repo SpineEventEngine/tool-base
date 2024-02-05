@@ -98,7 +98,6 @@ public object PsiWrite {
 
         Environment.setup()
 
-        // https://github.com/ansman/kotlin/blob/e4b574de3893a2f8bf9c6aa2c975b85f91cae61d/native/native.tests/tests/org/jetbrains/kotlin/konan/test/blackbox/support/group/ExtTestCaseGroupProvider.kt#L872
         synchronized(lock) {
             extensionArea // Force initialization of `ExtensionArea` static.
 
