@@ -31,7 +31,7 @@ import io.spine.io.Resource
 /**
  * Reads a text file from resources of this module by the given name.
  *
- * Line numbers of the loaded text are converted to `\n` to be compatible with PSI.
+ * Line separators of the loaded text are converted to `\n` to be compatible with PSI.
  */
 internal fun readResource(fileName: String): String {
     val resource = Resource.file(fileName, object{}.javaClass.classLoader)
