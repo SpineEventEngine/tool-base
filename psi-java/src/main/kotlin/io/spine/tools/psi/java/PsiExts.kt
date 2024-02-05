@@ -31,14 +31,6 @@ import com.intellij.psi.PsiJavaFile
 import io.spine.tools.psi.document
 
 /**
- * Obtains the line number of the class declaration in the containing file.
- *
- * @return the line where the name identifier of the class is placed.
- */
-public val PsiClass.lineNumber: Int
-    get() = document.getLineNumber(textOffset)
-
-/**
  * Locates a class by its simple name in the given Java file.
  *
  * If a class is nested, the simple name must include the names of all the enclosing classes
@@ -85,3 +77,11 @@ public fun PsiJavaFile.locate(simpleName: Iterable<String>): PsiClass? {
     }
     return null
 }
+
+/**
+ * Obtains the line number of the class declaration in the containing file.
+ *
+ * @return the line where the name identifier of the class is placed.
+ */
+public val PsiClass.lineNumber: Int
+    get() = document.getLineNumber(textOffset)
