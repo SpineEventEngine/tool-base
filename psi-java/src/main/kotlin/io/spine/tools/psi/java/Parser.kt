@@ -55,7 +55,7 @@ public class Parser(public val project: Project) {
      *         If `null` a synthetic file name will be used.
      */
     public fun parse(javaSource: String, file: File? = null): PsiJavaFile {
-        return syntheticFile(javaSource, file)
+        return fromFromCode(javaSource, file)
     }
 
     /**
@@ -64,9 +64,10 @@ public class Parser(public val project: Project) {
      *
      * The instance also has the event system enabled to allow obtaining `VirtualFile` instance.
      */
-    private fun syntheticFile(javaSource: String, file: File?): PsiJavaFile {
+    private fun fromFromCode(javaSource: String, file: File?): PsiJavaFile {
         val fileName = file?.canonicalPath ?: "__to_parse_${UUID.randomUUID()}__$FILE_SUFFIX"
-        val modificationStamp = Instant.now().toEpochMilli()
+        val fromFile = file?.lastModified() ?: 0
+        val modificationStamp = if (fromFile == 0L) Instant.now().toEpochMilli() else fromFile
         val psiFile = fileFactory.createFileFromText(
             fileName,
             JavaFileType.INSTANCE,
