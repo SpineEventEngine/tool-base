@@ -29,6 +29,8 @@ package io.spine.tools.psi.java
 import com.intellij.core.JavaCoreProjectEnvironment
 import com.intellij.mock.MockProject
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.application.TransactionGuard
+import com.intellij.openapi.application.TransactionGuardImpl
 import com.intellij.openapi.util.Disposer
 import io.spine.io.Closeable
 import io.spine.tools.psi.IdeaStandaloneExecution
@@ -71,6 +73,8 @@ public object Environment : Closeable {
             IdeaStandaloneExecution.setup()
             rootDisposable = Disposer.newDisposable()
             appEnvironment = PsiJavaAppEnvironment.create(rootDisposable!!)
+            appEnvironment.application
+                .registerService(TransactionGuard::class.java, TransactionGuardImpl::class.java)
             projectEnvironment = JavaCoreProjectEnvironment(rootDisposable!!, appEnvironment)
             _project = projectEnvironment.project
         }

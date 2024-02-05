@@ -26,16 +26,25 @@
 
 package io.spine.tools.psi.java
 
-import com.intellij.core.CoreApplicationEnvironment.registerApplicationDynamicExtensionPoint
+import com.intellij.core.CoreApplicationEnvironment
 import com.intellij.mock.MockProject
+import com.intellij.openapi.command.CommandProcessor
 import com.intellij.openapi.command.impl.CoreCommandProcessor
+import com.intellij.openapi.editor.impl.DocumentWriteAccessGuard
+import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.extensions.Extensions
 import com.intellij.openapi.extensions.ExtensionsArea
+import com.intellij.openapi.extensions.ProjectExtensionPointName
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl
 import com.intellij.pom.PomModel
 import com.intellij.pom.core.impl.PomModelImpl
 import com.intellij.pom.tree.TreeAspect
+import com.intellij.psi.JavaPsiFacade
+import com.intellij.psi.PsiElementFactory
+import com.intellij.psi.PsiTreeChangeListener
+import com.intellij.psi.impl.PsiTreeChangePreprocessor
 import com.intellij.psi.impl.source.tree.TreeCopyHandler
+import io.spine.tools.psi.java.PsiWrite.execute
 
 /**
  * Enhances the PSI [Environment] with the writing abilities.
@@ -57,16 +66,22 @@ public object PsiWrite {
         result
     }
 
-    private val commandProcessor: CoreCommandProcessor by lazy {
+    private val commandProcessor: CommandProcessor
+    get() {
         if (!initialized) {
             init()
         }
-        CoreCommandProcessor()
+        return CoreCommandProcessor.getInstance()
+    }
+
+    public val elementFactory: PsiElementFactory by lazy {
+        JavaPsiFacade.getElementFactory(project)
     }
 
     @JvmStatic
     public fun execute(runnable: Runnable) {
-        commandProcessor.executeCommand(project, runnable, null, null)
+        commandProcessor.executeCommand(project, runnable,
+            "ProtoData Annotating Command", "ProtoData Group of Annotation Operations")
     }
 
     private fun init() {
@@ -80,15 +95,36 @@ public object PsiWrite {
         synchronized(lock) {
             extensionArea // Force initialization of `ExtensionArea` static.
 
-            registerApplicationDynamicExtensionPoint(
-                TreeCopyHandler.EP_NAME.name,
-                TreeCopyHandler::class.java
-            )
+            registerDynamic(TreeCopyHandler.EP_NAME)
+            registerDynamic(PsiTreeChangePreprocessor.EP)
+            registerDynamic(DocumentWriteAccessGuard.EP_NAME)
+
             project.run {
-                registerService(PomModel::class.java, PomModelImpl::class.java)
+                registerServiceImpl<PomModel>(PomModelImpl::class.java)
                 registerService(TreeAspect::class.java)
+
+                registerPoint(PsiTreeChangePreprocessor.EP)
+                registerPoint(PsiTreeChangeListener.EP)
             }
         }
         initialized = true
     }
+}
+
+private inline fun <reified T : Any> registerDynamic(name: ExtensionPointName<T>) {
+    CoreApplicationEnvironment.registerApplicationDynamicExtensionPoint(name.name, T::class.java)
+}
+
+private inline fun <reified T : Any> registerDynamic(name: ProjectExtensionPointName<T>) {
+    CoreApplicationEnvironment.registerApplicationDynamicExtensionPoint(name.name, T::class.java)
+}
+
+private inline fun <reified T : Any> MockProject.registerServiceImpl(impl: Class<out T>) {
+    registerService(T::class.java, impl)
+}
+
+private inline fun <reified T : Any> MockProject.registerPoint(
+    point: ProjectExtensionPointName<T>
+) {
+    CoreApplicationEnvironment.registerExtensionPoint(extensionArea, point.name, T::class.java)
 }

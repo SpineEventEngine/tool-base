@@ -1,5 +1,5 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,48 +26,28 @@
 
 package io.spine.tools.psi.java
 
-import com.intellij.psi.PsiJavaFile
-import java.io.File
 import io.kotest.matchers.string.shouldContain
-import io.kotest.matchers.string.shouldStartWith
 import io.spine.tools.psi.readResource
-import org.junit.jupiter.api.BeforeAll
+import java.io.File
 import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-@DisplayName("`Parser` should")
-class ParserSpec : PsiTest() {
+@DisplayName("PSI writing extensions should")
+class PsiWritingExtsSpec: PsiTest() {
 
-    companion object {
-
-        lateinit var parser: Parser
-        lateinit var code: String
-
-        @JvmStatic
-        @BeforeAll
-        fun setupIdea() {
-            Environment.setup()
-            parser = Parser(Environment.project)
-            code = readResource("FileOnDisk.java")
-        }
+    private val parser by lazy {
+        Parser(Environment.project)
     }
 
-    @Nested inner class
-    `parse loaded Java code` {
+    @Test
+    fun `annotate a method`() {
+        val fileName = "FileOnDisk.java"
+        val code = readResource(fileName)
+        val file = parser.parse(code, File(fileName))
+        val mainMethod = file.classes.first().findMethodsByName("main", false).first()
+        val annotationCode = "@SuppressWarnings(\"ALL\")"
+        mainMethod.annotate(annotationCode)
 
-        @Test
-        fun `providing synthetic file name`() {
-            val psiJavaFile = parser.parse(code)
-            psiJavaFile.name shouldStartWith "__to_parse_"
-        }
-
-        @Test
-        fun `using passed file reference`() {
-            val file = File("path/to/file.java")
-            val psiJavaFile: PsiJavaFile = parser.parse(code, file)
-
-            psiJavaFile.name shouldContain file.toString()
-        }
+        file.text shouldContain annotationCode
     }
 }

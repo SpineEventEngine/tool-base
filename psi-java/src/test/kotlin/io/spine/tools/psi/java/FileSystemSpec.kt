@@ -36,7 +36,7 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.io.TempDir
 
 @DisplayName("`FileSystem` should")
-internal class FileSystemSpec : ParsingTest() {
+internal class FileSystemSpec : PsiTest() {
 
     companion object {
 

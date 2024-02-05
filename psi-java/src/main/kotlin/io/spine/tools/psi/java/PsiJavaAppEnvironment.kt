@@ -64,21 +64,11 @@ public class PsiJavaAppEnvironment private constructor(
     }
 
     private fun replaceFileDocumentManager() {
+        // Remove the registration of `MockFileDocumentManagerImpl`.
         application.picoContainer.unregisterComponent(FileDocumentManager::class.java.name)
-        val documentManager =
-            object : MockFileDocumentManagerImpl(null, { chars: CharSequence? ->
-                DocumentImpl(
-                    chars!!
-                )
-            }) {
-                override fun getCachedDocument(file: VirtualFile): Document? {
-                    return super.getDocument(file)
-                }
-            }
-
         registerApplicationService(
             FileDocumentManager::class.java,
-            documentManager
+            UncachingDocumentManager()
         )
     }
 
@@ -117,7 +107,7 @@ public class PsiJavaAppEnvironment private constructor(
             register(SmartPointerAnchorProvider.EP_NAME)
         }
 
-        private inline fun <reified T: Any> register(name: ExtensionPointName<T>) =
+        private inline fun <reified T : Any> register(name: ExtensionPointName<T>) =
             registerApplicationExtensionPoint(name, T::class.java)
     }
 }
@@ -129,6 +119,19 @@ private object IdeaExtensionPoints {
         register(JavaModuleSystem.EP_NAME)
     }
 
-    private inline fun <reified T: Any> ExtensionsArea.register(name: ExtensionPointName<T>) =
+    private inline fun <reified T : Any> ExtensionsArea.register(name: ExtensionPointName<T>) =
         CoreApplicationEnvironment.registerExtensionPoint(this, name, T::class.java)
+}
+
+/**
+ * A hack around [MockFileDocumentManagerImpl] which makes [getCachedDocument]
+ * delegate to [getDocument] to force creation of the document in a modified
+ * `VirtualFile`, to handle the update to a `VirtualFile` which corresponds to
+ * [dynamically created][Parser.parse] `PsiJavaFile`.
+ */
+private class UncachingDocumentManager : MockFileDocumentManagerImpl(null, { DocumentImpl(it) }) {
+
+    override fun getCachedDocument(file: VirtualFile): Document? {
+        return super.getDocument(file)
+    }
 }
