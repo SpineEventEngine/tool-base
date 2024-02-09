@@ -74,7 +74,7 @@ internal data class BuildSrcCopy(
      * Such references are resoled if classes under `buildSrc/build/classes` are available
      * for the Gradle runner.
      *
-     * So far, any "field" tests have shown that this directory
+     * So far, all "field" tests have shown that this directory
      * **cannot** be re-used, as its contents will be regenerated anyway,
      * because Kotlin compiler detects the paths of source files
      * in the "copied" version of `buildSrc/src` to be different
