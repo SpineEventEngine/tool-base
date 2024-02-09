@@ -40,6 +40,32 @@ import kotlin.io.path.name
  *     locked under the `.gradle` directory could not be copied.
  */
 internal data class BuildSrcCopy(
+
+    /**
+     * If `true`, `buildSrc/build/libs/buildSrc.jar` will be copied
+     * to the root of destination-`buildSrc` directory.
+     *
+     * This JAR file may be included into `buildSrc/build.gradle.kts`
+     * as an implementation-level dependency, and in this way, replace
+     * all the source files, which otherwise would have had to be compiled
+     * from scratch.
+     *
+     * Testing shows ~50% reduce in integration test time,
+     * when this approach is used.
+     */
+    val includeBuildSrcJar: Boolean = true,
+
+    /**
+     * If `true`, `buildSrc/src` directory will be copied.
+     *
+     * This approach is alternative to using `buildSrc.jar`,
+     * and is known to be slower, as additional Kotlin compilation
+     * is going to be required for these source files.
+     *
+     * See [includeBuildSrcJar].
+     */
+    val includeSourceDir: Boolean = false,
+
     /**
      * If `true`, `buildSrc/build` directory will be copied.
      *
@@ -47,14 +73,23 @@ internal data class BuildSrcCopy(
      * the `io.spine.internal.dependency` package in their build scripts.
      * Such references are resoled if classes under `buildSrc/build/classes` are available
      * for the Gradle runner.
+     *
+     * So far, any "field" tests have shown that this directory
+     * **cannot** be re-used, as its contents will be regenerated anyway,
+     * because Kotlin compiler detects the paths of source files
+     * in the "copied" version of `buildSrc/src` to be different
+     * from those used when `buildSrc/build` contents were first obtained.
      */
-    val includeBuildDir: Boolean = true
+    val includeBuildDir: Boolean = false,
 ): Predicate<Path> {
 
-    private val doNotCopy: List<String> = buildList(2) {
+    private val doNotCopy: List<String> = buildList(3) {
         add(".gradle")
         if (!includeBuildDir) {
             add("build")
+        }
+        if(!includeSourceDir) {
+            add("src")
         }
     }
 
