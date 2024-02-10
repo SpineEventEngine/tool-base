@@ -93,9 +93,6 @@ class BuildSrcCopySpec {
     fun `copy 'buildSrc(dot)jar' file by default`() {
         val tool = BuildSrcCopy()
         tool.includeBuildSrcJar shouldBe true
-
-        val jarPath = Paths.get("build/lib/${JAR_NAME}")
-        tool.test(jarPath) shouldBe true
     }
 
     @Test

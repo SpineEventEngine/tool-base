@@ -107,7 +107,7 @@ internal data class BuildSrcCopy(
         if (!includeBuildDir) {
             add("build")
         }
-        if(!includeSourceDir) {
+        if (!includeSourceDir) {
             add("src")
         }
     }
@@ -121,18 +121,21 @@ internal data class BuildSrcCopy(
     }
 
     private fun copyJar(rootPath: Path, targetDir: Path) {
-        val jar = rootPath / "build" / "libs" / JAR_NAME
+        val jar = rootPath / FOLDER_NAME / "build" / "libs" / JAR_NAME
         if (includeBuildSrcJar && jar.exists()) {
-            val jarTarget = targetDir / FOLDER_NAME / jar.fileName
+            val jarTarget = targetDir / FOLDER_NAME / JAR_NAME
             Files.copy(jar, jarTarget)
         }
     }
 
-    /** Tests if the given path should be copied. */
+    /**
+     * Tests if the given path should be copied.
+     *
+     * This method does not account for `buildSrc.jar`,
+     * as the folder structure for its target location (`<targetDir>/buildSrc`)
+     * from the original folder structure (`<rootDir>/buildSrc/build/libs/buildSrc.jar`).
+     **/
     override fun test(path: Path): Boolean {
-        if(path.name == JAR_NAME) {
-            return includeBuildSrcJar
-        }
         return path.any { doNotCopy.contains(it.name) }.not()
     }
 }
