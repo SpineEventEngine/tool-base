@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ class BuildSrcCopySpec {
 
     @Test
     fun `copy directories with source code`() {
-        buildSrcCopy = BuildSrcCopy(false)
+        buildSrcCopy = BuildSrcCopy(includeBuildSrcJar = false, includeSourceDir = true)
         listOf(
             "aus.weis",
             "src/main/kotlin",
@@ -61,7 +61,11 @@ class BuildSrcCopySpec {
 
     @Test
     fun `include 'build' directory if instructed`() {
-        buildSrcCopy = BuildSrcCopy(true)
+        buildSrcCopy = BuildSrcCopy(
+            includeBuildSrcJar = false,
+            includeSourceDir = true,
+            includeBuildDir = true
+        )
 
         listOf(
             "build",
@@ -76,8 +80,8 @@ class BuildSrcCopySpec {
     }
 
     @Test
-    fun `copy 'build' dir by default`() {
-        BuildSrcCopy().includeBuildDir shouldBe true
+    fun `not copy 'build' dir by default`() {
+        BuildSrcCopy().includeBuildDir shouldBe false
     }
 
     private fun assertIsSourceCode(path: String) {
