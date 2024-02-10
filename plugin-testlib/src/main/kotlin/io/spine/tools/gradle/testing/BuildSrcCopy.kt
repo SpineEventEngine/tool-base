@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,11 @@
 package io.spine.tools.gradle.testing
 
 import io.spine.io.Copy.copyDir
+import java.nio.file.Files
 import java.nio.file.Path
 import java.util.function.Predicate
+import kotlin.io.path.div
+import kotlin.io.path.exists
 import kotlin.io.path.name
 
 /**
@@ -83,6 +86,22 @@ internal data class BuildSrcCopy(
     val includeBuildDir: Boolean = false,
 ): Predicate<Path> {
 
+    companion object {
+        /**
+         * Name of the `buildSrc.jar` file.
+         *
+         * Exposed to be re-used in tests.
+         */
+        internal const val JAR_NAME = "buildSrc.jar"
+
+        /**
+         * Name of the `buildSrc` folder.
+         *
+         * Exposed for testing.
+         */
+        internal const val FOLDER_NAME = "buildSrc"
+    }
+
     private val doNotCopy: List<String> = buildList(3) {
         add(".gradle")
         if (!includeBuildDir) {
@@ -96,12 +115,24 @@ internal data class BuildSrcCopy(
     /** Copies the `buildSrc` directory from the [RootProject] into the specified directory. */
     fun writeTo(targetDir: Path) {
         val rootPath = RootProject.path()
-        val buildSrc = rootPath.resolve("buildSrc")
+        val buildSrc = rootPath.resolve(FOLDER_NAME)
         copyDir(buildSrc, targetDir) { path -> test(path) }
+        copyJar(rootPath, targetDir)
+    }
+
+    private fun copyJar(rootPath: Path, targetDir: Path) {
+        val jar = rootPath / "build" / "libs" / JAR_NAME
+        if (includeBuildSrcJar && jar.exists()) {
+            val jarTarget = targetDir / FOLDER_NAME / jar.fileName
+            Files.copy(jar, jarTarget)
+        }
     }
 
     /** Tests if the given path should be copied. */
     override fun test(path: Path): Boolean {
+        if(path.name == JAR_NAME) {
+            return includeBuildSrcJar
+        }
         return path.any { doNotCopy.contains(it.name) }.not()
     }
 }
