@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,7 +77,7 @@ final class ColumnAccessor implements GeneratedMethodSpec {
     }
 
     /**
-     * Returns the name of the Java type of a column.
+     * Returns the name of the Java type of column.
      */
     private ParameterizedTypeName columnType() {
         var result = JavaPoetName.of(EntityColumn.class);
