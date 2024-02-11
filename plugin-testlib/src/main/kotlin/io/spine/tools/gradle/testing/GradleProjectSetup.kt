@@ -241,7 +241,7 @@ public class GradleProjectSetup internal constructor(
      */
     @JvmOverloads
     public fun copyBuildSrc(cachingEnabled: Boolean = true): GradleProjectSetup {
-        buildSrcCopy = if(cachingEnabled) {
+        buildSrcCopy = if (cachingEnabled) {
             BuildSrcCopy()
         } else {
             BuildSrcCopy(includeBuildSrcJar = false, includeSourceDir = true)
