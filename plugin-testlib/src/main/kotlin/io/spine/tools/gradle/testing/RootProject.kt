@@ -80,4 +80,16 @@ internal object RootProject {
     fun dir(): File {
         return path().toFile()
     }
+
+    /**
+     * Returns a path to a conventionally established temp directory named `.gradle-test-kit`,
+     * for Gradle TestKit runners.
+     *
+     * It may be used to configure TestKit runners, so that just a single folder
+     * is created for all integration tests.
+     */
+    @JvmStatic
+    fun testKitTempDir() : Path {
+        return path().resolve(".gradle-test-kit")
+    }
 }

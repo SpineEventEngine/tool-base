@@ -93,6 +93,10 @@ public class GradleProjectSetup internal constructor(
     internal var debug = false
         private set
 
+    /** Whether a [shared Gradle TestKit folder][RootProject.testKitTempDir] should be used. */
+    internal var useSharedTestKit = false
+        private set
+
     /**
      * Determines whether the plugin under test classpath is defined and should be added to
      * the Gradle execution classpath.
@@ -224,10 +228,24 @@ public class GradleProjectSetup internal constructor(
     /**
      * Instructs to copy the `buildSrc` directory from the parent project
      * into the directory of the project to be created.
+     *
+     * If [caching is enabled][cachingEnabled], [BuildSrcCopy] is used by default,
+     * meaning only several files are copied:
+     *  * all first-level files from original `buildSrc` directory as-is;
+     *  * original `/buildSrc/build/libs/buildSrc.jar` is copied to the root
+     *  of the destination `buildSrc` directory — allowing to use it in caching purposes.
+     *
+     *  If caching is disabled, we copy just `buildSrc` sources instead,
+     *  excluding all its "working" subdirectories, such as `.gradle`, `build` etc.,
+     *  as they cannot be reused for caching anyway.
      */
     @JvmOverloads
-    public fun copyBuildSrc(withBuildDir: Boolean = true): GradleProjectSetup {
-        buildSrcCopy = BuildSrcCopy(withBuildDir)
+    public fun copyBuildSrc(cachingEnabled: Boolean = true): GradleProjectSetup {
+        buildSrcCopy = if (cachingEnabled) {
+            BuildSrcCopy()
+        } else {
+            BuildSrcCopy(includeBuildSrcJar = false, includeSourceDir = true)
+        }
         return this
     }
 
@@ -306,6 +324,18 @@ public class GradleProjectSetup internal constructor(
         val r = Replacement(token, replacement)
         this.replacements.add(r)
         return this
+    }
+
+    /**
+     * Tells the TestKit runner to use a [single shared folder][RootProject.testKitTempDir]
+     * for all tests.
+     *
+     * The idea is that this folder is not deleted on `gradlew clean` phase,
+     * and therefore may be somewhat re-used to speed up the test execution.
+     */
+    public fun withSharedTestKitDirectory() : GradleProjectSetup {
+        this.useSharedTestKit = true;
+        return this;
     }
 
     /**
