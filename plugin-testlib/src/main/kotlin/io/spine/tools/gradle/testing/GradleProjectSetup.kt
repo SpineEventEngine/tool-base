@@ -326,6 +326,13 @@ public class GradleProjectSetup internal constructor(
         return this
     }
 
+    /**
+     * Tells the TestKit runner to use a [single shared folder][RootProject.testKitTempDir]
+     * for all tests.
+     *
+     * The idea is that this folder is not deleted on `gradlew clean` phase,
+     * and therefore may be somewhat re-used to speed up the test execution.
+     */
     public fun withSharedTestKitDirectory() : GradleProjectSetup {
         this.useSharedTestKit = true;
         return this;
