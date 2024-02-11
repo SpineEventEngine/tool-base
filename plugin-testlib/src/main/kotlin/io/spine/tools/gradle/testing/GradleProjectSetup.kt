@@ -93,6 +93,10 @@ public class GradleProjectSetup internal constructor(
     internal var debug = false
         private set
 
+    /** Whether a [shared Gradle TestKit folder][RootProject.testKitTempDir] should be used. */
+    internal var useSharedTestKit = false
+        private set
+
     /**
      * Determines whether the plugin under test classpath is defined and should be added to
      * the Gradle execution classpath.
@@ -320,6 +324,11 @@ public class GradleProjectSetup internal constructor(
         val r = Replacement(token, replacement)
         this.replacements.add(r)
         return this
+    }
+
+    public fun withSharedTestKitDirectory() : GradleProjectSetup {
+        this.useSharedTestKit = true;
+        return this;
     }
 
     /**

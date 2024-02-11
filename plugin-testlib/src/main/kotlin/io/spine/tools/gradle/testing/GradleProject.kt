@@ -27,6 +27,7 @@ package io.spine.tools.gradle.testing
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue
 import io.spine.tools.gradle.task.TaskName
+import io.spine.tools.gradle.testing.GradleProject.Companion.setupAt
 import java.io.File
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
@@ -64,9 +65,17 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
     /**
      * The runner for executing tasks.
      */
-    public val runner: GradleRunner = GradleRunner.create()
-        .withProjectDir(setup.projectDir)
-        .withDebug(setup.debug)
+    public val runner: GradleRunner by lazy {
+        val runner = GradleRunner.create()
+            .withProjectDir(setup.projectDir)
+            .withDebug(setup.debug)
+        if (setup.useSharedTestKit) {
+            val sharedDir = RootProject.testKitTempDir().toFile()
+            sharedDir.mkdirs()
+            runner.withTestKitDir(sharedDir)
+        }
+        runner
+    }
 
     init {
         if (setup.addPluginUnderTestClasspath) {
