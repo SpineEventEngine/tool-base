@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,20 +27,30 @@
 package io.spine.tools.gradle.testing
 
 import io.kotest.matchers.shouldBe
+import io.spine.tools.gradle.testing.BuildSrcCopy.Companion.FOLDER_NAME
+import io.spine.tools.gradle.testing.BuildSrcCopy.Companion.JAR_NAME
+import java.io.File
+import java.nio.file.Path
 import java.nio.file.Paths
+import kotlin.io.path.div
+import kotlin.io.path.exists
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 
 @DisplayName("`BuildSrcCopy` should")
 class BuildSrcCopySpec {
 
     private lateinit var buildSrcCopy: BuildSrcCopy
 
+    @field:TempDir
+    private lateinit var tempDir: File
+
     @Test
     fun `copy directories with source code`() {
-        buildSrcCopy = BuildSrcCopy(false)
+        buildSrcCopy = BuildSrcCopy(includeBuildSrcJar = false, includeSourceDir = true)
         listOf(
             "aus.weis",
             "src/main/kotlin",
@@ -61,7 +71,11 @@ class BuildSrcCopySpec {
 
     @Test
     fun `include 'build' directory if instructed`() {
-        buildSrcCopy = BuildSrcCopy(true)
+        buildSrcCopy = BuildSrcCopy(
+            includeBuildSrcJar = false,
+            includeSourceDir = true,
+            includeBuildDir = true
+        )
 
         listOf(
             "build",
@@ -76,8 +90,37 @@ class BuildSrcCopySpec {
     }
 
     @Test
-    fun `copy 'build' dir by default`() {
-        BuildSrcCopy().includeBuildDir shouldBe true
+    fun `copy 'buildSrc(dot)jar' file by default`() {
+        val tool = BuildSrcCopy()
+        tool.includeBuildSrcJar shouldBe true
+    }
+
+    @Test
+    fun `not copy 'build' dir by default`() {
+        BuildSrcCopy().includeBuildDir shouldBe false
+    }
+
+    @Test
+    fun `not copy 'src' dir by default`() {
+        BuildSrcCopy().includeSourceDir shouldBe false
+    }
+
+    @Test
+    fun `copy only first-level files of 'buildSrc' files and 'buildSrc(dot)jar' by default`() {
+        val target = tempDir.toPath()
+        BuildSrcCopy().writeTo(target)
+
+        assertCopied(target, JAR_NAME)
+
+        // We expect at least this file to be present in root `buildSrc` folder.
+        assertCopied(target, "build.gradle.kts")
+    }
+
+    private fun assertCopied(target: Path, filename: String) {
+        val maybeCopy = target / FOLDER_NAME / filename
+        assertTrue(maybeCopy.exists()) {
+            "`$filename` is expected to be copied by default."
+        }
     }
 
     private fun assertIsSourceCode(path: String) {

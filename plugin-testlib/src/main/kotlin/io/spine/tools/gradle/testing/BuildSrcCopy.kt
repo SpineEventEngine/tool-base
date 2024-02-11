@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,11 @@
 package io.spine.tools.gradle.testing
 
 import io.spine.io.Copy.copyDir
+import java.nio.file.Files
 import java.nio.file.Path
 import java.util.function.Predicate
+import kotlin.io.path.div
+import kotlin.io.path.exists
 import kotlin.io.path.name
 
 /**
@@ -40,6 +43,32 @@ import kotlin.io.path.name
  *     locked under the `.gradle` directory could not be copied.
  */
 internal data class BuildSrcCopy(
+
+    /**
+     * If `true`, `buildSrc/build/libs/buildSrc.jar` will be copied
+     * to the root of destination-`buildSrc` directory.
+     *
+     * This JAR file may be included into `buildSrc/build.gradle.kts`
+     * as an implementation-level dependency, and in this way, replace
+     * all the source files, which otherwise would have had to be compiled
+     * from scratch.
+     *
+     * Testing shows ~50% reduce in integration test time,
+     * when this approach is used.
+     */
+    val includeBuildSrcJar: Boolean = true,
+
+    /**
+     * If `true`, `buildSrc/src` directory will be copied.
+     *
+     * This approach is alternative to using `buildSrc.jar`,
+     * and is known to be slower, as additional Kotlin compilation
+     * is going to be required for these source files.
+     *
+     * See [includeBuildSrcJar].
+     */
+    val includeSourceDir: Boolean = false,
+
     /**
      * If `true`, `buildSrc/build` directory will be copied.
      *
@@ -47,25 +76,65 @@ internal data class BuildSrcCopy(
      * the `io.spine.internal.dependency` package in their build scripts.
      * Such references are resoled if classes under `buildSrc/build/classes` are available
      * for the Gradle runner.
+     *
+     * So far, all "field" tests have shown that this directory
+     * **cannot** be re-used, as its contents will be regenerated anyway,
+     * because Kotlin compiler detects the paths of source files
+     * in the "copied" version of `buildSrc/src` to be different
+     * from those used when `buildSrc/build` contents were first obtained.
      */
-    val includeBuildDir: Boolean = true
+    val includeBuildDir: Boolean = false,
 ): Predicate<Path> {
 
-    private val doNotCopy: List<String> = buildList(2) {
+    companion object {
+        /**
+         * Name of the `buildSrc.jar` file.
+         *
+         * Exposed to be re-used in tests.
+         */
+        internal const val JAR_NAME = "buildSrc.jar"
+
+        /**
+         * Name of the `buildSrc` folder.
+         *
+         * Exposed for testing.
+         */
+        internal const val FOLDER_NAME = "buildSrc"
+    }
+
+    private val doNotCopy: List<String> = buildList(3) {
         add(".gradle")
         if (!includeBuildDir) {
             add("build")
+        }
+        if (!includeSourceDir) {
+            add("src")
         }
     }
 
     /** Copies the `buildSrc` directory from the [RootProject] into the specified directory. */
     fun writeTo(targetDir: Path) {
         val rootPath = RootProject.path()
-        val buildSrc = rootPath.resolve("buildSrc")
+        val buildSrc = rootPath.resolve(FOLDER_NAME)
         copyDir(buildSrc, targetDir) { path -> test(path) }
+        copyJar(rootPath, targetDir)
     }
 
-    /** Tests if the given path should be copied. */
+    private fun copyJar(rootPath: Path, targetDir: Path) {
+        val jar = rootPath / FOLDER_NAME / "build" / "libs" / JAR_NAME
+        if (includeBuildSrcJar && jar.exists()) {
+            val jarTarget = targetDir / FOLDER_NAME / JAR_NAME
+            Files.copy(jar, jarTarget)
+        }
+    }
+
+    /**
+     * Tests if the given path should be copied.
+     *
+     * This method does not account for `buildSrc.jar`,
+     * as the folder structure for its target location (`<targetDir>/buildSrc`)
+     * from the original folder structure (`<rootDir>/buildSrc/build/libs/buildSrc.jar`).
+     **/
     override fun test(path: Path): Boolean {
         return path.any { doNotCopy.contains(it.name) }.not()
     }
