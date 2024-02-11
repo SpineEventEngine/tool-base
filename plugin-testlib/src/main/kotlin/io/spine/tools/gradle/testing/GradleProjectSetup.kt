@@ -224,10 +224,24 @@ public class GradleProjectSetup internal constructor(
     /**
      * Instructs to copy the `buildSrc` directory from the parent project
      * into the directory of the project to be created.
+     *
+     * If [caching is enabled][cachingEnabled], [BuildSrcCopy] is used by default,
+     * meaning only several files are copied:
+     *  * all first-level files from original `buildSrc` directory as-is;
+     *  * original `/buildSrc/build/libs/buildSrc.jar` is copied to the root
+     *  of the destination `buildSrc` directory — allowing to use it in caching purposes.
+     *
+     *  If caching is disabled, we copy just `buildSrc` sources instead,
+     *  excluding all its "working" subdirectories, such as `.gradle`, `build` etc.,
+     *  as they cannot be reused for caching anyway.
      */
     @JvmOverloads
-    public fun copyBuildSrc(withBuildDir: Boolean = true): GradleProjectSetup {
-        buildSrcCopy = BuildSrcCopy(withBuildDir)
+    public fun copyBuildSrc(cachingEnabled: Boolean = true): GradleProjectSetup {
+        buildSrcCopy = if(cachingEnabled) {
+            BuildSrcCopy()
+        } else {
+            BuildSrcCopy(includeBuildSrcJar = false, includeSourceDir = true)
+        }
         return this
     }
 
