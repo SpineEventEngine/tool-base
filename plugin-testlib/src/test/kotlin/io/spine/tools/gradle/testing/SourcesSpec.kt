@@ -43,7 +43,7 @@ import org.junit.jupiter.api.io.TempDir
 class SourcesSpec {
 
     companion object {
-        private const val buildScr = "buildSrc"
+        private const val buildSrc = "buildSrc"
 
         /** The name of the directory under `resources`. */
         private const val resourceDir = "sources_test"
@@ -75,13 +75,13 @@ class SourcesSpec {
         fun `when instructed`() {
             setup.copyBuildSrc()
             setup.create()
-            assertExists(buildScr)
+            assertExists(buildSrc)
         }
 
         @Test
         fun `only when told`() {
             setup.create()
-            assertNotExists(buildScr)
+            assertNotExists(buildSrc)
         }
     }
 
