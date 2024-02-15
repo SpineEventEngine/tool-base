@@ -34,9 +34,7 @@ import io.spine.tools.psi.java.PsiWrite.elementFactory
  */
 public fun PsiMethod.annotate(annotationCode: String) {
     val annotation = elementFactory.createAnnotationFromText(annotationCode, containingClass)
-    PsiWrite.execute {
-        with(modifierList) {
-            addBefore(annotation, firstChild)
-        }
+    with(modifierList) {
+        addBefore(annotation, firstChild)
     }
 }
