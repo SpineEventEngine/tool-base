@@ -38,16 +38,20 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.impl.DocumentImpl
+import com.intellij.openapi.editor.impl.DocumentWriteAccessGuard
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.extensions.ExtensionsArea
+import com.intellij.openapi.extensions.ProjectExtensionPointName
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileSystem
 import com.intellij.psi.FileContextProvider
 import com.intellij.psi.JavaModuleSystem
 import com.intellij.psi.augment.PsiAugmentProvider
+import com.intellij.psi.impl.PsiTreeChangePreprocessor
 import com.intellij.psi.impl.compiled.ClsCustomNavigationPolicy
 import com.intellij.psi.impl.smartPointers.SmartPointerAnchorProvider
+import com.intellij.psi.impl.source.tree.TreeCopyHandler
 import com.intellij.psi.meta.MetaDataContributor
 import io.spine.tools.psi.java.IdeaExtensionPoints.registerVersionSpecificAppExtensionPoints
 
@@ -83,15 +87,13 @@ public class PsiJavaAppEnvironment private constructor(
          */
         public fun create(parentDisposable: Disposable): PsiJavaAppEnvironment {
             val environment = PsiJavaAppEnvironment(parentDisposable)
-            registerExtensionPoints()
             return environment
         }
 
-        private fun registerExtensionPoints() {
+        internal fun registerExtensionPoints() {
             registerAppExtensionPoints()
-            registerVersionSpecificAppExtensionPoints(
-                ApplicationManager.getApplication().extensionArea
-            )
+            registerVersionSpecificAppExtensionPoints()
+            registerDynamicPoints()
         }
 
         private fun registerAppExtensionPoints() {
@@ -107,16 +109,25 @@ public class PsiJavaAppEnvironment private constructor(
             register(SmartPointerAnchorProvider.EP_NAME)
         }
 
+        private fun registerDynamicPoints() {
+            registerDynamic(TreeCopyHandler.EP_NAME)
+            registerDynamic(PsiTreeChangePreprocessor.EP)
+            registerDynamic(DocumentWriteAccessGuard.EP_NAME)
+        }
+
         private inline fun <reified T : Any> register(name: ExtensionPointName<T>) =
-            registerApplicationExtensionPoint(name, T::class.java)
+            CoreApplicationEnvironment.registerApplicationExtensionPoint(name, T::class.java)
     }
 }
 
 private object IdeaExtensionPoints {
 
-    fun registerVersionSpecificAppExtensionPoints(area: ExtensionsArea) = with(area) {
-        register(ClsCustomNavigationPolicy.EP_NAME)
-        register(JavaModuleSystem.EP_NAME)
+    fun registerVersionSpecificAppExtensionPoints() {
+        val area = ApplicationManager.getApplication().extensionArea
+        with(area) {
+            register(ClsCustomNavigationPolicy.EP_NAME)
+            register(JavaModuleSystem.EP_NAME)
+        }
     }
 
     private inline fun <reified T : Any> ExtensionsArea.register(name: ExtensionPointName<T>) =
@@ -135,3 +146,14 @@ private class UncachingDocumentManager : MockFileDocumentManagerImpl(null, { Doc
         return super.getDocument(file)
     }
 }
+
+internal inline fun <reified T : Any> registerWithName(pointName: String) {
+    CoreApplicationEnvironment.registerApplicationDynamicExtensionPoint(pointName, T::class.java)
+}
+
+internal inline fun <reified T : Any> registerDynamic(point: ExtensionPointName<T>) =
+    registerWithName<T>(point.name)
+
+internal inline fun <reified T : Any> registerDynamic(point: ProjectExtensionPointName<T>) =
+    registerWithName<T>(point.name)
+

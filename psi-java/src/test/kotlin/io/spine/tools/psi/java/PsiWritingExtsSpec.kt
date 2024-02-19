@@ -46,7 +46,7 @@ class PsiWritingExtsSpec: PsiTest() {
         val file = parser.parse(code, File(fileName))
         val mainMethod = file.classes.first().findMethodsByName("main", false).first()
         val annotationCode = "@SuppressWarnings(\"ALL\")"
-        PsiWrite.execute {
+        Environment.execute {
             mainMethod.annotate(annotationCode)
         }
 

@@ -32,6 +32,11 @@ repositories {
 }
 
 dependencies {
-    api(IntelliJ.Platform.core)
-    api(IntelliJ.Platform.util)
+    IntelliJ.Platform.run {
+        arrayOf(
+            core,
+            util,
+            coreImpl
+        ).forEach { api(it) }
+    }
 }

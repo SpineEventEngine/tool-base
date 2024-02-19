@@ -27,7 +27,7 @@
 package io.spine.tools.psi.java
 
 import com.intellij.psi.PsiMethod
-import io.spine.tools.psi.java.PsiWrite.elementFactory
+import io.spine.tools.psi.java.Environment.elementFactory
 
 /**
  * Annotates this method using the given annotation code.

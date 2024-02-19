@@ -27,14 +27,33 @@
 package io.spine.tools.psi.java
 
 import com.intellij.core.JavaCoreProjectEnvironment
+import com.intellij.lang.MetaLanguage
 import com.intellij.mock.MockProject
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.TransactionGuard
 import com.intellij.openapi.application.TransactionGuardImpl
+import com.intellij.openapi.command.CommandProcessor
+import com.intellij.openapi.command.impl.CoreCommandProcessor
+import com.intellij.openapi.extensions.Extensions
+import com.intellij.openapi.extensions.ExtensionsArea
+import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl
 import com.intellij.openapi.util.Disposer
+import com.intellij.pom.PomModel
+import com.intellij.pom.core.impl.PomModelImpl
+import com.intellij.pom.tree.TreeAspect
+import com.intellij.psi.JavaPsiFacade
+import com.intellij.psi.PsiElementFactory
+import com.intellij.psi.PsiManager
+import com.intellij.psi.PsiTreeChangeListener
+import com.intellij.psi.augment.PsiAugmentProvider
+import com.intellij.psi.impl.PsiManagerImpl
+import com.intellij.psi.impl.PsiTreeChangePreprocessor
 import io.spine.io.Closeable
 import io.spine.tools.psi.IdeaStandaloneExecution
 import io.spine.tools.psi.java.Environment.setUp
+import io.spine.tools.psi.register
+import io.spine.tools.psi.registerPoint
+import io.spine.tools.psi.registerServiceImpl
 
 /**
  * An environment for working with IntelliJ PSI.
@@ -58,12 +77,40 @@ public object Environment : Closeable {
      */
     public val project: MockProject
         get() {
+            if (!isOpen) {
+                setUp()
+            }
             check(_project != null) {
                 "PSI environment is not set up." +
                         " Please call `Environment.setUp()` before accessing PSI."
             }
             return _project!!
         }
+
+    /**
+     * Obtains the instance of [PsiElementFactory] to be used for
+     * the current [project][Environment.project].
+     */
+    public val elementFactory: PsiElementFactory by lazy {
+        JavaPsiFacade.getElementFactory(project)
+    }
+
+    private val commandProcessor: CommandProcessor
+        get() {
+            if (!isOpen) {
+                setUp()
+            }
+            return CoreCommandProcessor.getInstance()
+        }
+
+    /**
+     * Executes the given [Runnable] as a PSI modification
+     * [command][CommandProcessor.executeCommand].
+     */
+    @JvmStatic
+    public fun execute(runnable: Runnable) {
+        commandProcessor.executeCommand(project, runnable, null, null)
+    }
 
     /**
      * Initializes the PSI environment, making it [open][isOpen].
@@ -80,11 +127,46 @@ public object Environment : Closeable {
             rootDisposable = Disposer.newDisposable()
             appEnvironment = PsiJavaAppEnvironment.create(rootDisposable!!)
             appEnvironment.application
-                .registerService(TransactionGuard::class.java, TransactionGuardImpl::class.java)
+                .registerServiceImpl<TransactionGuard>(TransactionGuardImpl::class.java)
             projectEnvironment = JavaCoreProjectEnvironment(rootDisposable!!, appEnvironment)
             _project = projectEnvironment.project
+
+            createRootArea()
+            // The below call uses indirectly `Extensions.getRootArea()`.
+            // So it must follow the creation of the area.
+            PsiJavaAppEnvironment.registerExtensionPoints()
+            registerProjectExtensions()
         }
     }
+
+    private fun registerProjectExtensions() {
+        project.run {
+            registerServiceImpl<PomModel>(PomModelImpl::class.java)
+            registerServiceImpl<PsiManager>(PsiManagerImpl::class.java)
+
+            // registerServiceImpl<JavaCodeStyleManager>(JavaCodeStyleManagerImpl::class.java)
+
+            registerService(TreeAspect::class.java)
+
+            registerPoint(PsiTreeChangePreprocessor.EP)
+            registerPoint(PsiTreeChangeListener.EP)
+        }
+    }
+
+    private fun createRootArea() {
+        val rootArea = ExtensionsAreaImpl(_project!!)
+        Extensions.setRootArea(rootArea)
+        //TODO:2024-02-15:alexander.yevsyukov: register ALL extensions
+        // which target `Extensions.getRootArea()`.
+        //registerInArea(ApplicationManager.getApplication().extensionArea)
+        registerInArea(rootArea)
+    }
+
+    private fun registerInArea(extensionArea: ExtensionsArea) {
+        extensionArea.register(MetaLanguage.EP_NAME)
+        extensionArea.register(PsiAugmentProvider.EP_NAME)
+    }
+
 
     override val isOpen: Boolean
         get() = rootDisposable != null
