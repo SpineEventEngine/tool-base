@@ -1,6 +1,6 @@
 
 
-# Dependencies of `io.spine.tools:spine-plugin-base:2.0.0-SNAPSHOT.197`
+# Dependencies of `io.spine.tools:spine-plugin-base:2.0.0-SNAPSHOT.200`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -636,12 +636,12 @@
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Sun Feb 11 18:04:36 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Mon Feb 19 16:29:47 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:spine-plugin-testlib:2.0.0-SNAPSHOT.197`
+# Dependencies of `io.spine.tools:spine-plugin-testlib:2.0.0-SNAPSHOT.200`
 
 ## Runtime
 1.  **Group** : com.google.auto.value. **Name** : auto-value-annotations. **Version** : 1.10.2.
@@ -1391,12 +1391,12 @@ This report was generated on **Sun Feb 11 18:04:36 WET 2024** using [Gradle-Lice
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Sun Feb 11 18:04:36 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Mon Feb 19 16:29:47 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:spine-psi:2.0.0-SNAPSHOT.197`
+# Dependencies of `io.spine.tools:spine-psi:2.0.0-SNAPSHOT.200`
 
 ## Runtime
 1.  **Group** : be.cyberelf.nanoxml. **Name** : nanoxml. **Version** : 2.2.3.
@@ -1427,6 +1427,7 @@ This report was generated on **Sun Feb 11 18:04:36 WET 2024** using [Gradle-Lice
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : com.jetbrains.intellij.platform. **Name** : core. **Version** : 213.7172.53.**No license information found**
+1.  **Group** : com.jetbrains.intellij.platform. **Name** : core-impl. **Version** : 213.7172.53.**No license information found**
 1.  **Group** : com.jetbrains.intellij.platform. **Name** : extensions. **Version** : 213.7172.53.**No license information found**
 1.  **Group** : com.jetbrains.intellij.platform. **Name** : util. **Version** : 213.7172.53.**No license information found**
 1.  **Group** : com.jetbrains.intellij.platform. **Name** : util-base. **Version** : 213.7172.53.**No license information found**
@@ -1434,6 +1435,10 @@ This report was generated on **Sun Feb 11 18:04:36 WET 2024** using [Gradle-Lice
 1.  **Group** : com.jetbrains.intellij.platform. **Name** : util-rt. **Version** : 213.7172.53.**No license information found**
 1.  **Group** : com.jetbrains.intellij.platform. **Name** : util-text-matching. **Version** : 213.7172.53.**No license information found**
 1.  **Group** : com.jetbrains.intellij.platform. **Name** : util-xml-dom. **Version** : 213.7172.53.**No license information found**
+1.  **Group** : dk.brics. **Name** : automaton. **Version** : 1.12-1.
+     * **Project URL:** [http://www.brics.dk/automaton](http://www.brics.dk/automaton)
+     * **License:** [BSD](http://www.opensource.org/licenses/bsd-license.php)
+
 1.  **Group** : org.apache.commons. **Name** : commons-compress. **Version** : 1.21.
      * **Project URL:** [https://commons.apache.org/proper/commons-compress/](https://commons.apache.org/proper/commons-compress/)
      * **License:** [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -1614,6 +1619,7 @@ This report was generated on **Sun Feb 11 18:04:36 WET 2024** using [Gradle-Lice
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : com.jetbrains.intellij.platform. **Name** : core. **Version** : 213.7172.53.**No license information found**
+1.  **Group** : com.jetbrains.intellij.platform. **Name** : core-impl. **Version** : 213.7172.53.**No license information found**
 1.  **Group** : com.jetbrains.intellij.platform. **Name** : extensions. **Version** : 213.7172.53.**No license information found**
 1.  **Group** : com.jetbrains.intellij.platform. **Name** : util. **Version** : 213.7172.53.**No license information found**
 1.  **Group** : com.jetbrains.intellij.platform. **Name** : util-base. **Version** : 213.7172.53.**No license information found**
@@ -1636,6 +1642,10 @@ This report was generated on **Sun Feb 11 18:04:36 WET 2024** using [Gradle-Lice
 1.  **Group** : commons-collections. **Name** : commons-collections. **Version** : 3.2.2.
      * **Project URL:** [http://commons.apache.org/collections/](http://commons.apache.org/collections/)
      * **License:** [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : dk.brics. **Name** : automaton. **Version** : 1.12-1.
+     * **Project URL:** [http://www.brics.dk/automaton](http://www.brics.dk/automaton)
+     * **License:** [BSD](http://www.opensource.org/licenses/bsd-license.php)
 
 1.  **Group** : info.picocli. **Name** : picocli. **Version** : 4.7.4.
      * **Project URL:** [https://picocli.info](https://picocli.info)
@@ -2023,12 +2033,12 @@ This report was generated on **Sun Feb 11 18:04:36 WET 2024** using [Gradle-Lice
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Sun Feb 11 18:04:37 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Mon Feb 19 16:29:48 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:spine-psi-java:2.0.0-SNAPSHOT.197`
+# Dependencies of `io.spine.tools:spine-psi-java:2.0.0-SNAPSHOT.200`
 
 ## Runtime
 1.  **Group** : be.cyberelf.nanoxml. **Name** : nanoxml. **Version** : 2.2.3.
@@ -2759,12 +2769,12 @@ This report was generated on **Sun Feb 11 18:04:37 WET 2024** using [Gradle-Lice
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Sun Feb 11 18:04:37 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Mon Feb 19 16:29:48 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:spine-tool-base:2.0.0-SNAPSHOT.197`
+# Dependencies of `io.spine.tools:spine-tool-base:2.0.0-SNAPSHOT.200`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -3443,4 +3453,4 @@ This report was generated on **Sun Feb 11 18:04:37 WET 2024** using [Gradle-Lice
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Sun Feb 11 18:04:38 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Mon Feb 19 16:29:48 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
