@@ -28,7 +28,17 @@ package io.spine.tools.psi.java
 
 import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiJavaFile
-import io.spine.tools.psi.document
+
+/**
+ * Obtains the top class declared in this Java file.
+ */
+public val PsiJavaFile.topLevelClass: PsiClass
+    get() {
+        check(classes.isNotEmpty()) {
+            "The Java file `$this` has no classes."
+        }
+        return classes[0]
+    }
 
 /**
  * Locates a class by its simple name in the given Java file.
@@ -77,11 +87,3 @@ public fun PsiJavaFile.locate(simpleName: Iterable<String>): PsiClass? {
     }
     return null
 }
-
-/**
- * Obtains the line number of the class declaration in the containing file.
- *
- * @return the line where the name identifier of the class is placed.
- */
-public val PsiClass.lineNumber: Int
-    get() = document.getLineNumber(textOffset)
