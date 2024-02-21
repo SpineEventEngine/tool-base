@@ -44,9 +44,11 @@ import com.intellij.pom.tree.TreeAspect
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiElementFactory
 import com.intellij.psi.PsiManager
+import com.intellij.psi.PsiNameHelper
 import com.intellij.psi.PsiTreeChangeListener
 import com.intellij.psi.augment.PsiAugmentProvider
 import com.intellij.psi.impl.PsiManagerImpl
+import com.intellij.psi.impl.PsiNameHelperImpl
 import com.intellij.psi.impl.PsiTreeChangePreprocessor
 import io.spine.io.Closeable
 import io.spine.tools.psi.IdeaStandaloneExecution
@@ -137,6 +139,7 @@ public object Environment : Closeable {
     private fun registerProjectExtensions() {
         project.run {
             registerServiceImpl<PomModel>(PomModelImpl::class.java)
+            registerServiceImpl<PsiNameHelper>(PsiNameHelperImpl::class.java)
             registerServiceImpl<PsiManager>(PsiManagerImpl::class.java)
 
             // registerServiceImpl<JavaCodeStyleManager>(JavaCodeStyleManagerImpl::class.java)
