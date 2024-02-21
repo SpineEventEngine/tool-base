@@ -95,22 +95,17 @@ public object Environment : Closeable {
         JavaPsiFacade.getElementFactory(project)
     }
 
-    private val commandProcessor: CommandProcessor
+    /**
+     * Obtains the instance of [CommandProcessor] ensuring the [Environment] is
+     * [initialized][setUp].
+     */
+    internal val commandProcessor: CommandProcessor
         get() {
             if (!isOpen) {
                 setUp()
             }
             return CoreCommandProcessor.getInstance()
         }
-
-    /**
-     * Executes the given [Runnable] as a PSI modification
-     * [command][CommandProcessor.executeCommand].
-     */
-    @JvmStatic
-    public fun execute(runnable: Runnable) {
-        commandProcessor.executeCommand(project, runnable, null, null)
-    }
 
     /**
      * Initializes the PSI environment, making it [open][isOpen].
@@ -123,7 +118,7 @@ public object Environment : Closeable {
             return
         }
         synchronized(lock) {
-            IdeaStandaloneExecution.setup()
+            IdeaStandaloneExecution.setUp()
             rootDisposable = Disposer.newDisposable()
             appEnvironment = PsiJavaAppEnvironment.create(rootDisposable!!)
             appEnvironment.application
