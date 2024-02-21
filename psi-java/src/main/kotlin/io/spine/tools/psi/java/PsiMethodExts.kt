@@ -27,6 +27,7 @@
 package io.spine.tools.psi.java
 
 import com.intellij.psi.PsiMethod
+import io.spine.tools.psi.addFirst
 import io.spine.tools.psi.java.Environment.elementFactory
 
 /**
@@ -34,7 +35,13 @@ import io.spine.tools.psi.java.Environment.elementFactory
  */
 public fun PsiMethod.annotate(annotationCode: String) {
     val annotation = elementFactory.createAnnotationFromText(annotationCode, containingClass)
-    with(modifierList) {
-        addBefore(annotation, firstChild)
-    }
+    modifierList.addFirst(annotation)
+}
+
+/**
+ * Creates Javadoc comment and adds it as the first element of this method.
+ */
+public fun PsiMethod.addJavadoc(text: String) {
+    val doc = elementFactory.createDocCommentFromText(text)
+    addFirst(doc)
 }

@@ -26,39 +26,7 @@
 
 package io.spine.tools.psi
 
-import com.intellij.openapi.editor.Document
-import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.util.text.StringUtilRt
-import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.psi.PsiElement
-
-private val documentManager: FileDocumentManager by lazy {
-    FileDocumentManager.getInstance()
-}
-
-/**
- * Obtains the virtual file to which this element belongs.
- */
-public val PsiElement.virtualFile: VirtualFile
-    get() {
-        val vf = containingFile.virtualFile
-        check(vf != null) {
-            "Unable to obtain a virtual file for `${containingFile.name}`."
-        }
-        return vf
-    }
-
-/**
- * Obtains the document to which this element belongs.
- */
-public val PsiElement.document: Document
-    get() {
-        val doc = documentManager.getDocument(virtualFile)
-        check(doc != null) {
-            "Unable to obtain a document for `${virtualFile.name}`."
-        }
-        return doc
-    }
 
 /**
  * Converts the line separators in the string to the one used by PSI (`"\n"`).
