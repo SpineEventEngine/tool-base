@@ -27,11 +27,12 @@
 package io.spine.tools.psi.java
 
 import com.intellij.psi.PsiClass
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiModifier
+import com.intellij.psi.PsiModifier.STATIC
 import com.intellij.psi.PsiModifierList
 import io.spine.tools.psi.document
-
 
 /**
  * Obtains the line number of the class declaration in the containing file.
@@ -71,31 +72,23 @@ public val PsiClass.modifiers: PsiModifierList
     }
 
 /**
- * Adds `public` modifier to this class, if it did have the modifier before.
+ * Tells if this class has the [`static`][STATIC] modifier.
  */
-public fun PsiClass.makePublic(): PsiClass {
-    modifiers.setIfAbsent(PsiModifier.PUBLIC)
-    return this
-}
+public val PsiClass.isStatic: Boolean
+    get() = modifiers.hasModifierProperty(STATIC)
 
 /**
- * Adds `static` modifier to this class, if it did have the modifier before.
+ * Adds `static` modifier to this class, if it did not have the modifier before.
  */
 public fun PsiClass.makeStatic(): PsiClass {
-    modifiers.setIfAbsent(PsiModifier.STATIC)
+    modifiers.setIfAbsent(STATIC)
     return this
 }
 
 /**
- * Adds `final` modifier to this class, if it did have the modifier before.
+ * Adds given [element] before the closing brace of this class.
  */
-public fun PsiClass.makeFinal(): PsiClass {
-    modifiers.setIfAbsent(PsiModifier.FINAL)
+public fun PsiClass.addLast(element: PsiElement): PsiClass {
+    addBefore(element, rBrace)
     return this
-}
-
-private fun PsiModifierList.setIfAbsent(modifier: String) {
-    if (!hasModifierProperty(modifier)) {
-        setModifierProperty(modifier, true)
-    }
 }
