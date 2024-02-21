@@ -27,7 +27,6 @@
 package io.spine.tools.psi.java
 
 import com.intellij.psi.PsiClass
-import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiModifier
 import com.intellij.psi.PsiModifierList
 import io.spine.tools.psi.document
@@ -41,10 +40,13 @@ import io.spine.tools.psi.document
 public val PsiClass.lineNumber: Int
     get() = document.getLineNumber(textOffset)
 
-public fun PsiClass.addFirst(element: PsiElement): PsiElement {
-    return addBefore(element, firstChild)
-}
-
+/**
+ * Obtains the list of modifiers for this class.
+ *
+ * @throws IllegalStateException
+ *          if the class does not have a list of modifiers, which could be the case,
+ *          for example, for an anonymous class.
+ */
 public val PsiClass.modifiers: PsiModifierList
     get() {
         check(modifierList != null) {
@@ -53,16 +55,25 @@ public val PsiClass.modifiers: PsiModifierList
         return modifierList!!
     }
 
+/**
+ * Adds `public` modifier to this class, if it did have the modifier before.
+ */
 public fun PsiClass.makePublic(): PsiClass {
     modifiers.setIfAbsent(PsiModifier.PUBLIC)
     return this
 }
 
+/**
+ * Adds `static` modifier to this class, if it did have the modifier before.
+ */
 public fun PsiClass.makeStatic(): PsiClass {
     modifiers.setIfAbsent(PsiModifier.STATIC)
     return this
 }
 
+/**
+ * Adds `final` modifier to this class, if it did have the modifier before.
+ */
 public fun PsiClass.makeFinal(): PsiClass {
     modifiers.setIfAbsent(PsiModifier.FINAL)
     return this

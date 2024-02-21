@@ -32,8 +32,8 @@ import java.io.File
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-@DisplayName("PSI writing extensions should")
-class PsiWritingExtsSpec: PsiTest() {
+@DisplayName("'PsiMethod' extensions should")
+class PsiMethodExtsSpec: PsiTest() {
 
     private val parser by lazy {
         Parser(Environment.project)
@@ -46,7 +46,7 @@ class PsiWritingExtsSpec: PsiTest() {
         val file = parser.parse(code, File(fileName))
         val mainMethod = file.classes.first().findMethodsByName("main", false).first()
         val annotationCode = "@SuppressWarnings(\"ALL\")"
-        Environment.execute {
+        execute {
             mainMethod.annotate(annotationCode)
         }
 
