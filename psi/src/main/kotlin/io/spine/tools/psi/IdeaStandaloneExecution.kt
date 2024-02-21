@@ -54,7 +54,7 @@ public object IdeaStandaloneExecution {
      *
      * Call this method before creating other PSI environment objects.
      */
-    public fun setup() {
+    public fun setUp() {
         synchronized(this) {
             if (!configured) {
                 checkInHeadlessMode()
