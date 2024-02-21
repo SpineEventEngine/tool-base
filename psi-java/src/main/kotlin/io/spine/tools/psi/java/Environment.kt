@@ -154,9 +154,6 @@ public object Environment : Closeable {
     private fun createRootArea() {
         val rootArea = ExtensionsAreaImpl(_project!!)
         Extensions.setRootArea(rootArea)
-        //TODO:2024-02-15:alexander.yevsyukov: register ALL extensions
-        // which target `Extensions.getRootArea()`.
-        //registerInArea(ApplicationManager.getApplication().extensionArea)
         registerInArea(rootArea)
     }
 
