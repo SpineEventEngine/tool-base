@@ -27,11 +27,13 @@
 package io.spine.tools.psi.java
 
 import com.intellij.openapi.command.CommandProcessor
+import io.spine.tools.psi.java.Environment.commandProcessor
+import io.spine.tools.psi.java.Environment.project
 
 /**
  * Executes the given [Runnable] as a PSI modification
  * [command][CommandProcessor.executeCommand].
  */
 public fun execute(runnable: Runnable) {
-    Environment.commandProcessor.executeCommand(Environment.project, runnable, null, null)
+    commandProcessor.executeCommand(project, runnable, null, null)
 }
