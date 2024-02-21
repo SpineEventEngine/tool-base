@@ -29,7 +29,6 @@ package io.spine.tools.psi.java
 import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiMethod
-import com.intellij.psi.PsiModifier
 import com.intellij.psi.PsiModifier.STATIC
 import com.intellij.psi.PsiModifierList
 import io.spine.tools.psi.document
