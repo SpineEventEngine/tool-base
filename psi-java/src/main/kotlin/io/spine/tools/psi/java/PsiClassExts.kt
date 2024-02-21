@@ -27,6 +27,7 @@
 package io.spine.tools.psi.java
 
 import com.intellij.psi.PsiClass
+import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiModifier
 import com.intellij.psi.PsiModifierList
 import io.spine.tools.psi.document
@@ -39,6 +40,20 @@ import io.spine.tools.psi.document
  */
 public val PsiClass.lineNumber: Int
     get() = document.getLineNumber(textOffset)
+
+/**
+ * Obtains a method declared directly in this class.
+ *
+ * @throws IllegalStateException
+ *          if the class does not have a method with the given name.
+ */
+public fun PsiClass.method(name: String): PsiMethod {
+    val found = findMethodsByName(name, false)
+    check(found.isNotEmpty()) {
+        "The class `$qualifiedName` does not declare a method named `$name`."
+    }
+    return found.first()
+}
 
 /**
  * Obtains the list of modifiers for this class.

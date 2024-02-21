@@ -44,7 +44,7 @@ class PsiMethodExtsSpec: PsiTest() {
         val fileName = "FileOnDisk.java"
         val code = readResource(fileName)
         val file = parser.parse(code, File(fileName))
-        val mainMethod = file.classes.first().findMethodsByName("main", false).first()
+        val mainMethod = file.topLevelClass.method("main")
         val annotationCode = "@SuppressWarnings(\"ALL\")"
         execute {
             mainMethod.annotate(annotationCode)
