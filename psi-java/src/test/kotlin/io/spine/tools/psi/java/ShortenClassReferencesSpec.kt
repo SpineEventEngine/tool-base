@@ -26,14 +26,8 @@
 
 package io.spine.tools.psi.java
 
-import com.intellij.lang.java.JavaLanguage
 import com.intellij.psi.PsiJavaCodeReferenceElement
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager
 import com.intellij.psi.codeStyle.JavaCodeStyleManager
-import com.intellij.psi.codeStyle.ProjectCodeStyleSettingsManager
-import com.intellij.psi.codeStyle.ReferenceAdjuster
-import com.intellij.psi.impl.source.codeStyle.JavaCodeStyleManagerImpl
-import com.intellij.psi.impl.source.codeStyle.JavaReferenceAdjuster
 import com.intellij.psi.util.PsiTreeUtil
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
