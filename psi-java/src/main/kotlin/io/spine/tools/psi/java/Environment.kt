@@ -26,36 +26,64 @@
 
 package io.spine.tools.psi.java
 
+import com.intellij.configurationStore.SchemeNameToFileName
+import com.intellij.configurationStore.StreamProvider
 import com.intellij.core.JavaCoreProjectEnvironment
+import com.intellij.ide.JavaLanguageCodeStyleSettingsProvider
 import com.intellij.lang.MetaLanguage
+import com.intellij.lang.java.JavaLanguage
+import com.intellij.mock.MockApplication
 import com.intellij.mock.MockProject
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.TransactionGuard
 import com.intellij.openapi.application.TransactionGuardImpl
 import com.intellij.openapi.command.CommandProcessor
 import com.intellij.openapi.command.impl.CoreCommandProcessor
+import com.intellij.openapi.components.RoamingType
 import com.intellij.openapi.extensions.Extensions
 import com.intellij.openapi.extensions.ExtensionsArea
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl
+import com.intellij.openapi.options.EmptySchemesManager
+import com.intellij.openapi.options.Scheme
+import com.intellij.openapi.options.SchemeManager
+import com.intellij.openapi.options.SchemeManagerFactory
+import com.intellij.openapi.options.SchemeProcessor
 import com.intellij.openapi.util.Disposer
 import com.intellij.pom.PomModel
 import com.intellij.pom.core.impl.PomModelImpl
 import com.intellij.pom.tree.TreeAspect
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiElementFactory
+import com.intellij.psi.PsiElementFinder
 import com.intellij.psi.PsiManager
 import com.intellij.psi.PsiNameHelper
 import com.intellij.psi.PsiTreeChangeListener
 import com.intellij.psi.augment.PsiAugmentProvider
+import com.intellij.psi.codeStyle.AppCodeStyleSettingsManager
+import com.intellij.psi.codeStyle.CodeStyleSchemes
+import com.intellij.psi.codeStyle.CodeStyleSettingsManager
+import com.intellij.psi.codeStyle.CodeStyleSettingsProvider
+import com.intellij.psi.codeStyle.CodeStyleSettingsService
+import com.intellij.psi.codeStyle.CodeStyleSettingsServiceImpl
+import com.intellij.psi.codeStyle.FileIndentOptionsProvider
+import com.intellij.psi.codeStyle.FileTypeIndentOptionsProvider
+import com.intellij.psi.codeStyle.JavaCodeStyleManager
+import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider
+import com.intellij.psi.codeStyle.ProjectCodeStyleSettingsManager
+import com.intellij.psi.codeStyle.ReferenceAdjuster
 import com.intellij.psi.impl.PsiManagerImpl
 import com.intellij.psi.impl.PsiNameHelperImpl
 import com.intellij.psi.impl.PsiTreeChangePreprocessor
+import com.intellij.psi.impl.source.codeStyle.JavaCodeStyleManagerImpl
+import com.intellij.psi.impl.source.codeStyle.JavaReferenceAdjuster
+import com.intellij.psi.impl.source.codeStyle.PersistableCodeStyleSchemes
 import io.spine.io.Closeable
 import io.spine.tools.psi.IdeaStandaloneExecution
 import io.spine.tools.psi.java.Environment.setUp
 import io.spine.tools.psi.register
 import io.spine.tools.psi.registerPoint
 import io.spine.tools.psi.registerServiceImpl
+import java.nio.file.Path
 
 /**
  * An environment for working with IntelliJ PSI.
@@ -66,6 +94,7 @@ public object Environment : Closeable {
 
     private val lock = Object()
 
+    private var _application: MockApplication? = null
     private var _project: MockProject? = null
     private var rootDisposable: Disposable? = null
 
@@ -73,18 +102,25 @@ public object Environment : Closeable {
     private lateinit var projectEnvironment: JavaCoreProjectEnvironment
 
     /**
+     * Obtains the application initialized in this environment.
+     */
+    public val application: MockApplication
+        get() {
+            ensureSetUp()
+            check(_application != null) {
+                "PSI environment does not have the `application` initialized."
+            }
+            return _application!!
+        }
+
+    /**
      * Obtains the project initialized in this environment.
-     *
-     * @throws IllegalStateException if accessed before [setUp] or after [close] is called.
      */
     public val project: MockProject
         get() {
-            if (!isOpen) {
-                setUp()
-            }
+            ensureSetUp()
             check(_project != null) {
-                "PSI environment is not set up." +
-                        " Please call `Environment.setUp()` before accessing PSI."
+                "PSI environment does not have the `project` initialized."
             }
             return _project!!
         }
@@ -103,11 +139,15 @@ public object Environment : Closeable {
      */
     internal val commandProcessor: CommandProcessor
         get() {
-            if (!isOpen) {
-                setUp()
-            }
+            ensureSetUp()
             return CoreCommandProcessor.getInstance()
         }
+
+    private fun ensureSetUp() {
+        if (!isOpen) {
+            setUp()
+        }
+    }
 
     /**
      * Initializes the PSI environment, making it [open][isOpen].
@@ -123,8 +163,10 @@ public object Environment : Closeable {
             IdeaStandaloneExecution.setUp()
             rootDisposable = Disposer.newDisposable()
             appEnvironment = PsiJavaAppEnvironment.create(rootDisposable!!)
-            appEnvironment.application
-                .registerServiceImpl<TransactionGuard>(TransactionGuardImpl::class.java)
+
+            _application = appEnvironment.application
+            registerApplicationServices()
+
             projectEnvironment = JavaCoreProjectEnvironment(rootDisposable!!, appEnvironment)
             _project = projectEnvironment.project
 
@@ -133,6 +175,17 @@ public object Environment : Closeable {
             // So it must follow the creation of the area.
             PsiJavaAppEnvironment.registerExtensionPoints()
             registerProjectExtensions()
+            addOtherExtensions()
+        }
+    }
+
+    private fun registerApplicationServices() {
+        with(_application!!) {
+            registerServiceImpl<TransactionGuard>(TransactionGuardImpl::class.java)
+            registerServiceImpl<CodeStyleSettingsService>(CodeStyleSettingsServiceImpl::class.java)
+            registerServiceImpl<CodeStyleSchemes>(PersistableCodeStyleSchemes::class.java)
+            registerServiceImpl<SchemeManagerFactory>(MockSchemeManagerFactory::class.java)
+            registerServiceImpl<AppCodeStyleSettingsManager>(AppCodeStyleSettingsManager::class.java)
         }
     }
 
@@ -142,13 +195,32 @@ public object Environment : Closeable {
             registerServiceImpl<PsiNameHelper>(PsiNameHelperImpl::class.java)
             registerServiceImpl<PsiManager>(PsiManagerImpl::class.java)
 
-            // registerServiceImpl<JavaCodeStyleManager>(JavaCodeStyleManagerImpl::class.java)
+            registerServiceImpl<JavaCodeStyleManager>(
+                JavaCodeStyleManagerImpl::class.java
+            )
+            registerServiceImpl<CodeStyleSettingsManager>(
+                ProjectCodeStyleSettingsManager::class.java
+            )
+            registerServiceImpl<ProjectCodeStyleSettingsManager>(
+                ProjectCodeStyleSettingsManager::class.java
+            )
 
             registerService(TreeAspect::class.java)
 
             registerPoint(PsiTreeChangePreprocessor.EP)
             registerPoint(PsiTreeChangeListener.EP)
+            registerPoint(PsiElementFinder.EP)
         }
+    }
+
+    private fun addOtherExtensions() {
+        ReferenceAdjuster.Extension.INSTANCE.addExplicitExtension(
+            JavaLanguage.INSTANCE,
+            JavaReferenceAdjuster()
+        )
+        LanguageCodeStyleSettingsProvider.registerSettingsPageProvider(
+            JavaLanguageCodeStyleSettingsProvider()
+        )
     }
 
     private fun createRootArea() {
@@ -158,8 +230,17 @@ public object Environment : Closeable {
     }
 
     private fun registerInArea(extensionArea: ExtensionsArea) {
-        extensionArea.register(MetaLanguage.EP_NAME)
-        extensionArea.register(PsiAugmentProvider.EP_NAME)
+        with(extensionArea) {
+            register(MetaLanguage.EP_NAME)
+            register(PsiAugmentProvider.EP_NAME)
+            register(CodeStyleSettingsProvider.EXTENSION_POINT_NAME)
+            register(
+                LanguageCodeStyleSettingsProvider.EP_NAME,
+                JavaLanguageCodeStyleSettingsProvider::class.java
+            )
+            register(FileIndentOptionsProvider.EP_NAME)
+            register(FileTypeIndentOptionsProvider.EP_NAME)
+        }
     }
 
 
@@ -172,5 +253,24 @@ public object Environment : Closeable {
             rootDisposable = null
             _project = null
         }
+    }
+}
+
+private class MockSchemeManagerFactory : SchemeManagerFactory() {
+    override fun <SCHEME : Scheme, MUTABLE_SCHEME : SCHEME> create(
+        directoryName: String,
+        processor: SchemeProcessor<SCHEME, MUTABLE_SCHEME>,
+        presentableName: String?,
+        roamingType: RoamingType,
+        schemeNameToFileName: SchemeNameToFileName,
+        streamProvider: StreamProvider?,
+        directoryPath: Path?,
+        isAutoSave: Boolean
+    ): SchemeManager<SCHEME> {
+        /**
+         * Inspired by https://github.com/openrewrite/rewrite-python/blob/46c390dcbb33d7b408e679462f38988f34b873fd/src/main/java/org/openrewrite/python/internal/IntelliJUtils.java#L193
+         */
+        @Suppress("UNCHECKED_CAST")
+        return EmptySchemesManager() as SchemeManager<SCHEME>
     }
 }
