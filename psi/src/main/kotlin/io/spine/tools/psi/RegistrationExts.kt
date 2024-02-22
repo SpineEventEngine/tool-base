@@ -46,6 +46,23 @@ public inline fun <reified T: Any> ExtensionsArea.register(epName: ExtensionPoin
 }
 
 /**
+ * Registers the extension point and its implementation with this extension area.
+ *
+ * @param T
+ *         the type of the extension point.
+ * @param epName
+ *         the name of the extension point.
+ * @param impl
+ *         the type of the extension point implementation.
+ */
+public inline fun <reified T: Any> ExtensionsArea.register(
+    epName: ExtensionPointName<T>,
+    impl: Class<out T>
+) {
+    CoreApplicationEnvironment.registerExtensionPoint(this, epName, impl)
+}
+
+/**
  * Registers the implementation of the services with this `MockComponentManager`.
  *
  * @param T
