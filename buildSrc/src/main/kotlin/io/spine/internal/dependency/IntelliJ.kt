@@ -51,6 +51,11 @@ object IntelliJ {
         const val core = "$group:core:$version"
         const val util = "$group:util:$version"
         const val coreImpl = "$group:core-impl:$version"
+        const val codeStyle = "$group:code-style:$version"
+        const val projectModel = "$group:project-model:$version"
+        const val projectModelImpl = "$group:project-model-impl:$version"
+        const val lang = "$group:lang:$version"
+        const val langImpl = "$group:lang-impl:$version"
     }
 
     object JavaPsi {
