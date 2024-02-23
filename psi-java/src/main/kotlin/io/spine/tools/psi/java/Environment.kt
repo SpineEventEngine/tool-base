@@ -26,20 +26,41 @@
 
 package io.spine.tools.psi.java
 
+import com.intellij.codeInsight.quickfix.UnresolvedReferenceQuickFixProvider
 import com.intellij.configurationStore.SchemeNameToFileName
 import com.intellij.configurationStore.StreamProvider
+import com.intellij.core.CoreApplicationEnvironment
 import com.intellij.core.JavaCoreProjectEnvironment
+import com.intellij.formatting.Formatter
+import com.intellij.formatting.FormatterImpl
+import com.intellij.formatting.service.CoreFormattingService
+import com.intellij.formatting.service.FormattingService
+import com.intellij.ide.DataManager
 import com.intellij.ide.JavaLanguageCodeStyleSettingsProvider
+import com.intellij.ide.impl.HeadlessDataManager
+import com.intellij.ide.util.PropertiesComponent
+import com.intellij.ide.util.PropertiesComponentImpl
+import com.intellij.lang.ImportOptimizer
+import com.intellij.lang.LanguageFormattingRestriction
 import com.intellij.lang.MetaLanguage
+import com.intellij.lang.injection.InjectedLanguageManager
+import com.intellij.lang.injection.MultiHostInjector
+import com.intellij.lang.java.JavaFormattingModelBuilder
+import com.intellij.lang.java.JavaImportOptimizer
 import com.intellij.lang.java.JavaLanguage
 import com.intellij.mock.MockApplication
 import com.intellij.mock.MockProject
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.application.AsyncExecutionService
 import com.intellij.openapi.application.TransactionGuard
 import com.intellij.openapi.application.TransactionGuardImpl
+import com.intellij.openapi.application.impl.AsyncExecutionServiceImpl
 import com.intellij.openapi.command.CommandProcessor
 import com.intellij.openapi.command.impl.CoreCommandProcessor
 import com.intellij.openapi.components.RoamingType
+import com.intellij.openapi.editor.EditorFactory
+import com.intellij.openapi.editor.impl.EditorFactoryImpl
+import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.extensions.Extensions
 import com.intellij.openapi.extensions.ExtensionsArea
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl
@@ -48,35 +69,65 @@ import com.intellij.openapi.options.Scheme
 import com.intellij.openapi.options.SchemeManager
 import com.intellij.openapi.options.SchemeManagerFactory
 import com.intellij.openapi.options.SchemeProcessor
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.roots.AdditionalLibraryRootsProvider
+import com.intellij.openapi.roots.ProjectFileIndex
+import com.intellij.openapi.roots.ProjectRootManager
+import com.intellij.openapi.roots.impl.DirectoryIndex
+import com.intellij.openapi.roots.impl.DirectoryIndexExcludePolicy
+import com.intellij.openapi.roots.impl.DirectoryIndexImpl
+import com.intellij.openapi.roots.impl.ProjectFileIndexImpl
+import com.intellij.openapi.roots.impl.ProjectRootManagerImpl
 import com.intellij.openapi.util.Disposer
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.pom.PomModel
+import com.intellij.pom.PomModelAspect
 import com.intellij.pom.core.impl.PomModelImpl
+import com.intellij.pom.event.PomModelEvent
 import com.intellij.pom.tree.TreeAspect
+import com.intellij.psi.JavaModuleSystem
 import com.intellij.psi.JavaPsiFacade
+import com.intellij.psi.LanguageInjector
 import com.intellij.psi.PsiElementFactory
 import com.intellij.psi.PsiElementFinder
 import com.intellij.psi.PsiManager
 import com.intellij.psi.PsiNameHelper
+import com.intellij.psi.PsiReference
 import com.intellij.psi.PsiTreeChangeListener
 import com.intellij.psi.augment.PsiAugmentProvider
 import com.intellij.psi.codeStyle.AppCodeStyleSettingsManager
+import com.intellij.psi.codeStyle.CodeStyleManager
 import com.intellij.psi.codeStyle.CodeStyleSchemes
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager
 import com.intellij.psi.codeStyle.CodeStyleSettingsProvider
 import com.intellij.psi.codeStyle.CodeStyleSettingsService
 import com.intellij.psi.codeStyle.CodeStyleSettingsServiceImpl
+import com.intellij.psi.codeStyle.ExternalFormatProcessor
 import com.intellij.psi.codeStyle.FileIndentOptionsProvider
 import com.intellij.psi.codeStyle.FileTypeIndentOptionsProvider
 import com.intellij.psi.codeStyle.JavaCodeStyleManager
 import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider
 import com.intellij.psi.codeStyle.ProjectCodeStyleSettingsManager
 import com.intellij.psi.codeStyle.ReferenceAdjuster
+import com.intellij.psi.impl.JavaPlatformModuleSystem
 import com.intellij.psi.impl.PsiManagerImpl
 import com.intellij.psi.impl.PsiNameHelperImpl
 import com.intellij.psi.impl.PsiTreeChangePreprocessor
+import com.intellij.psi.impl.source.PostprocessReformattingAspect
+import com.intellij.psi.impl.source.codeStyle.CodeStyleManagerImpl
 import com.intellij.psi.impl.source.codeStyle.JavaCodeStyleManagerImpl
 import com.intellij.psi.impl.source.codeStyle.JavaReferenceAdjuster
 import com.intellij.psi.impl.source.codeStyle.PersistableCodeStyleSchemes
+import com.intellij.psi.impl.source.codeStyle.PostFormatProcessor
+import com.intellij.psi.impl.source.codeStyle.PreFormatProcessor
+import com.intellij.psi.impl.source.javadoc.JavadocManagerImpl
+import com.intellij.psi.impl.source.tree.injected.InjectedLanguageManagerImpl
+import com.intellij.psi.javadoc.CustomJavadocTagProvider
+import com.intellij.psi.javadoc.JavadocManager
+import com.intellij.psi.javadoc.JavadocTagInfo
+import com.intellij.psi.util.PsiEditorUtil
+import com.intellij.psi.util.PsiEditorUtilBase
+import com.intellij.util.KeyedLazyInstance
 import io.spine.io.Closeable
 import io.spine.tools.psi.IdeaStandaloneExecution
 import io.spine.tools.psi.java.Environment.setUp
@@ -84,6 +135,7 @@ import io.spine.tools.psi.register
 import io.spine.tools.psi.registerPoint
 import io.spine.tools.psi.registerServiceImpl
 import java.nio.file.Path
+import org.jetbrains.annotations.VisibleForTesting
 
 /**
  * An environment for working with IntelliJ PSI.
@@ -97,6 +149,9 @@ public object Environment : Closeable {
     private var _application: MockApplication? = null
     private var _project: MockProject? = null
     private var rootDisposable: Disposable? = null
+
+    @VisibleForTesting
+    public lateinit var rootArea: ExtensionsAreaImpl
 
     private lateinit var appEnvironment: PsiJavaAppEnvironment
     private lateinit var projectEnvironment: JavaCoreProjectEnvironment
@@ -186,14 +241,30 @@ public object Environment : Closeable {
             registerServiceImpl<CodeStyleSchemes>(PersistableCodeStyleSchemes::class.java)
             registerServiceImpl<SchemeManagerFactory>(MockSchemeManagerFactory::class.java)
             registerServiceImpl<AppCodeStyleSettingsManager>(AppCodeStyleSettingsManager::class.java)
+            registerServiceImpl<AsyncExecutionService>(AsyncExecutionServiceImpl::class.java)
+            registerServiceImpl<PropertiesComponent>(PropertiesComponentImpl::class.java)
+            registerServiceImpl<EditorFactory>(EditorFactoryImpl::class.java)
+            registerServiceImpl<PsiEditorUtil>(PsiEditorUtilBase::class.java)
+            registerServiceImpl<DataManager>(HeadlessDataManager::class.java)
+            registerServiceImpl<Formatter>(FormatterImpl::class.java)
         }
     }
 
     private fun registerProjectExtensions() {
         project.run {
-            registerServiceImpl<PomModel>(PomModelImpl::class.java)
+            //TODO:2024-02-23:alexander.yevsyukov: Replace
+            //     myProject.registerService(InjectedLanguageManager.class, new CoreInjectedLanguageManager());
+            // done by `CoreProjectEnvironment` with registration of `InjectedLanguageManagerImpl` instead.
+            picoContainer.unregisterComponent(InjectedLanguageManager::class.java.name)
+            registerServiceImpl<InjectedLanguageManager>(InjectedLanguageManagerImpl::class.java)
+
+//            registerServiceImpl<PomModel>(PomModelImpl::class.java)
+            registerServiceImpl<PomModel>(LangPomModel::class.java)
+
             registerServiceImpl<PsiNameHelper>(PsiNameHelperImpl::class.java)
             registerServiceImpl<PsiManager>(PsiManagerImpl::class.java)
+
+            registerServiceImpl<CodeStyleManager>(CodeStyleManagerImpl::class.java)
 
             registerServiceImpl<JavaCodeStyleManager>(
                 JavaCodeStyleManagerImpl::class.java
@@ -206,10 +277,29 @@ public object Environment : Closeable {
             )
 
             registerService(TreeAspect::class.java)
+            registerService(PostprocessReformattingAspect::class.java)
+            registerService(ProjectRootManager::class.java, ProjectRootManagerImpl::class.java)
+            registerService(ProjectFileIndex::class.java, MockProjectFileIndex::class.java)
+            registerService(DirectoryIndex::class.java, DirectoryIndexImpl::class.java)
+            registerService(JavadocManager::class.java, JavadocManagerImpl::class.java)
 
             registerPoint(PsiTreeChangePreprocessor.EP)
             registerPoint(PsiTreeChangeListener.EP)
             registerPoint(PsiElementFinder.EP)
+
+            CoreApplicationEnvironment.registerExtensionPoint(
+                extensionArea,
+                DirectoryIndexExcludePolicy.EP_NAME.toString(),
+                DirectoryIndexExcludePolicy::class.java
+            )
+
+            CoreApplicationEnvironment.registerExtensionPoint(
+                extensionArea,
+                JavadocTagInfo.EP_NAME.toString(),
+                JavadocTagInfo::class.java
+            )
+
+            registerPoint(MultiHostInjector.MULTIHOST_INJECTOR_EP_NAME)
         }
     }
 
@@ -224,7 +314,7 @@ public object Environment : Closeable {
     }
 
     private fun createRootArea() {
-        val rootArea = ExtensionsAreaImpl(_project!!)
+        rootArea = ExtensionsAreaImpl(_project!!)
         Extensions.setRootArea(rootArea)
         registerInArea(rootArea)
     }
@@ -240,6 +330,60 @@ public object Environment : Closeable {
             )
             register(FileIndentOptionsProvider.EP_NAME)
             register(FileTypeIndentOptionsProvider.EP_NAME)
+            register(JavaModuleSystem.EP_NAME, JavaPlatformModuleSystem::class.java)
+            register(LanguageFormattingRestriction.EP_NAME)
+            register(ExternalFormatProcessor.EP_NAME)
+            register(
+                FormattingService.EP_NAME,
+                CoreFormattingService::class.java
+            )
+
+            val importOptimizerEp : ExtensionPointName<KeyedLazyInstance<ImportOptimizer>> =
+                ExtensionPointName.create("com.intellij.lang.importOptimizer")
+            register(importOptimizerEp)
+            @Suppress("DEPRECATION")
+            importOptimizerEp.point.registerExtension(
+                object : KeyedLazyInstance<ImportOptimizer> {
+                    override fun getKey(): String {
+                        return JavaLanguage.INSTANCE.id
+                    }
+
+                    override fun getInstance(): ImportOptimizer {
+                        return JavaImportOptimizer()
+                    }
+                }
+            )
+
+            register(AdditionalLibraryRootsProvider.EP_NAME)
+            register(DirectoryIndexExcludePolicy.EP_NAME)
+            register(CustomJavadocTagProvider.EP_NAME)
+            register(PreFormatProcessor.EP_NAME)
+            register(PostFormatProcessor.EP_NAME)
+
+            // From a private const `UnresolvedReferenceQuickFixProvider.EXTENSION_NAME`.
+            val unresolvedRefQuickFixEp =
+                ExtensionPointName.create<UnresolvedReferenceQuickFixProvider<out PsiReference>>(
+                    "com.intellij.codeInsight.unresolvedReferenceQuickFixProvider")
+            register(unresolvedRefQuickFixEp)
+
+
+            val langFormatterEp : ExtensionPointName<KeyedLazyInstance<JavaFormattingModelBuilder>> =
+                ExtensionPointName.create("com.intellij.lang.formatter")
+            register(langFormatterEp)
+            @Suppress("DEPRECATION")
+            langFormatterEp.point.registerExtension(
+                object : KeyedLazyInstance<JavaFormattingModelBuilder> {
+                    override fun getKey(): String {
+                        return JavaLanguage.INSTANCE.id
+                    }
+
+                    override fun getInstance(): JavaFormattingModelBuilder {
+                        return JavaFormattingModelBuilder()
+                    }
+                }
+            )
+
+            register(LanguageInjector.EXTENSION_POINT_NAME)
         }
     }
 
@@ -272,5 +416,36 @@ private class MockSchemeManagerFactory : SchemeManagerFactory() {
          */
         @Suppress("UNCHECKED_CAST")
         return EmptySchemesManager() as SchemeManager<SCHEME>
+    }
+}
+
+/**
+ * A mock implementation of `ProjectFileIndex` telling that everything "is in its sources".
+ */
+private class MockProjectFileIndex(project: Project) : ProjectFileIndexImpl(project) {
+
+    override fun isInSource(fileOrDir: VirtualFile): Boolean {
+        return true
+    }
+}
+
+/**
+ * The substitution for the class which is loaded via reflection using nested class name
+ * from `intellij-community/platform/code-style-impl/resources/META-INF/CodeStyle.xml`.
+ *
+ * The original code is [com.intellij.psi.impl.source.PostprocessReformattingAspect.LangPomModel].
+ * @see https://github.com/JetBrains/intellij-community/blob/bcd577f1af06572e025ed03cd92e888655f6e875/platform/code-style-impl/resources/META-INF/CodeStyle.xml#L57
+ */
+private class LangPomModel internal constructor(project: Project) : PomModelImpl(project) {
+
+    private val myAspect = PostprocessReformattingAspect(project)
+
+    override fun <T : PomModelAspect?> getModelAspect(aClass: Class<T>): T {
+        return if (myAspect.javaClass == aClass) myAspect as T else super.getModelAspect(aClass)
+    }
+
+    override fun updateDependentAspects(event: PomModelEvent) {
+        super.updateDependentAspects(event)
+        myAspect.update(event)
     }
 }

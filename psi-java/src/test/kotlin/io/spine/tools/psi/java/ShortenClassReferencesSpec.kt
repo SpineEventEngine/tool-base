@@ -26,9 +26,18 @@
 
 package io.spine.tools.psi.java
 
-import com.intellij.psi.PsiJavaCodeReferenceElement
+import com.intellij.codeInsight.actions.OptimizeImportsProcessor
+import com.intellij.codeInsight.actions.ReformatCodeProcessor
+import com.intellij.formatting.service.CoreFormattingService
+import com.intellij.formatting.service.FormattingService
+import com.intellij.openapi.editor.SelectionModel
+import com.intellij.openapi.editor.impl.SelectionModelImpl
+import com.intellij.openapi.module.EmptyModuleManager
+import com.intellij.openapi.module.ModuleManager
+import com.intellij.openapi.util.TextRange
+import com.intellij.psi.codeStyle.CodeStyleManager
 import com.intellij.psi.codeStyle.JavaCodeStyleManager
-import com.intellij.psi.util.PsiTreeUtil
+import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
@@ -64,22 +73,43 @@ class ShortenClassReferencesSpec {
 
     @Test
     fun `register 'JavaCodeStyleManager' with project`() {
-        val styleManager = JavaCodeStyleManager.getInstance(Environment.project)
+        val project = Environment.project
+        val styleManager = JavaCodeStyleManager.getInstance(project)
         styleManager shouldNotBe null
         val fileName = "FieldPath.java"
         val javaFile = readResource(fileName)
-        val psiFile = Parser(project = Environment.project).parse(javaFile, File(fileName))
+        val psiFile = Parser(project = project).parse(javaFile, File(fileName))
 
+        project.addComponent(ModuleManager::class.java, EmptyModuleManager(project))
         // replace with your PsiFile
-        val references = PsiTreeUtil.collectElementsOfType(
-            psiFile,
-            PsiJavaCodeReferenceElement::class.java
-        )
+//        val references = PsiTreeUtil.collectElementsOfType(
+//            psiFile,
+//            PsiJavaCodeReferenceElement::class.java
+//        )
+        val codeStyleManager: CodeStyleManager = CodeStyleManager.getInstance(project)
 
+//        Environment.rootArea.register(
+//            FormattingService.EP_NAME,
+//            CoreFormattingService::class.java
+//        )
+
+        @Suppress("DEPRECATION")
+        FormattingService.EP_NAME.point.registerExtension(CoreFormattingService())
+
+        FormattingService.EP_NAME.getExtensionList().shouldNotBeEmpty()
+
+//        NonProjectFileWritingAccessProvider.allowWriting(listOf(psiFile.virtualFile))
         execute {
-            references.forEach {
-                styleManager.shortenClassReferences(it)
-            }
+//            references.forEach {
+//                styleManager.shortenClassReferences(it)
+//            }
+            styleManager.shortenClassReferences(psiFile)
+            //styleManager.optimizeImports(psiFile)
+//            codeStyleManager.reformatText(psiFile, 0, psiFile.textLength)
+//            val processor = OptimizeImportsProcessor(project, psiFile)
+            val processor = ReformatCodeProcessor(project, psiFile,
+                TextRange(0, psiFile.textLength), false)
+            processor.runWithoutProgress()
         }
 
         val text = psiFile.text
