@@ -45,7 +45,11 @@ internal class MockLangPomModel(project: Project) : PomModelImpl(project) {
     private val myAspect = PostprocessReformattingAspect(project)
 
     override fun <T : PomModelAspect?> getModelAspect(aClass: Class<T>): T {
-        return if (myAspect.javaClass == aClass) myAspect as T else super.getModelAspect(aClass)
+        @Suppress("UNCHECKED_CAST")
+        val result =
+            if (myAspect.javaClass == aClass) (myAspect as T)
+            else super.getModelAspect(aClass)
+        return result
     }
 
     override fun updateDependentAspects(event: PomModelEvent) {
