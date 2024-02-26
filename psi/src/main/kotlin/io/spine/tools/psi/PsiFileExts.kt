@@ -24,22 +24,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.IntelliJ
-import io.spine.internal.dependency.Spine
+package io.spine.tools.psi
 
-repositories {
-    intellijReleases
-    jetBrainsCacheRedirector
-}
+import com.intellij.openapi.editor.Document
+import com.intellij.psi.PsiFile
 
-dependencies {
-    api(Spine.base)
-    IntelliJ.Platform.run {
-        arrayOf(
-            core,
-            util,
-            coreImpl,
-            codeStyle
-        ).forEach { api(it) }
-    }
-}
+/**
+ * Obtains a document for this [PsiFile].
+ *
+ * @return the document instance of `null` if the file is binary, or
+ *         the file has no associated document.
+ */
+public val PsiFile.document: Document?
+    get() = project.documentManager.getDocument(this)

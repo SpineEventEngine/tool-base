@@ -1,3 +1,4 @@
+import io.spine.internal.dependency.Guava
 import io.spine.internal.dependency.IntelliJ
 import io.spine.internal.dependency.Spine
 
@@ -7,6 +8,7 @@ repositories {
 }
 
 dependencies {
+    implementation(Guava.lib)
     api(project(":psi"))
     api(IntelliJ.Platform.core)
     api(IntelliJ.Platform.util)
@@ -16,74 +18,64 @@ dependencies {
     api(IntelliJ.Platform.projectModel)
     api(IntelliJ.Platform.projectModelImpl)
     api(IntelliJ.Platform.lang)
-    api(IntelliJ.Platform.langImpl) {
-        exclude(group = "com.jetbrains.infra")
-        exclude(group = "ai.grazie.spell")
-        exclude(group = "com.jetbrains.intellij.platform")
+
+    val exclusions = listOf(
+        "com.jetbrains.infra",
+        "ai.grazie.spell",
+        "com.jetbrains.intellij.platform",
+        "org.codehaus.groovy",
+        "org.apache.groovy"
+    )
+    fun ModuleDependency.excludeMany(excl: Iterable<String> = exclusions) {
+        excl.forEach { exclude(it) }
     }
 
+    api(IntelliJ.Platform.langImpl) { excludeMany() }
 
     // To use `AsyncExecutionServiceImpl`, uncomment this:
-    api(IntelliJ.Platform.ideImpl) {
-        exclude(group = "com.jetbrains.infra")
-        exclude(group = "ai.grazie.spell")
-        exclude(group = "com.jetbrains.intellij.platform")
-    }
+    api(IntelliJ.Platform.ideImpl) { excludeMany() }
 
     // To use `NonProjectFileWritingAccessProvider`, uncomment the following:
-    api(IntelliJ.Platform.ideCoreImpl) {
-        exclude(group = "com.jetbrains.infra")
-        exclude(group = "ai.grazie.spell")
-        exclude(group = "com.jetbrains.intellij.platform")
-    }
+    api(IntelliJ.Platform.ideCoreImpl) { excludeMany() }
 
     // To access `com.intellij.psi.JspPsiUtil` as a transitive dependency
     // used by `com.intellij.psi.impl.source.codeStyle.ImportHelper`.
-    implementation(IntelliJ.Jsp.jsp) {
-        exclude(group = "com.jetbrains.infra")
-        exclude(group = "ai.grazie.spell")
-        exclude(group = "com.jetbrains.intellij.platform")
-    }
+    implementation(IntelliJ.Jsp.jsp) { excludeMany() }
 
-    implementation(IntelliJ.Xml.xmlPsiImpl) {
-        exclude(group = "com.jetbrains.infra")
-        exclude(group = "ai.grazie.spell")
-        exclude(group = "com.jetbrains.intellij.platform")
-    }
-
-    implementation(IntelliJ.Platform.analysisImpl) {
-        exclude(group = "com.jetbrains.infra")
-        exclude(group = "ai.grazie.spell")
-        exclude(group = "com.jetbrains.intellij.platform")
-    }
+    implementation(IntelliJ.Xml.xmlPsiImpl) { excludeMany() }
+    implementation(IntelliJ.Platform.analysisImpl) { excludeMany() }
+    implementation(IntelliJ.Platform.indexingImpl) { excludeMany() }
 
     api(IntelliJ.JavaPsi.api)
     api(IntelliJ.JavaPsi.impl)
 
     implementation(IntelliJ.Java.impl) {
-        exclude(group = "ai.grazie.nlp")
-        exclude(group = "ai.grazie.spell")
-        exclude(group = "ai.grazie.utils")
-        exclude(group = "org.jetbrains.teamcity")
-        exclude(group = "com.jetbrains.infra")
+        excludeMany(listOf(
+            "ai.grazie.nlp",
+            "ai.grazie.spell",
+            "ai.grazie.utils",
+            "org.jetbrains.teamcity",
+            "com.jetbrains.infra",
 
-        exclude(group = "com.jetbrains.intellij.platform")
+            "com.jetbrains.intellij.platform",
+            "org.apache.groovy",
 
-        exclude(group = "com.jetbrains.intellij.jsp")
-        exclude(group = "com.jetbrains.intellij.regexp")
-        exclude(group = "com.jetbrains.intellij.spellchecker")
-        exclude(group = "com.jetbrains.intellij.xml")
-        exclude(group = "com.jetbrains.intellij.copyright")
+            "com.jetbrains.intellij.jsp",
+            "com.jetbrains.intellij.regexp",
+            "com.jetbrains.intellij.spellchecker",
+            "com.jetbrains.intellij.xml",
+            "com.jetbrains.intellij.copyright",
 
-        exclude(group = "com.sun.activation")
-        exclude(group = "javax.xml.bind")
-        exclude(group = "commons-collections")
-        exclude(group = "net.jcip")
-        exclude(group = "net.sourceforge.nekohtml")
-        exclude(group = "one.util")
-        exclude(group = "org.apache.velocity")
-        exclude(group = "org.glassfish.jaxb")
-        exclude(group = "oro")
+            "com.sun.activation",
+            "javax.xml.bind",
+            "commons-collections",
+            "net.jcip",
+            "net.sourceforge.nekohtml",
+            "one.util",
+            "org.apache.velocity",
+            "org.glassfish.jaxb",
+            "oro"
+        ))
     }
 
     testImplementation(Spine.base)

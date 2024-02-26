@@ -60,6 +60,7 @@ object IntelliJ {
         const val ideImpl = "$group:ide-impl:$version"
         const val ideCoreImpl = "$group:ide-core-impl:$version"
         const val analysisImpl = "$group:analysis-impl:$version"
+        const val indexingImpl = "$group:indexing-impl:$version"
     }
 
     object Jsp {

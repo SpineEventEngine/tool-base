@@ -24,22 +24,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.IntelliJ
-import io.spine.internal.dependency.Spine
+package io.spine.tools.psi.java
 
-repositories {
-    intellijReleases
-    jetBrainsCacheRedirector
-}
+import com.intellij.application.options.CodeStyle
+import com.intellij.openapi.project.Project
+import com.intellij.psi.codeStyle.JavaCodeStyleManager
+import com.intellij.psi.codeStyle.JavaCodeStyleSettings
 
-dependencies {
-    api(Spine.base)
-    IntelliJ.Platform.run {
-        arrayOf(
-            core,
-            util,
-            coreImpl,
-            codeStyle
-        ).forEach { api(it) }
-    }
-}
+/**
+ * Obtains [JavaCodeStyleManager] for this project.
+ */
+public val Project.javaCodeStyleManager: JavaCodeStyleManager
+    get() = JavaCodeStyleManager.getInstance(this)
+
+public val Project.javaCodeStyleSettings: JavaCodeStyleSettings
+    get() = CodeStyle.getSettings(this).getCustomSettings(JavaCodeStyleSettings::class.java)

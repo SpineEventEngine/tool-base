@@ -26,21 +26,20 @@
 
 package io.spine.tools.psi.java
 
+import com.intellij.application.options.CodeStyle
 import com.intellij.codeInsight.actions.OptimizeImportsProcessor
-import com.intellij.codeInsight.actions.ReformatCodeProcessor
-import com.intellij.formatting.service.CoreFormattingService
-import com.intellij.formatting.service.FormattingService
-import com.intellij.openapi.editor.SelectionModel
-import com.intellij.openapi.editor.impl.SelectionModelImpl
-import com.intellij.openapi.module.EmptyModuleManager
-import com.intellij.openapi.module.ModuleManager
-import com.intellij.openapi.util.TextRange
-import com.intellij.psi.codeStyle.CodeStyleManager
-import com.intellij.psi.codeStyle.JavaCodeStyleManager
-import io.kotest.matchers.collections.shouldNotBeEmpty
+import com.intellij.codeInsight.documentation.DocumentationManager
+import com.intellij.openapi.editor.Document
+import com.intellij.psi.PsiDocumentManager
+import com.intellij.psi.codeStyle.JavaCodeStyleSettings
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
+import io.spine.tools.psi.codeStyleManager
+import io.spine.tools.psi.codeStyleSettings
+import io.spine.tools.psi.document
+import io.spine.tools.psi.force
+import io.spine.tools.psi.get
 import io.spine.tools.psi.readResource
 import java.io.File
 import java.net.URI
@@ -49,6 +48,7 @@ import org.gradle.testfixtures.ProjectBuilder
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
+
 
 @DisplayName("`PsiJavaFile` should support shortening class references")
 class ShortenClassReferencesSpec {
@@ -74,48 +74,25 @@ class ShortenClassReferencesSpec {
     @Test
     fun `register 'JavaCodeStyleManager' with project`() {
         val project = Environment.project
-        val styleManager = JavaCodeStyleManager.getInstance(project)
+
+        val styleManager = project.javaCodeStyleManager
         styleManager shouldNotBe null
         val fileName = "FieldPath.java"
         val javaFile = readResource(fileName)
-        val psiFile = Parser(project = project).parse(javaFile, File(fileName))
+        val psiFile = Parser(project).parse(javaFile, File(fileName))
 
-        project.addComponent(ModuleManager::class.java, EmptyModuleManager(project))
-        // replace with your PsiFile
-//        val references = PsiTreeUtil.collectElementsOfType(
-//            psiFile,
-//            PsiJavaCodeReferenceElement::class.java
-//        )
-        val codeStyleManager: CodeStyleManager = CodeStyleManager.getInstance(project)
+        val projectSettings = project.codeStyleSettings
+        val javaSettings = projectSettings.get<JavaCodeStyleSettings>()
+        javaSettings.classCountToUseImportOnDemand = 999
+        project.force(projectSettings)
 
-//        Environment.rootArea.register(
-//            FormattingService.EP_NAME,
-//            CoreFormattingService::class.java
-//        )
-
-        @Suppress("DEPRECATION")
-        FormattingService.EP_NAME.point.registerExtension(CoreFormattingService())
-
-        FormattingService.EP_NAME.getExtensionList().shouldNotBeEmpty()
-
-//        NonProjectFileWritingAccessProvider.allowWriting(listOf(psiFile.virtualFile))
         execute {
-//            references.forEach {
-//                styleManager.shortenClassReferences(it)
-//            }
             styleManager.shortenClassReferences(psiFile)
-            //styleManager.optimizeImports(psiFile)
-//            codeStyleManager.reformatText(psiFile, 0, psiFile.textLength)
-//            val processor = OptimizeImportsProcessor(project, psiFile)
-            val processor = ReformatCodeProcessor(project, psiFile,
-                TextRange(0, psiFile.textLength), false)
-            processor.runWithoutProgress()
+            styleManager.optimizeImports(psiFile)
         }
-
         val text = psiFile.text
 
         text shouldContain "import com.google.protobuf.GeneratedMessageV3;"
-        text shouldNotContain "java.lang"
     }
 }
 

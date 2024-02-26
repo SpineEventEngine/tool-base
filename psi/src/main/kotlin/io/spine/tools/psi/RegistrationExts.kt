@@ -32,6 +32,7 @@ import com.intellij.mock.MockComponentManager
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.extensions.ExtensionsArea
 import com.intellij.openapi.extensions.ProjectExtensionPointName
+import kotlin.reflect.KClass
 
 /**
  * Registers the extension point with this extension area.
@@ -72,6 +73,31 @@ public inline fun <reified T: Any> ExtensionsArea.register(
  */
 public inline fun <reified T : Any> MockComponentManager.registerServiceImpl(impl: Class<out T>) {
     registerService(T::class.java, impl)
+}
+
+/**
+ * Registers the implementation of the services with this `MockComponentManager`.
+ *
+ * @param T
+ *         the type of the service.
+ * @param impl
+ *         the Kotlin class of the service implementation, Java instance of which will be used.
+ */
+public inline fun <reified T : Any> MockComponentManager.registerServiceImpl(impl: KClass<out T>) {
+    registerService(T::class.java, impl.java)
+}
+
+/**
+ * Replaces the implementation of the service.
+ *
+ * @param T
+ *         the type of the service.
+ * @param newImpl
+ *         the class of the new service implementation to be used.
+ */
+public inline fun <reified T : Any> MockComponentManager.replaceServiceImpl(newImpl: Class<out T>) {
+    picoContainer.unregisterComponent(T::class.java.name)
+    registerServiceImpl(newImpl)
 }
 
 /**

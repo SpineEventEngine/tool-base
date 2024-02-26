@@ -24,22 +24,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.IntelliJ
-import io.spine.internal.dependency.Spine
+package io.spine.tools.psi.java
 
-repositories {
-    intellijReleases
-    jetBrainsCacheRedirector
-}
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.roots.impl.ProjectFileIndexImpl
+import com.intellij.openapi.vfs.VirtualFile
 
-dependencies {
-    api(Spine.base)
-    IntelliJ.Platform.run {
-        arrayOf(
-            core,
-            util,
-            coreImpl,
-            codeStyle
-        ).forEach { api(it) }
+/**
+ * A mock implementation of `ProjectFileIndex` telling that everything "is in its sources".
+ */
+@Suppress("UnstableApiUsage")
+internal class MockProjectFileIndex(project: Project) : ProjectFileIndexImpl(project) {
+
+    override fun isInSource(fileOrDir: VirtualFile): Boolean {
+        return true
     }
 }

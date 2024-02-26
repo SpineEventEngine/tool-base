@@ -26,9 +26,8 @@
 
 package io.spine.tools.psi.java
 
+import com.intellij.codeInsight.ImportFilter
 import com.intellij.codeInsight.quickfix.UnresolvedReferenceQuickFixProvider
-import com.intellij.configurationStore.SchemeNameToFileName
-import com.intellij.configurationStore.StreamProvider
 import com.intellij.core.CoreApplicationEnvironment
 import com.intellij.core.JavaCoreProjectEnvironment
 import com.intellij.formatting.Formatter
@@ -57,33 +56,24 @@ import com.intellij.openapi.application.TransactionGuardImpl
 import com.intellij.openapi.application.impl.AsyncExecutionServiceImpl
 import com.intellij.openapi.command.CommandProcessor
 import com.intellij.openapi.command.impl.CoreCommandProcessor
-import com.intellij.openapi.components.RoamingType
 import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.editor.impl.EditorFactoryImpl
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.extensions.Extensions
 import com.intellij.openapi.extensions.ExtensionsArea
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl
-import com.intellij.openapi.options.EmptySchemesManager
-import com.intellij.openapi.options.Scheme
-import com.intellij.openapi.options.SchemeManager
+import com.intellij.openapi.module.EmptyModuleManager
+import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.options.SchemeManagerFactory
-import com.intellij.openapi.options.SchemeProcessor
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.AdditionalLibraryRootsProvider
 import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.openapi.roots.impl.DirectoryIndex
 import com.intellij.openapi.roots.impl.DirectoryIndexExcludePolicy
 import com.intellij.openapi.roots.impl.DirectoryIndexImpl
-import com.intellij.openapi.roots.impl.ProjectFileIndexImpl
 import com.intellij.openapi.roots.impl.ProjectRootManagerImpl
 import com.intellij.openapi.util.Disposer
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.pom.PomModel
-import com.intellij.pom.PomModelAspect
-import com.intellij.pom.core.impl.PomModelImpl
-import com.intellij.pom.event.PomModelEvent
 import com.intellij.pom.tree.TreeAspect
 import com.intellij.psi.JavaModuleSystem
 import com.intellij.psi.JavaPsiFacade
@@ -109,10 +99,14 @@ import com.intellij.psi.codeStyle.JavaCodeStyleManager
 import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider
 import com.intellij.psi.codeStyle.ProjectCodeStyleSettingsManager
 import com.intellij.psi.codeStyle.ReferenceAdjuster
+import com.intellij.psi.impl.JavaClassSupersImpl
 import com.intellij.psi.impl.JavaPlatformModuleSystem
+import com.intellij.psi.impl.JavaPsiImplementationHelper
+import com.intellij.psi.impl.JavaPsiImplementationHelperImpl
 import com.intellij.psi.impl.PsiManagerImpl
 import com.intellij.psi.impl.PsiNameHelperImpl
 import com.intellij.psi.impl.PsiTreeChangePreprocessor
+import com.intellij.psi.impl.search.PsiSearchHelperImpl
 import com.intellij.psi.impl.source.PostprocessReformattingAspect
 import com.intellij.psi.impl.source.codeStyle.CodeStyleManagerImpl
 import com.intellij.psi.impl.source.codeStyle.JavaCodeStyleManagerImpl
@@ -125,6 +119,9 @@ import com.intellij.psi.impl.source.tree.injected.InjectedLanguageManagerImpl
 import com.intellij.psi.javadoc.CustomJavadocTagProvider
 import com.intellij.psi.javadoc.JavadocManager
 import com.intellij.psi.javadoc.JavadocTagInfo
+import com.intellij.psi.search.PsiSearchHelper
+import com.intellij.psi.search.searches.ReferencesSearch
+import com.intellij.psi.util.JavaClassSupers
 import com.intellij.psi.util.PsiEditorUtil
 import com.intellij.psi.util.PsiEditorUtilBase
 import com.intellij.util.KeyedLazyInstance
@@ -134,7 +131,7 @@ import io.spine.tools.psi.java.Environment.setUp
 import io.spine.tools.psi.register
 import io.spine.tools.psi.registerPoint
 import io.spine.tools.psi.registerServiceImpl
-import java.nio.file.Path
+import io.spine.tools.psi.replaceServiceImpl
 import org.jetbrains.annotations.VisibleForTesting
 
 /**
@@ -236,30 +233,30 @@ public object Environment : Closeable {
 
     private fun registerApplicationServices() {
         with(_application!!) {
-            registerServiceImpl<TransactionGuard>(TransactionGuardImpl::class.java)
-            registerServiceImpl<CodeStyleSettingsService>(CodeStyleSettingsServiceImpl::class.java)
-            registerServiceImpl<CodeStyleSchemes>(PersistableCodeStyleSchemes::class.java)
-            registerServiceImpl<SchemeManagerFactory>(MockSchemeManagerFactory::class.java)
-            registerServiceImpl<AppCodeStyleSettingsManager>(AppCodeStyleSettingsManager::class.java)
-            registerServiceImpl<AsyncExecutionService>(AsyncExecutionServiceImpl::class.java)
-            registerServiceImpl<PropertiesComponent>(PropertiesComponentImpl::class.java)
-            registerServiceImpl<EditorFactory>(EditorFactoryImpl::class.java)
-            registerServiceImpl<PsiEditorUtil>(PsiEditorUtilBase::class.java)
-            registerServiceImpl<DataManager>(HeadlessDataManager::class.java)
-            registerServiceImpl<Formatter>(FormatterImpl::class.java)
+            registerServiceImpl<TransactionGuard>(TransactionGuardImpl::class)
+            registerServiceImpl<CodeStyleSettingsService>(CodeStyleSettingsServiceImpl::class)
+            registerServiceImpl<CodeStyleSchemes>(PersistableCodeStyleSchemes::class)
+            registerServiceImpl<SchemeManagerFactory>(MockSchemeManagerFactory::class)
+            registerServiceImpl<AppCodeStyleSettingsManager>(AppCodeStyleSettingsManager::class)
+            registerServiceImpl<AsyncExecutionService>(AsyncExecutionServiceImpl::class)
+            registerServiceImpl<PropertiesComponent>(PropertiesComponentImpl::class)
+            registerServiceImpl<EditorFactory>(EditorFactoryImpl::class)
+            registerServiceImpl<PsiEditorUtil>(PsiEditorUtilBase::class)
+            registerServiceImpl<DataManager>(HeadlessDataManager::class)
+            registerServiceImpl<Formatter>(FormatterImpl::class)
+            registerServiceImpl<JavaClassSupers>(JavaClassSupersImpl::class)
         }
     }
 
     private fun registerProjectExtensions() {
         project.run {
-            //TODO:2024-02-23:alexander.yevsyukov: Replace
-            //     myProject.registerService(InjectedLanguageManager.class, new CoreInjectedLanguageManager());
-            // done by `CoreProjectEnvironment` with registration of `InjectedLanguageManagerImpl` instead.
-            picoContainer.unregisterComponent(InjectedLanguageManager::class.java.name)
-            registerServiceImpl<InjectedLanguageManager>(InjectedLanguageManagerImpl::class.java)
+            replaceServiceImpl<InjectedLanguageManager>(InjectedLanguageManagerImpl::class.java)
+            replaceServiceImpl<JavaPsiFacade>(MockJavaPsiFacade::class.java)
+            replaceServiceImpl<JavaPsiImplementationHelper>(
+                JavaPsiImplementationHelperImpl::class.java
+            )
 
-//            registerServiceImpl<PomModel>(PomModelImpl::class.java)
-            registerServiceImpl<PomModel>(LangPomModel::class.java)
+            registerServiceImpl<PomModel>(MockLangPomModel::class.java)
 
             registerServiceImpl<PsiNameHelper>(PsiNameHelperImpl::class.java)
             registerServiceImpl<PsiManager>(PsiManagerImpl::class.java)
@@ -282,6 +279,7 @@ public object Environment : Closeable {
             registerService(ProjectFileIndex::class.java, MockProjectFileIndex::class.java)
             registerService(DirectoryIndex::class.java, DirectoryIndexImpl::class.java)
             registerService(JavadocManager::class.java, JavadocManagerImpl::class.java)
+            registerService(PsiSearchHelper::class.java, PsiSearchHelperImpl::class.java)
 
             registerPoint(PsiTreeChangePreprocessor.EP)
             registerPoint(PsiTreeChangeListener.EP)
@@ -300,6 +298,8 @@ public object Environment : Closeable {
             )
 
             registerPoint(MultiHostInjector.MULTIHOST_INJECTOR_EP_NAME)
+
+            addComponent(ModuleManager::class.java, EmptyModuleManager(project))
         }
     }
 
@@ -311,6 +311,8 @@ public object Environment : Closeable {
         LanguageCodeStyleSettingsProvider.registerSettingsPageProvider(
             JavaLanguageCodeStyleSettingsProvider()
         )
+        @Suppress("DEPRECATION")
+        FormattingService.EP_NAME.point.registerExtension(CoreFormattingService())
     }
 
     private fun createRootArea() {
@@ -384,9 +386,10 @@ public object Environment : Closeable {
             )
 
             register(LanguageInjector.EXTENSION_POINT_NAME)
+            register(ImportFilter.EP_NAME)
+            register(ReferencesSearch.EP_NAME)
         }
     }
-
 
     override val isOpen: Boolean
         get() = rootDisposable != null
@@ -397,55 +400,5 @@ public object Environment : Closeable {
             rootDisposable = null
             _project = null
         }
-    }
-}
-
-private class MockSchemeManagerFactory : SchemeManagerFactory() {
-    override fun <SCHEME : Scheme, MUTABLE_SCHEME : SCHEME> create(
-        directoryName: String,
-        processor: SchemeProcessor<SCHEME, MUTABLE_SCHEME>,
-        presentableName: String?,
-        roamingType: RoamingType,
-        schemeNameToFileName: SchemeNameToFileName,
-        streamProvider: StreamProvider?,
-        directoryPath: Path?,
-        isAutoSave: Boolean
-    ): SchemeManager<SCHEME> {
-        /**
-         * Inspired by https://github.com/openrewrite/rewrite-python/blob/46c390dcbb33d7b408e679462f38988f34b873fd/src/main/java/org/openrewrite/python/internal/IntelliJUtils.java#L193
-         */
-        @Suppress("UNCHECKED_CAST")
-        return EmptySchemesManager() as SchemeManager<SCHEME>
-    }
-}
-
-/**
- * A mock implementation of `ProjectFileIndex` telling that everything "is in its sources".
- */
-private class MockProjectFileIndex(project: Project) : ProjectFileIndexImpl(project) {
-
-    override fun isInSource(fileOrDir: VirtualFile): Boolean {
-        return true
-    }
-}
-
-/**
- * The substitution for the class which is loaded via reflection using nested class name
- * from `intellij-community/platform/code-style-impl/resources/META-INF/CodeStyle.xml`.
- *
- * The original code is [com.intellij.psi.impl.source.PostprocessReformattingAspect.LangPomModel].
- * @see https://github.com/JetBrains/intellij-community/blob/bcd577f1af06572e025ed03cd92e888655f6e875/platform/code-style-impl/resources/META-INF/CodeStyle.xml#L57
- */
-private class LangPomModel internal constructor(project: Project) : PomModelImpl(project) {
-
-    private val myAspect = PostprocessReformattingAspect(project)
-
-    override fun <T : PomModelAspect?> getModelAspect(aClass: Class<T>): T {
-        return if (myAspect.javaClass == aClass) myAspect as T else super.getModelAspect(aClass)
-    }
-
-    override fun updateDependentAspects(event: PomModelEvent) {
-        super.updateDependentAspects(event)
-        myAspect.update(event)
     }
 }
