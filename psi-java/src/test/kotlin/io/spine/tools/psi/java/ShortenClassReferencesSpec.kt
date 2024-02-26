@@ -26,18 +26,10 @@
 
 package io.spine.tools.psi.java
 
-import com.intellij.application.options.CodeStyle
-import com.intellij.codeInsight.actions.OptimizeImportsProcessor
-import com.intellij.codeInsight.documentation.DocumentationManager
-import com.intellij.openapi.editor.Document
-import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.codeStyle.JavaCodeStyleSettings
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
-import io.kotest.matchers.string.shouldNotContain
-import io.spine.tools.psi.codeStyleManager
 import io.spine.tools.psi.codeStyleSettings
-import io.spine.tools.psi.document
 import io.spine.tools.psi.force
 import io.spine.tools.psi.get
 import io.spine.tools.psi.readResource
