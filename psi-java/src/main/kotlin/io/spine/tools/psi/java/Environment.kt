@@ -369,7 +369,7 @@ public object Environment : Closeable {
             register(unresolvedRefQuickFixEp)
 
 
-            val langFormatterEp : ExtensionPointName<KeyedLazyInstance<JavaFormattingModelBuilder>> =
+            val langFormatterEp: ExtensionPointName<KeyedLazyInstance<JavaFormattingModelBuilder>> =
                 ExtensionPointName.create("com.intellij.lang.formatter")
             register(langFormatterEp)
             @Suppress("DEPRECATION")

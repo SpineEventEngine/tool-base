@@ -32,6 +32,7 @@ import com.google.common.cache.LoadingCache
 import com.intellij.openapi.project.Project
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiClass
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementFactory
 import com.intellij.psi.PsiField
 import com.intellij.psi.PsiType
@@ -43,6 +44,7 @@ import io.spine.code.java.ClassName
 @Suppress("NonExtendableApiUsage")
 internal class MockJavaPsiFacade(project: Project) : JavaPsiFacadeImpl(project) {
 
+    @Suppress("ReturnCount")
     override fun findClass(qualifiedName: String, scope: GlobalSearchScope): PsiClass? {
         val foundClass = super.findClass(qualifiedName, scope)
         if (foundClass != null) {
@@ -51,7 +53,7 @@ internal class MockJavaPsiFacade(project: Project) : JavaPsiFacadeImpl(project) 
         val clsName = ClassName.of(qualifiedName)
 
         val simpleName = clsName.toSimple().value
-        if(qualifiedName == simpleName) {
+        if (qualifiedName == simpleName) {
             // Meaning, no package set!
             return null
         }
@@ -61,6 +63,7 @@ internal class MockJavaPsiFacade(project: Project) : JavaPsiFacadeImpl(project) 
             return null
         }
 
+        @Suppress("SwallowedException")
         val synthetic = try {
 //            Thread.currentThread().contextClassLoader.loadClass(qualifiedName)
             MockPsiClassFactory.get(clsName)
@@ -84,10 +87,6 @@ private object MockPsiClassFactory {
             .maximumSize(LIMIT)
             .build(Loader)
 
-    private val elementFactory: PsiElementFactory by lazy {
-        JavaPsiFacade.getElementFactory(Environment.project)
-    }
-
     private val parser: Parser by lazy {
         Parser(Environment.project)
     }
@@ -103,43 +102,56 @@ private object MockPsiClassFactory {
             val mockPsiFile = parser.parse(mockFile)
             val cls = mockPsiFile.topLevelClass
             val endOfClass = cls.children.last()
-            val wrapper = object : PsiClassImpl(cls.node) {
-                private val serialVersionUID: Long = 7142432410196103694L
-
-                override fun findInnerClassByName(name: String?, checkBases: Boolean): PsiClass? {
-                    val original = cls.findInnerClassByName(name, checkBases)
-                    if(original != null) {
-                        return original
-                    }
-                    if(!name!!.first().isUpperCase()) {
-                        return null
-                    }
-
-                    val inner = elementFactory.createClassFromText(
-                        """
-                        public static class $name { }
-                    """.trimIndent(), cls
-                    ).allInnerClasses.first()
-                    val addedElement = cls.addBefore(inner, endOfClass)
-                    return addedElement as PsiClass
-                }
-
-                override fun findFieldByName(name: String?, checkBases: Boolean): PsiField? {
-                    val original = cls.findFieldByName(name, checkBases)
-                    if (original != null) {
-                        return original
-                    }
-
-                    if (!name!!.first().isLowerCase()) {
-                        return null
-                    }
-
-                    val field = elementFactory.createField(name, PsiType.LONG)
-                    val addedElement = cls.addBefore(field, endOfClass)
-                    return addedElement as PsiField
-                }
-            }
+            val wrapper = PsiClassImplWrapper(cls, endOfClass)
             return wrapper
+        }
+    }
+}
+
+private class PsiClassImplWrapper(
+    private val cls: PsiClass,
+    private val endOfClass: PsiElement?
+) : PsiClassImpl(cls.node) {
+
+    @Suppress("ReturnCount")
+    override fun findInnerClassByName(name: String?, checkBases: Boolean): PsiClass? {
+        val original = cls.findInnerClassByName(name, checkBases)
+        if(original != null) {
+            return original
+        }
+        if(!name!!.first().isUpperCase()) {
+            return null
+        }
+
+        val inner = elementFactory.createClassFromText("""
+            public static class $name { }
+        """.trimIndent(), cls
+        ).allInnerClasses.first()
+        val addedElement = cls.addBefore(inner, endOfClass)
+        return addedElement as PsiClass
+    }
+
+    @Suppress("ReturnCount")
+    override fun findFieldByName(name: String?, checkBases: Boolean): PsiField? {
+        val original = cls.findFieldByName(name, checkBases)
+        if (original != null) {
+            return original
+        }
+
+        if (!name!!.first().isLowerCase()) {
+            return null
+        }
+
+        val field = elementFactory.createField(name, PsiType.LONG)
+        val addedElement = cls.addBefore(field, endOfClass)
+        return addedElement as PsiField
+    }
+
+    companion object {
+        private const val serialVersionUID: Long = 0L
+
+        val elementFactory: PsiElementFactory by lazy {
+            JavaPsiFacade.getElementFactory(Environment.project)
         }
     }
 }
