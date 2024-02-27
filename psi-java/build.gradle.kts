@@ -20,7 +20,13 @@ dependencies {
             projectModel,
             projectModelImpl,
             lang,
-        ).forEach { api(it) }
+        ).forEach {
+            api(it) {
+                // Avoiding duplicated binding with Gradle.
+                // Users will need to provide their own dependency on Slf4J.
+                exclude(group = "org.slf4j")
+            }
+        }
     }
 
     api(IntelliJ.JavaPsi.api)
@@ -90,7 +96,8 @@ dependencies {
             "one.util",
             "org.apache.velocity",
             "org.glassfish.jaxb",
-            "oro"
+            "org.slf4j",
+            "oro",
         ))
     }
 
