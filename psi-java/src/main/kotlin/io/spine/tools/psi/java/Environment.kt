@@ -71,6 +71,7 @@ import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.openapi.roots.impl.DirectoryIndex
 import com.intellij.openapi.roots.impl.DirectoryIndexExcludePolicy
 import com.intellij.openapi.roots.impl.DirectoryIndexImpl
+import com.intellij.openapi.roots.impl.ProjectFileIndexImpl
 import com.intellij.openapi.roots.impl.ProjectRootManagerImpl
 import com.intellij.openapi.util.Disposer
 import com.intellij.pom.PomModel
@@ -251,11 +252,9 @@ public object Environment : Closeable {
     private fun registerProjectExtensions() {
         project.run {
             replaceServiceImpl<InjectedLanguageManager>(InjectedLanguageManagerImpl::class.java)
-            replaceServiceImpl<JavaPsiFacade>(MockJavaPsiFacade::class.java)
             replaceServiceImpl<JavaPsiImplementationHelper>(
                 JavaPsiImplementationHelperImpl::class.java
             )
-
             registerServiceImpl<PomModel>(MockLangPomModel::class.java)
 
             registerServiceImpl<PsiNameHelper>(PsiNameHelperImpl::class.java)
@@ -276,7 +275,9 @@ public object Environment : Closeable {
             registerService(TreeAspect::class.java)
             registerService(PostprocessReformattingAspect::class.java)
             registerService(ProjectRootManager::class.java, ProjectRootManagerImpl::class.java)
-            registerService(ProjectFileIndex::class.java, MockProjectFileIndex::class.java)
+
+            registerServiceImpl<ProjectFileIndex>(ProjectFileIndexImpl::class.java)
+
             registerService(DirectoryIndex::class.java, DirectoryIndexImpl::class.java)
             registerService(JavadocManager::class.java, JavadocManagerImpl::class.java)
             registerService(PsiSearchHelper::class.java, PsiSearchHelperImpl::class.java)
@@ -340,35 +341,12 @@ public object Environment : Closeable {
                 CoreFormattingService::class.java
             )
 
-            val importOptimizerEp : ExtensionPointName<KeyedLazyInstance<ImportOptimizer>> =
-                ExtensionPointName.create("com.intellij.lang.importOptimizer")
-            register(importOptimizerEp)
-            @Suppress("DEPRECATION")
-            importOptimizerEp.point.registerExtension(
-                object : KeyedLazyInstance<ImportOptimizer> {
-                    override fun getKey(): String {
-                        return JavaLanguage.INSTANCE.id
-                    }
-
-                    override fun getInstance(): ImportOptimizer {
-                        return JavaImportOptimizer()
-                    }
-                }
-            )
-
             register(AdditionalLibraryRootsProvider.EP_NAME)
             register(DirectoryIndexExcludePolicy.EP_NAME)
             register(CustomJavadocTagProvider.EP_NAME)
             register(PreFormatProcessor.EP_NAME)
             register(PostFormatProcessor.EP_NAME)
-
-            // From a private const `UnresolvedReferenceQuickFixProvider.EXTENSION_NAME`.
-            val unresolvedRefQuickFixEp =
-                ExtensionPointName.create<UnresolvedReferenceQuickFixProvider<out PsiReference>>(
-                    "com.intellij.codeInsight.unresolvedReferenceQuickFixProvider")
-            register(unresolvedRefQuickFixEp)
-
-
+            
             val langFormatterEp: ExtensionPointName<KeyedLazyInstance<JavaFormattingModelBuilder>> =
                 ExtensionPointName.create("com.intellij.lang.formatter")
             register(langFormatterEp)
