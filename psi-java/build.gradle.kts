@@ -24,7 +24,6 @@ dependencies {
         "ai.grazie.spell",
         "com.jetbrains.intellij.platform",
         "org.codehaus.groovy",
-        "org.apache.groovy"
     )
     fun ModuleDependency.excludeMany(excl: Iterable<String> = exclusions) {
         excl.forEach { exclude(it) }
@@ -58,7 +57,6 @@ dependencies {
             "com.jetbrains.infra",
 
             "com.jetbrains.intellij.platform",
-            "org.apache.groovy",
 
             "com.jetbrains.intellij.jsp",
             "com.jetbrains.intellij.regexp",
