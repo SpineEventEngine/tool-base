@@ -64,12 +64,7 @@ internal class MockJavaPsiFacade(project: Project) : JavaPsiFacadeImpl(project) 
         }
 
         @Suppress("SwallowedException")
-        val synthetic = try {
-//            Thread.currentThread().contextClassLoader.loadClass(qualifiedName)
-            MockPsiClassFactory.get(clsName)
-        } catch (e: ClassNotFoundException ) {
-            return null
-        }
+        val synthetic = MockPsiClassFactory.get(clsName)
         return synthetic
     }
 }
