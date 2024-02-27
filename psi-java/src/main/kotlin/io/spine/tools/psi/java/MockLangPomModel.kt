@@ -33,12 +33,17 @@ import com.intellij.pom.event.PomModelEvent
 import com.intellij.psi.impl.source.PostprocessReformattingAspect
 
 /**
- * The substitution for the class which is loaded via reflection using nested class name
- * from `intellij-community/platform/code-style-impl/resources/META-INF/CodeStyle.xml`.
+ * The substitution for the class which is loaded via reflection
+ * using nested class name from the resource file
+ * `intellij-community/platform/code-style-impl/resources/META-INF/CodeStyle.xml`.
+ *
+ * Since the class is package-private, we cannot instantiate it for registering
+ * the service implementation programmatically, as we do in [Environment].
+ * We do not want to use the Java Reflection for this simple class.
  *
  * The original code is [com.intellij.psi.impl.source.PostprocessReformattingAspect.LangPomModel].
  *
- * @see <a href="https://github.com/JetBrains/intellij-community/blob/bcd577f1af06572e025ed03cd92e888655f6e875/platform/code-style-impl/resources/META-INF/CodeStyle.xml#L57">Original code</a>
+ * @see <a href="https://github.com/JetBrains/intellij-community/blob/940f3845a0dbf74bc2f53c339fc09f7956fd5458/platform/code-style-impl/resources/META-INF/CodeStyle.xml#L56">Resource file entry</a>
  */
 internal class MockLangPomModel(project: Project) : PomModelImpl(project) {
 
@@ -58,6 +63,7 @@ internal class MockLangPomModel(project: Project) : PomModelImpl(project) {
     }
 
     companion object {
+        @Suppress("ConstPropertyName")
         private const val serialVersionUID: Long = 0L
     }
 }

@@ -27,7 +27,6 @@
 package io.spine.tools.psi.java
 
 import com.intellij.codeInsight.ImportFilter
-import com.intellij.codeInsight.quickfix.UnresolvedReferenceQuickFixProvider
 import com.intellij.core.CoreApplicationEnvironment
 import com.intellij.core.JavaCoreProjectEnvironment
 import com.intellij.formatting.Formatter
@@ -39,13 +38,11 @@ import com.intellij.ide.JavaLanguageCodeStyleSettingsProvider
 import com.intellij.ide.impl.HeadlessDataManager
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.ide.util.PropertiesComponentImpl
-import com.intellij.lang.ImportOptimizer
 import com.intellij.lang.LanguageFormattingRestriction
 import com.intellij.lang.MetaLanguage
 import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.lang.injection.MultiHostInjector
 import com.intellij.lang.java.JavaFormattingModelBuilder
-import com.intellij.lang.java.JavaImportOptimizer
 import com.intellij.lang.java.JavaLanguage
 import com.intellij.mock.MockApplication
 import com.intellij.mock.MockProject
@@ -74,6 +71,7 @@ import com.intellij.openapi.roots.impl.DirectoryIndexImpl
 import com.intellij.openapi.roots.impl.ProjectFileIndexImpl
 import com.intellij.openapi.roots.impl.ProjectRootManagerImpl
 import com.intellij.openapi.util.Disposer
+import com.intellij.openapi.util.registry.Registry
 import com.intellij.pom.PomModel
 import com.intellij.pom.tree.TreeAspect
 import com.intellij.psi.JavaModuleSystem
@@ -83,7 +81,6 @@ import com.intellij.psi.PsiElementFactory
 import com.intellij.psi.PsiElementFinder
 import com.intellij.psi.PsiManager
 import com.intellij.psi.PsiNameHelper
-import com.intellij.psi.PsiReference
 import com.intellij.psi.PsiTreeChangeListener
 import com.intellij.psi.augment.PsiAugmentProvider
 import com.intellij.psi.codeStyle.AppCodeStyleSettingsManager
@@ -229,6 +226,51 @@ public object Environment : Closeable {
             PsiJavaAppEnvironment.registerExtensionPoints()
             registerProjectExtensions()
             addOtherExtensions()
+            markRegistryLoaded()
+        }
+    }
+
+    /**
+     * Marks the [Registry] as loaded to avoid console warnings for entries
+     * we provide in the `misc/registry.properties` resource.
+     *
+     * The version of IntelliJ platform we use does not have the entry
+     * with this name in the `misc/registry.properties` resource in `util-213.7172.53.jar`.
+     *
+     * Still, the code of [Registry] does use the
+     * [key][com.intellij.psi.formatter.java.LegacyChainedMethodCallsBlockBuilder.COMPATIBILITY_KEY]
+     * in the [AbstractJavaBlock][com.intellij.psi.formatter.java.AbstractJavaBlock] class,
+     * in the private `createMethodCallExpressionBlock()` method, in particular:
+     * ```java
+     * if (Registry.is(LegacyChainedMethodCallsBlockBuilder.COMPATIBILITY_KEY)) { ...
+     * ```
+     * Not having the entry in resources fails the code of IntelliJ Platform formatting with
+     * the following exception:
+     * ```
+     * java.util.MissingResourceException: Registry key java.formatter.chained.calls.pre212.compatibility is not defined
+     * 	at com.intellij.openapi.util.registry.Registry.getBundleValue(Registry.java:164)
+     * 	at com.intellij.openapi.util.registry.RegistryValue._get(RegistryValue.java:234)
+     * 	at com.intellij.openapi.util.registry.RegistryValue.get(RegistryValue.java:204)
+     * 	at com.intellij.openapi.util.registry.RegistryValue.asBoolean(RegistryValue.java:63)
+     * 	at com.intellij.openapi.util.registry.Registry.is(Registry.java:57)
+     * 	at com.intellij.psi.formatter.java.AbstractJavaBlock.createMethodCallExpressionBlock(AbstractJavaBlock.java:787)
+     * 	...
+     * ```
+     * This is why we create own `misc/registry.properties` file with the needed entry.
+     *
+     * The warning we suppress by this method occurs in
+     * the [RegistryValue][com.intellij.openapi.util.registry.RegistryValue] class,
+     * in its `private` method `_get()`.
+     *
+     * We do not want to load all the properties managed by the `Registry` ourselves because it
+     * is not needed for our purposes. We do not want the warning appearing in the console either.
+     * So, we make the [Registry] appear to be loaded by calling its internal
+     * method [markAsLoaded][Registry.markAsLoaded].
+     */
+    @Suppress("UnstableApiUsage") // See the doc above.
+    private fun markRegistryLoaded() {
+        if (!Registry.getInstance().isLoaded) {
+            Registry.markAsLoaded()
         }
     }
 
@@ -346,28 +388,15 @@ public object Environment : Closeable {
             register(CustomJavadocTagProvider.EP_NAME)
             register(PreFormatProcessor.EP_NAME)
             register(PostFormatProcessor.EP_NAME)
-            
-            val langFormatterEp: ExtensionPointName<KeyedLazyInstance<JavaFormattingModelBuilder>> =
-                ExtensionPointName.create("com.intellij.lang.formatter")
-            register(langFormatterEp)
-            @Suppress("DEPRECATION")
-            langFormatterEp.point.registerExtension(
-                object : KeyedLazyInstance<JavaFormattingModelBuilder> {
-                    override fun getKey(): String {
-                        return JavaLanguage.INSTANCE.id
-                    }
 
-                    override fun getInstance(): JavaFormattingModelBuilder {
-                        return JavaFormattingModelBuilder()
-                    }
-                }
-            )
+            registerJavaFormattingModelBuilder()
 
             register(LanguageInjector.EXTENSION_POINT_NAME)
             register(ImportFilter.EP_NAME)
             register(ReferencesSearch.EP_NAME)
         }
     }
+
 
     override val isOpen: Boolean
         get() = rootDisposable != null
@@ -379,4 +408,37 @@ public object Environment : Closeable {
             _project = null
         }
     }
+}
+
+/**
+ * Registers an extension for the point named `com.intellij.lang.formatter`.
+ *
+ * This is the replacement for XML entry of `JavaPlugin.xml` which results in association
+ * of the extension point with [JavaFormattingModelBuilder].
+ * The XML code looks like this:
+ * ```xml
+ * <lang.formatter language="JAVA"
+ *  implementationClass="com.intellij.lang.java.JavaFormattingModelBuilder"/>
+ * ```
+ * Since we do not load the XML file to configure IntelliJ Platform, we need a programmatic
+ * replacement, which this extension function provides.
+ *
+ * @see <a href="https://github.com/JetBrains/intellij-community/blob/940f3845a0dbf74bc2f53c339fc09f7956fd5458/java/java-impl/src/META-INF/JavaPlugin.xml#L1332">JavaPlugin.xml entry</a>
+ */
+private fun ExtensionsArea.registerJavaFormattingModelBuilder() {
+    val langFormatterEp: ExtensionPointName<KeyedLazyInstance<JavaFormattingModelBuilder>> =
+        ExtensionPointName.create("com.intellij.lang.formatter")
+    register(langFormatterEp)
+    @Suppress("DEPRECATION")
+    langFormatterEp.point.registerExtension(
+        object : KeyedLazyInstance<JavaFormattingModelBuilder> {
+            override fun getKey(): String {
+                return JavaLanguage.INSTANCE.id
+            }
+
+            override fun getInstance(): JavaFormattingModelBuilder {
+                return JavaFormattingModelBuilder()
+            }
+        }
+    )
 }
