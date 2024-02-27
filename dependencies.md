@@ -636,7 +636,7 @@
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Tue Feb 27 20:30:39 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Tue Feb 27 23:11:25 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -1391,7 +1391,7 @@ This report was generated on **Tue Feb 27 20:30:39 WET 2024** using [Gradle-Lice
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Tue Feb 27 20:30:39 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Tue Feb 27 23:11:25 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -2237,7 +2237,7 @@ This report was generated on **Tue Feb 27 20:30:39 WET 2024** using [Gradle-Lice
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Tue Feb 27 20:30:40 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Tue Feb 27 23:11:25 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -2784,14 +2784,6 @@ This report was generated on **Tue Feb 27 20:30:40 WET 2024** using [Gradle-Lice
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-
-1.  **Group** : org.slf4j. **Name** : slf4j-api. **Version** : 2.0.7.
-     * **Project URL:** [http://www.slf4j.org](http://www.slf4j.org)
-     * **License:** [MIT License](http://www.opensource.org/licenses/mit-license.php)
-
-1.  **Group** : org.slf4j. **Name** : slf4j-log4j12. **Version** : 1.7.31.
-     * **Project URL:** [http://www.slf4j.org](http://www.slf4j.org)
-     * **License:** [MIT License](http://www.opensource.org/licenses/mit-license.php)
 
 1.  **Group** : org.swinglabs. **Name** : swingx-core. **Version** : 1.6.2-2.
      * **License:** [Lesser General Public License (LGPL)](http://www.gnu.org/copyleft/lesser.html)
@@ -3790,14 +3782,6 @@ This report was generated on **Tue Feb 27 20:30:40 WET 2024** using [Gradle-Lice
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
      * **License:** [WTFPL](http://www.wtfpl.net/)
 
-1.  **Group** : org.slf4j. **Name** : slf4j-api. **Version** : 2.0.7.
-     * **Project URL:** [http://www.slf4j.org](http://www.slf4j.org)
-     * **License:** [MIT License](http://www.opensource.org/licenses/mit-license.php)
-
-1.  **Group** : org.slf4j. **Name** : slf4j-log4j12. **Version** : 1.7.31.
-     * **Project URL:** [http://www.slf4j.org](http://www.slf4j.org)
-     * **License:** [MIT License](http://www.opensource.org/licenses/mit-license.php)
-
 1.  **Group** : org.snakeyaml. **Name** : snakeyaml-engine. **Version** : 2.6.
      * **Project URL:** [https://bitbucket.org/snakeyaml/snakeyaml-engine](https://bitbucket.org/snakeyaml/snakeyaml-engine)
      * **License:** [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -3833,7 +3817,7 @@ This report was generated on **Tue Feb 27 20:30:40 WET 2024** using [Gradle-Lice
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Tue Feb 27 20:30:40 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Tue Feb 27 23:11:26 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -4517,4 +4501,4 @@ This report was generated on **Tue Feb 27 20:30:40 WET 2024** using [Gradle-Lice
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Tue Feb 27 20:30:40 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Tue Feb 27 23:11:26 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
