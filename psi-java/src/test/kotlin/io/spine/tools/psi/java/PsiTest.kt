@@ -27,6 +27,9 @@
 package io.spine.tools.psi.java
 
 import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiJavaFile
+import io.spine.tools.psi.readResource
+import java.io.File
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 
@@ -42,6 +45,10 @@ abstract class PsiTest {
 
         lateinit var project: Project
 
+        val parser: Parser by lazy {
+            Parser(project)
+        }
+
         @JvmStatic
         @BeforeAll
         fun setupIdea() {
@@ -53,6 +60,13 @@ abstract class PsiTest {
         @AfterAll
         fun dispose() {
             Environment.close()
+        }
+
+        fun parse(fileName: String): PsiJavaFile {
+            val code = readResource(fileName)
+            val file = File(fileName)
+            val psiFile = parser.parse(code, file)
+            return psiFile
         }
     }
 }

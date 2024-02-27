@@ -28,8 +28,6 @@ package io.spine.tools.psi.java
 
 import io.kotest.matchers.string.shouldContain
 import io.spine.tools.psi.codeStyleManager
-import io.spine.tools.psi.readResource
-import java.io.File
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -48,9 +46,7 @@ internal class EnvironmentReformatSupportSpec : PsiTest() {
 
     @Test
     fun `reformat of 'PsiJavaFile'`() {
-        val fileName = "FieldPath.java"
-        val javaFile = readResource(fileName)
-        val psiFile = Parser(project).parse(javaFile, File(fileName))
+        val psiFile = parse("FieldPath.java")
 
         execute {
             project.codeStyleManager.reformat(psiFile)

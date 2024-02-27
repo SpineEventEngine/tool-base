@@ -27,23 +27,15 @@
 package io.spine.tools.psi.java
 
 import io.kotest.matchers.string.shouldContain
-import io.spine.tools.psi.readResource
-import java.io.File
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 @DisplayName("'PsiMethod' extensions should")
 class PsiMethodExtsSpec: PsiTest() {
 
-    private val parser by lazy {
-        Parser(Environment.project)
-    }
-
     @Test
     fun `annotate a method`() {
-        val fileName = "FileOnDisk.java"
-        val code = readResource(fileName)
-        val file = parser.parse(code, File(fileName))
+        val file = parse("FileOnDisk.java")
         val mainMethod = file.topLevelClass.method("main")
         val annotationCode = "@SuppressWarnings(\"ALL\")"
         execute {

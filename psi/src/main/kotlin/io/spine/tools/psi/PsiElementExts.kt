@@ -27,13 +27,8 @@
 package io.spine.tools.psi
 
 import com.intellij.openapi.editor.Document
-import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
-
-private val documentManager: FileDocumentManager
-    get() = FileDocumentManager.getInstance()
-
 
 /**
  * Obtains the virtual file to which this element belongs.
@@ -52,7 +47,7 @@ public val PsiElement.virtualFile: VirtualFile
  */
 public val PsiElement.document: Document
     get() {
-        val doc = documentManager.getDocument(virtualFile)
+        val doc = containingFile.document
         check(doc != null) {
             "Unable to obtain a document for `${virtualFile.name}`."
         }

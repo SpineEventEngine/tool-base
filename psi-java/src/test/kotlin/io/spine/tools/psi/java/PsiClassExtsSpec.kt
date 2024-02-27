@@ -27,19 +27,21 @@
 package io.spine.tools.psi.java
 
 import com.intellij.psi.PsiClass
+import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
+import io.spine.tools.psi.java.Environment.elementFactory
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 @DisplayName("`PsiClass` extensions should")
-internal class PsiClassExtsSpec {
+internal class PsiClassExtsSpec: PsiTest() {
 
     private lateinit var cls: PsiClass
 
     @BeforeEach
     fun createClass() {
-        cls = Environment.elementFactory.createClass("Stub")
+        cls = elementFactory.createClass("Stub")
         execute { cls.removePublic() }
     }
 
@@ -48,5 +50,19 @@ internal class PsiClassExtsSpec {
         cls.isStatic shouldBe false
         execute { cls.makeStatic() }
         cls.isStatic shouldBe true
+    }
+
+    @Test
+    fun `make class public`() {
+        cls.isPublic shouldBe false // Because we cleared it. It comes `public` out of the factory.
+        execute { cls.makePublic() }
+        cls.isPublic shouldBe true
+    }
+
+    @Test
+    fun `obtain line number`() {
+        val file = parse("LineNumberTest.java")
+        cls = file.topLevelClass
+        cls.lineNumber shouldBeGreaterThan 0
     }
 }
