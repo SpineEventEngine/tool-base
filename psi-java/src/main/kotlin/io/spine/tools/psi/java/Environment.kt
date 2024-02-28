@@ -397,7 +397,6 @@ public object Environment : Closeable {
         }
     }
 
-
     override val isOpen: Boolean
         get() = rootDisposable != null
 
