@@ -36,6 +36,18 @@ import com.intellij.openapi.options.SchemeManagerFactory
 import com.intellij.openapi.options.SchemeProcessor
 import java.nio.file.Path
 
+/**
+ * A mock implementation of [SchemeManagerFactory] application service used by [Environment].
+ *
+ * The implementation returns [EmptySchemesManager], which fits our current needs
+ * of integration with PSI.
+ *
+ * The source code of this class was copied from
+ * [IntelliJUtils.java](https://github.com/openrewrite/rewrite-python/blob/46c390dcbb33d7b408e679462f38988f34b873fd/src/main/java/org/openrewrite/python/internal/IntelliJUtils.java#L193)
+ * of the `rewrite-python` project.
+ *
+ * @see <a href="https://github.com/openrewrite/rewrite-python/blob/46c390dcbb33d7b408e679462f38988f34b873fd/src/main/java/org/openrewrite/python/internal/IntelliJUtils.java#L193">Original code</a>
+ */
 internal class MockSchemeManagerFactory : SchemeManagerFactory() {
     override fun <SCHEME : Scheme, MUTABLE_SCHEME : SCHEME> create(
         directoryName: String,
@@ -47,9 +59,6 @@ internal class MockSchemeManagerFactory : SchemeManagerFactory() {
         directoryPath: Path?,
         isAutoSave: Boolean
     ): SchemeManager<SCHEME> {
-        /**
-         * Inspired by https://github.com/openrewrite/rewrite-python/blob/46c390dcbb33d7b408e679462f38988f34b873fd/src/main/java/org/openrewrite/python/internal/IntelliJUtils.java#L193
-         */
         @Suppress("UNCHECKED_CAST")
         return EmptySchemesManager() as SchemeManager<SCHEME>
     }
