@@ -31,6 +31,7 @@ import io.spine.internal.dependency.FindBugs
 import io.spine.internal.dependency.Grpc
 import io.spine.internal.dependency.Guava
 import io.spine.internal.dependency.JUnit
+import io.spine.internal.dependency.Jackson
 import io.spine.internal.dependency.Kotlin
 import io.spine.internal.dependency.Spine
 import io.spine.internal.dependency.Truth
@@ -119,7 +120,7 @@ fun Module.forceConfigurations() {
                     Coroutines.core,
                     Coroutines.bom,
                     Coroutines.coreJvm,
-                    "com.fasterxml.jackson.jr:jackson-jr-objects:2.15.3"
+                    Jackson.Junior.objects
                 )
             }
         }
