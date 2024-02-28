@@ -316,13 +316,13 @@ public object Environment : Closeable {
 
             registerService(TreeAspect::class.java)
             registerService(PostprocessReformattingAspect::class.java)
-            registerService(ProjectRootManager::class.java, ProjectRootManagerImpl::class.java)
 
+            registerServiceImpl<ProjectRootManager>(ProjectRootManagerImpl::class.java)
             registerServiceImpl<ProjectFileIndex>(ProjectFileIndexImpl::class.java)
+            registerServiceImpl<DirectoryIndex>(DirectoryIndexImpl::class.java)
 
-            registerService(DirectoryIndex::class.java, DirectoryIndexImpl::class.java)
-            registerService(JavadocManager::class.java, JavadocManagerImpl::class.java)
-            registerService(PsiSearchHelper::class.java, PsiSearchHelperImpl::class.java)
+            registerServiceImpl<JavadocManager>(JavadocManagerImpl::class.java)
+            registerServiceImpl<PsiSearchHelper>(PsiSearchHelperImpl::class.java)
 
             registerPoint(PsiTreeChangePreprocessor.EP)
             registerPoint(PsiTreeChangeListener.EP)
