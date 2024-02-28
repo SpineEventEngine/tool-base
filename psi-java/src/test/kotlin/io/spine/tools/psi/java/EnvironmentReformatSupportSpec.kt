@@ -1,5 +1,5 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,12 +24,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.psi
+package io.spine.tools.psi.java
 
-import com.intellij.openapi.util.text.StringUtilRt
+import io.kotest.matchers.string.shouldContain
+import io.spine.tools.psi.codeStyleManager
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 
-/**
- * Converts the line separators in the string to the one used by PSI (`"\n"`).
- */
-public fun String.convertLineSeparators(): String =
-    StringUtilRt.convertLineSeparators(this)
+@DisplayName("`Environment` should configure PSI for")
+internal class EnvironmentReformatSupportSpec : PsiTest() {
+
+    private val project = Environment.project
+
+    @Test
+    fun `obtaining 'CodeStyleManager'`() {
+        assertDoesNotThrow {
+            project.codeStyleManager
+        }
+    }
+
+    @Test
+    fun `reformat of 'PsiJavaFile'`() {
+        val psiFile = parse("FieldPath.java")
+
+        execute {
+            project.codeStyleManager.reformat(psiFile)
+        }
+
+        val text = psiFile.text
+
+        // The static field, which was not indented, got indentation of 4 spaces.
+        text shouldContain "    private static final long serialVersionUID = 0L;"
+    }
+}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,10 +26,40 @@
 
 package io.spine.tools.psi
 
-import com.intellij.openapi.util.text.StringUtilRt
+import com.intellij.openapi.editor.Document
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiElement
 
 /**
- * Converts the line separators in the string to the one used by PSI (`"\n"`).
+ * Obtains the virtual file to which this element belongs.
  */
-public fun String.convertLineSeparators(): String =
-    StringUtilRt.convertLineSeparators(this)
+public val PsiElement.virtualFile: VirtualFile
+    get() {
+        val vf = containingFile.virtualFile
+        check(vf != null) {
+            "Unable to obtain a virtual file for `${containingFile.name}`."
+        }
+        return vf
+    }
+
+/**
+ * Obtains the document to which this element belongs.
+ */
+public val PsiElement.document: Document
+    get() {
+        val doc = containingFile.document
+        check(doc != null) {
+            "Unable to obtain a document for `${virtualFile.name}`."
+        }
+        return doc
+    }
+
+/**
+ * Adds the given [element] before the current
+ * [firstChild][com.intellij.psi.PsiElement.getFirstChild].
+ *
+ * @return the added element, which could be the given instance or its copy.
+ */
+public fun PsiElement.addFirst(element: PsiElement): PsiElement {
+    return addBefore(element, firstChild)
+}

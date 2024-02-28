@@ -1,5 +1,5 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,12 +24,45 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.psi
+package io.spine.tools.psi.java
 
-import com.intellij.openapi.util.text.StringUtilRt
+import com.intellij.psi.PsiClass
+import io.kotest.matchers.ints.shouldBeGreaterThan
+import io.kotest.matchers.shouldBe
+import io.spine.tools.psi.java.Environment.elementFactory
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 
-/**
- * Converts the line separators in the string to the one used by PSI (`"\n"`).
- */
-public fun String.convertLineSeparators(): String =
-    StringUtilRt.convertLineSeparators(this)
+@DisplayName("`PsiClass` extensions should")
+internal class PsiClassExtsSpec: PsiTest() {
+
+    private lateinit var cls: PsiClass
+
+    @BeforeEach
+    fun createClass() {
+        cls = elementFactory.createClass("Stub")
+        execute { cls.removePublic() }
+    }
+
+    @Test
+    fun `make class static`() {
+        cls.isStatic shouldBe false
+        execute { cls.makeStatic() }
+        cls.isStatic shouldBe true
+    }
+
+    @Test
+    fun `make class public`() {
+        cls.isPublic shouldBe false // Because we cleared it. It comes `public` out of the factory.
+        execute { cls.makePublic() }
+        cls.isPublic shouldBe true
+    }
+
+    @Test
+    fun `obtain line number`() {
+        val file = parse("LineNumberTest.java")
+        cls = file.topLevelClass
+        cls.lineNumber shouldBeGreaterThan 0
+    }
+}

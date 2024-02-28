@@ -31,10 +31,11 @@ import io.spine.internal.dependency.FindBugs
 import io.spine.internal.dependency.Grpc
 import io.spine.internal.dependency.Guava
 import io.spine.internal.dependency.JUnit
+import io.spine.internal.dependency.Jackson
 import io.spine.internal.dependency.Kotlin
 import io.spine.internal.dependency.Spine
-import io.spine.internal.dependency.Validation
 import io.spine.internal.dependency.Truth
+import io.spine.internal.dependency.Validation
 import io.spine.internal.gradle.VersionWriter
 import io.spine.internal.gradle.checkstyle.CheckStyleConfig
 import io.spine.internal.gradle.github.pages.updateGitHubPages
@@ -47,15 +48,6 @@ import io.spine.internal.gradle.publish.IncrementGuard
 import io.spine.internal.gradle.report.license.LicenseReporter
 import io.spine.internal.gradle.testing.configureLogging
 import io.spine.internal.gradle.testing.registerTestTasks
-import org.gradle.api.Project
-import org.gradle.api.tasks.compile.JavaCompile
-import org.gradle.jvm.toolchain.JavaLanguageVersion
-import org.gradle.kotlin.dsl.apply
-import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.invoke
-import org.gradle.kotlin.dsl.`java-library`
-import org.gradle.kotlin.dsl.kotlin
-import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -128,6 +120,7 @@ fun Module.forceConfigurations() {
                     Coroutines.core,
                     Coroutines.bom,
                     Coroutines.coreJvm,
+                    Jackson.Junior.objects
                 )
             }
         }

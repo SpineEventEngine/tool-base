@@ -26,28 +26,42 @@
 
 package io.spine.tools.psi.java
 
-import io.kotest.matchers.string.shouldContain
-import io.spine.tools.psi.readResource
-import java.io.File
+import com.intellij.psi.PsiClass
+import io.kotest.matchers.shouldBe
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-@DisplayName("PSI writing extensions should")
-class PsiWritingExtsSpec: PsiTest() {
+@DisplayName("`PsiModifierListOwner` extensions should")
+class PsiModifierListOwnerExtsSpec {
 
-    private val parser by lazy {
-        Parser(Environment.project)
+    private lateinit var cls: PsiClass
+
+    @BeforeEach
+    fun createClass() {
+        cls = Environment.elementFactory.createClass("Stub")
+        execute {
+            cls.removePublic()
+        }
     }
 
-    @Test
-    fun `annotate a method`() {
-        val fileName = "FileOnDisk.java"
-        val code = readResource(fileName)
-        val file = parser.parse(code, File(fileName))
-        val mainMethod = file.classes.first().findMethodsByName("main", false).first()
-        val annotationCode = "@SuppressWarnings(\"ALL\")"
-        mainMethod.annotate(annotationCode)
+    @Nested
+    inner class
+    `add modifiers` {
 
-        file.text shouldContain annotationCode
+        @Test
+        fun public() {
+            cls.isPublic shouldBe false
+            execute { cls.makePublic() }
+            cls.isPublic shouldBe true
+        }
+
+        @Test
+        fun final() {
+            cls.isFinal shouldBe false
+            execute { cls.makeFinal() }
+            cls.isFinal shouldBe true
+        }
     }
 }

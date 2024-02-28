@@ -1,5 +1,5 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,10 +26,14 @@
 
 package io.spine.tools.psi
 
-import com.intellij.openapi.util.text.StringUtilRt
+import com.intellij.openapi.editor.Document
+import com.intellij.psi.PsiFile
 
 /**
- * Converts the line separators in the string to the one used by PSI (`"\n"`).
+ * Obtains a document for this [PsiFile].
+ *
+ * @return the document instance of `null` if the file is binary, or
+ *         the file has no associated document.
  */
-public fun String.convertLineSeparators(): String =
-    StringUtilRt.convertLineSeparators(this)
+public val PsiFile.document: Document?
+    get() = project.documentManager.getDocument(this)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,12 +24,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.psi
+package io.spine.tools.psi.java
 
-import com.intellij.openapi.util.text.StringUtilRt
+import com.intellij.openapi.command.CommandProcessor
+import io.spine.tools.psi.java.Environment.commandProcessor
+import io.spine.tools.psi.java.Environment.project
 
 /**
- * Converts the line separators in the string to the one used by PSI (`"\n"`).
+ * Executes the given [Runnable] as a PSI modification
+ * [command][CommandProcessor.executeCommand].
  */
-public fun String.convertLineSeparators(): String =
-    StringUtilRt.convertLineSeparators(this)
+public fun execute(runnable: Runnable) {
+    commandProcessor.executeCommand(project, runnable, null, null)
+}

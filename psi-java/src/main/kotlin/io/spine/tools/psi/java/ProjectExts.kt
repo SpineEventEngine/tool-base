@@ -1,5 +1,5 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,12 +24,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.psi
+package io.spine.tools.psi.java
 
-import com.intellij.openapi.util.text.StringUtilRt
+import com.intellij.application.options.CodeStyle
+import com.intellij.openapi.project.Project
+import com.intellij.psi.codeStyle.JavaCodeStyleManager
+import com.intellij.psi.codeStyle.JavaCodeStyleSettings
 
 /**
- * Converts the line separators in the string to the one used by PSI (`"\n"`).
+ * Obtains [JavaCodeStyleManager] for this project.
  */
-public fun String.convertLineSeparators(): String =
-    StringUtilRt.convertLineSeparators(this)
+public val Project.javaCodeStyleManager: JavaCodeStyleManager
+    get() = JavaCodeStyleManager.getInstance(this)
+
+public val Project.javaCodeStyleSettings: JavaCodeStyleSettings
+    get() = CodeStyle.getSettings(this).getCustomSettings(JavaCodeStyleSettings::class.java)

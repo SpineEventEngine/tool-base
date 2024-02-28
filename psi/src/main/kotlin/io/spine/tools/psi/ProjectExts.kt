@@ -1,5 +1,5 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,49 +24,45 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.psi.java
+package io.spine.tools.psi
 
+import com.intellij.application.options.CodeStyle
 import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiJavaFile
-import io.spine.tools.psi.readResource
-import java.io.File
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
+import com.intellij.psi.PsiDocumentManager
+import com.intellij.psi.codeStyle.CodeStyleManager
+import com.intellij.psi.codeStyle.CodeStyleSettings
+import com.intellij.psi.codeStyle.CustomCodeStyleSettings
 
 /**
- * Abstract base for test suites which need PSI [Environment].
+ * Obtains [CodeStyleManager] for this project.
  */
-@Suppress(
-    "UtilityClassWithPublicConstructor" // Adds `@BeforeAll` and `@AfterAll` for derived classes.
-)
-abstract class PsiTest {
+public val Project.codeStyleManager: CodeStyleManager
+    get() = CodeStyleManager.getInstance(this)
 
-    companion object {
+/**
+ * Obtains code settings for this project.
+ */
+public val Project.codeStyleSettings: CodeStyleSettings
+    get() = CodeStyle.getSettings(this)
 
-        lateinit var project: Project
-
-        val parser: Parser by lazy {
-            Parser(project)
-        }
-
-        @JvmStatic
-        @BeforeAll
-        fun setupIdea() {
-            Environment.setUp()
-            project = Environment.project
-        }
-
-        @JvmStatic
-        @AfterAll
-        fun dispose() {
-            Environment.close()
-        }
-
-        fun parse(fileName: String): PsiJavaFile {
-            val code = readResource(fileName)
-            val file = File(fileName)
-            val psiFile = parser.parse(code, file)
-            return psiFile
-        }
-    }
+/**
+ * Obtains custom code settings of the type [T] from this [CodeStyleSettings].
+ */
+public inline fun <reified T: CustomCodeStyleSettings> CodeStyleSettings.get(): T {
+    return getCustomSettings(T::class.java)
 }
+
+/**
+ * Assigns main project-wide code settings to be used instead of application-wide.
+ *
+ * @see CodeStyle.setMainProjectSettings
+ */
+public fun Project.force(settings: CodeStyleSettings) {
+    CodeStyle.setMainProjectSettings(this, settings)
+}
+
+/**
+ * Obtains a document manager for this project.
+ */
+public val Project.documentManager: PsiDocumentManager
+    get() = PsiDocumentManager.getInstance(this)

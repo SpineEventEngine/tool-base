@@ -10,7 +10,7 @@ all modules and does not describe the project structure per-subproject.
  -->
 <groupId>io.spine.tools</groupId>
 <artifactId>tool-base</artifactId>
-<version>2.0.0-SNAPSHOT.197</version>
+<version>2.0.0-SNAPSHOT.200</version>
 
 <inceptionYear>2015</inceptionYear>
 
@@ -31,6 +31,12 @@ all modules and does not describe the project structure per-subproject.
   </dependency>
   <dependency>
     <groupId>com.jetbrains.intellij.java</groupId>
+    <artifactId>java-impl</artifactId>
+    <version>213.7172.53</version>
+    <scope>compile</scope>
+  </dependency>
+  <dependency>
+    <groupId>com.jetbrains.intellij.java</groupId>
     <artifactId>java-psi</artifactId>
     <version>213.7172.53</version>
     <scope>compile</scope>
@@ -42,6 +48,30 @@ all modules and does not describe the project structure per-subproject.
     <scope>compile</scope>
   </dependency>
   <dependency>
+    <groupId>com.jetbrains.intellij.jsp</groupId>
+    <artifactId>jsp</artifactId>
+    <version>213.7172.53</version>
+    <scope>compile</scope>
+  </dependency>
+  <dependency>
+    <groupId>com.jetbrains.intellij.platform</groupId>
+    <artifactId>analysis-impl</artifactId>
+    <version>213.7172.53</version>
+    <scope>compile</scope>
+  </dependency>
+  <dependency>
+    <groupId>com.jetbrains.intellij.platform</groupId>
+    <artifactId>code-style</artifactId>
+    <version>213.7172.53</version>
+    <scope>compile</scope>
+  </dependency>
+  <dependency>
+    <groupId>com.jetbrains.intellij.platform</groupId>
+    <artifactId>code-style-impl</artifactId>
+    <version>213.7172.53</version>
+    <scope>compile</scope>
+  </dependency>
+  <dependency>
     <groupId>com.jetbrains.intellij.platform</groupId>
     <artifactId>core</artifactId>
     <version>213.7172.53</version>
@@ -49,7 +79,61 @@ all modules and does not describe the project structure per-subproject.
   </dependency>
   <dependency>
     <groupId>com.jetbrains.intellij.platform</groupId>
+    <artifactId>core-impl</artifactId>
+    <version>213.7172.53</version>
+    <scope>compile</scope>
+  </dependency>
+  <dependency>
+    <groupId>com.jetbrains.intellij.platform</groupId>
+    <artifactId>ide-core-impl</artifactId>
+    <version>213.7172.53</version>
+    <scope>compile</scope>
+  </dependency>
+  <dependency>
+    <groupId>com.jetbrains.intellij.platform</groupId>
+    <artifactId>ide-impl</artifactId>
+    <version>213.7172.53</version>
+    <scope>compile</scope>
+  </dependency>
+  <dependency>
+    <groupId>com.jetbrains.intellij.platform</groupId>
+    <artifactId>indexing-impl</artifactId>
+    <version>213.7172.53</version>
+    <scope>compile</scope>
+  </dependency>
+  <dependency>
+    <groupId>com.jetbrains.intellij.platform</groupId>
+    <artifactId>lang</artifactId>
+    <version>213.7172.53</version>
+    <scope>compile</scope>
+  </dependency>
+  <dependency>
+    <groupId>com.jetbrains.intellij.platform</groupId>
+    <artifactId>lang-impl</artifactId>
+    <version>213.7172.53</version>
+    <scope>compile</scope>
+  </dependency>
+  <dependency>
+    <groupId>com.jetbrains.intellij.platform</groupId>
+    <artifactId>project-model</artifactId>
+    <version>213.7172.53</version>
+    <scope>compile</scope>
+  </dependency>
+  <dependency>
+    <groupId>com.jetbrains.intellij.platform</groupId>
+    <artifactId>project-model-impl</artifactId>
+    <version>213.7172.53</version>
+    <scope>compile</scope>
+  </dependency>
+  <dependency>
+    <groupId>com.jetbrains.intellij.platform</groupId>
     <artifactId>util</artifactId>
+    <version>213.7172.53</version>
+    <scope>compile</scope>
+  </dependency>
+  <dependency>
+    <groupId>com.jetbrains.intellij.xml</groupId>
+    <artifactId>xml-psi-impl</artifactId>
     <version>213.7172.53</version>
     <scope>compile</scope>
   </dependency>
