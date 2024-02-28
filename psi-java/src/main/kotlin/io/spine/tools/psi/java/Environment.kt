@@ -425,6 +425,9 @@ public object Environment : Closeable {
  * @see <a href="https://github.com/JetBrains/intellij-community/blob/940f3845a0dbf74bc2f53c339fc09f7956fd5458/java/java-impl/src/META-INF/JavaPlugin.xml#L1332">JavaPlugin.xml entry</a>
  */
 private fun ExtensionsArea.registerJavaFormattingModelBuilder() {
+    @Suppress("UnresolvedPluginConfigReference") /* Suppress the built-in error reported by IDEA.
+        We get the error probably because we probably don't have `Plugin.xml` underneath, and
+        create the extension point programmatically. */
     val langFormatterEp: ExtensionPointName<KeyedLazyInstance<JavaFormattingModelBuilder>> =
         ExtensionPointName.create("com.intellij.lang.formatter")
     register(langFormatterEp)
