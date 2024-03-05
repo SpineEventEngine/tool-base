@@ -59,20 +59,9 @@ dependencies {
     // To use `NonProjectFileWritingAccessProvider`, uncomment the following:
     api(IntelliJ.Platform.ideCoreImpl) { excludeMany() }
 
-    //
-    // Implementation dependencies on IntelliJ artifacts
-    //---------------------------------------------------
-
-    // To access `com.intellij.psi.JspPsiUtil` as a transitive dependency
-    // used by `com.intellij.psi.impl.source.codeStyle.ImportHelper`.
-    implementation(IntelliJ.Jsp.jsp) { excludeMany() }
-
-    implementation(IntelliJ.Xml.xmlPsiImpl) { excludeMany() }
-
-    implementation(IntelliJ.Platform.analysisImpl) { excludeMany() }
-    implementation(IntelliJ.Platform.indexingImpl) { excludeMany() }
-
-    implementation(IntelliJ.Java.impl) {
+    // To expose `JavaCodeStyleSettings` and other types from `com.intellij.psi.codeStyle`
+    // which tools would use for the code style purposes.
+    api(IntelliJ.Java.impl) {
         excludeMany(listOf(
             "ai.grazie.nlp",
             "ai.grazie.spell",
@@ -100,6 +89,21 @@ dependencies {
             "oro",
         ))
     }
+
+    //
+    // Implementation dependencies on IntelliJ artifacts
+    //---------------------------------------------------
+
+    // To access `com.intellij.psi.JspPsiUtil` as a transitive dependency
+    // used by `com.intellij.psi.impl.source.codeStyle.ImportHelper`.
+    implementation(IntelliJ.Jsp.jsp) { excludeMany() }
+
+    implementation(IntelliJ.Xml.xmlPsiImpl) { excludeMany() }
+
+    implementation(IntelliJ.Platform.analysisImpl) { excludeMany() }
+    implementation(IntelliJ.Platform.indexingImpl) { excludeMany() }
+
+
 
     testImplementation(Spine.base)
     testImplementation(Spine.testlib)
