@@ -31,5 +31,6 @@ include(
     "plugin-base",
     "plugin-testlib",
     "psi",
-    "psi-java"
+    "psi-java",
+    "psi-java-bundle"
 )
