@@ -35,17 +35,11 @@ plugins {
 /** The publishing settings from the root project. */
 val spinePublishing = rootProject.the<SpinePublishing>()
 
-/**
- * The ID of the far JAR artifact.
- *
- * This value is also used in `io.spine.tools.mc.java.gradle.Artifacts.kt`.
- */
+/** The ID of the far JAR artifact. */
 val projectArtifact = spinePublishing.artifactPrefix + "psi-java-bundle"
 
-val protoDataVersion: String by extra
-
 dependencies {
-    implementation(project(":psi-java"))
+    api(project(":psi-java"))
 }
 
 publishing {
