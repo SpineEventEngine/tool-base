@@ -13,9 +13,6 @@ dependencies {
 
     with(IntelliJ.Platform) {
         listOf(
-            core,
-            util,
-            codeStyle,
             codeStyleImpl,
             projectModel,
             projectModelImpl,
@@ -102,8 +99,6 @@ dependencies {
 
     implementation(IntelliJ.Platform.analysisImpl) { excludeMany() }
     implementation(IntelliJ.Platform.indexingImpl) { excludeMany() }
-
-
 
     testImplementation(Spine.base)
     testImplementation(Spine.testlib)

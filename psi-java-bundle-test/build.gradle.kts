@@ -24,14 +24,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "tool-base"
+/**
+ * This build runs tests from `psi-java` module using the JAR produced by
+ * the `psi-java-bundle-jar` module.
+ *
+ * This is needed to make sure that the FAT JAR produced by the `psi-java-bundle-jar` module
+ * satisfies our tests, meaning no important classes or resources were excluded during
+ * assembling of the JAR.
+ *
+ * To achieve the goal, we depend on test classes and the JAR, and then JUnit to
+ * run the test classes via the `testClassesDir` property of the `Test` task.
+ */
+@Suppress("PropertyName")
+val ABOUT = ""
 
-include(
-    "tool-base",
-    "plugin-base",
-    "plugin-testlib",
-    "psi",
-    "psi-java",
-    "psi-java-bundle-jar",
-    "psi-java-bundle-test"
+val psiJavaProject = project(":psi-java")
+val psiJavaBuildDir = psiJavaProject.buildDir
+val psiTestClasses = files(
+    psiJavaBuildDir.resolve("classes/kotlin/test"),
+    psiJavaBuildDir.resolve("resources/test"),
 )
+
+val psiBundleJarProject = project(":psi-java-bundle-jar")
+
+dependencies {
+    val shadowJar = psiBundleJarProject.tasks.getByName("shadowJar")
+    testImplementation(files(shadowJar))
+    testImplementation(psiTestClasses)
+
+    testImplementation(project(":plugin-testlib"))
+}
+
+tasks.test {
+    testClassesDirs = psiTestClasses
+}
