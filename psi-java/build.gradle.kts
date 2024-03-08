@@ -100,8 +100,6 @@ dependencies {
     implementation(IntelliJ.Platform.analysisImpl) { excludeMany() }
     implementation(IntelliJ.Platform.indexingImpl) { excludeMany() }
 
-
-
     testImplementation(Spine.base)
     testImplementation(Spine.testlib)
     testImplementation(project(":plugin-testlib"))

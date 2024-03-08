@@ -25,7 +25,6 @@
  */
 
 import groovy.util.Node
-import io.spine.internal.dependency.ProtoData
 import io.spine.internal.gradle.publish.SpinePublishing
 
 plugins {
@@ -183,7 +182,7 @@ tasks.shadowJar {
     )
 
     setZip64(true)  /* The archive has way too many items. So using the Zip64 mode. */
-    archiveClassifier.set("")    /** To prevent Gradle setting something like `osx-x86_64`. */
+    archiveClassifier.set("")  /** To prevent Gradle setting something like `osx-x86_64`. */
     mergeServiceFiles("desc.ref")
     mergeServiceFiles("META-INF/services/io.spine.option.OptionsProvider")
 }
