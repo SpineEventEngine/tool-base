@@ -13,9 +13,6 @@ dependencies {
 
     with(IntelliJ.Platform) {
         listOf(
-            core,
-            util,
-            codeStyle,
             codeStyleImpl,
             projectModel,
             projectModelImpl,
