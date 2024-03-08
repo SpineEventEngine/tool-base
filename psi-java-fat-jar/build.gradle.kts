@@ -49,7 +49,6 @@ dependencies {
     implementation(project(":psi-java"))
 }
 
-
 publishing {
     val groupName = project.group.toString()
     val versionName = project.version.toString()
@@ -60,54 +59,6 @@ publishing {
             artifactId = projectArtifact
             version = versionName
             artifact(tasks.shadowJar)
-
-            /**
-             * Manually add the dependency onto `io.spine:protodata`,
-             * as there is no good way to remove all the dependencies
-             * from the fat JAR artifact, but leave just this one.
-             *
-             * This dependency is required in order to place the ProtoData plugin
-             * onto the build classpath, so that `mc-java` routines
-             * could apply it programmatically.
-             *
-             * The appended content should look like this:
-             * ```
-             *     <dependency>
-             *         <groupId>io.spine</groupId>
-             *         <artifactId>protodata</artifactId>
-             *         <version>$protoDataVersion</version>
-             *         <scope>runtime</scope>
-             *         <exclusions>
-             *              <exclusion>
-             *                  <groupId>io.spine.protodata</groupId>
-             *                  <artifactId>*</artifactId>
-             *              </exclusion>
-             *              <exclusion>
-             *                  <groupId>org.jetbrains.kotlin</groupId>
-             *                  <artifactId>*</artifactId>
-             *              </exclusion>
-             *              <exclusion>
-             *                  <groupId>com.google.protobuf</groupId>
-             *                  <artifactId>*</artifactId>
-             *              </exclusion>
-             *              <exclusion>
-             *                  <groupId>io.spine.tools</groupId>
-             *                  <artifactId>*</artifactId>
-             *              </exclusion>
-             *         </exclusions>
-             *    </dependency>
-             * ```
-             */
-            pom.withXml {
-                val projectNode: Node = asNode() as Node
-                val dependencies = Node(projectNode, "dependencies")
-                val dependency = Node(dependencies, "dependency")
-
-                val exclusions = Node(dependency, "exclusions")
-                excludeGroupId(exclusions, "org.jetbrains.kotlin")
-                excludeGroupId(exclusions, "com.google.protobuf")
-                excludeGroupId(exclusions, "io.spine.tools")
-            }
         }
     }
 }
@@ -232,16 +183,10 @@ tasks.shadowJar {
     )
 
     setZip64(true)  /* The archive has way too many items. So using the Zip64 mode. */
-    archiveClassifier.set("all")    /** To prevent Gradle setting something like `osx-x86_64`. */
+    archiveClassifier.set("")    /** To prevent Gradle setting something like `osx-x86_64`. */
     mergeServiceFiles("desc.ref")
     mergeServiceFiles("META-INF/services/io.spine.option.OptionsProvider")
 }
-
-// See https://github.com/johnrengelman/shadow/issues/153.
-//tasks.shadowDistTar.get().enabled = false
-//tasks.shadowDistZip.get().enabled = false
-//tasks.distTar.get().enabled = false
-//tasks.distZip.get().enabled = false
 
 fun excludeGroupId(exclusions: Node, groupId: String) {
     val exclusion = Node(exclusions, "exclusion")
