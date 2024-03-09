@@ -70,7 +70,6 @@ spinePublishing {
         "tool-base",
         "psi",
         "psi-java",
-        "psi-java-bundle-jar",
     )
     destinations = with(PublishingRepos) {
         setOf(
