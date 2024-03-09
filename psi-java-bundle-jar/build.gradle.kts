@@ -181,9 +181,10 @@ tasks.shadowJar {
     mergeServiceFiles("META-INF/services/io.spine.option.OptionsProvider")
 }
 
-fun excludeGroupId(exclusions: Node, groupId: String) {
-    val exclusion = Node(exclusions, "exclusion")
-    Node(exclusion, "groupId", groupId)
-    Node(exclusion, "artifactId", "*")
-}
+/**
+ *  Make the root project publish this module separately to
+ *  those modules that are declared in `spinePublishing.modules`.
+ */
+val rootPublish: Task = rootProject.tasks.getByName("publish")
+rootPublish.dependsOn(tasks.publish)
 
