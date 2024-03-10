@@ -1,6 +1,6 @@
 
 
-# Dependencies of `io.spine.tools:spine-plugin-base:2.0.0-SNAPSHOT.203`
+# Dependencies of `io.spine.tools:spine-plugin-base:2.0.0-SNAPSHOT.204`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -636,12 +636,12 @@
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Sat Mar 09 01:44:58 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Sun Mar 10 14:53:49 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:spine-plugin-testlib:2.0.0-SNAPSHOT.203`
+# Dependencies of `io.spine.tools:spine-plugin-testlib:2.0.0-SNAPSHOT.204`
 
 ## Runtime
 1.  **Group** : com.google.auto.value. **Name** : auto-value-annotations. **Version** : 1.10.2.
@@ -1391,12 +1391,12 @@ This report was generated on **Sat Mar 09 01:44:58 WET 2024** using [Gradle-Lice
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Sat Mar 09 01:44:59 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Sun Mar 10 14:53:50 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:spine-psi:2.0.0-SNAPSHOT.203`
+# Dependencies of `io.spine.tools:spine-psi:2.0.0-SNAPSHOT.204`
 
 ## Runtime
 1.  **Group** : be.cyberelf.nanoxml. **Name** : nanoxml. **Version** : 2.2.3.
@@ -2237,12 +2237,12 @@ This report was generated on **Sat Mar 09 01:44:59 WET 2024** using [Gradle-Lice
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Sat Mar 09 01:44:59 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Sun Mar 10 14:53:50 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:spine-psi-java:2.0.0-SNAPSHOT.203`
+# Dependencies of `io.spine.tools:spine-psi-java:2.0.0-SNAPSHOT.204`
 
 ## Runtime
 1.  **Group** : be.cyberelf.nanoxml. **Name** : nanoxml. **Version** : 2.2.3.
@@ -3817,12 +3817,12 @@ This report was generated on **Sat Mar 09 01:44:59 WET 2024** using [Gradle-Lice
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Sat Mar 09 01:44:59 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Sun Mar 10 14:53:50 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:spine-psi-java-bundle-jar:2.0.0-SNAPSHOT.203`
+# Dependencies of `io.spine.tools:spine-psi-java-bundle-jar:2.0.0-SNAPSHOT.204`
 
 ## Runtime
 1.  **Group** : be.cyberelf.nanoxml. **Name** : nanoxml. **Version** : 2.2.3.
@@ -5341,12 +5341,12 @@ This report was generated on **Sat Mar 09 01:44:59 WET 2024** using [Gradle-Lice
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Sat Mar 09 01:44:59 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Sun Mar 10 14:53:51 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:spine-psi-java-bundle-test:2.0.0-SNAPSHOT.203`
+# Dependencies of `io.spine.tools:spine-psi-java-bundle-test:2.0.0-SNAPSHOT.204`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -5929,12 +5929,12 @@ This report was generated on **Sat Mar 09 01:44:59 WET 2024** using [Gradle-Lice
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Sat Mar 09 01:44:59 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Sun Mar 10 14:53:51 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:spine-tool-base:2.0.0-SNAPSHOT.203`
+# Dependencies of `io.spine.tools:spine-tool-base:2.0.0-SNAPSHOT.204`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -6613,4 +6613,4 @@ This report was generated on **Sat Mar 09 01:44:59 WET 2024** using [Gradle-Lice
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Sat Mar 09 01:45:00 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Sun Mar 10 14:53:51 WET 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
