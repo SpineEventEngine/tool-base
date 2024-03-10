@@ -71,6 +71,9 @@ spinePublishing {
         "psi",
         "psi-java",
     )
+    modulesWithCustomPublishing = setOf(
+        "psi-java-bundle-jar"
+    )
     destinations = with(PublishingRepos) {
         setOf(
             cloudArtifactRegistry,
