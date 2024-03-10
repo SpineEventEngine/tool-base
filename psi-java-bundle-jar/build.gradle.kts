@@ -31,15 +31,15 @@ plugins {
     id("com.github.johnrengelman.shadow")
 }
 
+dependencies {
+    api(project(":psi-java"))
+}
+
 /** The publishing settings from the root project. */
 val spinePublishing = rootProject.the<SpinePublishing>()
 
 /** The ID of the far JAR artifact. */
 val projectArtifact = spinePublishing.artifactPrefix + "psi-java-bundle"
-
-dependencies {
-    api(project(":psi-java"))
-}
 
 publishing {
     val groupName = project.group.toString()
