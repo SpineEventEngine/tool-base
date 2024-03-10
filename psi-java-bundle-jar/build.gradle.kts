@@ -41,6 +41,8 @@ val spinePublishing = rootProject.the<SpinePublishing>()
 /** The ID of the far JAR artifact. */
 val projectArtifact = spinePublishing.artifactPrefix + "psi-java-bundle"
 
+project.description = "A fat JAR version of the `spine-psi-java` artifact."
+
 publishing {
     val groupName = project.group.toString()
     val versionName = project.version.toString()

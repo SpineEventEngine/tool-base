@@ -64,6 +64,15 @@ public class KManifest(public val impl: Manifest) {
         public val DEPENDS_ON_ATTR: Name = Name("Depends-On")
 
         /**
+         * The name of a commonly used manifest attribute,
+         * describing the contents of the respective JAR file.
+         *
+         * This attribute name is hard-coded in [Attributes] as a plain string literal,
+         * therefore, we re-declare it here as a constant.
+         */
+        public val BUNDLE_DESCRIPTION: Name = Name("Bundle-Description")
+
+        /**
          * Loads the manifest next to the given class.
          */
         public fun load(cls: Class<*>): KManifest {
@@ -111,6 +120,11 @@ public class KManifest(public val impl: Manifest) {
      * Obtains the [`Implementation-Vendor`][IMPLEMENTATION_VENDOR] attribute of the manifest.
      */
     public val implementationVendor: String? = mainAttributes[IMPLEMENTATION_VENDOR]?.toString()
+
+    /**
+     * Obtains the [`Bundle-Description`][BUNDLE_DESCRIPTION] attribute of the manifest.
+     */
+    public val bundleDescription: String? = mainAttributes[BUNDLE_DESCRIPTION]?.toString()
 
     /**
      * Obtains the dependencies declared in the ['Depends-On'][DEPENDS_ON_ATTR] attribute
