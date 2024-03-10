@@ -24,7 +24,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import groovy.util.Node
 import io.spine.internal.gradle.publish.SpinePublishing
 
 plugins {
@@ -168,8 +167,8 @@ tasks.shadowJar {
         "win32-x86-64/**",
 
         /**
-         * Exclude Windows process management library (WinP).
-         * `https://github.com/jenkinsci/winp`.
+         * Exclude the Windows process management (WinP) libraries.
+         * See: `https://github.com/jenkinsci/winp`.
          */
         "winp.dll",
         "winp.x64.dll"
@@ -180,11 +179,4 @@ tasks.shadowJar {
     mergeServiceFiles("desc.ref")
     mergeServiceFiles("META-INF/services/io.spine.option.OptionsProvider")
 }
-
-/**
- *  Make the root project publish this module separately to
- *  those modules that are declared in `spinePublishing.modules`.
- */
-val rootPublish: Task = rootProject.tasks.getByName("publish")
-rootPublish.dependsOn(tasks.publish)
 
