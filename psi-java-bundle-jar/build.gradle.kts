@@ -24,7 +24,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import groovy.util.Node
 import io.spine.internal.gradle.publish.SpinePublishing
 
 plugins {
