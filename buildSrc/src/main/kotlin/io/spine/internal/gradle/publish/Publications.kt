@@ -82,10 +82,17 @@ internal sealed class PublicationHandler(
     /**
      * Takes a group name and a version from the given [project] and assigns
      * them to this publication.
+     *
+     * Also, adds the [artifactPrefix][SpinePublishing.artifactPrefix] to
+     * the [artifactId][MavenPublication.setArtifactId] of
+     * this publication, if the prefix is not added yet.
      */
     protected fun MavenPublication.assignMavenCoordinates() {
         groupId = project.group.toString()
-        artifactId = project.spinePublishing.artifactPrefix + artifactId
+        val prefix = project.spinePublishing.artifactPrefix
+        if (!artifactId.startsWith(prefix)) {
+            artifactId = prefix + artifactId
+        }
         version = project.version.toString()
     }
 }
@@ -198,7 +205,7 @@ internal class StandardJavaPublicationHandler(
  *
  * If a module with [publications] declared locally is not specified as one with custom publishing,
  * it may cause a name clash between an artifact produced by the [standard][MavenPublication]
- * publication, and custom ones. In order to have both standard and custom publications,
+ * publication, and custom ones. To have both standard and custom publications,
  * please specify custom artifact IDs or classifiers for each custom publication.
  */
 internal class CustomPublicationHandler(project: Project, destinations: Set<Repository>) :
