@@ -26,50 +26,11 @@
 
 package io.spine.tools.psi.java
 
-import com.intellij.openapi.vfs.local.CoreLocalFileSystem
 import com.intellij.psi.PsiJavaFile
-import com.intellij.psi.PsiManager
+import io.spine.tools.psi.AbstractFileSystem
 import io.spine.tools.psi.java.Parser.Companion.FILE_SUFFIX
-import java.io.File
 
 /**
  * File operations for working with [PsiJavaFile] instances.
  */
-public object FileSystem {
-
-    private val psiManager by lazy {
-        PsiManager.getInstance(Environment.project)
-    }
-
-    private val localFileSystem by lazy {
-        CoreLocalFileSystem()
-    }
-
-    /**
-     * Locates the file on the local file system and creates
-     * corresponding [PsiJavaFile] instance.
-     *
-     * @throws IllegalArgumentException
-     *         — If the file has an extension other than ".java".
-     *         — If the file does not exist.
-     * @throws IllegalStateException
-     *          — If [CoreLocalFileSystem] could not obtain [VirtualFile].
-     *          — If [PsiManager] could not find the virtual file.
-     */
-    public fun load(file: File): PsiJavaFile {
-        require(file.toString().endsWith(FILE_SUFFIX)) {
-            "The file `$file` must have the `$FILE_SUFFIX` extension."
-        }
-        require(file.exists()) {
-            "The file `$file` does not exist."
-        }
-        val found = localFileSystem.findFileByIoFile(file)
-        check(found != null) {
-            "Unable to locate the file `$file` in the local file system."
-        }
-        psiManager.findFile(found)?.let {
-            return it as PsiJavaFile
-        }
-        error("Unable to load the file `$file`.")
-    }
-}
+public object FileSystem : AbstractFileSystem<PsiJavaFile>(Environment.project, FILE_SUFFIX)
