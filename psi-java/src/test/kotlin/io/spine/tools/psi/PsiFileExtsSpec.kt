@@ -26,26 +26,37 @@
 
 package io.spine.tools.psi
 
-import com.intellij.openapi.editor.Document
-import com.intellij.psi.PsiFile
+import io.kotest.matchers.shouldBe
+import io.spine.testing.TestValues.randomString
+import io.spine.tools.psi.java.FileSystem
+import java.nio.file.Path
+import kotlin.io.path.writeText
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 
 /**
- * Obtains a document for this [PsiFile].
+ * This test suite is for extensions of [PsiFile][com.intellij.psi.PsiFile] which
+ * are declared in the `PsiFileExts.kt` of the `psi` module.
  *
- * @return the document instance of `null` if the file is binary, or
- *         the file has no associated document.
+ * We have these tests here, under `psi-java` module, because this module
+ * has [io.spine.tools.psi.java.Environment] with all the needed PSI services configured.
+ * Some of these services are language independent, some of them are specific to Java.
+ *
+ * [PsiFile][com.intellij.psi.PsiFile] is language independent interface.
+ * Once we have language neutral environment configuration code under the `psi` module,
+ * these tests should be moved there too.
  */
-public val PsiFile.document: Document?
-    get() = project.documentManager.getDocument(this)
+@DisplayName("`PsiFile` extensions should")
+internal class PsiFileExtsSpec {
 
-/**
- * Obtains the content of the file via a document of
- * its [viewProvider][com.intellij.psi.FileViewProvider].
- *
- * This method is safer than obtaining the content via the [text][PsiFile.getText] property
- * because it avoids the error of size miscalculation when the `PsiFile` was modified.
- */
-public fun PsiFile.content(): String {
-    val result = viewProvider.document.text
-    return result
+    @Test
+    fun `load file content`(@TempDir tempDir: Path) {
+        val file = tempDir.resolve("Stub.java")
+        val content = """/* ${randomString()} */"""
+        file.writeText(content)
+
+        val psiFile = FileSystem.load(file)
+        psiFile.content() shouldBe content
+    }
 }
