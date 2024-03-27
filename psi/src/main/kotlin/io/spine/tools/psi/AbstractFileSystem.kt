@@ -37,7 +37,7 @@ import java.nio.file.Path
  * An abstract base for classes implementing file operations.
  *
  * @param F
- *         the type of the [PsiFile] objects implementing classed deal with.
+ *         the type of the [PsiFile] objects implementing classes deal with.
  * @param project
  *         the project to which files belong.
  * @param suffix
