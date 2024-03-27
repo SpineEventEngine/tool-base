@@ -42,4 +42,5 @@ dependencies {
             codeStyle
         ).forEach { api(it) }
     }
+    testImplementation(Spine.testlib)
 }
