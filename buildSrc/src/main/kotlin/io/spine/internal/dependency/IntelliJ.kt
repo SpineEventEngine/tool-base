@@ -65,6 +65,7 @@ object IntelliJ {
 
     object Jsp {
         private const val group = "com.jetbrains.intellij.jsp"
+        @Suppress("MemberNameEqualsClassName")
         const val jsp = "$group:jsp:$version"
     }
 
@@ -81,6 +82,7 @@ object IntelliJ {
 
     object Java {
         private const val group = "com.jetbrains.intellij.java"
+        @Suppress("MemberNameEqualsClassName")
         const val java = "$group:java:$version"
         const val impl = "$group:java-impl:$version"
     }
