@@ -29,6 +29,8 @@ package io.spine.tools.psi.java
 import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiMethod
+import com.intellij.psi.PsiModifier.FINAL
+import com.intellij.psi.PsiModifier.PUBLIC
 import com.intellij.psi.PsiModifier.STATIC
 import com.intellij.psi.PsiModifierList
 import io.spine.tools.psi.document
@@ -71,10 +73,22 @@ public val PsiClass.modifiers: PsiModifierList
     }
 
 /**
+ * Tells if this class has the [`public`][PUBLIC] modifier.
+ */
+public val PsiClass.isPublic: Boolean
+    get() = modifiers.hasModifierProperty(PUBLIC)
+
+/**
  * Tells if this class has the [`static`][STATIC] modifier.
  */
 public val PsiClass.isStatic: Boolean
     get() = modifiers.hasModifierProperty(STATIC)
+
+/**
+ * Tells if this class has the [`final`][FINAL] modifier.
+ */
+public val PsiClass.isFinal: Boolean
+    get() = modifiers.hasModifierProperty(FINAL)
 
 /**
  * Adds `static` modifier to this class, if it did not have the modifier before.
@@ -82,6 +96,29 @@ public val PsiClass.isStatic: Boolean
 public fun PsiClass.makeStatic(): PsiClass {
     modifiers.setIfAbsent(STATIC)
     return this
+}
+
+/**
+ * Adds `public` modifier to this class, if it did not have the modifier before.
+ */
+public fun PsiClass.makePublic(): PsiClass {
+    modifiers.setIfAbsent(PUBLIC)
+    return this
+}
+
+/**
+ * Adds `final` modifier to this class, if it did not have the modifier before.
+ */
+public fun PsiClass.makeFinal(): PsiClass {
+    modifiers.setIfAbsent(FINAL)
+    return this
+}
+
+/**
+ * Adds given [element] before the [firstChild][PsiClass.getFirstChild] of this class.
+ */
+public fun PsiClass.addFirst(element: PsiElement): PsiElement {
+    return addBefore(element, firstChild)
 }
 
 /**
