@@ -78,21 +78,21 @@ public val PsiClass.modifiers: PsiModifierList
  */
 @Deprecated("Please use `PsiModifierListOwner.isPublic` instead.")
 public val PsiClass.isPublic: Boolean
-    get() = modifiers.hasModifierProperty(PUBLIC)
+    get() = (this as PsiModifierListOwner).isPublic
 
 /**
  * Tells if this class has the [`static`][STATIC] modifier.
  */
 @Deprecated("Please use `PsiModifierListOwner.isStatic` instead.")
 public val PsiClass.isStatic: Boolean
-    get() = modifiers.hasModifierProperty(STATIC)
+    get() = (this as PsiModifierListOwner).isStatic
 
 /**
  * Tells if this class has the [`final`][FINAL] modifier.
  */
 @Deprecated("Please use `PsiModifierListOwner.isFinal` instead.")
 public val PsiClass.isFinal: Boolean
-    get() = modifiers.hasModifierProperty(FINAL)
+    get() = (this as PsiModifierListOwner).isFinal
 
 /**
  * Adds `static` modifier to this class, if it did not have the modifier before.
