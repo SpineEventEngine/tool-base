@@ -33,6 +33,7 @@ import com.intellij.psi.PsiModifier.FINAL
 import com.intellij.psi.PsiModifier.PUBLIC
 import com.intellij.psi.PsiModifier.STATIC
 import com.intellij.psi.PsiModifierList
+import com.intellij.psi.PsiModifierListOwner
 import io.spine.tools.psi.document
 
 /**
@@ -75,44 +76,44 @@ public val PsiClass.modifiers: PsiModifierList
 /**
  * Tells if this class has the [`public`][PUBLIC] modifier.
  */
+@Deprecated("Please use `PsiModifierListOwner.isPublic` instead.")
 public val PsiClass.isPublic: Boolean
     get() = modifiers.hasModifierProperty(PUBLIC)
 
 /**
  * Tells if this class has the [`static`][STATIC] modifier.
  */
+@Deprecated("Please use `PsiModifierListOwner.isStatic` instead.")
 public val PsiClass.isStatic: Boolean
     get() = modifiers.hasModifierProperty(STATIC)
 
 /**
  * Tells if this class has the [`final`][FINAL] modifier.
  */
+@Deprecated("Please use `PsiModifierListOwner.isFinal` instead.")
 public val PsiClass.isFinal: Boolean
     get() = modifiers.hasModifierProperty(FINAL)
 
 /**
  * Adds `static` modifier to this class, if it did not have the modifier before.
  */
-public fun PsiClass.makeStatic(): PsiClass {
-    modifiers.setIfAbsent(STATIC)
-    return this
-}
+@Deprecated("Please use `PsiModifierListOwner.makeStatic()` instead.")
+public fun PsiClass.makeStatic(): PsiClass =
+    (this as PsiModifierListOwner).makeStatic() as PsiClass
 
 /**
  * Adds `public` modifier to this class, if it did not have the modifier before.
  */
-public fun PsiClass.makePublic(): PsiClass {
-    modifiers.setIfAbsent(PUBLIC)
-    return this
-}
+@Deprecated("Please use `PsiModifierListOwner.makePublic()` instead.")
+public fun PsiClass.makePublic(): PsiClass =
+    (this as PsiModifierListOwner).makePublic() as PsiClass
 
 /**
  * Adds `final` modifier to this class, if it did not have the modifier before.
  */
-public fun PsiClass.makeFinal(): PsiClass {
-    modifiers.setIfAbsent(FINAL)
-    return this
-}
+@Deprecated("Please use `PsiModifierListOwner.makeFinal()` instead.")
+public fun PsiClass.makeFinal(): PsiClass =
+    (this as PsiModifierListOwner).makeFinal() as PsiClass
 
 /**
  * Adds given [element] before the [firstChild][PsiClass.getFirstChild] of this class.

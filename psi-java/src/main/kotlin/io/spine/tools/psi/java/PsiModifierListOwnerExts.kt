@@ -29,21 +29,37 @@ package io.spine.tools.psi.java
 import com.intellij.psi.PsiModifier
 import com.intellij.psi.PsiModifier.FINAL
 import com.intellij.psi.PsiModifier.PUBLIC
+import com.intellij.psi.PsiModifier.STATIC
 import com.intellij.psi.PsiModifierList
 import com.intellij.psi.PsiModifierListOwner
 import org.jetbrains.annotations.NonNls
 
 /**
+ * Tells if this object has the modifier with the given [name].
+ */
+public fun PsiModifierListOwner.hasModifier(
+    @PsiModifier.ModifierConstant @NonNls name: String): Boolean {
+    return  modifierList?.hasModifierProperty(name) ?: false
+}
+
+/**
  * Returns `true` if the modifier [`final`][FINAL] is applied.
  */
 public val PsiModifierListOwner.isFinal: Boolean
-    get() = modifierList?.hasModifierProperty(FINAL) ?: false
+    get() = hasModifier(FINAL)
 
 /**
  * Returns `true` if the modifier [`public`][PUBLIC] is applied.
  */
 public val PsiModifierListOwner.isPublic: Boolean
-    get() = modifierList?.hasModifierProperty(PUBLIC) ?: false
+    get() = hasModifier(PUBLIC)
+
+/**
+ * Tells if this class has the [`static`][STATIC] modifier.
+ */
+public val PsiModifierListOwner.isStatic: Boolean
+    get() = hasModifier(STATIC)
+
 
 /**
  * Adds the [`public`][PUBLIC] modifier.
@@ -58,6 +74,14 @@ public fun PsiModifierListOwner.makePublic(): PsiModifierListOwner {
  */
 public fun PsiModifierListOwner.makeFinal(): PsiModifierListOwner {
     modifierList?.setIfAbsent(FINAL)
+    return this
+}
+
+/**
+ * Adds the [`static`][STATIC] modifier.
+ */
+public fun PsiModifierListOwner.makeStatic(): PsiModifierListOwner {
+    modifierList?.setIfAbsent(STATIC)
     return this
 }
 
