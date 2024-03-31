@@ -29,8 +29,11 @@ package io.spine.tools.psi.java
 import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiMethod
+import com.intellij.psi.PsiModifier.FINAL
+import com.intellij.psi.PsiModifier.PUBLIC
 import com.intellij.psi.PsiModifier.STATIC
 import com.intellij.psi.PsiModifierList
+import com.intellij.psi.PsiModifierListOwner
 import io.spine.tools.psi.document
 
 /**
@@ -71,17 +74,10 @@ public val PsiClass.modifiers: PsiModifierList
     }
 
 /**
- * Tells if this class has the [`static`][STATIC] modifier.
+ * Adds given [element] before the [firstChild][PsiClass.getFirstChild] of this class.
  */
-public val PsiClass.isStatic: Boolean
-    get() = modifiers.hasModifierProperty(STATIC)
-
-/**
- * Adds `static` modifier to this class, if it did not have the modifier before.
- */
-public fun PsiClass.makeStatic(): PsiClass {
-    modifiers.setIfAbsent(STATIC)
-    return this
+public fun PsiClass.addFirst(element: PsiElement): PsiElement {
+    return addBefore(element, firstChild)
 }
 
 /**

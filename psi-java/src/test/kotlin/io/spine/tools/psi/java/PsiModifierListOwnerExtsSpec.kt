@@ -26,7 +26,7 @@
 
 package io.spine.tools.psi.java
 
-import com.intellij.psi.PsiClass
+import com.intellij.psi.PsiModifierListOwner
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -36,7 +36,7 @@ import org.junit.jupiter.api.Test
 @DisplayName("`PsiModifierListOwner` extensions should")
 class PsiModifierListOwnerExtsSpec {
 
-    private lateinit var cls: PsiClass
+    private lateinit var cls: PsiModifierListOwner
 
     @BeforeEach
     fun createClass() {

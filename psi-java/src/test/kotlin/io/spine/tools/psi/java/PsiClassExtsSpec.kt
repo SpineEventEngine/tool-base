@@ -27,12 +27,14 @@
 package io.spine.tools.psi.java
 
 import com.intellij.psi.PsiClass
+import com.intellij.psi.PsiMethod
 import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 import io.spine.tools.psi.java.Environment.elementFactory
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 
 @DisplayName("`PsiClass` extensions should")
 internal class PsiClassExtsSpec: PsiTest() {
@@ -46,23 +48,46 @@ internal class PsiClassExtsSpec: PsiTest() {
     }
 
     @Test
-    fun `make class static`() {
-        cls.isStatic shouldBe false
-        execute { cls.makeStatic() }
-        cls.isStatic shouldBe true
-    }
-
-    @Test
-    fun `make class public`() {
-        cls.isPublic shouldBe false // Because we cleared it. It comes `public` out of the factory.
-        execute { cls.makePublic() }
-        cls.isPublic shouldBe true
-    }
-
-    @Test
     fun `obtain line number`() {
         val file = parse("LineNumberTest.java")
         cls = file.topLevelClass
         cls.lineNumber shouldBeGreaterThan 0
+    }
+
+    @Test
+    fun `find a method by its name`() {
+        val file = parse("FileOnDisk.java")
+        cls = file.topLevelClass
+        val method: PsiMethod = assertDoesNotThrow {
+            cls.method("main")
+        }
+        method.isStatic shouldBe true
+        method.isPublic shouldBe true
+    }
+
+    @Test
+    fun `add an element first`() {
+        val methodName = "doFirst"
+        val method = elementFactory.createStubMethod(methodName)
+        execute {
+            cls.addFirst(method)
+        }
+        (cls.firstChild is PsiMethod) shouldBe true
+        // Cannot use equality with `PsiMethod` because `equals()` is not overridden.
+        (cls.firstChild as PsiMethod).name shouldBe method.name
+    }
+
+    @Test
+    fun `add an element before the closing brace`() {
+        val methodName = "doLast"
+        val method = elementFactory.createStubMethod(methodName)
+        execute {
+            cls.addLast(method)
+        }
+        val closingBraceIndex = cls.children.indexOf(cls.rBrace)
+        val preLastChild = cls.children[closingBraceIndex - 1]
+
+        (preLastChild is PsiMethod) shouldBe true
+        (preLastChild as PsiMethod).name shouldBe method.name
     }
 }
