@@ -62,7 +62,7 @@ public val PsiModifierListOwner.isPrivate: Boolean
     get() = hasModifier(PRIVATE)
 
 /**
- * Tells if this class has the [`static`][STATIC] modifier.
+ * Returns `true` if the modifier [`static`][STATIC] is applied.
  */
 public val PsiModifierListOwner.isStatic: Boolean
     get() = hasModifier(STATIC)
