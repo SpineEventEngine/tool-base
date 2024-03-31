@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-@DisplayName("Extensions for `PsiElementFactory` should")
+@DisplayName("`PsiElementFactory` extensions should")
 internal class PsiElementFactoryExtsSpec {
 
     @Nested inner class
