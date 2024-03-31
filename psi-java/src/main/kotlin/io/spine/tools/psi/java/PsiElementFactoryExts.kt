@@ -30,36 +30,58 @@ import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiElementFactory
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.javadoc.PsiDocComment
-import io.spine.tools.psi.java.Environment.elementFactory
+import io.spine.string.containsLineSeparators
 import org.jetbrains.annotations.TestOnly
 
+/**
+ * Creates a private no-op constructor for the given class.
+ *
+ * The created constructor accepts no parameters.
+ * This function could be useful for creating constructors of utility classes, or
+ * for classes that should not be instantiated from outside the code of
+ * the generated class.
+ *
+ * @param javadocLine
+ *         optional single-line text for Javadoc comment to be generated.
+ *         If `null`, no Javadoc comment will be created.
+ * @return the generated constructor.
+ * @see PsiElementFactory.createMethodFromText
+ */
 public fun PsiElementFactory.createPrivateConstructor(
     cls: PsiClass,
-    javadocText: String? = null,
-    body: String? = null,
+    javadocLine: String? = null,
 ): PsiMethod {
     val ctor = createMethodFromText("""
         private ${cls.name}() {
-            // No-op.
         }            
         """.trimIndent(), cls
     )
-    if (javadocText != null) {
-        val javadoc = createJavadoc(javadocText)
+    if (javadocLine != null) {
+        val javadoc = createJavadoc(javadocLine)
         ctor.addBefore(javadoc, ctor.firstChild)
     }
     return ctor
 }
 
-public fun PsiElementFactory.createJavadoc(text: String): PsiDocComment {
-    require(text.isNotEmpty()) {
+/**
+ * Creates a single-line Javadoc comment using the given text.
+ *
+ * @param line
+ *         a non-empty one-line text of the Javadoc comment.
+ * @throws IllegalArgumentException
+ *         if the given line is empty or contains line separators.
+ * @return the generated Javadoc comment.
+ * @see PsiElementFactory.createDocCommentFromText
+ */
+public fun PsiElementFactory.createJavadoc(line: String): PsiDocComment {
+    require(line.isNotEmpty()) {
         "Unable to create a Javadoc comment with an empty text."
     }
-    //TODO:2024-03-31:alexander.yevsyukov: See if the comment multiline, and use
-    // proper surrounding accordingly.
-    val javadoc = createDocCommentFromText(
-        """
-        /** Prevents instantiation of this class. */    
+    require(!line.containsLineSeparators()) {
+        "Please use `createDocCommentFromText()` for creating multi-line Javadoc comments."
+    }
+    val javadoc = createDocCommentFromText("""
+        /** $line */    
         """.trimIndent()
     )
     return javadoc
@@ -73,8 +95,8 @@ public fun PsiElementFactory.createJavadoc(text: String): PsiDocComment {
 @TestOnly
 public fun PsiElementFactory.createStubMethod(name: String): PsiMethod {
     val method = createMethodFromText("""
-            void $name() {}
-            """.trimIndent(), null
+        void $name() {}
+        """.trimIndent(), null
     )
     return method
 }

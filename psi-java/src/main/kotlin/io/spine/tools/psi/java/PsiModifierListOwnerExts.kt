@@ -29,6 +29,7 @@ package io.spine.tools.psi.java
 import com.intellij.psi.PsiModifier
 import com.intellij.psi.PsiModifier.FINAL
 import com.intellij.psi.PsiModifier.PUBLIC
+import com.intellij.psi.PsiModifier.PRIVATE
 import com.intellij.psi.PsiModifier.STATIC
 import com.intellij.psi.PsiModifierList
 import com.intellij.psi.PsiModifierListOwner
@@ -53,6 +54,12 @@ public val PsiModifierListOwner.isFinal: Boolean
  */
 public val PsiModifierListOwner.isPublic: Boolean
     get() = hasModifier(PUBLIC)
+
+/**
+ * Returns `true` if the modifier [`private`][PRIVATE] is applied.
+ */
+public val PsiModifierListOwner.isPrivate: Boolean
+    get() = hasModifier(PRIVATE)
 
 /**
  * Tells if this class has the [`static`][STATIC] modifier.
