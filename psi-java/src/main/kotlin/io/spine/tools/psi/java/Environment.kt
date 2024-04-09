@@ -107,6 +107,8 @@ import com.intellij.psi.impl.PsiTreeChangePreprocessor
 import com.intellij.psi.impl.search.PsiSearchHelperImpl
 import com.intellij.psi.impl.source.PostprocessReformattingAspect
 import com.intellij.psi.impl.source.codeStyle.CodeStyleManagerImpl
+import com.intellij.psi.impl.source.codeStyle.IndentHelper
+import com.intellij.psi.impl.source.codeStyle.IndentHelperImpl
 import com.intellij.psi.impl.source.codeStyle.JavaCodeStyleManagerImpl
 import com.intellij.psi.impl.source.codeStyle.JavaReferenceAdjuster
 import com.intellij.psi.impl.source.codeStyle.PersistableCodeStyleSchemes
@@ -288,6 +290,7 @@ public object Environment : Closeable {
             registerServiceImpl<DataManager>(HeadlessDataManager::class)
             registerServiceImpl<Formatter>(FormatterImpl::class)
             registerServiceImpl<JavaClassSupers>(JavaClassSupersImpl::class)
+            registerServiceImpl<IndentHelper>(IndentHelperImpl::class)
         }
     }
 

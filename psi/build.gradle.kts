@@ -27,11 +27,6 @@
 import io.spine.internal.dependency.IntelliJ
 import io.spine.internal.dependency.Spine
 
-repositories {
-    intellijReleases
-    jetBrainsCacheRedirector
-}
-
 dependencies {
     api(Spine.base)
     IntelliJ.Platform.run {

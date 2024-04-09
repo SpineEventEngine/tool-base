@@ -2,11 +2,6 @@ import io.spine.internal.dependency.Guava
 import io.spine.internal.dependency.IntelliJ
 import io.spine.internal.dependency.Spine
 
-repositories {
-    intellijReleases
-    jetBrainsCacheRedirector
-}
-
 dependencies {
     implementation(Guava.lib)
     api(project(":psi"))
