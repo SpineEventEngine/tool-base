@@ -26,6 +26,8 @@
 
 package io.spine.tools.psi.java
 
+import com.intellij.psi.impl.source.codeStyle.IndentHelper
+import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import io.spine.tools.psi.codeStyleManager
 import org.junit.jupiter.api.DisplayName
@@ -56,5 +58,13 @@ internal class EnvironmentReformatSupportSpec : PsiTest() {
 
         // The static field, which was not indented, got indentation of 4 spaces.
         text shouldContain "    private static final long serialVersionUID = 0L;"
+    }
+
+    @Test
+    fun `obtaining 'IndentHelper' instance`() {
+        val indentHelper = assertDoesNotThrow {
+            IndentHelper.getInstance()
+        }
+        indentHelper shouldNotBe null
     }
 }
