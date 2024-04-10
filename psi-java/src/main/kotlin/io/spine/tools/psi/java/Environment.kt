@@ -97,6 +97,7 @@ import com.intellij.psi.codeStyle.JavaCodeStyleManager
 import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider
 import com.intellij.psi.codeStyle.ProjectCodeStyleSettingsManager
 import com.intellij.psi.codeStyle.ReferenceAdjuster
+import com.intellij.psi.codeStyle.arrangement.MemberOrderService
 import com.intellij.psi.impl.JavaClassSupersImpl
 import com.intellij.psi.impl.JavaPlatformModuleSystem
 import com.intellij.psi.impl.JavaPsiImplementationHelper
@@ -291,6 +292,7 @@ public object Environment : Closeable {
             registerServiceImpl<Formatter>(FormatterImpl::class)
             registerServiceImpl<JavaClassSupers>(JavaClassSupersImpl::class)
             registerServiceImpl<IndentHelper>(IndentHelperImpl::class)
+            registerService(MemberOrderService::class.java)
         }
     }
 
