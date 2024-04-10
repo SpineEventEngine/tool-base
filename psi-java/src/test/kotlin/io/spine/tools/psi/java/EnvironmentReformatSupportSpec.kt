@@ -26,10 +26,13 @@
 
 package io.spine.tools.psi.java
 
+import com.intellij.psi.codeStyle.arrangement.MemberOrderService
 import com.intellij.psi.impl.source.codeStyle.IndentHelper
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import io.spine.tools.psi.codeStyleManager
+import io.spine.tools.psi.java.Environment.application
+import io.spine.tools.psi.service
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -66,5 +69,11 @@ internal class EnvironmentReformatSupportSpec : PsiTest() {
             IndentHelper.getInstance()
         }
         indentHelper shouldNotBe null
+    }
+
+    @Test
+    fun `obtaining 'MemberOrderService' instance`() {
+        val orderService = application.service<MemberOrderService>()
+        orderService shouldNotBe null
     }
 }

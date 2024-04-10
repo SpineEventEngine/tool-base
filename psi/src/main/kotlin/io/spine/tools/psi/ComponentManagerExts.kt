@@ -24,4 +24,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.210")
+package io.spine.tools.psi
+
+import com.intellij.openapi.components.ComponentManager
+
+/**
+ * Obtains a service specified by the generic parameter [T].
+ *
+ * @return the service instance or `null`, if there is no registered service with this type.
+ */
+public inline fun <reified T: Any> ComponentManager.service(): T? = getService(T::class.java)
