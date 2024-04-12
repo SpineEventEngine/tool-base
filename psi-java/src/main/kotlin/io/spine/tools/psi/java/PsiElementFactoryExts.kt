@@ -27,6 +27,7 @@
 package io.spine.tools.psi.java
 
 import com.intellij.psi.PsiClass
+import com.intellij.psi.PsiClassType
 import com.intellij.psi.PsiElementFactory
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.javadoc.PsiDocComment
@@ -99,4 +100,12 @@ public fun PsiElementFactory.createStubMethod(name: String): PsiMethod {
         """.trimIndent(), null
     )
     return method
+}
+
+/**
+ * Creates a class type which represents the Java class specified by the generic parameter [T].
+ */
+public inline fun <reified T: Any> PsiElementFactory.createClassType(): PsiClassType {
+    val clsType = createTypeByFQClassName(T::class.java.canonicalName)
+    return clsType
 }
