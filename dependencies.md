@@ -82,7 +82,7 @@
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -596,22 +596,17 @@
      * **Project URL:** [https://github.com/ota4j-team/opentest4j](https://github.com/ota4j-team/opentest4j)
      * **License:** [The Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm-analysis. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm-commons. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm-commons. **Version** : 9.2.
-     * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
-     * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
-     * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-
-1.  **Group** : org.ow2.asm. **Name** : asm-tree. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm-tree. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -636,7 +631,7 @@
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Sat May 18 22:43:05 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Sat May 18 22:48:49 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -836,7 +831,7 @@ This report was generated on **Sat May 18 22:43:05 WEST 2024** using [Gradle-Lic
      * **Project URL:** [https://github.com/ota4j-team/opentest4j](https://github.com/ota4j-team/opentest4j)
      * **License:** [The Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -1351,22 +1346,17 @@ This report was generated on **Sat May 18 22:43:05 WEST 2024** using [Gradle-Lic
      * **Project URL:** [https://github.com/ota4j-team/opentest4j](https://github.com/ota4j-team/opentest4j)
      * **License:** [The Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm-analysis. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm-commons. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm-commons. **Version** : 9.2.
-     * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
-     * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
-     * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-
-1.  **Group** : org.ow2.asm. **Name** : asm-tree. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm-tree. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -1391,7 +1381,7 @@ This report was generated on **Sat May 18 22:43:05 WEST 2024** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Sat May 18 22:43:05 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Sat May 18 22:48:49 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -1608,7 +1598,7 @@ This report was generated on **Sat May 18 22:43:05 WEST 2024** using [Gradle-Lic
      * **Project URL:** [https://github.com/lz4/lz4-java](https://github.com/lz4/lz4-java)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -2232,22 +2222,17 @@ This report was generated on **Sat May 18 22:43:05 WEST 2024** using [Gradle-Lic
      * **Project URL:** [https://github.com/ota4j-team/opentest4j](https://github.com/ota4j-team/opentest4j)
      * **License:** [The Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm-analysis. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm-commons. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm-commons. **Version** : 9.2.
-     * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
-     * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
-     * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-
-1.  **Group** : org.ow2.asm. **Name** : asm-tree. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm-tree. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -2277,7 +2262,7 @@ This report was generated on **Sat May 18 22:43:05 WEST 2024** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Sat May 18 22:43:06 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Sat May 18 22:48:50 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -2820,7 +2805,7 @@ This report was generated on **Sat May 18 22:43:06 WEST 2024** using [Gradle-Lic
 1.  **Group** : org.objenesis. **Name** : objenesis. **Version** : 3.2.
      * **License:** [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -3793,22 +3778,17 @@ This report was generated on **Sat May 18 22:43:06 WEST 2024** using [Gradle-Lic
      * **Project URL:** [https://github.com/ota4j-team/opentest4j](https://github.com/ota4j-team/opentest4j)
      * **License:** [The Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm-analysis. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm-commons. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm-commons. **Version** : 9.2.
-     * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
-     * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
-     * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-
-1.  **Group** : org.ow2.asm. **Name** : asm-tree. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm-tree. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -3857,7 +3837,7 @@ This report was generated on **Sat May 18 22:43:06 WEST 2024** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Sat May 18 22:43:06 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Sat May 18 22:48:50 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -4400,7 +4380,7 @@ This report was generated on **Sat May 18 22:43:06 WEST 2024** using [Gradle-Lic
 1.  **Group** : org.objenesis. **Name** : objenesis. **Version** : 3.2.
      * **License:** [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -5317,22 +5297,17 @@ This report was generated on **Sat May 18 22:43:06 WEST 2024** using [Gradle-Lic
      * **Project URL:** [https://github.com/ota4j-team/opentest4j](https://github.com/ota4j-team/opentest4j)
      * **License:** [The Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm-analysis. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm-commons. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm-commons. **Version** : 9.2.
-     * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
-     * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
-     * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-
-1.  **Group** : org.ow2.asm. **Name** : asm-tree. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm-tree. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -5381,7 +5356,7 @@ This report was generated on **Sat May 18 22:43:06 WEST 2024** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Sat May 18 22:43:07 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Sat May 18 22:48:50 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -5929,22 +5904,17 @@ This report was generated on **Sat May 18 22:43:07 WEST 2024** using [Gradle-Lic
      * **Project URL:** [https://github.com/ota4j-team/opentest4j](https://github.com/ota4j-team/opentest4j)
      * **License:** [The Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm-analysis. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm-commons. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm-commons. **Version** : 9.2.
-     * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
-     * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
-     * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-
-1.  **Group** : org.ow2.asm. **Name** : asm-tree. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm-tree. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -5969,7 +5939,7 @@ This report was generated on **Sat May 18 22:43:07 WEST 2024** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Sat May 18 22:43:07 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Sat May 18 22:48:51 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -6056,7 +6026,7 @@ This report was generated on **Sat May 18 22:43:07 WEST 2024** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -6613,22 +6583,17 @@ This report was generated on **Sat May 18 22:43:07 WEST 2024** using [Gradle-Lic
      * **Project URL:** [https://github.com/ota4j-team/opentest4j](https://github.com/ota4j-team/opentest4j)
      * **License:** [The Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm-analysis. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm-commons. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.ow2.asm. **Name** : asm-commons. **Version** : 9.2.
-     * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
-     * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
-     * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-
-1.  **Group** : org.ow2.asm. **Name** : asm-tree. **Version** : 9.2.
+1.  **Group** : org.ow2.asm. **Name** : asm-tree. **Version** : 9.6.
      * **Project URL:** [http://asm.ow2.io/](http://asm.ow2.io/)
      * **License:** [BSD-3-Clause](https://asm.ow2.io/license.html)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -6653,4 +6618,4 @@ This report was generated on **Sat May 18 22:43:07 WEST 2024** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Sat May 18 22:43:07 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Sat May 18 22:48:51 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
