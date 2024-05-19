@@ -24,4 +24,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.213")
+package io.spine.tools.psi.java
+
+import com.intellij.openapi.fileTypes.FileTypeRegistry
+import io.kotest.matchers.shouldNotBe
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+
+@DisplayName("`Environment` should")
+internal class EnvironmentSpec {
+
+    companion object {
+
+        @BeforeAll
+        @JvmStatic
+        fun initEnvironment() {
+            Environment.setUp()
+        }
+    }
+
+    @Test
+    fun `register 'FileTypeManager' service so that 'FileTypeRegistry' is available`() {
+        val registry = FileTypeRegistry.getInstance()
+        registry shouldNotBe null
+    }
+}

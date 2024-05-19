@@ -59,6 +59,8 @@ import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.extensions.Extensions
 import com.intellij.openapi.extensions.ExtensionsArea
 import com.intellij.openapi.extensions.impl.ExtensionsAreaImpl
+import com.intellij.openapi.fileTypes.FileTypeManager
+import com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl
 import com.intellij.openapi.module.EmptyModuleManager
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.options.SchemeManagerFactory
@@ -279,56 +281,48 @@ public object Environment : Closeable {
 
     private fun registerApplicationServices() {
         with(_application!!) {
-            registerServiceImpl<TransactionGuard>(TransactionGuardImpl::class)
-            registerServiceImpl<CodeStyleSettingsService>(CodeStyleSettingsServiceImpl::class)
-            registerServiceImpl<CodeStyleSchemes>(PersistableCodeStyleSchemes::class)
-            registerServiceImpl<SchemeManagerFactory>(MockSchemeManagerFactory::class)
             registerServiceImpl<AppCodeStyleSettingsManager>(AppCodeStyleSettingsManager::class)
             registerServiceImpl<AsyncExecutionService>(AsyncExecutionServiceImpl::class)
-            registerServiceImpl<PropertiesComponent>(PropertiesComponentImpl::class)
-            registerServiceImpl<EditorFactory>(EditorFactoryImpl::class)
-            registerServiceImpl<PsiEditorUtil>(PsiEditorUtilBase::class)
+            registerServiceImpl<CodeStyleSchemes>(PersistableCodeStyleSchemes::class)
+            registerServiceImpl<CodeStyleSettingsService>(CodeStyleSettingsServiceImpl::class)
             registerServiceImpl<DataManager>(HeadlessDataManager::class)
+            registerServiceImpl<EditorFactory>(EditorFactoryImpl::class)
+            registerServiceImpl<FileTypeManager>(FileTypeManagerImpl::class)
             registerServiceImpl<Formatter>(FormatterImpl::class)
-            registerServiceImpl<JavaClassSupers>(JavaClassSupersImpl::class)
             registerServiceImpl<IndentHelper>(IndentHelperImpl::class)
+            registerServiceImpl<JavaClassSupers>(JavaClassSupersImpl::class)
+            registerServiceImpl<PropertiesComponent>(PropertiesComponentImpl::class)
+            registerServiceImpl<PsiEditorUtil>(PsiEditorUtilBase::class)
+            registerServiceImpl<SchemeManagerFactory>(MockSchemeManagerFactory::class)
+            registerServiceImpl<TransactionGuard>(TransactionGuardImpl::class)
             registerService(MemberOrderService::class.java)
         }
     }
 
     private fun registerProjectExtensions() {
         project.run {
-            replaceServiceImpl<InjectedLanguageManager>(InjectedLanguageManagerImpl::class.java)
-            replaceServiceImpl<JavaPsiImplementationHelper>(
-                JavaPsiImplementationHelperImpl::class.java
-            )
-            registerServiceImpl<PomModel>(MockLangPomModel::class.java)
+            replaceServiceImpl<InjectedLanguageManager>(InjectedLanguageManagerImpl::class)
+            replaceServiceImpl<JavaPsiImplementationHelper>(JavaPsiImplementationHelperImpl::class)
 
-            registerServiceImpl<PsiNameHelper>(PsiNameHelperImpl::class.java)
-            registerServiceImpl<PsiManager>(PsiManagerImpl::class.java)
-
-            registerServiceImpl<CodeStyleManager>(CodeStyleManagerImpl::class.java)
-
-            registerServiceImpl<JavaCodeStyleManager>(
-                JavaCodeStyleManagerImpl::class.java
-            )
-            registerServiceImpl<CodeStyleSettingsManager>(
-                ProjectCodeStyleSettingsManager::class.java
-            )
-            registerServiceImpl<ProjectCodeStyleSettingsManager>(
-                ProjectCodeStyleSettingsManager::class.java
-            )
-
-            registerService(TreeAspect::class.java)
             registerService(PostprocessReformattingAspect::class.java)
+            registerService(TreeAspect::class.java)
 
-            registerServiceImpl<ProjectRootManager>(ProjectRootManagerImpl::class.java)
-            registerServiceImpl<ProjectFileIndex>(ProjectFileIndexImpl::class.java)
-            registerServiceImpl<DirectoryIndex>(DirectoryIndexImpl::class.java)
+            registerServiceImpl<CodeStyleManager>(CodeStyleManagerImpl::class)
+            registerServiceImpl<CodeStyleSettingsManager>(ProjectCodeStyleSettingsManager::class)
+            registerServiceImpl<DirectoryIndex>(DirectoryIndexImpl::class)
+            registerServiceImpl<JavaCodeStyleManager>(JavaCodeStyleManagerImpl::class)
+            registerServiceImpl<JavadocManager>(JavadocManagerImpl::class)
+            registerServiceImpl<PomModel>(MockLangPomModel::class)
+            registerServiceImpl<ProjectCodeStyleSettingsManager>(
+                ProjectCodeStyleSettingsManager::class
+            )
+            registerServiceImpl<ProjectFileIndex>(ProjectFileIndexImpl::class)
+            registerServiceImpl<ProjectRootManager>(ProjectRootManagerImpl::class)
+            registerServiceImpl<PsiManager>(PsiManagerImpl::class)
+            registerServiceImpl<PsiNameHelper>(PsiNameHelperImpl::class)
+            registerServiceImpl<PsiSearchHelper>(PsiSearchHelperImpl::class)
 
-            registerServiceImpl<JavadocManager>(JavadocManagerImpl::class.java)
-            registerServiceImpl<PsiSearchHelper>(PsiSearchHelperImpl::class.java)
-
+            registerPoint(MultiHostInjector.MULTIHOST_INJECTOR_EP_NAME)
             registerPoint(PsiTreeChangePreprocessor.EP)
             registerPoint(PsiTreeChangeListener.EP)
             registerPoint(PsiElementFinder.EP)
@@ -344,8 +338,6 @@ public object Environment : Closeable {
                 JavadocTagInfo.EP_NAME.toString(),
                 JavadocTagInfo::class.java
             )
-
-            registerPoint(MultiHostInjector.MULTIHOST_INJECTOR_EP_NAME)
 
             addComponent(ModuleManager::class.java, EmptyModuleManager(project))
         }

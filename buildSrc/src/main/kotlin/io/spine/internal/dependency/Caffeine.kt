@@ -24,4 +24,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.213")
+package io.spine.internal.dependency
+
+/**
+ * A [high performance](https://github.com/ben-manes/caffeine/wiki/Benchmarks),
+ * [near optimal](https://github.com/ben-manes/caffeine/wiki/Efficiency) caching library.
+ *
+ * This library is a transitive dependency for us via ErrorProne.
+ *
+ * @see <a href="https://github.com/ben-manes/caffeine">Caffeine at GitHub</a>
+ */
+@Suppress("unused")
+object Caffeine {
+    private const val version = "3.0.5"
+    const val lib = "com.github.ben-manes.caffeine:caffeine:$version"
+}

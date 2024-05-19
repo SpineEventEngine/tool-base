@@ -101,6 +101,20 @@ public inline fun <reified T : Any> MockComponentManager.replaceServiceImpl(newI
 }
 
 /**
+ * Replaces the implementation of the service.
+ *
+ * @param T
+ *         the type of the service.
+ * @param newImpl
+ *         the class of the new service implementation to be used.
+ */
+public inline fun <reified T : Any> MockComponentManager.replaceServiceImpl(
+    newImpl: KClass<out T>
+) {
+    replaceServiceImpl(newImpl.java)
+}
+
+/**
  * Registers the given project extension point.
  *
  * @param T

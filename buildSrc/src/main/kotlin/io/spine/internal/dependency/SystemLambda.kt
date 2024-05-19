@@ -24,4 +24,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.213")
+package io.spine.internal.dependency
+
+// https://github.com/stefanbirkner/system-lambda
+@Suppress("unused", "ConstPropertyName")
+object SystemLambda {
+    const val version = "1.2.1"
+    const val group = "com.github.stefanbirkner"
+    const val lib = "$group:system-lambda:$version"
+}
