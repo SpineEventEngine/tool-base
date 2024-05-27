@@ -42,9 +42,6 @@ import org.gradle.api.tasks.SourceSetContainer
 
 /**
  * Obtains the Java plugin extension of the project.
- *
- * Please note this method will throw `NoSuchMethodError`
- * for Gradle versions prior to 7.1.
  */
 public val Project.javaPluginExtension: JavaPluginExtension
     get() = extensions.getByType(JavaPluginExtension::class.java)
@@ -58,13 +55,13 @@ public val Project.javaPluginExtension: JavaPluginExtension
  * This is required in order to allow ProtoData be applied
  * with older Gradle versions, such as 6.9.x, actual for Spine 1.x.
  */
-@Suppress("DEPRECATION")  /* Gradle API for lower Gradle versions. */
+@Suppress("DEPRECATION" /* Gradle API for lower Gradle versions. */)
 public val Project.sourceSets: SourceSetContainer
     get() {
-        val extension = extensions.findByType(JavaPluginExtension::class.java)
-        return if (extension != null) {
-            extension.sourceSets
-        } else {
+        return try {
+            // Prior to Gradle 7.1 this line will throw `NoSuchMethodError`.
+            javaPluginExtension.sourceSets
+        } catch (ignored: NoSuchMethodError) {
             val convention = convention.getByType(JavaPluginConvention::class.java)
             convention.sourceSets
         }
