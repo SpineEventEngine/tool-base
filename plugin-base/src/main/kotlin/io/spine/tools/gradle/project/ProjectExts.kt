@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import io.spine.tools.gradle.Artifact
 import io.spine.tools.gradle.ConfigurationName
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
+import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
@@ -47,9 +48,24 @@ public val Project.javaPluginExtension: JavaPluginExtension
 
 /**
  * Obtains source set container of the Java project.
+ *
+ * Depending on Gradle version, the result is returned
+ * either via [JavaPluginExtension] (available since Gradle 7.1),
+ * or through [JavaPluginConvention] (available pre-7.1, now deprecated).
+ * This is required in order to allow ProtoData be applied
+ * with older Gradle versions, such as 6.9.x, actual for Spine 1.x.
  */
+@Suppress("DEPRECATION" /* Gradle API for lower Gradle versions. */)
 public val Project.sourceSets: SourceSetContainer
-    get() = javaPluginExtension.sourceSets
+    get() {
+        return try {
+            // Prior to Gradle 7.1 this line will throw `NoSuchMethodError`.
+            javaPluginExtension.sourceSets
+        } catch (ignored: NoSuchMethodError) {
+            val convention = convention.getByType(JavaPluginConvention::class.java)
+            convention.sourceSets
+        }
+    }
 
 /**
  * Obtains names of the source sets of this project.
