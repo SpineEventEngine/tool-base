@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,21 +35,40 @@ import io.spine.tools.gradle.Artifact
 import io.spine.tools.gradle.ConfigurationName
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
+import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
 
 /**
  * Obtains the Java plugin extension of the project.
+ *
+ * Please note this method will throw `NoSuchMethodError`
+ * for Gradle versions prior to 7.1.
  */
 public val Project.javaPluginExtension: JavaPluginExtension
     get() = extensions.getByType(JavaPluginExtension::class.java)
 
 /**
  * Obtains source set container of the Java project.
+ *
+ * Depending on Gradle version, the result is returned
+ * either via [JavaPluginExtension] (available since Gradle 7.1),
+ * or through [JavaPluginConvention] (available pre-7.1, now deprecated).
+ * This is required in order to allow ProtoData be applied
+ * with older Gradle versions, such as 6.9.x, actual for Spine 1.x.
  */
+@Suppress("DEPRECATION")  /* Gradle API for lower Gradle versions. */
 public val Project.sourceSets: SourceSetContainer
-    get() = javaPluginExtension.sourceSets
+    get() {
+        val extension = extensions.findByType(JavaPluginExtension::class.java)
+        return if (extension != null) {
+            extension.sourceSets
+        } else {
+            val convention = convention.getByType(JavaPluginConvention::class.java)
+            convention.sourceSets
+        }
+    }
 
 /**
  * Obtains names of the source sets of this project.
