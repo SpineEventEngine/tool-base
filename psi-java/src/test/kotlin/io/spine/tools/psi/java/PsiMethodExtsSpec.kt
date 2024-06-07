@@ -60,7 +60,7 @@ class PsiMethodExtsSpec: PsiTest() {
     }
 
     @Nested inner class
-    `Mark a method with '@Override'`() {
+    `Mark a method with '@Override'` {
 
         @Test
         fun `if the method is not annotated`() {
