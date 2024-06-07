@@ -86,7 +86,7 @@ public fun PsiClass.addLast(element: PsiElement): PsiClass {
 }
 
 /**
- * Tells if this class has no explicitly declared superclass.
+ * Tells if this class has any explicitly declared superclass.
  *
  * In Java all the classes implicitly extend [java.lang.Object].
  * The function checks only explicitly defined superclass.
