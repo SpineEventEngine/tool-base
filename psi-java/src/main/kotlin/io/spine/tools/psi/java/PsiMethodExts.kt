@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -45,3 +45,39 @@ public fun PsiMethod.addJavadoc(text: String) {
     val doc = elementFactory.createDocCommentFromText(text)
     addFirst(doc)
 }
+
+/**
+ * Annotates this method with `@Override`.
+ */
+public fun PsiMethod.annotateOverride() {
+    annotate(Override::class.java)
+}
+
+/**
+ * Tells if this method is annotated with the given annotation.
+ */
+public fun PsiMethod.isAnnotated(cls: Class<out Annotation>): Boolean {
+    return modifierList.findAnnotation(cls.name) != null
+            // If PSI is not supplied with JDK, annotations from `java.lang` are not resolved.
+            // Double check using the simple class name.
+            || modifierList.findAnnotation(cls.simpleName) != null
+}
+
+/**
+ * Annotates this method with the given annotation if it's not yet added.
+ */
+public fun PsiMethod.annotate(cls: Class<out Annotation>) {
+    if (!isAnnotated(cls)) {
+        val annotation = elementFactory.createAnnotationFromText("@${cls.reference}", this)
+        modifierList.addBefore(annotation, modifierList.firstChild)
+    }
+}
+
+// We do have similar extensions in the `tool-base` module,
+// but we don't want to add the dependency on it just because of these small bits.
+
+private val <T : Annotation> Class<T>.isJavaLang: Boolean
+    get() = name.contains("java.lang")
+
+private val <T : Annotation> Class<T>.reference: String
+    get() = if (isJavaLang) simpleName else canonicalName
