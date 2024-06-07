@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -35,7 +35,6 @@ import io.spine.tools.gradle.Artifact
 import io.spine.tools.gradle.ConfigurationName
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
-import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
@@ -62,7 +61,9 @@ public val Project.sourceSets: SourceSetContainer
             // Prior to Gradle 7.1 this line will throw `NoSuchMethodError`.
             javaPluginExtension.sourceSets
         } catch (ignored: NoSuchMethodError) {
-            val convention = convention.getByType(JavaPluginConvention::class.java)
+            val convention = convention.getByType(
+                org.gradle.api.plugins.JavaPluginConvention::class.java
+            )
             convention.sourceSets
         }
     }
