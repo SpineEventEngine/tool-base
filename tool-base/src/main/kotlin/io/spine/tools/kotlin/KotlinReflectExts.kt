@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -26,14 +26,60 @@
 
 package io.spine.tools.kotlin
 
-import io.spine.tools.java.reference
 import kotlin.reflect.KClass
 
 /**
- * Obtains the code which is used for referencing this Kotlin class in Java code.
+ * The packages imported by default to every Kotlin file.
  *
- * @return a simple class name for the class belonging to `java.lang` package.
- *         Otherwise, a canonical name is returned.
+ * @see <a href="https://kotlinlang.org/docs/packages.html#default-imports">Default imports</a>
+ */
+public val defaultPackages: List<String> by lazy {
+    listOf(
+        "kotlin",
+        "kotlin.annotation",
+        "kotlin.collections",
+        "kotlin.comparisons",
+        "kotlin.io",
+        "kotlin.ranges",
+        "kotlin.sequences",
+        "kotlin.text",
+        "kotlin.jvm",
+        "java.lang"
+    )
+}
+
+/**
+ * Obtains the code which is used for referencing this Kotlin class in the _Kotlin_ code.
+ *
+ * For referencing a Kotlin class from the Java code, please
+ * use [KClass.java.reference][io.spine.tools.java.reference].
+ *
+ * @return [KClass.simpleName] for the class belonging to [defaultPackages].
+ *         Otherwise, [KClass.qualifiedName] is returned.
+ * @see io.spine.tools.java.reference
  */
 public val <T: Any> KClass<T>.reference: String
-    get() = java.reference
+    get() {
+        return if (packageName in defaultPackages) {
+            simpleName ?: "$this"
+        } else {
+            qualifiedName ?: "$this"
+        }
+    }
+
+/*
+ * This is the shortcut for obtaining a package for the Kotlin class.
+ *
+ * At the time of writing, there's now a reliable way known to the authors
+ * to obtain a package in cross-platform way in Kotlin without resorting to
+ * `expect/actual` mechanism for platform detection.
+ *
+ * We assume that classes using this extension would be mostly from the platform
+ * or, even if they are nested inside other classes, their references would
+ * be fully qualified anyway.
+ *
+ * The value returns a substring before the last '.' in the [qualifiedName] of the class or
+ * an empty string if the [qualifiedName] is not available.
+ */
+private val <T: Any> KClass<T>.packageName: String
+    get() = qualifiedName?.substringBeforeLast('.') ?: ""
