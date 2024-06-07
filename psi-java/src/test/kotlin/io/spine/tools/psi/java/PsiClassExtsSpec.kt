@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -27,14 +27,19 @@
 package io.spine.tools.psi.java
 
 import com.intellij.psi.PsiClass
+import com.intellij.psi.PsiJavaCodeReferenceElement
 import com.intellij.psi.PsiMethod
 import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import io.spine.tools.java.reference
 import io.spine.tools.psi.java.Environment.elementFactory
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
 
 @DisplayName("`PsiClass` extensions should")
 internal class PsiClassExtsSpec: PsiTest() {
@@ -89,5 +94,41 @@ internal class PsiClassExtsSpec: PsiTest() {
 
         (preLastChild is PsiMethod) shouldBe true
         (preLastChild as PsiMethod).name shouldBe method.name
+    }
+
+    @Nested inner class
+    `Add super type` {
+
+        private val runnable: PsiJavaCodeReferenceElement by lazy {
+            elementFactory.createClassReference(className = Runnable::class.java.reference)
+        }
+
+        private val function: PsiJavaCodeReferenceElement by lazy {
+            elementFactory.createClassReference(
+                className = java.util.function.Function::class.java.reference
+            )
+        }
+
+        @Test
+        fun `if the class does not have a super type`() {
+            cls.run {
+                hasSuperclass() shouldBe false
+                execute {
+                    addSuperclass(runnable)
+                }
+                explicitSuperclass shouldNotBe null
+                explicitSuperclass!!.qualifiedName shouldBe Runnable::class.java.reference
+            }
+        }
+
+        @Test
+        fun `preventing adding if superclass already exists`() {
+            execute {
+                cls.addSuperclass(function)
+                assertThrows<IllegalStateException> {
+                    cls.addSuperclass(runnable)
+                }
+            }
+        }
     }
 }

@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -28,7 +28,9 @@ package io.spine.tools.psi.java
 
 import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiClassType
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementFactory
+import com.intellij.psi.PsiJavaCodeReferenceElement
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.javadoc.PsiDocComment
 import io.spine.string.containsLineSeparators
@@ -108,4 +110,30 @@ public fun PsiElementFactory.createStubMethod(name: String): PsiMethod {
 public inline fun <reified T: Any> PsiElementFactory.createClassType(): PsiClassType {
     val clsType = createTypeByFQClassName(T::class.java.canonicalName)
     return clsType
+}
+
+/**
+ * Creates a reference to the class with the given name.
+ *
+ * @param context
+ *         the PSI element used as the context for resolving the reference.
+ * @param className
+ *         the name of the class to reference. It could be fully qualified or
+ *         a simple name.
+ * @param genericParams
+ *         optional generic parameters if the class to reference is generic.
+ * @return new class reference.
+ */
+public fun PsiElementFactory.createClassReference(
+    context: PsiElement? = null,
+    className: String,
+    vararg genericParams: String
+): PsiJavaCodeReferenceElement {
+    return if (genericParams.isEmpty()) {
+        createReferenceFromText(className, context)
+    } else {
+        val paramsText = genericParams.joinToString(", ")
+        val superClassRef = "$className<$paramsText>"
+        createReferenceFromText(superClassRef, context)
+    }
 }
