@@ -24,19 +24,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.jetbrains.dokka.gradle.DokkaTask
+package given.annotation;
 
-plugins {
-    id("org.jetbrains.dokka") // Cannot use `Dokka` dependency object here yet.
-}
+import java.lang.annotation.Repeatable;
+import java.lang.annotation.Target;
 
-dependencies {
-    useDokkaWithSpineExtensions()
-}
+import static java.lang.annotation.ElementType.TYPE;
 
-tasks.withType<DokkaTask>().configureEach {
-    configureForKotlin()
-    onlyIf {
-        (it as DokkaTask).isInPublishingGraph()
-    }
+/**
+ * A repeated annotation.
+ */
+@SuppressWarnings("unused") // Properties explain the meaning of the annotation.
+@Target(TYPE)
+@Repeatable(Schedules.class)
+public @interface Schedule {
+    String dayOfMonth() default "first";
+    String dayOfWeek() default "Mon";
+    int hour() default 12;
 }

@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * https://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -24,19 +24,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.jetbrains.dokka.gradle.DokkaTask
+@file:JvmName("JavaLangTypes")
 
-plugins {
-    id("org.jetbrains.dokka") // Cannot use `Dokka` dependency object here yet.
-}
+package io.spine.tools.java
 
-dependencies {
-    useDokkaWithSpineExtensions()
-}
+/**
+ * Tells if this class belongs to the "java.lang" package.
+ */
+public val Class<*>.isJavaLang: Boolean
+    get() = name.contains("java.lang")
 
-tasks.withType<DokkaTask>().configureEach {
-    configureForKotlin()
-    onlyIf {
-        (it as DokkaTask).isInPublishingGraph()
-    }
-}
+/**
+ * Tells if this annotation type is repeatable.
+ *
+ * Since the receiver is the Java class, we check the presence of
+ * [java.lang.annotation.Repeatable] annotation, not [kotlin.annotation.Repeatable].
+ */
+public val <T: Annotation> Class<T>.isRepeatable: Boolean
+    get() = isAnnotationPresent(java.lang.annotation.Repeatable::class.java)
+
+/**
+ * Obtains the code which is used for referencing this class in Java code.
+ *
+ * @return a simple class name for the class belonging to `java.lang` package.
+ *         Otherwise, a canonical name is returned.
+ */
+public val <T: Any> Class<T>.reference: String
+    get() = if (isJavaLang) simpleName else canonicalName

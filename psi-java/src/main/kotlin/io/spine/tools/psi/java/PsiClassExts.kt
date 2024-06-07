@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -28,12 +28,9 @@ package io.spine.tools.psi.java
 
 import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiJavaCodeReferenceElement
 import com.intellij.psi.PsiMethod
-import com.intellij.psi.PsiModifier.FINAL
-import com.intellij.psi.PsiModifier.PUBLIC
-import com.intellij.psi.PsiModifier.STATIC
 import com.intellij.psi.PsiModifierList
-import com.intellij.psi.PsiModifierListOwner
 import io.spine.tools.psi.document
 
 /**
@@ -86,4 +83,49 @@ public fun PsiClass.addFirst(element: PsiElement): PsiElement {
 public fun PsiClass.addLast(element: PsiElement): PsiClass {
     addBefore(element, rBrace)
     return this
+}
+
+/**
+ * Tells if this class has any explicitly declared superclass.
+ *
+ * In Java all the classes implicitly extend [java.lang.Object].
+ * The function checks only explicitly defined superclass.
+ *
+ * @return `true` if the class is anonymous or has no `extends` clause, `false` otherwise.
+ * @see explicitSuperclass
+ */
+public fun PsiClass.hasSuperclass(): Boolean {
+    return extendsList?.children?.isNotEmpty() ?: false
+}
+
+/**
+ * Obtains a reference to a superclass, if any, this class extends.
+ *
+ * In Java all the classes implicitly extend [java.lang.Object].
+ * The value provides only explicitly defined superclass.
+ *
+ * @see hasSuperclass
+ */
+public val PsiClass.explicitSuperclass: PsiJavaCodeReferenceElement?
+    get() = if (hasSuperclass()) {
+        extendsList?.children?.last() as PsiJavaCodeReferenceElement
+    } else {
+        null
+    }
+
+/**
+ * Makes this class extend the class specified by the given [classReference].
+ *
+ * @throws IllegalStateException
+ *          if called for a receiver representing an anonymous class, or
+ *          when the receiver already extends another class.
+ */
+public fun PsiClass.addSuperclass(classReference: PsiJavaCodeReferenceElement) {
+    check(extendsList != null) {
+        "Cannot add a superclass to an anonymous class `$this`."
+    }
+    check(!hasSuperclass()) {
+        "The class `$qualifiedName` already extends `${explicitSuperclass?.qualifiedName}`."
+    }
+    extendsList!!.add(classReference)
 }

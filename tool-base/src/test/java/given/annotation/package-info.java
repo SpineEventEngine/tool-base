@@ -24,19 +24,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.jetbrains.dokka.gradle.DokkaTask
+/**
+ * Fixtures for testing {@code io.spine.protodata.java.annotation} package.
+ */
+@CheckReturnValue
+@ParametersAreNonnullByDefault
+package given.annotation;
 
-plugins {
-    id("org.jetbrains.dokka") // Cannot use `Dokka` dependency object here yet.
-}
+import com.google.errorprone.annotations.CheckReturnValue;
 
-dependencies {
-    useDokkaWithSpineExtensions()
-}
-
-tasks.withType<DokkaTask>().configureEach {
-    configureForKotlin()
-    onlyIf {
-        (it as DokkaTask).isInPublishingGraph()
-    }
-}
+import javax.annotation.ParametersAreNonnullByDefault;

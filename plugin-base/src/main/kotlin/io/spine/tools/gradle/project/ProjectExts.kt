@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -35,7 +35,6 @@ import io.spine.tools.gradle.Artifact
 import io.spine.tools.gradle.ConfigurationName
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
-import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
@@ -51,9 +50,10 @@ public val Project.javaPluginExtension: JavaPluginExtension
  *
  * Depending on Gradle version, the result is returned
  * either via [JavaPluginExtension] (available since Gradle 7.1),
- * or through [JavaPluginConvention] (available pre-7.1, now deprecated).
- * This is required in order to allow ProtoData be applied
- * with older Gradle versions, such as 6.9.x, actual for Spine 1.x.
+ * or through [JavaPluginConvention][org.gradle.api.plugins.JavaPluginConvention]
+ * (available pre-7.1, now deprecated).
+ * This is required to allow ProtoData to be applied with older Gradle versions,
+ * such as 6.9.x, actual for Spine 1.x.
  */
 @Suppress("DEPRECATION" /* Gradle API for lower Gradle versions. */)
 public val Project.sourceSets: SourceSetContainer
@@ -62,7 +62,9 @@ public val Project.sourceSets: SourceSetContainer
             // Prior to Gradle 7.1 this line will throw `NoSuchMethodError`.
             javaPluginExtension.sourceSets
         } catch (ignored: NoSuchMethodError) {
-            val convention = convention.getByType(JavaPluginConvention::class.java)
+            val convention = convention.getByType(
+                org.gradle.api.plugins.JavaPluginConvention::class.java
+            )
             convention.sourceSets
         }
     }

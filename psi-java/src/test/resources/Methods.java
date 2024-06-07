@@ -24,19 +24,42 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.jetbrains.dokka.gradle.DokkaTask
+import java.util.function.Predicate;
 
-plugins {
-    id("org.jetbrains.dokka") // Cannot use `Dokka` dependency object here yet.
-}
+/**
+ * This is a stub Java class for testing extensions of {@code PsiMethod}.
+ *
+ * @see io.spine.tools.psi.java.PsiMethodExtsSpec
+ */
+class Methods extends Runnable, Predicate<String> {
 
-dependencies {
-    useDokkaWithSpineExtensions()
-}
+    /**
+     * The method which is not annotated with {@code Override} because this method
+     * does not really override.
+     */
+    public fun notOverriding() {
+        // Do nothing.
+    }
 
-tasks.withType<DokkaTask>().configureEach {
-    configureForKotlin()
-    onlyIf {
-        (it as DokkaTask).isInPublishingGraph()
+    /**
+     * The method which is rightfully annotated with {@code Override}.
+     */
+    @Override
+    public void run() {
+        // Do nothing.
+    }
+
+    /**
+     * The method which should be annotated with with {@code Override}, but is not.
+     */
+    public boolean test(String s) {
+        return s.isEmpty();
+    }
+
+    /**
+     * A static method.
+     */
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
     }
 }

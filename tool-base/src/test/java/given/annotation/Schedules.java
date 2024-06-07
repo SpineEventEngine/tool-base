@@ -24,19 +24,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.jetbrains.dokka.gradle.DokkaTask
+package given.annotation;
 
-plugins {
-    id("org.jetbrains.dokka") // Cannot use `Dokka` dependency object here yet.
-}
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-dependencies {
-    useDokkaWithSpineExtensions()
-}
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-tasks.withType<DokkaTask>().configureEach {
-    configureForKotlin()
-    onlyIf {
-        (it as DokkaTask).isInPublishingGraph()
-    }
+/**
+ * A container for repeated {@link Schedule} annotations.
+ */
+@Target(TYPE)
+@Retention(RUNTIME)
+public @interface Schedules {
+    Schedule[] value();
 }

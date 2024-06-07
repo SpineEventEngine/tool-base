@@ -24,19 +24,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import org.jetbrains.dokka.gradle.DokkaTask
+package io.spine.tools.kotlin
 
-plugins {
-    id("org.jetbrains.dokka") // Cannot use `Dokka` dependency object here yet.
-}
+import io.kotest.matchers.shouldBe
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 
-dependencies {
-    useDokkaWithSpineExtensions()
-}
+@DisplayName("`kotlin.reflect` type extensions should")
+internal class KotlinReflectExtsSpec {
 
-tasks.withType<DokkaTask>().configureEach {
-    configureForKotlin()
-    onlyIf {
-        (it as DokkaTask).isInPublishingGraph()
+    @Test
+    fun `obtain class reference for Kotlin codegen`() {
+        String::class.reference shouldBe "String"
+        java.lang.String::class.reference shouldBe "String"
+        List::class.reference shouldBe "List"
+        Override::class.reference shouldBe "Override"
+        FileTreeWalk::class.reference shouldBe "FileTreeWalk"
     }
 }
