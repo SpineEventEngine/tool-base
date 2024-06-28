@@ -1,11 +1,11 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -29,6 +29,7 @@ package io.spine.tools.code
 import io.spine.io.Glob
 import java.io.File
 import java.nio.file.Path
+import kotlin.io.path.isDirectory
 
 /**
  * A programming language or a specific syntax.
@@ -112,6 +113,53 @@ protected constructor(
      * Returns the name of the language.
      */
     override fun toString(): String = name
+
+    public companion object {
+
+        /**
+         * The list of known languages.
+         */
+        private val languages: List<Language> by lazy {
+            listOf(
+                Java,
+                Kotlin,
+                JavaScript,
+                TypeScript,
+                Dart,
+                Protobuf,
+                AnyLanguage
+            )
+        }
+
+        /**
+         * Obtains a language of the give file taking its extension.
+         *
+         * @return one of the supported languages, or [AnyLanguage] if the extension is absent
+         * or not known.
+         *
+         * @throws IllegalArgumentException
+         *          if the given instance represents a directory.
+         */
+        @JvmStatic
+        public fun of(file: Path): Language {
+            require(!file.isDirectory()) {
+                "The path `$file` is a directory, not a file."
+            }
+            return languages.first { it.matches(file) }
+        }
+
+        /**
+         * Obtains a language of the give file taking its extension.
+         *
+         * @return one of the supported languages, or [AnyLanguage] if the extension is absent
+         * or not known.
+         *
+         * @throws IllegalArgumentException
+         *          if the given instance represents a directory.
+         */
+        @JvmStatic
+        public fun of(file: File): Language = of(file.toPath())
+    }
 }
 
 /**
@@ -131,7 +179,7 @@ public abstract class SlashAsteriskCommentLang(
  * This object indicates that any programming language can be accepted.
  *
  * Intended to be used for filtering source files by language via file name conventions.
- * If no filtering required, but a [Language] is needed, use `CommonLanguages.any`.
+ * If no filtering required, but a [Language] is needed, use [AnyLanguage].
  *
  * Does not support [comments][Language.comment].
  */
@@ -210,4 +258,17 @@ public object TypeScript :
     */
     @JvmStatic
     public fun lang(): TypeScript = this
+}
+
+/**
+ * A typed [Language] for Dart.
+ */
+public object Dart :
+    SlashAsteriskCommentLang("Dart", listOf("dart")) {
+
+    /**
+     * Returns the typed instance of this language for usage in Java code.
+     */
+    @JvmStatic
+    public fun lang(): Dart = this
 }
