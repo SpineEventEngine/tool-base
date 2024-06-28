@@ -125,6 +125,7 @@ class LanguageKotlinApiSpec {
             Language.of(File("File.kt")) shouldBe Kotlin
             Language.of(File("file.js")) shouldBe JavaScript
             Language.of(File("file.ts")) shouldBe TypeScript
+            Language.of(File("vader.dart")) shouldBe Dart
             Language.of(File("file.proto")) shouldBe Protobuf
         }
 

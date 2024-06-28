@@ -125,6 +125,7 @@ protected constructor(
                 Kotlin,
                 JavaScript,
                 TypeScript,
+                Dart,
                 Protobuf,
                 AnyLanguage
             )
@@ -257,4 +258,17 @@ public object TypeScript :
     */
     @JvmStatic
     public fun lang(): TypeScript = this
+}
+
+/**
+ * A typed [Language] for Dart.
+ */
+public object Dart :
+    SlashAsteriskCommentLang("Dart", listOf("dart")) {
+
+    /**
+     * Returns the typed instance of this language for usage in Java code.
+     */
+    @JvmStatic
+    public fun lang(): Dart = this
 }
