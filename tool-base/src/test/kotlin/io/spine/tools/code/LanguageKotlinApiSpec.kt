@@ -1,11 +1,11 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -30,11 +30,14 @@ import com.google.common.truth.Truth.assertThat
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import java.io.File
+import java.nio.file.Path
 import java.nio.file.Paths
+import kotlin.io.path.Path
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.io.TempDir
 
 /**
  * This test suite verifies that the Kotlin API for [Language] works as expected.
@@ -63,10 +66,10 @@ class LanguageKotlinApiSpec {
 
     @Test
     fun `filter files by their extension`() {
-        // Passing the directory, rather than file.
+        // Passing the directory, rather than a file.
         Protobuf.matches(File("Windows")) shouldBe false
 
-        // Passing file with extension.
+        // Passing file with an extension.
         TypeScript.matches(File("safari.swift")) shouldBe false
 
         JavaScript.matches(File("mozilla.js")) shouldBe true
@@ -110,6 +113,37 @@ class LanguageKotlinApiSpec {
             matches(File("jQuery.js")) shouldBe true
             matches(File("bar.map")) shouldBe true
             matches(File("Main.java")) shouldBe false
+        }
+    }
+
+    @Nested inner class
+    `obtain a 'Language' by file extension` {
+
+        @Test
+        fun `for known languages`() {
+            Language.of(File("File.java")) shouldBe Java
+            Language.of(File("File.kt")) shouldBe Kotlin
+            Language.of(File("file.js")) shouldBe JavaScript
+            Language.of(File("file.ts")) shouldBe TypeScript
+            Language.of(File("file.proto")) shouldBe Protobuf
+        }
+
+        @Test
+        fun `returning 'AnyLanguage' for unsupported languages`() {
+            Language.of(Path("main.cpp")) shouldBe AnyLanguage
+            Language.of(Path("file.h")) shouldBe AnyLanguage
+            Language.of(Path("file.")) shouldBe AnyLanguage
+            Language.of(Path("file")) shouldBe AnyLanguage
+        }
+
+        @Test
+        fun `disallowing passing a directory`(@TempDir dir: Path) {
+            assertThrows<IllegalArgumentException> {
+                Language.of(dir)
+            }
+            assertThrows<IllegalArgumentException> {
+                Language.of(dir.toFile())
+            }
         }
     }
 }
