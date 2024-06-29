@@ -26,35 +26,35 @@
 
 package io.spine.tools.gradle
 
-import com.google.common.collect.ImmutableSet
+import com.google.common.collect.ImmutableList
 import io.spine.annotation.Internal
 import kotlin.reflect.KClass
 import org.gradle.api.Project
-import org.gradle.api.provider.SetProperty
+import org.gradle.api.provider.ListProperty
 
 /**
- * A Gradle [SetProperty] which is automatically instantiated by
+ * A Gradle [ListProperty] which is automatically instantiated by
  * the [ObjectFactory][org.gradle.api.model.ObjectFactory] of the associated project.
  *
- * @param E the type of the elements in the set.
+ * @param E the type of the elements in the list.
  * @param project
  *         the project which provides an object factory for creating Gradle properties.
  * @param klass
- *         the class of the elements in the set.
+ *         the class of the elements in the list.
  */
 @Internal
-public class Multiple<E : Any>(project: Project, klass: KClass<E>) :
-    SetProperty<E> by project.objects.setProperty(klass.java) {
+public class Ordered<E : Any>(project: Project, klass: KClass<E>) :
+    ListProperty<E> by project.objects.listProperty(klass.java) {
 
     /**
-     * Creates a new `Multiple`.
+     * Creates a new `Ordered`.
      *
      * This is a Java-friendly constructor. Use the primary constructor in Kotlin.
      *
      * @param project
      *         the project which provides an object factory for creating Gradle properties.
      * @param cls
-     *         the Java class of the elements in the set.
+     *         the Java class of the elements in the list.
      */
     public constructor(project: Project, cls: Class<E>) : this(project, cls.kotlin)
 
@@ -63,8 +63,8 @@ public class Multiple<E : Any>(project: Project, klass: KClass<E>) :
      *
      * @param T the target type of the transformation.
      */
-    public fun <T> transform(transformer: (E) -> T): ImmutableSet<T> =
-        get().map(transformer).toImmutableSet()
+    public fun <T> transform(transformer: (E) -> T): ImmutableList<T> =
+        get().map(transformer).toImmutableList()
 }
 
-private fun <T> Iterable<T>.toImmutableSet(): ImmutableSet<T> = ImmutableSet.copyOf(this)
+private fun <T> Iterable<T>.toImmutableList(): ImmutableList<T> = ImmutableList.copyOf(this)
