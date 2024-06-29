@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -44,9 +44,9 @@ public class Multiple<E : Any>
  * Creates a new `Multiple`.
  *
  * @param project
- *          the project which provides an object factory for creating Gradle properties
+ *          the project which provides an object factory for creating Gradle properties.
  * @param klass
- *          class of the elements of the set
+ *          the class of the elements in the set.
  */
 constructor(
     project: Project, klass: KClass<E>
@@ -58,16 +58,16 @@ constructor(
      * This is a Java-friendly constructor. Use the primary constructor in Kotlin.
      *
      * @param project
-     *          the project which provides an object factory for creating Gradle properties
+     *          the project which provides an object factory for creating Gradle properties.
      * @param cls
-     *          Java class of the elements of the set
+     *          the Java class of the elements in the set.
      */
     public constructor(project: Project, cls: Class<E>) : this(project, cls.kotlin)
 
     /**
      * Obtains the value of this property and applies the given mapping function to each element.
      *
-     * @param T target type of the transformation
+     * @param T target type of the transformation.
      */
     public fun <T> transform(transformer: (E) -> T): ImmutableSet<T> =
         get().map(transformer).toImmutableSet()
