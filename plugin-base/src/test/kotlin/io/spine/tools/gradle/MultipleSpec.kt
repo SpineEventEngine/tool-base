@@ -24,4 +24,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.217")
+package io.spine.tools.gradle
+
+import io.kotest.matchers.collections.shouldContainExactly
+import org.gradle.testfixtures.ProjectBuilder
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+
+@DisplayName("`Multiple` should")
+internal class MultipleSpec {
+
+    private val project = ProjectBuilder.builder().build()
+
+    @Test
+    fun `be created using Kotlin class`() {
+        val m = Multiple(project, String::class)
+        val expected = setOf("1", "2", "3")
+        m.set(expected)
+        m.get() shouldContainExactly expected
+    }
+
+    @Test
+    fun `be created using Java class`() {
+        val m = Multiple(project, String::class.java)
+        val expected = setOf("um", "dois", "três")
+        m.set(expected)
+        m.get() shouldContainExactly expected
+    }
+
+    @Test
+    fun `run transformation`() {
+        val m = Multiple(project, Int::class)
+        m.set(setOf(1, 2, 3))
+        m.transform { it * 2 } shouldContainExactly setOf(2, 4, 6)
+    }
+}
