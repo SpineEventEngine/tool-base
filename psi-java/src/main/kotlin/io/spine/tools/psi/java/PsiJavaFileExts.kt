@@ -1,11 +1,11 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -61,10 +61,10 @@ public fun PsiJavaFile.locate(simpleName: Iterable<String>): PsiClass? {
     require(names.isNotEmpty()) {
         "The list of simple class names must not be empty."
     }
-    // There's only one top level class in a Java file.
+    // There's only one top-level class in a Java file.
     val topLevel = classes.first()
     if (topLevel.name != names[0]) {
-        // The top level class in the file does not match the first simple name.
+        // The top-level class in the file does not match the first simple name.
         // No need to look further.
         return null
     }
