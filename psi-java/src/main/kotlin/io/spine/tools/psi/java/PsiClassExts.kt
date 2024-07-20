@@ -154,6 +154,15 @@ public fun PsiClass.setSuperclass(superClass: PsiJavaCodeReferenceElement) {
 }
 
 /**
+ * Tells if this class or interface implements one or more interfaces.
+ */
+public fun PsiClass.implementsInterfaces(): Boolean {
+    // It's not likely that `implementsList` is `null`, but this way we cover possible future
+    // changes in the PSI implementation.
+    return implementsList?.referenceElements?.isNotEmpty() ?: false
+}
+
+/**
  * Makes a Java class or interface represented by this [PsiClass] implement the given interface.
  *
  * If this class or interface already implements the interface, the function does nothing.
