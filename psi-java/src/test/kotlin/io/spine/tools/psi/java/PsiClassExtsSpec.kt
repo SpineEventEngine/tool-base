@@ -114,7 +114,7 @@ internal class PsiClassExtsSpec: PsiTest() {
             cls.run {
                 hasSuperclass() shouldBe false
                 execute {
-                    addSuperclass(runnable)
+                    setSuperclass(runnable)
                 }
                 explicitSuperclass shouldNotBe null
                 explicitSuperclass!!.qualifiedName shouldBe Runnable::class.java.reference
@@ -124,9 +124,9 @@ internal class PsiClassExtsSpec: PsiTest() {
         @Test
         fun `preventing adding if superclass already exists`() {
             execute {
-                cls.addSuperclass(function)
+                cls.setSuperclass(function)
                 assertThrows<IllegalStateException> {
-                    cls.addSuperclass(runnable)
+                    cls.setSuperclass(runnable)
                 }
             }
         }
