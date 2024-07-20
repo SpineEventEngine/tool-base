@@ -121,7 +121,7 @@ public val PsiClass.explicitSuperclass: PsiJavaCodeReferenceElement?
  *          if called for a receiver representing an anonymous class, or
  *          when the receiver already extends another class.
  * @see setSuperclass
- * @see implementInterface
+ * @see implement
  */
 @Deprecated(
     message = "Please use `setSuperclass()` instead.",
@@ -137,7 +137,7 @@ public fun PsiClass.addSuperclass(superClass: PsiJavaCodeReferenceElement) {
  * @throws IllegalStateException
  *          if called for a receiver representing an anonymous class, or
  *          when the receiver already extends another class.
- * @see implementInterface
+ * @see implement
  */
 public fun PsiClass.setSuperclass(superClass: PsiJavaCodeReferenceElement) {
     check(extendsList != null) {
@@ -154,7 +154,7 @@ public fun PsiClass.setSuperclass(superClass: PsiJavaCodeReferenceElement) {
 }
 
 /**
- * Tells if this class or interface implements one or more interfaces.
+ * Tells if this class implements one or more interfaces.
  */
 public fun PsiClass.implementsInterfaces(): Boolean {
     // It's not likely that `implementsList` is `null`, but this way we cover possible future
@@ -163,23 +163,30 @@ public fun PsiClass.implementsInterfaces(): Boolean {
 }
 
 /**
- * Makes a Java class or interface represented by this [PsiClass] implement the given interface.
+ * Tells if this class implements the given interface.
+ */
+@JvmName("doesImplement")
+public fun PsiClass.implements(superInterface: PsiJavaCodeReferenceElement): Boolean {
+    return implementsList?.referenceElements?.any {
+        it.qualifiedName == superInterface.qualifiedName
+    } ?: false
+}
+
+/**
+ * Makes a Java class represented by this [PsiClass] implement the given interface.
  *
  * If this class or interface already implements the interface, the function does nothing.
  *
  * @see setSuperclass
  */
-public fun PsiClass.implementInterface(superInterface: PsiJavaCodeReferenceElement) {
+public fun PsiClass.implement(superInterface: PsiJavaCodeReferenceElement) {
     val implements = implementsList
     if (implements == null) {
         val newList = elementFactory.createReferenceList(arrayOf(superInterface))
         addBefore(newList, lBrace)
         return
     }
-    val alreadyImplements = implements.referenceElements.any {
-        it.qualifiedName == superInterface.qualifiedName
-    }
-    if (!alreadyImplements) {
+    if (!implements(superInterface)) {
         implements.add(superInterface)
     }
 }

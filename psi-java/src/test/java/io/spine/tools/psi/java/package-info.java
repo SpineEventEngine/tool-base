@@ -24,17 +24,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.psi.java
-
-import com.intellij.openapi.command.CommandProcessor
-import io.spine.tools.psi.java.Environment.commandProcessor
-import io.spine.tools.psi.java.Environment.project
-
 /**
- * Executes the given [Runnable] as a PSI modification
- * [command][CommandProcessor.executeCommand].
+ * Tests in this package cover using PSI extensions from Java code.
  */
-@JvmName("execute")
-public fun execute(runnable: Runnable) {
-    commandProcessor.executeCommand(project, runnable, null, null)
-}
+@CheckReturnValue
+@ParametersAreNonnullByDefault
+package io.spine.tools.psi.java;
+
+import com.google.errorprone.annotations.CheckReturnValue;
+
+import javax.annotation.ParametersAreNonnullByDefault;

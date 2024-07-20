@@ -124,6 +124,7 @@ public inline fun <reified T: Any> PsiElementFactory.createClassType(): PsiClass
  *         optional generic parameters if the class to reference is generic.
  * @return new class reference.
  */
+@JvmName("createClassReference")
 public fun PsiElementFactory.createClassReference(
     context: PsiElement? = null,
     className: String,

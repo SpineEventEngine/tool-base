@@ -155,7 +155,7 @@ internal class PsiClassExtsSpec: PsiTest() {
             cls.implementsInterfaces() shouldBe false
 
             execute {
-                cls.implementInterface(runnable)
+                cls.implement(runnable)
             }
 
             cls.implementsList.run {
@@ -170,12 +170,12 @@ internal class PsiClassExtsSpec: PsiTest() {
         fun `if an interface already implemented`() {
             cls.implementsInterfaces() shouldBe false
             execute {
-                cls.implementInterface(runnable)
+                cls.implement(runnable)
             }
 
             assertDoesNotThrow {
                 execute {
-                    cls.implementInterface(runnable)
+                    cls.implement(runnable)
                 }
             }
 
@@ -190,12 +190,12 @@ internal class PsiClassExtsSpec: PsiTest() {
         fun `if another interface is already implemented`() {
             cls.implementsInterfaces() shouldBe false
             execute {
-                cls.implementInterface(runnable)
+                cls.implement(runnable)
             }
 
             assertDoesNotThrow {
                 execute {
-                    cls.implementInterface(function)
+                    cls.implement(function)
                 }
             }
 
