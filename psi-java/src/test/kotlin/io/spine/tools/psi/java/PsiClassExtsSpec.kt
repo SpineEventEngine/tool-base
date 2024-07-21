@@ -49,6 +49,8 @@ internal class PsiClassExtsSpec: PsiTest() {
     @BeforeEach
     fun createClass() {
         cls = elementFactory.createClass("Stub")
+        // Remove the `public` modifier automatically added by the `ElementFactory`.
+        // We need a "bare-bones" class in the tests.
         execute { cls.removePublic() }
     }
 
@@ -97,7 +99,46 @@ internal class PsiClassExtsSpec: PsiTest() {
     }
 
     @Nested inner class
-    `Add super type` {
+    `set superclass` {
+
+        private val arrayList: PsiJavaCodeReferenceElement by lazy {
+            elementFactory.createClassReference(
+                className = java.util.ArrayList::class.java.reference
+            )
+        }
+
+        private val hashMap: PsiJavaCodeReferenceElement by lazy {
+            elementFactory.createClassReference(
+                className = java.util.HashMap::class.java.reference
+            )
+        }
+
+        @Test
+        fun `if the class does not have an explicit superclass`() {
+            cls.run {
+                hasSuperclass() shouldBe false
+                execute {
+                    setSuperclass(arrayList)
+                }
+                explicitSuperclass shouldNotBe null
+                explicitSuperclass!!.qualifiedName shouldBe
+                        java.util.ArrayList::class.java.reference
+            }
+        }
+
+        @Test
+        fun `preventing adding if a superclass is already defined`() {
+            execute {
+                cls.setSuperclass(hashMap)
+                assertThrows<IllegalStateException> {
+                    cls.setSuperclass(arrayList)
+                }
+            }
+        }
+    }
+
+    @Nested inner class
+    `make a class or interface implement an interface` {
 
         private val runnable: PsiJavaCodeReferenceElement by lazy {
             elementFactory.createClassReference(className = Runnable::class.java.reference)
@@ -110,24 +151,59 @@ internal class PsiClassExtsSpec: PsiTest() {
         }
 
         @Test
-        fun `if the class does not have a super type`() {
-            cls.run {
-                hasSuperclass() shouldBe false
-                execute {
-                    addSuperclass(runnable)
-                }
-                explicitSuperclass shouldNotBe null
-                explicitSuperclass!!.qualifiedName shouldBe Runnable::class.java.reference
+        fun `if no interfaces are implemented`() {
+            cls.implementsInterfaces() shouldBe false
+
+            execute {
+                cls.implement(runnable)
+            }
+
+            cls.implementsList.run {
+                this shouldNotBe null
+                this!!
+                referenceElements.size shouldBe 1
+                referenceElements[0].qualifiedName shouldBe runnable.qualifiedName
             }
         }
 
         @Test
-        fun `preventing adding if superclass already exists`() {
+        fun `if an interface already implemented`() {
+            cls.implementsInterfaces() shouldBe false
             execute {
-                cls.addSuperclass(function)
-                assertThrows<IllegalStateException> {
-                    cls.addSuperclass(runnable)
+                cls.implement(runnable)
+            }
+
+            assertDoesNotThrow {
+                execute {
+                    cls.implement(runnable)
                 }
+            }
+
+            cls.implementsList.run {
+                this!!
+                referenceElements.size shouldBe 1
+                referenceElements[0].qualifiedName shouldBe runnable.qualifiedName
+            }
+        }
+
+        @Test
+        fun `if another interface is already implemented`() {
+            cls.implementsInterfaces() shouldBe false
+            execute {
+                cls.implement(runnable)
+            }
+
+            assertDoesNotThrow {
+                execute {
+                    cls.implement(function)
+                }
+            }
+
+            cls.implementsList.run {
+                this!!
+                referenceElements.size shouldBe 2
+                referenceElements[0].qualifiedName shouldBe runnable.qualifiedName
+                referenceElements[1].qualifiedName shouldBe function.qualifiedName
             }
         }
     }

@@ -32,6 +32,7 @@ import com.intellij.psi.PsiJavaCodeReferenceElement
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiModifierList
 import io.spine.tools.psi.document
+import io.spine.tools.psi.java.Environment.elementFactory
 
 /**
  * Obtains the line number of the class declaration in the containing file.
@@ -114,18 +115,78 @@ public val PsiClass.explicitSuperclass: PsiJavaCodeReferenceElement?
     }
 
 /**
- * Makes this class extend the class specified by the given [classReference].
+ * Makes this class extend the class specified by the given [superClass].
  *
  * @throws IllegalStateException
  *          if called for a receiver representing an anonymous class, or
  *          when the receiver already extends another class.
+ * @see setSuperclass
+ * @see implement
  */
-public fun PsiClass.addSuperclass(classReference: PsiJavaCodeReferenceElement) {
+@Deprecated(
+    message = "Please use `setSuperclass()` instead.",
+    replaceWith = ReplaceWith("setSuperclass()")
+)
+public fun PsiClass.addSuperclass(superClass: PsiJavaCodeReferenceElement) {
+    setSuperclass(superClass)
+}
+
+/**
+ * Makes this class extend the class specified by the given [superClass].
+ *
+ * @throws IllegalStateException
+ *          if called for a receiver representing an anonymous class, or
+ *          when the receiver already extends another class.
+ * @see implement
+ */
+public fun PsiClass.setSuperclass(superClass: PsiJavaCodeReferenceElement) {
     check(extendsList != null) {
         "Cannot add a superclass to an anonymous class `$this`."
     }
-    check(!hasSuperclass()) {
-        "The class `$qualifiedName` already extends `${explicitSuperclass?.qualifiedName}`."
+    check(
+        explicitSuperclass == null ||
+                explicitSuperclass?.qualifiedName == superClass.qualifiedName
+    ) {
+        "The class `$qualifiedName` cannot be derived from ${superClass.qualifiedName} " +
+        "because it already extends `${explicitSuperclass?.qualifiedName}`."
     }
-    extendsList!!.add(classReference)
+    extendsList!!.add(superClass)
+}
+
+/**
+ * Tells if this class implements one or more interfaces.
+ */
+public fun PsiClass.implementsInterfaces(): Boolean {
+    // It's not likely that `implementsList` is `null`, but this way we cover possible future
+    // changes in the PSI implementation.
+    return implementsList?.referenceElements?.isNotEmpty() ?: false
+}
+
+/**
+ * Tells if this class implements the given interface.
+ */
+@JvmName("doesImplement")
+public fun PsiClass.implements(superInterface: PsiJavaCodeReferenceElement): Boolean {
+    return implementsList?.referenceElements?.any {
+        it.qualifiedName == superInterface.qualifiedName
+    } ?: false
+}
+
+/**
+ * Makes a Java class represented by this [PsiClass] implement the given interface.
+ *
+ * If this class or interface already implements the interface, the function does nothing.
+ *
+ * @see setSuperclass
+ */
+public fun PsiClass.implement(superInterface: PsiJavaCodeReferenceElement) {
+    val implements = implementsList
+    if (implements == null) {
+        val newList = elementFactory.createReferenceList(arrayOf(superInterface))
+        addBefore(newList, lBrace)
+        return
+    }
+    if (!implements(superInterface)) {
+        implements.add(superInterface)
+    }
 }

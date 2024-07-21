@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -26,10 +26,11 @@
 
 package io.spine.tools.psi.java
 
+import com.google.errorprone.annotations.CanIgnoreReturnValue
 import com.intellij.psi.PsiModifier
 import com.intellij.psi.PsiModifier.FINAL
-import com.intellij.psi.PsiModifier.PUBLIC
 import com.intellij.psi.PsiModifier.PRIVATE
+import com.intellij.psi.PsiModifier.PUBLIC
 import com.intellij.psi.PsiModifier.STATIC
 import com.intellij.psi.PsiModifierList
 import com.intellij.psi.PsiModifierListOwner
@@ -71,6 +72,7 @@ public val PsiModifierListOwner.isStatic: Boolean
 /**
  * Adds the [`public`][PUBLIC] modifier.
  */
+@CanIgnoreReturnValue
 public fun PsiModifierListOwner.makePublic(): PsiModifierListOwner {
     modifierList?.setIfAbsent(PUBLIC)
     return this
@@ -79,6 +81,7 @@ public fun PsiModifierListOwner.makePublic(): PsiModifierListOwner {
 /**
  * Adds the [`final`][FINAL] modifier.
  */
+@CanIgnoreReturnValue
 public fun PsiModifierListOwner.makeFinal(): PsiModifierListOwner {
     modifierList?.setIfAbsent(FINAL)
     return this
@@ -87,6 +90,7 @@ public fun PsiModifierListOwner.makeFinal(): PsiModifierListOwner {
 /**
  * Adds the [`static`][STATIC] modifier.
  */
+@CanIgnoreReturnValue
 public fun PsiModifierListOwner.makeStatic(): PsiModifierListOwner {
     modifierList?.setIfAbsent(STATIC)
     return this
@@ -95,6 +99,7 @@ public fun PsiModifierListOwner.makeStatic(): PsiModifierListOwner {
 /**
  * Removes the [`public`][PUBLIC] modifier.
  */
+@CanIgnoreReturnValue
 public fun PsiModifierListOwner.removePublic(): PsiModifierListOwner {
     modifierList?.setModifierProperty(PUBLIC, false)
     return this
