@@ -124,13 +124,57 @@ public inline fun <reified T: Any> PsiElementFactory.createClassType(): PsiClass
  *         optional generic parameters if the class to reference is generic.
  * @return new class reference.
  */
+@Deprecated(
+    message = "Please use the overload with the trailing `context` parameter.",
+    ReplaceWith("createClassReference(context, className, genericParams, context)")
+)
 @JvmName("createClassReference")
 public fun PsiElementFactory.createClassReference(
     context: PsiElement? = null,
     className: String,
     vararg genericParams: String
+): PsiJavaCodeReferenceElement = createClassReference(className, genericParams.toList(), context)
+
+
+/**
+ * Creates a reference to the class with the given name.
+ *
+ * @param context
+ *         the PSI element used as the context for resolving the reference.
+ * @param className
+ *         the name of the class to reference. It could be fully qualified or
+ *         a simple name.
+ * @param genericParams
+ *         optional generic parameters if the class to reference is generic.
+ * @return new class reference.
+ */
+@JvmName("createClassReference")
+public fun PsiElementFactory.createClassReference(
+    className: String,
+    vararg genericParams: String,
+    context: PsiElement? = null
+): PsiJavaCodeReferenceElement = createClassReference(className, genericParams.toList(), context)
+
+/**
+ * Creates a reference to the class with the given name.
+ *
+ * @param className
+ *         the name of the class to reference. It could be fully qualified or
+ *         a simple name.
+ * @param genericParams
+ *         optional generic parameters if the class to reference is generic.
+ * @param context
+ *         the PSI element used as the context for resolving the reference.
+ * @return new class reference.
+ */
+@JvmName("createClassReference")
+public fun PsiElementFactory.createClassReference(
+    className: String,
+    genericParams: Iterable<String> = emptyList(),
+    context: PsiElement? = null,
 ): PsiJavaCodeReferenceElement {
-    return if (genericParams.isEmpty()) {
+    val params = genericParams.toList()
+    return if (params.isEmpty()) {
         createReferenceFromText(className, context)
     } else {
         val paramsText = genericParams.joinToString(", ")
