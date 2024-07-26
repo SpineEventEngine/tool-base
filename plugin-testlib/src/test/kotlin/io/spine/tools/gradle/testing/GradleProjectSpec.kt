@@ -30,14 +30,17 @@ import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
 import io.spine.base.Identifier
+import io.spine.tools.gradle.task.BaseTaskName
 import io.spine.tools.gradle.task.JavaTaskName.Companion.compileJava
 import java.io.File
 import java.nio.file.Path
 import org.gradle.testkit.runner.TaskOutcome
+import org.gradle.testkit.runner.UnexpectedBuildFailure
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.io.TempDir
 
 @DisplayName("`GradleProject` should")
@@ -100,6 +103,26 @@ class GradleProjectSpec {
             .resolve("src/main/java/acme/replacement.txt")
 
         replacementFile.readText() shouldContain replacement
+    }
+
+    @Test
+    fun `provide diagnostic message when build fails undexpectedly`() {
+        setup.fromResources("failing_build")
+        val project = setup.create()
+        val task = BaseTaskName.build
+        val exception = assertThrows<IllegalStateException> {
+            project.executeTask(task)
+        }
+        val output = (exception.cause as UnexpectedBuildFailure).buildResult.output
+        exception.message.run {
+            shouldContain("Project:")
+            shouldContain(project.projectDir.toString())
+            shouldContain("Task:")
+            shouldContain(task.name)
+            shouldContain("Build result output")
+            shouldContain(output)
+            shouldContain("Build result output end.")
+        }
     }
 
     @Nested
