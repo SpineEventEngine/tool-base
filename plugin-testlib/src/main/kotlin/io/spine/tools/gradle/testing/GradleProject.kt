@@ -31,9 +31,10 @@ import io.spine.tools.gradle.testing.GradleProject.Companion.setupAt
 import java.io.File
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
+import org.gradle.testkit.runner.UnexpectedBuildFailure
 
 /**
- * Allows to configure a Gradle project for testing needs.
+ * Allows configuring a Gradle project for testing needs.
  *
  * The project operates in the [given directory][setupAt] and allows executing Gradle tasks.
  *
@@ -145,10 +146,30 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
 
     /**
      * Executes the task with the given name.
+     *
+     * @throws IllegalStateException when the build fails with
+     * [UnexpectedBuildFailure][org.gradle.testkit.runner.UnexpectedBuildFailure] citing
+     * the output of [BuildResult] in its message.
      */
     @CanIgnoreReturnValue
     public fun executeTask(task: TaskName): BuildResult {
-        return prepareRun(task).build()
+        val run = prepareRun(task)
+        try {
+            return run.build()
+        } catch (e: UnexpectedBuildFailure) {
+            val output = e.buildResult.output
+            val message = "Unexpected build failure." + """
+                
+                Project: `${projectDir.path}`
+                Task: `${task.name()}`    
+                Build result output =====>
+                """.trimIndent() +
+                output +
+                """
+                <===== Build result output end.                
+                """.trimIndent()
+            throw IllegalStateException(message, e)
+        }
     }
 
     /**
@@ -156,7 +177,8 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
      */
     @CanIgnoreReturnValue
     public fun executeAndFail(task: TaskName): BuildResult {
-        return prepareRun(task).buildAndFail()
+        val run = prepareRun(task)
+        return run.buildAndFail()
     }
 
     private fun prepareRun(taskName: TaskName): GradleRunner {
