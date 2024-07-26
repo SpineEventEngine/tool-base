@@ -26,6 +26,7 @@
 
 package io.spine.tools.psi.java;
 
+import com.google.common.collect.ImmutableList;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiJavaCodeReferenceElement;
@@ -48,8 +49,9 @@ class PsiClassExtsJavaApiSpec {
 
     private PsiClass cls;
 
-    private final PsiJavaCodeReferenceElement runnable =
-            createClassReference(elementFactory, null, Runnable.class.getCanonicalName());
+    private final PsiJavaCodeReferenceElement runnable = createClassReference(
+            elementFactory, Runnable.class.getCanonicalName(), ImmutableList.of(), null
+    );
 
     @BeforeEach
     void createClass() {
