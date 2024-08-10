@@ -105,7 +105,7 @@ internal class JrtFileSystem : DeprecatedVirtualFileSystem() {
             val jrtFsJar = loadJrtFsJar(jdkHome) ?: return@createMap null
             val rootUri = URI.create(StandardFileSystems.JRT_PROTOCOL + ":/")
             /*
-              The ClassLoader, that was used to load JRT FS Provider actually lives as long as
+              The `ClassLoader`, that was used to load JRT FS Provider actually lives as long as
               the current thread due to ThreadLocal leak in jrt-fs,
               See https://bugs.openjdk.java.net/browse/JDK-8260621
               So that cache allows us to avoid creating too many classloaders for same
@@ -114,13 +114,13 @@ internal class JrtFileSystem : DeprecatedVirtualFileSystem() {
             if (isAtLeastJava9()) {
                 // If the runtime JDK is set to 9+ it has JrtFileSystemProvider,
                 // but to load proper jrt-fs (one that is pointed by jdkHome), we should
-                // provide "java.home" path.
+                // provide `"java.home"` path.
                 newFileSystem(rootUri, mapOf("java.home" to jdkHome.absolutePath))
             } else {
                 val classLoader = URLClassLoader(arrayOf(jrtFsJar.toURI().toURL()), null)
                 // If the runtime JDK is set to <9, there are no JrtFileSystemProvider,
-                // we should create classloader with jrt-fs.jar, and DO NOT NEED to pass "java.home" path,
-                // as otherwise it will incur additional classloader creation
+                // we should create `Classloader` with `jrt-fs.jar`, and DO NOT NEED to pass
+                // `"java.home" path`, as otherwise it will incur additional classloader creation
                 newFileSystem(rootUri, emptyMap<String, Nothing>(), classLoader)
             }
         }
@@ -135,7 +135,6 @@ private class JrtVirtualFile(
     private val parent: JrtVirtualFile?,
 ) : VirtualFile() {
 
-    // TODO: catch IOException?
     private val attributes: BasicFileAttributes
         get() = readAttributes(path, BasicFileAttributes::class.java)
 
