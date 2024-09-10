@@ -1,11 +1,11 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -26,6 +26,7 @@
 
 import io.spine.internal.dependency.CheckerFramework
 import io.spine.internal.dependency.Coroutines
+import io.spine.internal.dependency.Dokka
 import io.spine.internal.dependency.ErrorProne
 import io.spine.internal.dependency.FindBugs
 import io.spine.internal.dependency.Grpc
@@ -48,6 +49,8 @@ import io.spine.internal.gradle.publish.IncrementGuard
 import io.spine.internal.gradle.report.license.LicenseReporter
 import io.spine.internal.gradle.testing.configureLogging
 import io.spine.internal.gradle.testing.registerTestTasks
+import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.dokka.gradle.DokkaTaskPartial
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -64,19 +67,23 @@ plugins {
 apply<IncrementGuard>()
 apply<VersionWriter>()
 
+apply {
+    plugin(Dokka.GradlePlugin.id)
+}
+
 CheckStyleConfig.applyTo(project)
 JavadocConfig.applyTo(project)
 LicenseReporter.generateReportIn(project)
 
 project.run {
-    addDependencies()
     forceConfigurations()
+    addDependencies()
 
-    val javaVersion = JavaLanguageVersion.of(11)
-    configureJava(javaVersion)
-    configureKotlin(javaVersion)
+    configureJava()
+    configureKotlin()
 
     configureTests()
+    configureDocTasks()
 
     configureGitHubPages()
     configureTaskDependencies()
@@ -127,9 +134,9 @@ fun Module.forceConfigurations() {
     }
 }
 
-fun Module.configureJava(javaVersion: JavaLanguageVersion) {
+fun Module.configureJava() {
     java {
-        toolchain.languageVersion.set(javaVersion)
+        toolchain.languageVersion.set(BuildSettings.javaVersion)
     }
     tasks {
         withType<JavaCompile>().configureEach {
@@ -139,16 +146,17 @@ fun Module.configureJava(javaVersion: JavaLanguageVersion) {
     }
 }
 
-fun Module.configureKotlin(javaVersion: JavaLanguageVersion) {
+fun Module.configureKotlin() {
     kotlin {
-        applyJvmToolchain(javaVersion.asInt())
         explicitApi()
+        applyJvmToolchain(BuildSettings.javaVersion.asInt())
     }
 
     tasks {
         withType<KotlinCompile>().configureEach {
-            kotlinOptions.jvmTarget = javaVersion.toString()
             setFreeCompilerArgs()
+            // https://stackoverflow.com/questions/38298695/gradle-disable-all-incremental-compilation-and-parallel-builds
+            incremental = false
         }
     }
 }
@@ -162,6 +170,19 @@ fun Module.configureTests() {
             }
             configureLogging()
         }
+    }
+}
+
+fun Module.configureDocTasks() {
+    val dokkaJavadoc by tasks.getting(DokkaTask::class)
+    tasks.register("javadocJar", Jar::class) {
+        from(dokkaJavadoc.outputDirectory)
+        archiveClassifier.set("javadoc")
+        dependsOn(dokkaJavadoc)
+    }
+
+    tasks.withType<DokkaTaskPartial>().configureEach {
+        configureForKotlin()
     }
 }
 
