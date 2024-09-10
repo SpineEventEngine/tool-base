@@ -69,7 +69,7 @@ public fun PsiElementFactory.createPrivateConstructor(
  * Creates a single-line Javadoc comment using the given text.
  *
  * @param line A non-empty one-line text of the Javadoc comment.
- * @return the generated Javadoc comment.
+ * @return The generated Javadoc comment.
  * @throws IllegalArgumentException If the given line is empty or contains line separators.
  * @see PsiElementFactory.createDocCommentFromText
  */
