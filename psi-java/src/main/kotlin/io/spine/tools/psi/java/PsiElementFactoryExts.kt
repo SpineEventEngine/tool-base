@@ -110,10 +110,10 @@ public inline fun <reified T: Any> PsiElementFactory.createClassType(): PsiClass
 }
 
 /**
- * Creates a reference to the class with the given name.
+ * Creates a reference to the class or interface with the given name.
  *
  * @param context The PSI element used as the context for resolving the reference.
- * @param className The name of the class to reference.
+ * @param className The name of the class or interface to reference.
  *   It could be fully qualified or a simple name.
  * @param genericParams Optional generic parameters if the class to reference is generic.
  * @return new class reference.
@@ -131,10 +131,10 @@ public fun PsiElementFactory.createClassReference(
 
 
 /**
- * Creates a reference to the class with the given name.
+ * Creates a reference to the class or interface with the given name.
  *
  * @param context The PSI element used as the context for resolving the reference.
- * @param className The name of the class to reference.
+ * @param className The name of the class or interface to reference.
  *   It could be fully qualified or a simple name.
  * @param genericParams Optional generic parameters if the class to reference is generic.
  * @return new class reference.
@@ -147,9 +147,9 @@ public fun PsiElementFactory.createClassReference(
 ): PsiJavaCodeReferenceElement = createClassReference(className, genericParams.toList(), context)
 
 /**
- * Creates a reference to the class with the given name.
+ * Creates a reference to the class or interface with the given name.
  *
- * @param className The name of the class to reference.
+ * @param className The name of the class or interface to reference.
  *   It could be fully qualified or a simple name.
  * @param genericParams Optional generic parameters if the class to reference is generic.
  * @param context The PSI element used as the context for resolving the reference.
