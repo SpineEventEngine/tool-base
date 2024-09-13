@@ -46,11 +46,8 @@ import org.junit.jupiter.api.assertThrows
 @DisplayName("`PsiClass` extensions should")
 internal class PsiClassExtsSpec: PsiTest() {
 
+    private val fileFactory = PsiFileFactory.getInstance(project)
     private val packageName = "org.example.psi.extensions"
-
-    private val fileFactory by lazy {
-        PsiFileFactory.getInstance(project)
-    }
 
     private lateinit var cls: PsiClass
 
