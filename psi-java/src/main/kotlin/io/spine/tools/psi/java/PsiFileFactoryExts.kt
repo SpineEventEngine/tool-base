@@ -46,7 +46,7 @@ public fun PsiFileFactory.createJavaFile(
     modificationStamp: Instant = Instant.now()
 ): PsiJavaFile {
     require(className.isNotBlank()) {
-        "Class name must not be blank."
+        "The class name must not be blank. Encountered: `$className`."
     }
     require(className.containsAny('.', '$').not()) {
         "The class name must be simple. Encountered: `$className`."
