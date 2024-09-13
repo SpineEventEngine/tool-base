@@ -26,11 +26,9 @@
 
 package io.spine.tools.psi.java
 
-import com.intellij.ide.highlighter.JavaFileType
 import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiJavaCodeReferenceElement
-import com.intellij.psi.PsiJavaFile
 import com.intellij.psi.PsiMethod
 import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
@@ -60,18 +58,7 @@ internal class PsiClassExtsSpec: PsiTest() {
     fun createClass() {
         val suffix = TestValues.random(1000)
         val className = "Stub$suffix"
-        val psiFile = fileFactory.createFileFromText(
-            "$className.java",
-            JavaFileType.INSTANCE,
-            """
-            package $packageName;
-               
-            class $className {
-            }   
-            """.trimIndent(),
-            java.time.Instant.now().toEpochMilli(),
-            true /* `eventSystemEnabled` */
-        ) as PsiJavaFile
+        val psiFile = fileFactory.createJavaFile(packageName, className)
         cls = psiFile.topLevelClass
     }
 
