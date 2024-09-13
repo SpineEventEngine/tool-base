@@ -46,7 +46,7 @@ import org.jetbrains.annotations.TestOnly
  *
  * @param javadocLine Optional single-line text for Javadoc comment to be generated.
  *   If `null`, no Javadoc comment will be created.
- * @return the generated constructor.
+ * @return The generated constructor.
  * @see PsiElementFactory.createMethodFromText
  */
 public fun PsiElementFactory.createPrivateConstructor(
@@ -110,34 +110,13 @@ public inline fun <reified T: Any> PsiElementFactory.createClassType(): PsiClass
 }
 
 /**
- * Creates a reference to the class or interface with the given name.
+ * Creates a reference to the class with the given name.
  *
  * @param context The PSI element used as the context for resolving the reference.
- * @param className The name of the class or interface to reference.
- *   It could be fully qualified or a simple name.
- * @param genericParams Optional generic parameters if the class to reference is generic.
- * @return new class reference.
- */
-@Deprecated(
-    message = "Please use the overload with the trailing `context` parameter.",
-    ReplaceWith("createClassReference(context, className, genericParams, context)")
-)
-@JvmName("createClassReference")
-public fun PsiElementFactory.createClassReference(
-    context: PsiElement? = null,
-    className: String,
-    vararg genericParams: String
-): PsiJavaCodeReferenceElement = createClassReference(className, genericParams.toList(), context)
-
-
-/**
- * Creates a reference to the class or interface with the given name.
- *
- * @param context The PSI element used as the context for resolving the reference.
- * @param className The name of the class or interface to reference.
- *   It could be fully qualified or a simple name.
- * @param genericParams Optional generic parameters if the class to reference is generic.
- * @return new class reference.
+ * @param className The name of the class. It could be fully qualified or a simple name.
+ * @param genericParams Optional generic parameters if the class is generic.
+ * @return New class reference.
+ * @see PsiElementFactory.createInterfaceReference
  */
 @JvmName("createClassReference")
 public fun PsiElementFactory.createClassReference(
@@ -147,13 +126,13 @@ public fun PsiElementFactory.createClassReference(
 ): PsiJavaCodeReferenceElement = createClassReference(className, genericParams.toList(), context)
 
 /**
- * Creates a reference to the class or interface with the given name.
+ * Creates a reference to the class with the given name.
  *
- * @param className The name of the class or interface to reference.
- *   It could be fully qualified or a simple name.
- * @param genericParams Optional generic parameters if the class to reference is generic.
+ * @param className The name of the class. It could be fully qualified or a simple name.
+ * @param genericParams Optional generic parameters if the class is generic.
  * @param context The PSI element used as the context for resolving the reference.
- * @return new class reference.
+ * @return New class reference.
+ * @see PsiElementFactory.createInterfaceReference
  */
 @JvmName("createClassReference")
 public fun PsiElementFactory.createClassReference(
@@ -170,3 +149,35 @@ public fun PsiElementFactory.createClassReference(
         createReferenceFromText(superClassRef, context)
     }
 }
+
+/**
+ * Creates a reference to the interface with the given name.
+ *
+ * @param context The PSI element used as the context for resolving the reference.
+ * @param interfaceName The name of the interface. It could be fully qualified or a simple name.
+ * @param genericParams Optional generic parameters if the interface is generic.
+ * @return New interface reference.
+ * @see PsiElementFactory.createClassReference
+ */
+@JvmName("createInterfaceReference")
+public fun PsiElementFactory.createInterfaceReference(
+    interfaceName: String,
+    vararg genericParams: String,
+    context: PsiElement? = null
+): PsiJavaCodeReferenceElement =
+    createInterfaceReference(interfaceName, genericParams.toList(), context)
+
+/**
+ * Creates a reference to the interface with the given name.
+ *
+ * @param context The PSI element used as the context for resolving the reference.
+ * @param interfaceName The name of the interface. It could be fully qualified or a simple name.
+ * @param genericParams Optional generic parameters if the interface is generic.
+ * @return New interface reference.
+ * @see PsiElementFactory.createClassReference
+ */
+public fun PsiElementFactory.createInterfaceReference(
+    interfaceName: String,
+    genericParams: Iterable<String> = emptyList(),
+    context: PsiElement? = null
+): PsiJavaCodeReferenceElement = createClassReference(interfaceName, genericParams, context)
