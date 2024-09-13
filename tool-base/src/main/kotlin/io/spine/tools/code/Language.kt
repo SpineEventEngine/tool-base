@@ -90,7 +90,7 @@ protected constructor(
      * Creates a syntactically valid one-line comment in this language.
      *
      * @param line The contents of the comment.
-     * @return a line which can be safely inserted into a code file.
+     * @return A line which can be safely inserted into a code file.
      */
     public abstract fun comment(line: String): String
 
@@ -133,7 +133,7 @@ protected constructor(
         /**
          * Obtains a language of the give file taking its extension.
          *
-         * @return one of the supported languages, or [AnyLanguage] if the extension is absent
+         * @return One of the supported languages, or [AnyLanguage] if the extension is absent
          *  or not known.
          *
          * @throws IllegalArgumentException If the given instance represents a directory.
@@ -149,7 +149,7 @@ protected constructor(
         /**
          * Obtains a language of the give file taking its extension.
          *
-         * @return one of the supported languages, or [AnyLanguage] if the extension is absent
+         * @return One of the supported languages, or [AnyLanguage] if the extension is absent
          *   or not known.
          *
          * @throws IllegalArgumentException If the given instance represents a directory.
