@@ -40,8 +40,8 @@ import org.junit.jupiter.api.io.TempDir
  * are declared in the `PsiFileExts.kt` of the `psi` module.
  *
  * We have these tests here, under `psi-java` module, because this module
- * has [io.spine.tools.psi.java.Environment] with all the needed PSI services configured.
- * Some of these services are language independent, some of them are specific to Java.
+ * has [io.spine.tools.psi.java.Environment] with all the necessary PSI services configured.
+ * Some of these services are language-independent, some of them are specific to Java.
  *
  * [PsiFile][com.intellij.psi.PsiFile] is language independent interface.
  * Once we have language neutral environment configuration code under the `psi` module,
