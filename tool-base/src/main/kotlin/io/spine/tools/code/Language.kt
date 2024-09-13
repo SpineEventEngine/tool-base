@@ -36,8 +36,8 @@ import kotlin.io.path.isDirectory
  *
  * For example, `"Java"`, `"Python 3.x"`, etc.
  *
- * This abstract class is supposed to be extended by an `object` to make it a singleton
- * and a typed [Language] instance.
+ * This abstract class is supposed to be extended by an `object` to make it
+ * a singleton and a typed [Language] instance.
  *
  * @see Protobuf
  * @see Java
@@ -133,8 +133,8 @@ protected constructor(
         /**
          * Obtains a language of the give file taking its extension.
          *
-         * @return One of the supported languages, or [AnyLanguage] if the extension is absent
-         *  or not known.
+         * @return One of the supported languages, or [AnyLanguage] if the extension is
+         *  absent or not known.
          *
          * @throws IllegalArgumentException If the given instance represents a directory.
          */
@@ -149,8 +149,8 @@ protected constructor(
         /**
          * Obtains a language of the give file taking its extension.
          *
-         * @return One of the supported languages, or [AnyLanguage] if the extension is absent
-         *   or not known.
+         * @return One of the supported languages, or [AnyLanguage] if the extension is
+         *   absent or not known.
          *
          * @throws IllegalArgumentException If the given instance represents a directory.
          */
