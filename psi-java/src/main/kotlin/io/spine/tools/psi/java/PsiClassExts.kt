@@ -45,8 +45,7 @@ public val PsiClass.lineNumber: Int
 /**
  * Obtains a method declared directly in this class.
  *
- * @throws IllegalStateException
- *          if the class does not have a method with the given name.
+ * @throws IllegalStateException If the class does not have a method with the given name.
  */
 public fun PsiClass.method(name: String): PsiMethod {
     val found = findMethodsByName(name, false)
@@ -57,11 +56,26 @@ public fun PsiClass.method(name: String): PsiMethod {
 }
 
 /**
+ * Obtains the package to which this class belongs.
+ *
+ * @returns The package name or an empty string if the class does not belong to a package.
+ */
+public val PsiClass.packageName: String
+    get() {
+        var current = this;
+        while (current.containingClass != null) {
+            current = containingClass!!
+        }
+        val qualifiedName = current.qualifiedName
+        val result = qualifiedName?.substringBeforeLast('.')
+        return result ?: ""
+    }
+
+/**
  * Obtains the list of modifiers for this class.
  *
- * @throws IllegalStateException
- *          if the class does not have a list of modifiers, which could be the case,
- *          for example, for an anonymous class.
+ * @throws IllegalStateException If the class does not have a list of modifiers,
+ *   which could be the case, for example, for an anonymous class.
  */
 public val PsiClass.modifiers: PsiModifierList
     get() {
@@ -167,8 +181,13 @@ public fun PsiClass.implementsInterfaces(): Boolean {
  */
 @JvmName("doesImplement")
 public fun PsiClass.implements(superInterface: PsiJavaCodeReferenceElement): Boolean {
+    val qualified = superInterface.qualifier != null
+    val samePackage = this.packageName == superInterface.qualifier?.text
+
     return implementsList?.referenceElements?.any {
-        it.qualifiedName == superInterface.qualifiedName
+        (it.qualifiedName == superInterface.qualifiedName) ||
+                ((samePackage || qualified.not()) &&
+                        (it.referenceName == superInterface.referenceName))
     } ?: false
 }
 

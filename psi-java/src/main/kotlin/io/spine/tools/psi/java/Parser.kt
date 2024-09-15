@@ -48,11 +48,9 @@ public class Parser(public val project: Project) {
      *
      * The file is not saved to the disk.
      *
-     * @param javaSource
-     *         the previously loaded source code.
-     * @param file
-     *         the file to use when creating [PsiJavaFile] instance.
-     *         If `null` a synthetic file name will be used.
+     * @param javaSource The previously loaded source code.
+     * @param file The file to use when creating [PsiJavaFile] instance.
+     *    If `null` a synthetic file name will be used.
      */
     public fun parse(javaSource: String, file: File? = null): PsiJavaFile {
         return fromFromCode(javaSource, file)

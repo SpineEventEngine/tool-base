@@ -36,8 +36,8 @@ import kotlin.io.path.isDirectory
  *
  * For example, `"Java"`, `"Python 3.x"`, etc.
  *
- * This abstract class is supposed to be extended by an `object` to make it a singleton
- * and a typed [Language] instance.
+ * This abstract class is supposed to be extended by an `object` to make it
+ * a singleton and a typed [Language] instance.
  *
  * @see Protobuf
  * @see Java
@@ -89,9 +89,8 @@ protected constructor(
     /**
      * Creates a syntactically valid one-line comment in this language.
      *
-     * @param line
-     *          the contents of the comment
-     * @return a line which can be safely inserted into a code file.
+     * @param line The contents of the comment.
+     * @return A line which can be safely inserted into a code file.
      */
     public abstract fun comment(line: String): String
 
@@ -134,11 +133,10 @@ protected constructor(
         /**
          * Obtains a language of the give file taking its extension.
          *
-         * @return one of the supported languages, or [AnyLanguage] if the extension is absent
-         * or not known.
+         * @return One of the supported languages, or [AnyLanguage] if the extension is
+         *  absent or not known.
          *
-         * @throws IllegalArgumentException
-         *          if the given instance represents a directory.
+         * @throws IllegalArgumentException If the given instance represents a directory.
          */
         @JvmStatic
         public fun of(file: Path): Language {
@@ -151,11 +149,10 @@ protected constructor(
         /**
          * Obtains a language of the give file taking its extension.
          *
-         * @return one of the supported languages, or [AnyLanguage] if the extension is absent
-         * or not known.
+         * @return One of the supported languages, or [AnyLanguage] if the extension is
+         *   absent or not known.
          *
-         * @throws IllegalArgumentException
-         *          if the given instance represents a directory.
+         * @throws IllegalArgumentException If the given instance represents a directory.
          */
         @JvmStatic
         public fun of(file: File): Language = of(file.toPath())

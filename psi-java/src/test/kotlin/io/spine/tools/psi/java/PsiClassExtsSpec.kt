@@ -27,11 +27,13 @@
 package io.spine.tools.psi.java
 
 import com.intellij.psi.PsiClass
+import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiJavaCodeReferenceElement
 import com.intellij.psi.PsiMethod
 import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.spine.testing.TestValues
 import io.spine.tools.java.reference
 import io.spine.tools.psi.java.Environment.elementFactory
 import org.junit.jupiter.api.BeforeEach
@@ -44,14 +46,17 @@ import org.junit.jupiter.api.assertThrows
 @DisplayName("`PsiClass` extensions should")
 internal class PsiClassExtsSpec: PsiTest() {
 
+    private val fileFactory = PsiFileFactory.getInstance(project)
+    private val packageName = "org.example.psi.extensions"
+
     private lateinit var cls: PsiClass
 
     @BeforeEach
     fun createClass() {
-        cls = elementFactory.createClass("Stub")
-        // Remove the `public` modifier automatically added by the `ElementFactory`.
-        // We need a "bare-bones" class in the tests.
-        execute { cls.removePublic() }
+        val suffix = TestValues.random(1000)
+        val className = "Stub$suffix"
+        val psiFile = fileFactory.createJavaFile(packageName, className)
+        cls = psiFile.topLevelClass
     }
 
     @Test
@@ -205,6 +210,50 @@ internal class PsiClassExtsSpec: PsiTest() {
                 referenceElements[0].qualifiedName shouldBe runnable.qualifiedName
                 referenceElements[1].qualifiedName shouldBe function.qualifiedName
             }
+        }
+    }
+
+    @Nested inner class
+    `tell if a class implements an interface` {
+
+        private val shortName = "BaseInterface"
+        private val shortReference = elementFactory.createInterfaceReference(shortName)
+
+        /**
+         * The reference in the same package.
+         */
+        private val qualifiedReference =
+            elementFactory.createInterfaceReference("$packageName.$shortName")
+
+        @Test
+        fun `in the same package via short reference`() {
+            execute {
+                cls.implement(shortReference)
+            }
+
+            cls.implements(shortReference) shouldBe true
+            cls.implements(qualifiedReference) shouldBe true
+        }
+
+        @Test
+        fun `in the same package via qualified reference`() {
+            execute {
+                cls.implement(qualifiedReference)
+            }
+
+            cls.implements(qualifiedReference) shouldBe true
+            cls.implements(shortReference) shouldBe true
+        }
+
+        @Test
+        fun `in another package`() {
+            val inAnotherPackage =
+                elementFactory.createInterfaceReference("another.pckg.$shortName")
+            execute {
+                cls.implement(inAnotherPackage)
+            }
+
+            cls.implements(inAnotherPackage) shouldBe true
         }
     }
 }
