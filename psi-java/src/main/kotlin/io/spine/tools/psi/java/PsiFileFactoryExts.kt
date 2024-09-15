@@ -35,7 +35,7 @@ import java.time.Instant
 /**
  * Creates a Java file with the top-level class with the given name.
  *
- * @param packageName The package to which the class belongs. Could be an empty string.
+ * @param packageName The package to which the class belongs. Can be an empty string.
  * @param className The simple name of the class.
  */
 public fun PsiFileFactory.createJavaFile(
