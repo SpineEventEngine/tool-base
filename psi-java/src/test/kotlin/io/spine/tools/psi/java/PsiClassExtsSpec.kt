@@ -256,4 +256,39 @@ internal class PsiClassExtsSpec: PsiTest() {
             cls.implements(inAnotherPackage) shouldBe true
         }
     }
+
+    @Nested inner class
+    `obtain a package` {
+
+        @Test
+        fun `of top level class`() {
+            cls.packageName shouldBe packageName
+        }
+
+        @Test
+        fun `of a nested class`() {
+            val nestedClassName = "Nested"
+            val nested = elementFactory.createClass(nestedClassName)
+            execute {
+                cls.addLast(nested)
+            }
+            cls.findInnerClassByName(nestedClassName, false)!!.packageName shouldBe packageName
+        }
+
+        @Test
+        fun `of a deeper nested class`() {
+            val level2 = "Level2"
+            val level3 = "Level3"
+            val level2Class = elementFactory.createClass(level2)
+            val level3Class = elementFactory.createClass(level3)
+
+            execute {
+                level2Class.addLast(level3Class)
+                cls.addLast(level2Class)
+            }
+
+            cls.findInnerClassByName(level2, false)!!
+               .findInnerClassByName(level3, false)!!.packageName shouldBe packageName
+        }
+    }
 }

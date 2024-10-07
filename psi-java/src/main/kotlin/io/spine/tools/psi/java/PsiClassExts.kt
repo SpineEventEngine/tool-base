@@ -62,9 +62,9 @@ public fun PsiClass.method(name: String): PsiMethod {
  */
 public val PsiClass.packageName: String
     get() {
-        var current = this;
+        var current = this
         while (current.containingClass != null) {
-            current = containingClass!!
+            current = current.containingClass!!
         }
         val qualifiedName = current.qualifiedName
         val result = qualifiedName?.substringBeforeLast('.')
