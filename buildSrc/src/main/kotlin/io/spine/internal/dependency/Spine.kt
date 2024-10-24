@@ -166,10 +166,10 @@ object Spine {
 
         // Transitive dependencies.
         // Make `public` and use them to force a version in a particular repository, if needed.
-        internal const val julBackend = "$group:spine-logging-jul-backend:$version"
-        internal const val middleware = "$group:spine-logging-middleware:$version"
-        internal const val platformGenerator = "$group:spine-logging-platform-generator:$version"
-        internal const val jvmDefaultPlatform = "$group:spine-logging-jvm-default-platform:$version"
+        const val julBackend = "$group:spine-logging-jul-backend:$version"
+        const val middleware = "$group:spine-logging-middleware:$version"
+        const val platformGenerator = "$group:spine-logging-platform-generator:$version"
+        const val jvmDefaultPlatform = "$group:spine-logging-jvm-default-platform:$version"
     }
 
     const val javadocFilter = "$toolsGroup:spine-javadoc-filter:${ArtifactVersion.javadocTools}"
