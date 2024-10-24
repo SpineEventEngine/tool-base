@@ -24,6 +24,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.github.jengelman.gradle.plugins.shadow.internal.DependencyFilter
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import io.spine.internal.dependency.ErrorProne
+import io.spine.internal.dependency.Gson
+import io.spine.internal.dependency.Guava
+import io.spine.internal.dependency.J2ObjC
+import io.spine.internal.dependency.Protobuf
 import io.spine.internal.dependency.Spine
 import io.spine.internal.gradle.publish.SpinePublishing
 
@@ -72,21 +79,59 @@ tasks.publish {
 
 tasks.shadowJar {
     dependencies {
-        exclude(dependency(Spine.base))
-        exclude(dependency(Spine.reflect))
-        with(Spine.Logging) {
-            arrayOf(
-                lib,
-                libJvm,
-                platformGenerator,
-                julBackend,
-                jvmDefaultPlatform,
-                middleware
-            ).forEach {
-                exclude(dependency(it))
-            }
+        excludeExternalLibraries()
+        excludeSpineLibraries()
+    }
+    excludeFiles()
+    setZip64(true)  /* The archive has way too many items. So using the Zip64 mode. */
+    archiveClassifier.set("")  /** To prevent Gradle setting something like `osx-x86_64`. */
+    mergeServiceFiles("desc.ref")
+    mergeServiceFiles("META-INF/services/io.spine.option.OptionsProvider")
+}
+
+/**
+ * Exclude libraries we use.
+ *
+ * PSI may also use these libraries, but we want to force their versions.
+ */
+private fun DependencyFilter.excludeExternalLibraries() {
+    ErrorProne.annotations.forEach {
+        exclude(dependency(it))
+    }
+    exclude(dependency(J2ObjC.annotations))
+    exclude(dependency(Guava.lib))
+    exclude(dependency(Gson.lib))
+    Protobuf.libs.forEach {
+        exclude(dependency(it))
+    }
+}
+
+/**
+ * Exclude all Spine libraries from the PSI fat JAR.
+ *
+ * These libraries will be available as separate dependencies.
+ */
+private fun DependencyFilter.excludeSpineLibraries() {
+    exclude(dependency(Spine.base))
+    exclude(dependency(Spine.reflect))
+    with(Spine.Logging) {
+        arrayOf(
+            lib,
+            libJvm,
+            platformGenerator,
+            julBackend,
+            jvmDefaultPlatform,
+            middleware
+        ).forEach {
+            exclude(dependency(it))
         }
     }
+}
+
+/**
+ * Exclude unwanted directories.
+ */
+private fun ShadowJar.excludeFiles() {
     exclude(
         /*
           Exclude IntelliJ Platform images and other resources associated with IntelliJ UI.
@@ -167,7 +212,7 @@ tasks.shadowJar {
          */
         "google/**",
         "src/google/**",
-        
+
         /**
          * Exclude Spine Protobuf definitions to avoid duplications.
          */
@@ -192,9 +237,4 @@ tasks.shadowJar {
         "winp.dll",
         "winp.x64.dll",
     )
-    setZip64(true)  /* The archive has way too many items. So using the Zip64 mode. */
-    archiveClassifier.set("")  /** To prevent Gradle setting something like `osx-x86_64`. */
-    mergeServiceFiles("desc.ref")
-    mergeServiceFiles("META-INF/services/io.spine.option.OptionsProvider")
 }
-
