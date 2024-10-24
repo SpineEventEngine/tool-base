@@ -45,7 +45,6 @@ buildscript {
                 force(
                     io.spine.internal.dependency.Spine.base,
                     io.spine.internal.dependency.Spine.reflect,
-                    io.spine.internal.dependency.Spine.Logging.floggerApi,
                     io.spine.internal.dependency.Validation.java,
                     io.spine.internal.dependency.Protobuf.GradlePlugin.lib,
                     io.spine.internal.dependency.Kotlin.stdLibJdk8
