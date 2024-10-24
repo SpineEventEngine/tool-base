@@ -15,10 +15,6 @@
      * **Project URL:** [https://errorprone.info/error_prone_annotations](https://errorprone.info/error_prone_annotations)
      * **License:** [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : com.google.errorprone. **Name** : error_prone_type_annotations. **Version** : 2.23.0.
-     * **Project URL:** [https://errorprone.info/error_prone_type_annotations](https://errorprone.info/error_prone_type_annotations)
-     * **License:** [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-
 1.  **Group** : com.google.guava. **Name** : failureaccess. **Version** : 1.0.1.
      * **Project URL:** [https://github.com/google/guava/](https://github.com/google/guava/)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -511,17 +507,17 @@
      * **Project URL:** [http://hamcrest.org/JavaHamcrest/](http://hamcrest.org/JavaHamcrest/)
      * **License:** [BSD License 3](http://opensource.org/licenses/BSD-3-Clause)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.report. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.report. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
 1.  **Group** : org.javassist. **Name** : javassist. **Version** : 3.28.0-GA.
      * **Project URL:** [http://www.javassist.org/](http://www.javassist.org/)
@@ -752,7 +748,7 @@
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu Oct 24 20:35:41 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Thu Oct 24 21:47:23 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -774,10 +770,6 @@ This report was generated on **Thu Oct 24 20:35:41 WEST 2024** using [Gradle-Lic
 
 1.  **Group** : com.google.errorprone. **Name** : error_prone_annotations. **Version** : 2.23.0.
      * **Project URL:** [https://errorprone.info/error_prone_annotations](https://errorprone.info/error_prone_annotations)
-     * **License:** [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-
-1.  **Group** : com.google.errorprone. **Name** : error_prone_type_annotations. **Version** : 2.23.0.
-     * **Project URL:** [https://errorprone.info/error_prone_type_annotations](https://errorprone.info/error_prone_type_annotations)
      * **License:** [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : com.google.flogger. **Name** : flogger. **Version** : 0.7.4.
@@ -1383,17 +1375,17 @@ This report was generated on **Thu Oct 24 20:35:41 WEST 2024** using [Gradle-Lic
      * **Project URL:** [http://hamcrest.org/JavaHamcrest/](http://hamcrest.org/JavaHamcrest/)
      * **License:** [BSD License 3](http://opensource.org/licenses/BSD-3-Clause)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.report. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.report. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
 1.  **Group** : org.javassist. **Name** : javassist. **Version** : 3.28.0-GA.
      * **Project URL:** [http://www.javassist.org/](http://www.javassist.org/)
@@ -1624,7 +1616,7 @@ This report was generated on **Thu Oct 24 20:35:41 WEST 2024** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu Oct 24 20:35:42 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Thu Oct 24 21:47:23 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -1654,10 +1646,6 @@ This report was generated on **Thu Oct 24 20:35:42 WEST 2024** using [Gradle-Lic
 
 1.  **Group** : com.google.errorprone. **Name** : error_prone_annotations. **Version** : 2.23.0.
      * **Project URL:** [https://errorprone.info/error_prone_annotations](https://errorprone.info/error_prone_annotations)
-     * **License:** [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-
-1.  **Group** : com.google.errorprone. **Name** : error_prone_type_annotations. **Version** : 2.23.0.
-     * **Project URL:** [https://errorprone.info/error_prone_type_annotations](https://errorprone.info/error_prone_type_annotations)
      * **License:** [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : com.google.guava. **Name** : failureaccess. **Version** : 1.0.1.
@@ -1715,10 +1703,6 @@ This report was generated on **Thu Oct 24 20:35:42 WEST 2024** using [Gradle-Lic
 1.  **Group** : io.netty. **Name** : netty-common. **Version** : 4.1.72.Final.
      * **Project URL:** [https://netty.io/](https://netty.io/)
      * **License:** [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)
-
-1.  **Group** : javax.annotation. **Name** : javax.annotation-api. **Version** : 1.3.2.
-     * **Project URL:** [http://jcp.org/en/jsr/detail?id=250](http://jcp.org/en/jsr/detail?id=250)
-     * **License:** [CDDL + GPLv2 with classpath exception](https://github.com/javaee/javax.annotation/blob/master/LICENSE)
 
 1.  **Group** : net.jcip. **Name** : jcip-annotations. **Version** : 1.0.
      * **Project URL:** [http://jcip.net/](http://jcip.net/)
@@ -2331,17 +2315,17 @@ This report was generated on **Thu Oct 24 20:35:42 WEST 2024** using [Gradle-Lic
      * **Project URL:** [http://www.thebuzzmedia.com/software/imgscalr-java-image-scaling-library/](http://www.thebuzzmedia.com/software/imgscalr-java-image-scaling-library/)
      * **License:** [ASF 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.report. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.report. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
 1.  **Group** : org.javassist. **Name** : javassist. **Version** : 3.28.0-GA.
      * **Project URL:** [http://www.javassist.org/](http://www.javassist.org/)
@@ -2639,7 +2623,7 @@ This report was generated on **Thu Oct 24 20:35:42 WEST 2024** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu Oct 24 20:35:42 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Thu Oct 24 21:47:24 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -2715,10 +2699,6 @@ This report was generated on **Thu Oct 24 20:35:42 WEST 2024** using [Gradle-Lic
      * **Project URL:** [https://errorprone.info/error_prone_annotations](https://errorprone.info/error_prone_annotations)
      * **License:** [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : com.google.errorprone. **Name** : error_prone_type_annotations. **Version** : 2.23.0.
-     * **Project URL:** [https://errorprone.info/error_prone_type_annotations](https://errorprone.info/error_prone_type_annotations)
-     * **License:** [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-
 1.  **Group** : com.google.guava. **Name** : failureaccess. **Version** : 1.0.1.
      * **Project URL:** [https://github.com/google/guava/](https://github.com/google/guava/)
      * **License:** [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -3934,17 +3914,17 @@ This report was generated on **Thu Oct 24 20:35:42 WEST 2024** using [Gradle-Lic
      * **Project URL:** [http://www.thebuzzmedia.com/software/imgscalr-java-image-scaling-library/](http://www.thebuzzmedia.com/software/imgscalr-java-image-scaling-library/)
      * **License:** [ASF 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.report. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.report. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
 1.  **Group** : org.javassist. **Name** : javassist. **Version** : 3.28.0-GA.
      * **Project URL:** [http://www.javassist.org/](http://www.javassist.org/)
@@ -4328,7 +4308,7 @@ This report was generated on **Thu Oct 24 20:35:42 WEST 2024** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu Oct 24 20:35:43 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Thu Oct 24 21:47:24 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -4402,10 +4382,6 @@ This report was generated on **Thu Oct 24 20:35:43 WEST 2024** using [Gradle-Lic
 
 1.  **Group** : com.google.errorprone. **Name** : error_prone_annotations. **Version** : 2.23.0.
      * **Project URL:** [https://errorprone.info/error_prone_annotations](https://errorprone.info/error_prone_annotations)
-     * **License:** [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-
-1.  **Group** : com.google.errorprone. **Name** : error_prone_type_annotations. **Version** : 2.23.0.
-     * **Project URL:** [https://errorprone.info/error_prone_type_annotations](https://errorprone.info/error_prone_type_annotations)
      * **License:** [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : com.google.guava. **Name** : failureaccess. **Version** : 1.0.1.
@@ -5570,17 +5546,17 @@ This report was generated on **Thu Oct 24 20:35:43 WEST 2024** using [Gradle-Lic
      * **Project URL:** [http://www.thebuzzmedia.com/software/imgscalr-java-image-scaling-library/](http://www.thebuzzmedia.com/software/imgscalr-java-image-scaling-library/)
      * **License:** [ASF 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.report. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.report. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
 1.  **Group** : org.javassist. **Name** : javassist. **Version** : 3.28.0-GA.
      * **Project URL:** [http://www.javassist.org/](http://www.javassist.org/)
@@ -5952,7 +5928,7 @@ This report was generated on **Thu Oct 24 20:35:43 WEST 2024** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu Oct 24 20:35:44 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Thu Oct 24 21:47:25 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -6412,17 +6388,17 @@ This report was generated on **Thu Oct 24 20:35:44 WEST 2024** using [Gradle-Lic
      * **Project URL:** [http://hamcrest.org/JavaHamcrest/](http://hamcrest.org/JavaHamcrest/)
      * **License:** [BSD License 3](http://opensource.org/licenses/BSD-3-Clause)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.report. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.report. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
 1.  **Group** : org.javassist. **Name** : javassist. **Version** : 3.28.0-GA.
      * **Project URL:** [http://www.javassist.org/](http://www.javassist.org/)
@@ -6653,7 +6629,7 @@ This report was generated on **Thu Oct 24 20:35:44 WEST 2024** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu Oct 24 20:35:44 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Thu Oct 24 21:47:25 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -6671,10 +6647,6 @@ This report was generated on **Thu Oct 24 20:35:44 WEST 2024** using [Gradle-Lic
 
 1.  **Group** : com.google.errorprone. **Name** : error_prone_annotations. **Version** : 2.23.0.
      * **Project URL:** [https://errorprone.info/error_prone_annotations](https://errorprone.info/error_prone_annotations)
-     * **License:** [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-
-1.  **Group** : com.google.errorprone. **Name** : error_prone_type_annotations. **Version** : 2.23.0.
-     * **Project URL:** [https://errorprone.info/error_prone_type_annotations](https://errorprone.info/error_prone_type_annotations)
      * **License:** [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : com.google.guava. **Name** : failureaccess. **Version** : 1.0.1.
@@ -7218,17 +7190,17 @@ This report was generated on **Thu Oct 24 20:35:44 WEST 2024** using [Gradle-Lic
      * **Project URL:** [http://hamcrest.org/JavaHamcrest/](http://hamcrest.org/JavaHamcrest/)
      * **License:** [BSD License 3](http://opensource.org/licenses/BSD-3-Clause)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.report. **Version** : 0.8.8.
-     * **License:** [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
+1.  **Group** : org.jacoco. **Name** : org.jacoco.report. **Version** : 0.8.12.
+     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
 1.  **Group** : org.javassist. **Name** : javassist. **Version** : 3.28.0-GA.
      * **Project URL:** [http://www.javassist.org/](http://www.javassist.org/)
@@ -7459,4 +7431,4 @@ This report was generated on **Thu Oct 24 20:35:44 WEST 2024** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu Oct 24 20:35:44 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Thu Oct 24 21:47:25 WEST 2024** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
