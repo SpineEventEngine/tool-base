@@ -24,6 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import io.spine.internal.dependency.Spine
 import io.spine.internal.gradle.publish.SpinePublishing
 
 plugins {
@@ -70,6 +71,22 @@ tasks.publish {
 }
 
 tasks.shadowJar {
+    dependencies {
+        exclude(dependency(Spine.base))
+        exclude(dependency(Spine.reflect))
+        with(Spine.Logging) {
+            arrayOf(
+                lib,
+                libJvm,
+                platformGenerator,
+                julBackend,
+                jvmDefaultPlatform,
+                middleware
+            ).forEach {
+                exclude(dependency(it))
+            }
+        }
+    }
     exclude(
         /*
           Exclude IntelliJ Platform images and other resources associated with IntelliJ UI.
@@ -173,9 +190,8 @@ tasks.shadowJar {
          * See: `https://github.com/jenkinsci/winp`.
          */
         "winp.dll",
-        "winp.x64.dll"
+        "winp.x64.dll",
     )
-
     setZip64(true)  /* The archive has way too many items. So using the Zip64 mode. */
     archiveClassifier.set("")  /** To prevent Gradle setting something like `osx-x86_64`. */
     mergeServiceFiles("desc.ref")
