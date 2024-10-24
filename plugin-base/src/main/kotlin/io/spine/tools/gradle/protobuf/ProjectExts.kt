@@ -60,7 +60,7 @@ public val Project.protobufExtension: ProtobufExtension?
  * modify the value of the property either.
  */
 public val Project.generatedSourceProtoDir: Path
-    get() = buildDir.resolve("generated/source/proto").toPath()
+    get() = layout.buildDirectory.dir("generated/source/proto").get().asFile.toPath()
 
 /**
  * Obtains an absolute path to the generated code directory of this project.

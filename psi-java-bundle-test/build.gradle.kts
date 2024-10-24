@@ -39,10 +39,10 @@
 val ABOUT = ""
 
 val psiJavaProject = project(":psi-java")
-val psiJavaBuildDir = psiJavaProject.buildDir
+val psiJavaBuildDir: DirectoryProperty = psiJavaProject.layout.buildDirectory
 val psiTestClasses = files(
-    psiJavaBuildDir.resolve("classes/kotlin/test"),
-    psiJavaBuildDir.resolve("resources/test"),
+    psiJavaBuildDir.dir("classes/kotlin/test"),
+    psiJavaBuildDir.dir("resources/test"),
 )
 
 val psiBundleJarProject = project(":psi-java-bundle-jar")
@@ -57,4 +57,7 @@ dependencies {
 
 tasks.test {
     testClassesDirs = psiTestClasses
+    dependsOn(psiJavaProject.tasks.getByName("compileTestKotlin"))
+    dependsOn(psiJavaProject.tasks.getByName("processTestResources"))
+    dependsOn(psiBundleJarProject.tasks.getByName("jar"))
 }
