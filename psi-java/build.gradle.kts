@@ -32,9 +32,12 @@ plugins {
     module
 }
 
+val intellijPlatformJavaModule = project(":intellij-platform-java")
+
 dependencies {
     implementation(Guava.lib)
     api(project(":psi"))
+    api(intellijPlatformJavaModule)
 
     with(IntelliJ.Platform) {
         listOf(
@@ -128,4 +131,8 @@ dependencies {
     testImplementation(Spine.base)
     testImplementation(Spine.testlib)
     testImplementation(project(":plugin-testlib"))
+}
+
+tasks.test {
+    dependsOn(intellijPlatformJavaModule.tasks.named("shadowJar"))
 }

@@ -27,15 +27,15 @@
 import io.spine.internal.dependency.IntelliJ
 import io.spine.internal.gradle.publish.SpinePublishing
 import io.spine.internal.gradle.publish.spinePublishing
+import io.spine.internal.gradle.report.license.LicenseReporter
 
 plugins {
     `java-library`
-    id("write-manifest")
-    `project-report`
     idea
 }
+LicenseReporter.generateReportIn(project)
 
-description = "Core IntelliJ services and language-neutral utils"
+description = "Core IntelliJ Platform services and language-neutral utils"
 
 spinePublishing {
     artifactPrefix = ""

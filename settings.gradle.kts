@@ -34,6 +34,4 @@ include(
     "plugin-testlib",
     "psi",
     "psi-java",
-    "psi-java-bundle-jar",
-    "psi-java-bundle-test"
 )

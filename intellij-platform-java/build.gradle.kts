@@ -25,13 +25,13 @@
  */
 
 import io.spine.internal.dependency.IntelliJ
-import io.spine.internal.gradle.publish.SpinePublishing
-import io.spine.internal.gradle.publish.spinePublishing
 
 plugins {
     `intellij-platform-jar`
     kotlin("jvm")
 }
+
+description = "IntelliJ Platform for Java"
 
 val intellijPlatformModule = project(":intellij-platform")
 

@@ -24,7 +24,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.IntelliJ
 import io.spine.internal.dependency.Spine
 
 plugins {
@@ -33,13 +32,6 @@ plugins {
 
 dependencies {
     api(Spine.base)
-    IntelliJ.Platform.run {
-        arrayOf(
-            core,
-            util,
-            coreImpl,
-            codeStyle
-        ).forEach { api(it) }
-    }
+    api(project(":intellij-platform"))
     testImplementation(Spine.testlib)
 }

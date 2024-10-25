@@ -26,13 +26,10 @@
 
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import io.spine.internal.dependency.Kotlin
-import io.spine.internal.gradle.VersionWriter
 import io.spine.internal.gradle.publish.IncrementGuard
 import io.spine.internal.gradle.publish.SpinePublishing
 import io.spine.internal.gradle.publish.spinePublishing
 import io.spine.internal.gradle.report.license.LicenseReporter
-import org.gradle.api.publish.maven.MavenPublication
-import org.gradle.kotlin.dsl.apply
 
 plugins {
     `java-library`
@@ -43,7 +40,6 @@ plugins {
     idea
 }
 apply<IncrementGuard>()
-apply<VersionWriter>()
 LicenseReporter.generateReportIn(project)
 
 configurations {
