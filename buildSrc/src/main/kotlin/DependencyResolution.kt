@@ -195,9 +195,10 @@ fun Project.forceSpineBase() {
  * Forces configurations containing `"proto"` in their names (disregarding the case) to
  * use [Spine.baseForBuildScript].
  */
+@Suppress("unused")
 fun Project.forceBaseInProtoTasks() {
     configurations.configureEach {
-        if (name.toLowerCase().contains("proto")) {
+        if (name.lowercase().contains("proto")) {
             resolutionStrategy {
                 force(Spine.baseForBuildScript)
             }

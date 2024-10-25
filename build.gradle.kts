@@ -72,9 +72,6 @@ spinePublishing {
         "psi",
         "psi-java",
     )
-    modulesWithCustomPublishing = setOf(
-        "psi-java-bundle-jar"
-    )
     destinations = with(PublishingRepos) {
         setOf(
             cloudArtifactRegistry,
@@ -90,10 +87,6 @@ allprojects {
     version = extra["versionToPublish"]!!
 
     repositories.standardToSpineSdk()
-}
-
-subprojects {
-    apply(plugin = "module")
 }
 
 val dokkaHtmlMultiModule by tasks.getting(DokkaMultiModuleTask::class) {

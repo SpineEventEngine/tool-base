@@ -24,33 +24,48 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.github.jengelman.gradle.plugins.shadow.internal.DependencyFilter
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import io.spine.internal.dependency.ErrorProne
-import io.spine.internal.dependency.Gson
-import io.spine.internal.dependency.Guava
-import io.spine.internal.dependency.J2ObjC
-import io.spine.internal.dependency.Protobuf
-import io.spine.internal.dependency.Spine
+import io.spine.internal.dependency.Kotlin
+import io.spine.internal.gradle.VersionWriter
+import io.spine.internal.gradle.publish.IncrementGuard
 import io.spine.internal.gradle.publish.SpinePublishing
+import io.spine.internal.gradle.publish.spinePublishing
+import io.spine.internal.gradle.report.license.LicenseReporter
+import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.kotlin.dsl.apply
 
 plugins {
-    module
+    `java-library`
     `maven-publish`
     id("com.github.johnrengelman.shadow")
+    id("write-manifest")
+    `project-report`
+    idea
+}
+apply<IncrementGuard>()
+apply<VersionWriter>()
+LicenseReporter.generateReportIn(project)
+
+configurations {
+    all {
+        resolutionStrategy {
+            @Suppress("DEPRECATION")
+            force(
+                Kotlin.stdLibJdk8,
+                Kotlin.reflect
+            )
+        }
+    }
 }
 
-dependencies {
-    api(project(":psi-java"))
+spinePublishing {
+    artifactPrefix = ""
+    destinations = rootProject.the<SpinePublishing>().destinations
+    customPublishing = true
 }
-
-/** The publishing settings from the root project. */
-val spinePublishing = rootProject.the<SpinePublishing>()
 
 /** The ID of the far JAR artifact. */
-val projectArtifact = spinePublishing.artifactPrefix + "psi-java-bundle"
-
-project.description = "A fat JAR version of the `spine-psi-java` artifact."
+private val projectArtifact = project.name.replace(":", "")
 
 publishing {
     val groupName = project.group.toString()
@@ -69,9 +84,9 @@ publishing {
 /**
  * Declare dependency explicitly to address the Gradle warning.
  */
+@Suppress("unused")
 val publishFatJarPublicationToMavenLocal: Task by tasks.getting {
     dependsOn(tasks.jar)
-    println("Task `${this.name}` now depends on `${tasks.jar.name}`.")
 }
 
 tasks.publish {
@@ -79,54 +94,9 @@ tasks.publish {
 }
 
 tasks.shadowJar {
-    dependencies {
-        excludeExternalLibraries()
-        excludeSpineLibraries()
-    }
     excludeFiles()
     setZip64(true)  /* The archive has way too many items. So using the Zip64 mode. */
     archiveClassifier.set("")  /** To prevent Gradle setting something like `osx-x86_64`. */
-    mergeServiceFiles("desc.ref")
-    mergeServiceFiles("META-INF/services/io.spine.option.OptionsProvider")
-}
-
-/**
- * Exclude libraries we use.
- *
- * PSI may also use these libraries, but we want to force their versions.
- */
-private fun DependencyFilter.excludeExternalLibraries() {
-    ErrorProne.annotations.forEach {
-        exclude(dependency(it))
-    }
-    exclude(dependency(J2ObjC.annotations))
-    exclude(dependency(Guava.lib))
-    exclude(dependency(Gson.lib))
-    Protobuf.libs.forEach {
-        exclude(dependency(it))
-    }
-}
-
-/**
- * Exclude all Spine libraries from the PSI fat JAR.
- *
- * These libraries will be available as separate dependencies.
- */
-private fun DependencyFilter.excludeSpineLibraries() {
-    exclude(dependency(Spine.base))
-    exclude(dependency(Spine.reflect))
-    with(Spine.Logging) {
-        arrayOf(
-            lib,
-            libJvm,
-            platformGenerator,
-            julBackend,
-            jvmDefaultPlatform,
-            middleware
-        ).forEach {
-            exclude(dependency(it))
-        }
-    }
 }
 
 /**

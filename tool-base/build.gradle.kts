@@ -37,8 +37,10 @@ import io.spine.internal.dependency.Spine
 import io.spine.internal.gradle.protobuf.setup
 
 plugins {
+    module
     protobuf
     `java-test-fixtures`
+
 }
 
 dependencies {

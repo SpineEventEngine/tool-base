@@ -24,6 +24,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+plugins {
+    module
+}
+
 /**
  * This build runs tests from `psi-java` module using the JAR produced by
  * the `psi-java-bundle-jar` module.

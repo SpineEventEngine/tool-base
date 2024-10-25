@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -24,16 +24,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "tool-base"
+import io.spine.internal.dependency.IntelliJ
+import io.spine.internal.gradle.publish.SpinePublishing
+import io.spine.internal.gradle.publish.spinePublishing
 
-include(
-    "intellij-platform",
-    "intellij-platform-java",
-    "tool-base",
-    "plugin-base",
-    "plugin-testlib",
-    "psi",
-    "psi-java",
-    "psi-java-bundle-jar",
-    "psi-java-bundle-test"
-)
+plugins {
+    `java-library`
+    id("write-manifest")
+    `project-report`
+    idea
+}
+
+description = "Core IntelliJ services and language-neutral utils"
+
+spinePublishing {
+    artifactPrefix = ""
+    destinations = rootProject.the<SpinePublishing>().destinations
+    // This turns publishing off because we do not apply `maven-publish` in this module.
+    customPublishing = true
+}
+
+dependencies {
+    IntelliJ.Platform.run {
+        arrayOf(
+            core,
+            util,
+            coreImpl,
+            codeStyle
+        ).forEach { api(it) }
+    }
+}
