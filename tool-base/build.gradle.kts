@@ -40,7 +40,6 @@ plugins {
     module
     protobuf
     `java-test-fixtures`
-
 }
 
 dependencies {
