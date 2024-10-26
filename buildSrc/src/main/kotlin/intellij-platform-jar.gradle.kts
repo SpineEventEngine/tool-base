@@ -84,17 +84,12 @@ publishing {
  */
 @Suppress("unused")
 val publishFatJarPublicationToMavenLocal: Task by tasks.getting {
-    dependsOn(tasks.jar)
+    dependsOn(tasks.shadowJar)
 }
 
-@Suppress("unused")
-val publishFatJarPublicationToMavenRepository: Task by tasks.getting {
-    dependsOn(tasks.jar)
-}
-
-@Suppress("unused")
-val publishFatJarPublicationToMaven2Repository: Task by tasks.getting {
-    dependsOn(tasks.jar)
+// Disable the `jar` task to free up the name of the resulting archive.
+tasks.jar {
+    enabled = false
 }
 
 tasks.publish {
