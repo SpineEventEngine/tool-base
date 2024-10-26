@@ -25,24 +25,14 @@
  */
 
 import io.spine.internal.dependency.IntelliJ
-import io.spine.internal.gradle.publish.SpinePublishing
-import io.spine.internal.gradle.publish.spinePublishing
 import io.spine.internal.gradle.report.license.LicenseReporter
 
 plugins {
-    `java-library`
-    idea
+    `intellij-platform-jar`
 }
 LicenseReporter.generateReportIn(project)
 
 description = "Core IntelliJ Platform services and language-neutral utils"
-
-spinePublishing {
-    artifactPrefix = ""
-    destinations = rootProject.the<SpinePublishing>().destinations
-    // This turns publishing off because we do not apply `maven-publish` in this module.
-    customPublishing = true
-}
 
 dependencies {
     IntelliJ.Platform.run {

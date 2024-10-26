@@ -127,3 +127,21 @@ dependencies {
     implementation(IntelliJ.Platform.analysisImpl) { excludeMany() }
     implementation(IntelliJ.Platform.indexingImpl) { excludeMany() }
 }
+
+tasks.shadowJar {
+    val platformJarTask = intellijPlatformModule.tasks.shadowJar
+    dependsOn(platformJarTask)
+    val pathsToExclude = mutableListOf<String>()
+    doFirst {
+        // The path to the file produced for `intellij-platform` module.
+        val jarPath = platformJarTask.get().archiveFile.get().asFile
+        zipTree(jarPath).visit {
+            if (!isDirectory) {
+                pathsToExclude.add(this.path)
+            }
+        }
+    }                                                               
+    exclude {
+        it.path in pathsToExclude
+    }
+}
