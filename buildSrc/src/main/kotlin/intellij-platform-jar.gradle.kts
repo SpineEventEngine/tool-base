@@ -24,6 +24,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+@file:Suppress("UnstableApiUsage") // `configurations` block.
+
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import io.spine.internal.dependency.Kotlin
 import io.spine.internal.gradle.publish.IncrementGuard
@@ -78,11 +80,16 @@ publishing {
 }
 
 /**
- * Declare dependency explicitly to address the Gradle warning.
+ * Declare dependency explicitly to address the Gradle error.
  */
 @Suppress("unused")
 val publishFatJarPublicationToMavenLocal: Task by tasks.getting {
-    dependsOn(tasks.jar)
+    dependsOn(tasks.shadowJar)
+}
+
+// Disable the `jar` task to free up the name of the resulting archive.
+tasks.jar {
+    enabled = false
 }
 
 tasks.publish {
