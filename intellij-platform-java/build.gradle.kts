@@ -24,20 +24,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.Guava
 import io.spine.internal.dependency.IntelliJ
-import io.spine.internal.dependency.Spine
 
 plugins {
-    module
+    `intellij-platform-jar`
+    kotlin("jvm")
 }
 
-val intellijPlatformJavaModule = project(":intellij-platform-java")
+description = "IntelliJ Platform for Java"
+
+val intellijPlatformModule = project(":intellij-platform")
 
 dependencies {
-    implementation(Guava.lib)
-    api(project(":psi"))
-    api(intellijPlatformJavaModule)
+    api(intellijPlatformModule)
 
     with(IntelliJ.Platform) {
         listOf(
@@ -127,12 +126,4 @@ dependencies {
 
     implementation(IntelliJ.Platform.analysisImpl) { excludeMany() }
     implementation(IntelliJ.Platform.indexingImpl) { excludeMany() }
-
-    testImplementation(Spine.base)
-    testImplementation(Spine.testlib)
-    testImplementation(project(":plugin-testlib"))
-}
-
-tasks.test {
-    dependsOn(intellijPlatformJavaModule.tasks.named("shadowJar"))
 }

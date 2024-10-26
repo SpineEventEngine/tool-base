@@ -27,11 +27,11 @@
 rootProject.name = "tool-base"
 
 include(
+    "intellij-platform",
+    "intellij-platform-java",
     "tool-base",
     "plugin-base",
     "plugin-testlib",
     "psi",
     "psi-java",
-    "psi-java-bundle-jar",
-    "psi-java-bundle-test"
 )

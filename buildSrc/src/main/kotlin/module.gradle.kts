@@ -120,6 +120,7 @@ fun Module.forceConfigurations() {
                     JUnit.runner,
                     Spine.base,
                     Spine.Logging.lib,
+                    Spine.Logging.libJvm,
                     Spine.reflect,
                     Validation.runtime,
                     Grpc.stub,

@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -24,37 +24,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+package io.spine.internal.dependency
+
 /**
- * This build runs tests from `psi-java` module using the JAR produced by
- * the `psi-java-bundle-jar` module.
+ * Dependencies on Spine Model Compiler for Java.
  *
- * This is needed to make sure that the FAT JAR produced by the `psi-java-bundle-jar` module
- * satisfies our tests, meaning no important classes or resources were excluded during
- * assembling of the JAR.
- *
- * To achieve the goal, we depend on test classes and the JAR, and then JUnit to
- * run the test classes via the `testClassesDir` property of the `Test` task.
+ * See [mc-java](https://github.com/SpineEventEngine/mc-java).
  */
-@Suppress("PropertyName")
-val ABOUT = ""
-
-val psiJavaProject = project(":psi-java")
-val psiJavaBuildDir = psiJavaProject.buildDir
-val psiTestClasses = files(
-    psiJavaBuildDir.resolve("classes/kotlin/test"),
-    psiJavaBuildDir.resolve("resources/test"),
+@Suppress(
+    "MemberVisibilityCanBePrivate" /* `pluginLib()` is used by subprojects. */,
+    "ConstPropertyName"
 )
+object McJava {
+    const val group = Spine.toolsGroup
 
-val psiBundleJarProject = project(":psi-java-bundle-jar")
+    /** The version used to in the build classpath. */
+    const val dogfoodingVersion = "2.0.0-SNAPSHOT.242"
 
-dependencies {
-    val shadowJar = psiBundleJarProject.tasks.getByName("shadowJar")
-    testImplementation(files(shadowJar))
-    testImplementation(psiTestClasses)
+    /** The version to be used for integration tests. */
+    const val version = "2.0.0-SNAPSHOT.243"
 
-    testImplementation(project(":plugin-testlib"))
-}
+    const val pluginId = "io.spine.mc-java"
 
-tasks.test {
-    testClassesDirs = psiTestClasses
+    val pluginLib = pluginLib(dogfoodingVersion)
+    fun pluginLib(version: String): String = "$group:spine-mc-java-plugins:$version:all"
+
+    /** The artifact reference for forcing in configurations. */
+    @Suppress("unused")
+    const val pluginsArtifact: String = "$group:spine-mc-java-plugins:$version"
+
+    val base = base(version)
+    fun base(version: String): String = "$group:spine-mc-java-base:$version"
 }

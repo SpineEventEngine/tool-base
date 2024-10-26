@@ -24,24 +24,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import io.spine.internal.dependency.Kotlin
+import io.spine.internal.gradle.publish.IncrementGuard
 import io.spine.internal.gradle.publish.SpinePublishing
+import io.spine.internal.gradle.publish.spinePublishing
+import io.spine.internal.gradle.report.license.LicenseReporter
 
 plugins {
+    `java-library`
     `maven-publish`
     id("com.github.johnrengelman.shadow")
+    id("write-manifest")
+    `project-report`
+    idea
+}
+apply<IncrementGuard>()
+LicenseReporter.generateReportIn(project)
+
+configurations {
+    all {
+        resolutionStrategy {
+            @Suppress("DEPRECATION")
+            force(
+                Kotlin.stdLibJdk8,
+                Kotlin.reflect
+            )
+        }
+    }
 }
 
-dependencies {
-    api(project(":psi-java"))
+spinePublishing {
+    artifactPrefix = ""
+    destinations = rootProject.the<SpinePublishing>().destinations
+    customPublishing = true
 }
-
-/** The publishing settings from the root project. */
-val spinePublishing = rootProject.the<SpinePublishing>()
 
 /** The ID of the far JAR artifact. */
-val projectArtifact = spinePublishing.artifactPrefix + "psi-java-bundle"
-
-project.description = "A fat JAR version of the `spine-psi-java` artifact."
+private val projectArtifact = project.name.replace(":", "")
 
 publishing {
     val groupName = project.group.toString()
@@ -60,9 +80,9 @@ publishing {
 /**
  * Declare dependency explicitly to address the Gradle warning.
  */
+@Suppress("unused")
 val publishFatJarPublicationToMavenLocal: Task by tasks.getting {
     dependsOn(tasks.jar)
-    println("Task `${this.name}` now depends on `${tasks.jar.name}`.")
 }
 
 tasks.publish {
@@ -70,6 +90,15 @@ tasks.publish {
 }
 
 tasks.shadowJar {
+    excludeFiles()
+    setZip64(true)  /* The archive has way too many items. So using the Zip64 mode. */
+    archiveClassifier.set("")  /** To prevent Gradle setting something like `osx-x86_64`. */
+}
+
+/**
+ * Exclude unwanted directories.
+ */
+private fun ShadowJar.excludeFiles() {
     exclude(
         /*
           Exclude IntelliJ Platform images and other resources associated with IntelliJ UI.
@@ -150,7 +179,7 @@ tasks.shadowJar {
          */
         "google/**",
         "src/google/**",
-        
+
         /**
          * Exclude Spine Protobuf definitions to avoid duplications.
          */
@@ -173,12 +202,6 @@ tasks.shadowJar {
          * See: `https://github.com/jenkinsci/winp`.
          */
         "winp.dll",
-        "winp.x64.dll"
+        "winp.x64.dll",
     )
-
-    setZip64(true)  /* The archive has way too many items. So using the Zip64 mode. */
-    archiveClassifier.set("")  /** To prevent Gradle setting something like `osx-x86_64`. */
-    mergeServiceFiles("desc.ref")
-    mergeServiceFiles("META-INF/services/io.spine.option.OptionsProvider")
 }
-

@@ -35,7 +35,6 @@ import org.gradle.api.file.FileCollection
 import org.gradle.api.tasks.TaskContainer
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.bundling.Jar
-import org.gradle.configurationcache.extensions.capitalized
 import org.gradle.kotlin.dsl.DependencyHandlerScope
 import org.jetbrains.dokka.DokkaConfiguration
 import org.jetbrains.dokka.base.DokkaBase
@@ -70,8 +69,10 @@ fun DependencyHandlerScope.useDokkaWithSpineExtensions() {
 private fun DependencyHandler.dokkaPlugin(dependencyNotation: Any): Dependency? =
     add("dokkaPlugin", dependencyNotation)
 
-private fun Project.dokkaOutput(language: String): File =
-    buildDir.resolve("docs/dokka${language.capitalized()}")
+private fun Project.dokkaOutput(language: String): File {
+    val lng = language.replaceFirstChar { it.uppercaseChar() }
+    return layout.buildDirectory.dir("docs/dokka$lng").get().asFile
+}
 
 fun Project.dokkaConfigFile(file: String): File {
     val dokkaConfDir = project.rootDir.resolve("buildSrc/src/main/resources/dokka")
@@ -216,7 +217,7 @@ fun Project.dokkaJavaJar(): TaskProvider<Jar> = tasks.getOrCreate("dokkaJavaJar"
 fun Project.disableDocumentationTasks() {
     gradle.taskGraph.whenReady {
         tasks.forEach { task ->
-            val lowercaseName = task.name.toLowerCase()
+            val lowercaseName = task.name.lowercase()
             if (lowercaseName.contains("dokka") || lowercaseName.contains("javadoc")) {
                 task.enabled = false
             }

@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -24,18 +24,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.IntelliJ
 import io.spine.internal.dependency.Spine
+
+plugins {
+    module
+}
 
 dependencies {
     api(Spine.base)
-    IntelliJ.Platform.run {
-        arrayOf(
-            core,
-            util,
-            coreImpl,
-            codeStyle
-        ).forEach { api(it) }
-    }
+    api(project(":intellij-platform"))
     testImplementation(Spine.testlib)
 }

@@ -45,7 +45,6 @@ buildscript {
                 force(
                     io.spine.internal.dependency.Spine.base,
                     io.spine.internal.dependency.Spine.reflect,
-                    io.spine.internal.dependency.Spine.Logging.floggerApi,
                     io.spine.internal.dependency.Validation.java,
                     io.spine.internal.dependency.Protobuf.GradlePlugin.lib,
                     io.spine.internal.dependency.Kotlin.stdLibJdk8
@@ -73,9 +72,6 @@ spinePublishing {
         "psi",
         "psi-java",
     )
-    modulesWithCustomPublishing = setOf(
-        "psi-java-bundle-jar"
-    )
     destinations = with(PublishingRepos) {
         setOf(
             cloudArtifactRegistry,
@@ -91,10 +87,6 @@ allprojects {
     version = extra["versionToPublish"]!!
 
     repositories.standardToSpineSdk()
-}
-
-subprojects {
-    apply(plugin = "module")
 }
 
 val dokkaHtmlMultiModule by tasks.getting(DokkaMultiModuleTask::class) {
