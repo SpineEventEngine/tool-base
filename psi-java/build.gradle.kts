@@ -25,7 +25,6 @@
  */
 
 import io.spine.internal.dependency.Guava
-import io.spine.internal.dependency.IntelliJ
 import io.spine.internal.dependency.Spine
 
 plugins {
