@@ -34,7 +34,8 @@ import io.spine.internal.dependency.Jacoco
 import io.spine.internal.dependency.JavaX
 import io.spine.internal.dependency.Kotest
 import io.spine.internal.dependency.Protobuf
-import io.spine.internal.dependency.Spine
+import io.spine.internal.dependency.spine.Logging
+import io.spine.internal.dependency.spine.Spine
 import io.spine.internal.gradle.checkstyle.CheckStyleConfig
 import io.spine.internal.gradle.github.pages.updateGitHubPages
 import io.spine.internal.gradle.javac.configureErrorProne
@@ -136,7 +137,7 @@ fun Module.addDependencies() = dependencies {
     compileOnlyApi(JavaX.annotations)
     ErrorProne.annotations.forEach { compileOnlyApi(it) }
 
-    implementation(Spine.Logging.lib)
+    implementation(Logging.lib)
 
     testImplementation(Guava.testLib)
     testImplementation(JUnit.runner)
