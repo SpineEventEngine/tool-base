@@ -24,30 +24,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.Protobuf
-import io.spine.internal.dependency.spine.Logging
-import io.spine.internal.gradle.WriteVersions
+package io.spine.internal.dependency.spine
 
-plugins {
-    module
-}
-
-dependencies {
-    compileOnlyApi(gradleApi())
-    compileOnlyApi(Protobuf.GradlePlugin.lib)
-    api(project(":tool-base"))
-    implementation(Logging.lib)
-
-    testImplementation(project(":plugin-testlib"))
-    testImplementation(Protobuf.GradlePlugin.lib)
-}
-
-kotlin {
-    explicitApi()
-}
-
-tasks {
-    withType<WriteVersions>().configureEach {
-        version(Protobuf.compiler)
-    }
+/**
+ * Dependencies on `core-java` modules.
+ *
+ * See [`SpineEventEngine/core-java`](https://github.com/SpineEventEngine/core-java/).
+ */
+@Suppress("ConstPropertyName", "unused")
+object CoreJava {
+    const val group = Spine.group
+    const val version = "2.0.0-SNAPSHOT.177"
+    const val core = "$group:spine-core:$version"
+    const val client = "$group:spine-client:$version"
+    const val server = "$group:spine-server:$version"
+    const val testUtilServer = "${Spine.toolsGroup}:spine-testutil-server:$version"
 }

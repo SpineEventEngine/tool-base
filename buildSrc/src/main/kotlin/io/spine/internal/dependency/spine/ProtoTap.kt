@@ -24,30 +24,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.Protobuf
-import io.spine.internal.dependency.spine.Logging
-import io.spine.internal.gradle.WriteVersions
+package io.spine.internal.dependency.spine
 
-plugins {
-    module
-}
-
-dependencies {
-    compileOnlyApi(gradleApi())
-    compileOnlyApi(Protobuf.GradlePlugin.lib)
-    api(project(":tool-base"))
-    implementation(Logging.lib)
-
-    testImplementation(project(":plugin-testlib"))
-    testImplementation(Protobuf.GradlePlugin.lib)
-}
-
-kotlin {
-    explicitApi()
-}
-
-tasks {
-    withType<WriteVersions>().configureEach {
-        version(Protobuf.compiler)
-    }
+/**
+ * Dependencies on ProtoTap plugins.
+ *
+ * See [`SpineEventEngine/ProtoTap`](https://github.com/SpineEventEngine/ProtoTap/).
+ */
+@Suppress(
+    "unused" /* Some subprojects do not use ProtoData directly. */,
+    "ConstPropertyName" /* We use custom convention for artifact properties. */,
+    "MemberVisibilityCanBePrivate" /* The properties are used directly by other subprojects. */,
+)
+object ProtoTap {
+    const val group = "io.spine.tools"
+    const val version = "0.8.7"
+    const val gradlePluginId = "io.spine.prototap"
+    const val api = "$group:prototap-api:$version"
+    const val gradlePlugin = "$group:prototap-gradle-plugin:$version"
+    const val protocPlugin = "$group:prototap-protoc-plugin:$version"
 }

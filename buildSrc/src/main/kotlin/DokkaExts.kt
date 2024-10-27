@@ -70,7 +70,7 @@ private fun DependencyHandler.dokkaPlugin(dependencyNotation: Any): Dependency? 
     add("dokkaPlugin", dependencyNotation)
 
 private fun Project.dokkaOutput(language: String): File {
-    val lng = language.replaceFirstChar { it.uppercaseChar() }
+    val lng = language.titleCaseFirstChar()
     return layout.buildDirectory.dir("docs/dokka$lng").get().asFile
 }
 
@@ -184,7 +184,7 @@ fun Project.dokkaKotlinJar(): TaskProvider<Jar> = tasks.getOrCreate("dokkaKotlin
  * The task `"publishToMavenLocal"` is excluded from the check because it is a part of
  * the local testing workflow.
  */
-fun DokkaTask.isInPublishingGraph(): Boolean =
+fun AbstractDokkaTask.isInPublishingGraph(): Boolean =
     project.gradle.taskGraph.allTasks.any {
         with(it.name) {
             startsWith("publish") && !startsWith("publishToMavenLocal")
@@ -217,7 +217,7 @@ fun Project.dokkaJavaJar(): TaskProvider<Jar> = tasks.getOrCreate("dokkaJavaJar"
 fun Project.disableDocumentationTasks() {
     gradle.taskGraph.whenReady {
         tasks.forEach { task ->
-            val lowercaseName = task.name.lowercase()
+            val lowercaseName = task.name.lowercased()
             if (lowercaseName.contains("dokka") || lowercaseName.contains("javadoc")) {
                 task.enabled = false
             }

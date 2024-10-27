@@ -34,9 +34,11 @@ import io.spine.internal.dependency.Guava
 import io.spine.internal.dependency.JUnit
 import io.spine.internal.dependency.Jackson
 import io.spine.internal.dependency.Kotlin
-import io.spine.internal.dependency.Spine
 import io.spine.internal.dependency.Truth
-import io.spine.internal.dependency.Validation
+import io.spine.internal.dependency.spine.ArtifactVersion
+import io.spine.internal.dependency.spine.Spine
+import io.spine.internal.dependency.spine.Logging
+import io.spine.internal.dependency.spine.Validation
 import io.spine.internal.gradle.VersionWriter
 import io.spine.internal.gradle.checkstyle.CheckStyleConfig
 import io.spine.internal.gradle.github.pages.updateGitHubPages
@@ -119,9 +121,9 @@ fun Module.forceConfigurations() {
                     Kotlin.stdLibJdk7,
                     JUnit.runner,
                     Spine.base,
-                    Spine.Logging.lib,
-                    Spine.Logging.libJvm,
                     Spine.reflect,
+                    Logging.lib,
+                    Logging.libJvm,
                     Validation.runtime,
                     Grpc.stub,
                     Coroutines.jdk8,
@@ -188,7 +190,7 @@ fun Module.configureDocTasks() {
 }
 
 fun Module.configureGitHubPages() {
-    updateGitHubPages(Spine.ArtifactVersion.javadocTools) {
+    updateGitHubPages(ArtifactVersion.javadocTools) {
         allowInternalJavadoc.set(true)
         rootFolder.set(rootDir)
     }

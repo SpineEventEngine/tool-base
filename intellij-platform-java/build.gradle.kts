@@ -120,14 +120,17 @@ dependencies {
 
     // To access `com.intellij.psi.JspPsiUtil` as a transitive dependency
     // used by `com.intellij.psi.impl.source.codeStyle.ImportHelper`.
-    implementation(IntelliJ.Jsp.jsp) { excludeMany() }
+    api(IntelliJ.Jsp.jsp) { excludeMany() }
 
-    implementation(IntelliJ.Xml.xmlPsiImpl) { excludeMany() }
+    api(IntelliJ.Xml.xmlPsiImpl) { excludeMany() }
 
-    implementation(IntelliJ.Platform.analysisImpl) { excludeMany() }
-    implementation(IntelliJ.Platform.indexingImpl) { excludeMany() }
+    api(IntelliJ.Platform.analysisImpl) { excludeMany() }
+    api(IntelliJ.Platform.indexingImpl) { excludeMany() }
 }
 
+/**
+ * Exclude files from `intellij-platform` fat JAR when packing fat JAR for this module.
+ */
 tasks.shadowJar {
     val platformJarTask = intellijPlatformModule.tasks.shadowJar
     dependsOn(platformJarTask)

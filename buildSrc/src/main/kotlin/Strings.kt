@@ -24,23 +24,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.internal.dependency
+/**
+ * This file provides extensions to `String` and `CharSequence` that wrap
+ * analogues from standard Kotlin runtime.
+ *
+ * It helps in switching between versions of Gradle which have different versions of
+ * the Kotlin runtime. Please see the bodies of the extension functions for details on
+ * switching the implementations depending on the Kotlin version at hand.
+ *
+ * Once we migrate to newer Gradle, these wrappers should be inlined with
+ * the subsequent removal of this source file.
+ */
+@Suppress("unused")
+private const val ABOUT = ""
 
 /**
- * Dependencies on ProtoTap plugins.
- *
- * See [`SpineEventEngine/ProtoTap`](https://github.com/SpineEventEngine/ProtoTap/).
+ * Makes the first character come in the title case.
  */
-@Suppress(
-    "unused" /* Some subprojects do not use ProtoData directly. */,
-    "ConstPropertyName" /* We use custom convention for artifact properties. */,
-    "MemberVisibilityCanBePrivate" /* The properties are used directly by other subprojects. */,
-)
-object ProtoTap {
-    const val group = "io.spine.tools"
-    const val version = "0.8.7"
-    const val gradlePluginId = "io.spine.prototap"
-    const val api = "$group:prototap-api:$version"
-    const val gradlePlugin = "$group:prototap-gradle-plugin:$version"
-    const val protocPlugin = "$group:prototap-protoc-plugin:$version"
+fun String.titleCaseFirstChar(): String {
+    return replaceFirstChar { it.titlecase() }
+    // OR for earlier Kotlin versions:
+    //   1. add import of `org.gradle.configurationcache.extensions.capitalized`
+    //   2. call `capitalized()` instead of `replaceFirstChar` above.
+    // return capitalized()
+}
+
+/**
+ * Converts this string to lowercase.
+ */
+fun String.lowercased(): String {
+    return lowercase()
+    // OR for earlier Kotlin versions call:
+    // return toLowerCase()
 }

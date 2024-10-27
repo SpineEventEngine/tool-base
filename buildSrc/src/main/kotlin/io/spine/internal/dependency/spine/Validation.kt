@@ -24,30 +24,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.Protobuf
-import io.spine.internal.dependency.spine.Logging
-import io.spine.internal.gradle.WriteVersions
+package io.spine.internal.dependency.spine
 
-plugins {
-    module
-}
+/**
+ * Dependencies on Spine Validation SDK.
+ *
+ * See [`SpineEventEngine/validation`](https://github.com/SpineEventEngine/validation/).
+ */
+@Suppress("unused", "ConstPropertyName")
+object Validation {
+    /**
+     * The version of the Validation library artifacts.
+     */
+    const val version = "2.0.0-SNAPSHOT.160"
 
-dependencies {
-    compileOnlyApi(gradleApi())
-    compileOnlyApi(Protobuf.GradlePlugin.lib)
-    api(project(":tool-base"))
-    implementation(Logging.lib)
+    const val group = "io.spine.validation"
+    private const val prefix = "spine-validation"
 
-    testImplementation(project(":plugin-testlib"))
-    testImplementation(Protobuf.GradlePlugin.lib)
-}
+    const val runtime = "$group:$prefix-java-runtime:$version"
+    const val java = "$group:$prefix-java:$version"
 
-kotlin {
-    explicitApi()
-}
+    /** Obtains the artifact for the `java-bundle` artifact of the given version. */
+    fun javaBundle(version: String) = "$group:$prefix-java-bundle:$version"
 
-tasks {
-    withType<WriteVersions>().configureEach {
-        version(Protobuf.compiler)
-    }
+    val javaBundle = javaBundle(version)
+
+    const val model = "$group:$prefix-model:$version"
+    const val config = "$group:$prefix-configuration:$version"
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2024, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -33,7 +33,8 @@ import io.spine.internal.dependency.JavaPoet
 import io.spine.internal.dependency.JavaX
 import io.spine.internal.dependency.Protobuf
 import io.spine.internal.dependency.Roaster
-import io.spine.internal.dependency.Spine
+import io.spine.internal.dependency.spine.Spine
+import io.spine.internal.dependency.spine.Logging
 import io.spine.internal.gradle.protobuf.setup
 
 plugins {
@@ -50,7 +51,7 @@ dependencies {
 
     api(Spine.base)
 
-    implementation(Spine.Logging.lib)
+    implementation(Logging.lib)
 
     listOf(
         Grpc.protobuf,
