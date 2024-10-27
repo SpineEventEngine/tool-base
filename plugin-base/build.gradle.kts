@@ -25,7 +25,7 @@
  */
 
 import io.spine.internal.dependency.Protobuf
-import io.spine.internal.dependency.Spine
+import io.spine.internal.dependency.spine.Logging
 import io.spine.internal.gradle.WriteVersions
 
 plugins {
@@ -36,7 +36,7 @@ dependencies {
     compileOnlyApi(gradleApi())
     compileOnlyApi(Protobuf.GradlePlugin.lib)
     api(project(":tool-base"))
-    implementation(Spine.Logging.lib)
+    implementation(Logging.lib)
 
     testImplementation(project(":plugin-testlib"))
     testImplementation(Protobuf.GradlePlugin.lib)
