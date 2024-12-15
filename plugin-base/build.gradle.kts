@@ -24,9 +24,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.Protobuf
-import io.spine.internal.dependency.spine.Logging
-import io.spine.internal.gradle.WriteVersions
+import io.spine.dependency.lib.Protobuf
+import io.spine.dependency.local.Logging
+import io.spine.gradle.WriteVersions
 
 plugins {
     module

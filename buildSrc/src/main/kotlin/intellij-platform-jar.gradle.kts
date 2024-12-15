@@ -27,11 +27,11 @@
 @file:Suppress("UnstableApiUsage") // `configurations` block.
 
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import io.spine.internal.dependency.Kotlin
-import io.spine.internal.gradle.publish.IncrementGuard
-import io.spine.internal.gradle.publish.SpinePublishing
-import io.spine.internal.gradle.publish.spinePublishing
-import io.spine.internal.gradle.report.license.LicenseReporter
+import io.spine.dependency.lib.Kotlin
+import io.spine.gradle.publish.IncrementGuard
+import io.spine.gradle.publish.SpinePublishing
+import io.spine.gradle.publish.spinePublishing
+import io.spine.gradle.report.license.LicenseReporter
 
 plugins {
     `java-library`

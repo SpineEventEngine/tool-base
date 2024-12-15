@@ -27,15 +27,16 @@
 @file:Suppress("RemoveRedundantQualifierName")
 
 import com.google.protobuf.gradle.id
-import io.spine.internal.dependency.Grpc
-import io.spine.internal.dependency.GrpcKotlin
-import io.spine.internal.dependency.JavaPoet
-import io.spine.internal.dependency.JavaX
-import io.spine.internal.dependency.Protobuf
-import io.spine.internal.dependency.Roaster
-import io.spine.internal.dependency.spine.Spine
-import io.spine.internal.dependency.spine.Logging
-import io.spine.internal.gradle.protobuf.setup
+import io.spine.dependency.lib.Grpc
+import io.spine.dependency.lib.GrpcKotlin
+import io.spine.dependency.lib.JavaPoet
+import io.spine.dependency.lib.JavaX
+import io.spine.dependency.lib.Protobuf
+import io.spine.dependency.lib.Roaster
+import io.spine.dependency.local.Base
+import io.spine.dependency.local.Logging
+import io.spine.dependency.local.TestLib
+import io.spine.gradle.protobuf.setup
 
 plugins {
     module
@@ -49,7 +50,7 @@ dependencies {
     api(Roaster.api)
     api(Roaster.jdt)
 
-    api(Spine.base)
+    api(Base.lib)
 
     implementation(Logging.lib)
 
@@ -63,7 +64,7 @@ dependencies {
         testFixturesImplementation(it)
     }
 
-    testImplementation(Spine.testlib)
+    testImplementation(TestLib.lib)
 }
 
 sourceSets {
