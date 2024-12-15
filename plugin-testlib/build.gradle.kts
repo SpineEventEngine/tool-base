@@ -24,7 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.spine.Spine
+import io.spine.dependency.local.TestLib
 
 plugins {
     module
@@ -33,6 +33,6 @@ plugins {
 dependencies {
     api(gradleApi())
     api(gradleTestKit())
-    api(Spine.testlib)
+    api(TestLib.lib)
     api(project(":plugin-base"))
 }

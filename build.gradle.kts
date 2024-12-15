@@ -26,13 +26,13 @@
 
 @file:Suppress("RemoveRedundantQualifierName") // To prevent IDEA replacing FQN imports.
 
-import io.spine.internal.dependency.Dokka
-import io.spine.internal.gradle.publish.PublishingRepos
-import io.spine.internal.gradle.publish.spinePublishing
-import io.spine.internal.gradle.report.coverage.JacocoConfig
-import io.spine.internal.gradle.report.license.LicenseReporter
-import io.spine.internal.gradle.report.pom.PomGenerator
-import io.spine.internal.gradle.standardToSpineSdk
+import io.spine.dependency.build.Dokka
+import io.spine.gradle.publish.PublishingRepos
+import io.spine.gradle.publish.spinePublishing
+import io.spine.gradle.report.coverage.JacocoConfig
+import io.spine.gradle.report.license.LicenseReporter
+import io.spine.gradle.report.pom.PomGenerator
+import io.spine.gradle.standardToSpineSdk
 import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
 
 buildscript {
@@ -43,11 +43,11 @@ buildscript {
             resolutionStrategy {
                 @Suppress("DEPRECATION")
                 force(
-                    io.spine.internal.dependency.spine.Spine.base,
-                    io.spine.internal.dependency.spine.Spine.reflect,
-                    io.spine.internal.dependency.spine.Validation.java,
-                    io.spine.internal.dependency.Protobuf.GradlePlugin.lib,
-                    io.spine.internal.dependency.Kotlin.stdLibJdk8
+                    io.spine.dependency.local.Spine.base,
+                    io.spine.dependency.local.Spine.reflect,
+                    io.spine.dependency.local.Validation.java,
+                    io.spine.dependency.lib.Protobuf.GradlePlugin.lib,
+                    io.spine.dependency.lib.Kotlin.stdLibJdk8
                 )
             }
         }

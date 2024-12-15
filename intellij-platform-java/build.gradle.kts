@@ -24,7 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.IntelliJ
+import io.spine.dependency.lib.IntelliJ
 
 plugins {
     `intellij-platform-jar`

@@ -24,8 +24,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.IntelliJ
-import io.spine.internal.gradle.report.license.LicenseReporter
+import io.spine.dependency.lib.IntelliJ
+import io.spine.gradle.report.license.LicenseReporter
 
 plugins {
     `intellij-platform-jar`

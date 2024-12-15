@@ -24,8 +24,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.Guava
-import io.spine.internal.dependency.spine.Spine
+import io.spine.dependency.lib.Guava
+import io.spine.dependency.local.Base
+import io.spine.dependency.local.TestLib
 
 plugins {
     module
@@ -37,8 +38,8 @@ dependencies {
     implementation(Guava.lib)
     api(project(":psi"))
     api(intellijPlatformJavaModule)
-    testImplementation(Spine.base)
-    testImplementation(Spine.testlib)
+    testImplementation(Base.lib)
+    testImplementation(TestLib.lib)
     testImplementation(project(":plugin-testlib"))
 }
 

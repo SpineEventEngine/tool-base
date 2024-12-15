@@ -24,14 +24,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.spine.Spine
+import io.spine.dependency.local.Base
+import io.spine.dependency.local.TestLib
 
 plugins {
     module
 }
 
 dependencies {
-    api(Spine.base)
+    api(Base.lib)
     api(project(":intellij-platform"))
-    testImplementation(Spine.testlib)
+    testImplementation(TestLib.lib)
 }
