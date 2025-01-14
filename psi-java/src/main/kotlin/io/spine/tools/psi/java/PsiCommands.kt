@@ -48,6 +48,7 @@ import kotlin.system.exitProcess
  * @see executeSilent
  */
 @JvmName("execute")
+@Suppress("TooGenericExceptionCaught") // `CoreCommandProcessor` also catches `Throwable`.
 public fun execute(runnable: Runnable) {
     val withCaughtErrors = Runnable {
         try {
