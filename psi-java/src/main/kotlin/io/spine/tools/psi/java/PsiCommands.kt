@@ -54,7 +54,7 @@ import kotlin.system.exitProcess
  */
 @JvmName("execute")
 @Suppress("TooGenericExceptionCaught") // We need everything, including `java.lang.Error`.
-public fun execute(runnable: Runnable, errorHandler: (Throwable) -> Unit = ::logAndTerminate) {
+public fun execute(errorHandler: (Throwable) -> Unit = ::logAndTerminate, runnable: Runnable) {
     val withHandledErrors = Runnable {
         try {
             runnable.run()
