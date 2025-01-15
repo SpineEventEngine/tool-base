@@ -33,29 +33,26 @@ import kotlin.system.exitProcess
 
 /**
  * Executes the given [runnable] as a PSI modification [command][CommandProcessor.executeCommand],
- * ensuring any errors thrown by the [runnable] are handled with the provided [errorHandler].
+ * ensuring any errors thrown by the [runnable] are handled using the provided [errorHandler].
  *
  * By default, the `CoreCommandProcessor` used for PSI command processing suppresses
  * any [Throwable] thrown by the command, making it difficult for PSI users to detect
  * and handle errors.
  *
- * To address it, this method wraps the given [runnable] in a try-catch block.
+ * To address this, the given [runnable] is wrapped in a try-catch block.
  * Any thrown errors or exceptions are passed to the provided [errorHandler].
  *
- * If no custom [errorHandler] is provided, the default behavior is to log the error
- * to [System.err] and terminates the process with a non-zero exit code.
- * Use [executeSilent] to suppress errors entirely.
+ * If no custom [errorHandler] is provided, the default behavior is to print the stack
+ * trace to [System.err] and terminate the process with the exit code `1`.
  *
  * @param runnable The [Runnable] to execute as a PSI modification.
  * @param errorHandler A lambda to handle any [Throwable] thrown by the [runnable].
- *  Default to logging the error and terminating the process.
- *
- * @see executeSilent
+ *  Defaults to printing the stack trace and terminating the process with the exit code `1`.
  */
 @JvmOverloads
 @JvmName("execute")
 @Suppress("TooGenericExceptionCaught") // We need everything, including `java.lang.Error`.
-public fun execute(errorHandler: (Throwable) -> Unit = ::logAndTerminate, runnable: Runnable) {
+public fun execute(errorHandler: (Throwable) -> Unit = ::printAndTerminate, runnable: Runnable) {
     val withHandledErrors = Runnable {
         try {
             runnable.run()
@@ -63,29 +60,10 @@ public fun execute(errorHandler: (Throwable) -> Unit = ::logAndTerminate, runnab
             errorHandler(t)
         }
     }
-    executeSilent(withHandledErrors)
+    commandProcessor.executeCommand(project, withHandledErrors, null, null)
 }
 
-/**
- * The default error handler for [execute] that logs the given [Throwable] to [System.err]
- * and terminates the currently running process with a non-zero exit code.
- */
-private fun logAndTerminate(t: Throwable) {
+private fun printAndTerminate(t: Throwable) {
     t.printStackTrace()
     exitProcess(1)
-}
-
-/**
- * Executes the given [runnable] as a PSI modification [command][CommandProcessor.executeCommand],
- * suppressing any errors thrown by the [runnable].
- *
- * Any exceptions or errors thrown by the given [runnable] are caught and ignored
- * with no logging or further action. This method is suitable for use cases where error
- * handling is either unnecessary or managed by the [runnable] itself.
- *
- * @see execute
- */
-@JvmName("executeSilent")
-public fun executeSilent(runnable: Runnable) {
-    commandProcessor.executeCommand(project, runnable, null, null)
 }
