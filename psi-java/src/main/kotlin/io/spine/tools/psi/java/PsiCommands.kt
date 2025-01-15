@@ -52,6 +52,7 @@ import kotlin.system.exitProcess
  *
  * @see executeSilent
  */
+@JvmOverloads
 @JvmName("execute")
 @Suppress("TooGenericExceptionCaught") // We need everything, including `java.lang.Error`.
 public fun execute(errorHandler: (Throwable) -> Unit = ::logAndTerminate, runnable: Runnable) {
