@@ -39,3 +39,12 @@ internal fun readResource(fileName: String): String {
     val code = loaded.convertLineSeparators()
     return code
 }
+
+/**
+ * A signature of [com.google.protobuf.Message.Builder.mergeFrom] method.
+ */
+internal val MERGE_FROM_SIGNATURE = """
+        public Builder mergeFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+""".trimIndent()

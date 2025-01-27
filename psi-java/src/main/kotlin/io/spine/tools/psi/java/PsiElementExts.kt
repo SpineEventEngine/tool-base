@@ -59,17 +59,15 @@ public fun PsiElement.findFirstByText(
  * when the first child and all its descendants are checked.
  *
  * @return the found element, or `null`.
- * @throws [IllegalArgumentException] if this [PsiElement] doesn't contain such an element.
+ * @throws [IllegalStateException] if this [PsiElement] doesn't contain such an element.
  */
 public fun PsiElement.getFirstByText(
     startsWith: String,
     contains: String = startsWith
-): PsiElement {
-    val result = findFirstByText(startsWith, contains)
-    require(result != null) {
-        "The element was not found." +
-                "Search criteria: [startsWith=`$startsWith`, contains=`$contains`]." +
-                "Searched element: `$this`."
-    }
-    return result
-}
+): PsiElement =
+    findFirstByText(startsWith, contains)
+        ?: error {
+            "The element was not found." +
+                    "Search criteria: [startsWith=`$startsWith`, contains=`$contains`]." +
+                    "Searched element: `$this`."
+        }

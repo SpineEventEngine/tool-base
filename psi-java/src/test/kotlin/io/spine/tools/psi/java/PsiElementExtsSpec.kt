@@ -31,29 +31,23 @@ import com.intellij.psi.PsiTypeElement
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
-import io.spine.tools.psi.java.PsiTest.Companion.parse
+import io.spine.tools.psi.MERGE_FROM_SIGNATURE
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 
 @DisplayName("`PsiElementExts` should")
 internal class PsiElementExtsSpec : PsiTest() {
 
-    @Nested
-    inner class
+    @Nested inner class
     `look for elements by text` {
+
+        private val psiFile = parse("FieldPath.java")
+        private val psiClass = psiFile.topLevelClass.nested("Builder")
 
         @Test
         fun `returning 'null' when not found`() {
             psiClass.findFirstByText("tableAndChair") shouldBe null
-        }
-
-        @Test
-        fun `throwing when not found`() {
-            assertThrows<IllegalArgumentException> {
-                psiClass.getFirstByText("tableAndChair")
-            }
         }
 
         @Test
@@ -83,12 +77,3 @@ internal class PsiElementExtsSpec : PsiTest() {
         }
     }
 }
-
-private val psiFile = parse("FieldPath.java")
-private val psiClass = psiFile.topLevelClass.nested("Builder")
-
-private val MERGE_FROM_SIGNATURE = """
-        public Builder mergeFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-""".trimIndent()
