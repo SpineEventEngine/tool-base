@@ -89,8 +89,8 @@ internal class PsiClassExtsSpec: PsiTest() {
     @Test
     fun `return a nested class`() {
         val psiFile = parse("FieldPath.java")
-        psiFile.topLevelClass
-            .findNested("Builder").shouldNotBeNull()
+        val psiClass = psiFile.topLevelClass.findNested("Builder")
+        psiClass.shouldNotBeNull()
     }
 
     @Test
