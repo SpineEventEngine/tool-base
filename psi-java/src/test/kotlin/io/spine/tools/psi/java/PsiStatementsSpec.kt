@@ -39,8 +39,8 @@ internal class PsiStatementsSpec : PsiTest() {
     fun `be created from a code block`() {
         val codeBlock = elementFactory.createCodeBlockFromText("{$STATEMENTS_TEXT}", null)
         val statements = PsiStatements(codeBlock)
-        statements.firstChild.text shouldBe STATEMENT_LINES.first().trim()
-        statements.lastChild.text shouldBe STATEMENT_LINES.last().trim()
+        statements.firstChild.text shouldBe STATEMENT_LINES.first()
+        statements.lastChild.text shouldBe STATEMENT_LINES.last()
     }
 
     @Test

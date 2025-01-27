@@ -51,14 +51,14 @@ internal class PsiElementExtsSpec : PsiTest() {
         }
 
         @Test
-        fun `returning element which is a direct child`() {
+        fun `returning an element which is a direct child`() {
             val buildPartial = psiClass.method("buildPartial")
             val returnedType = buildPartial.findFirstByText("io.spine.base.FieldPath")
             returnedType.shouldBeInstanceOf<PsiTypeElement>()
         }
 
         @Test
-        fun `returning element which is an indirect child`() {
+        fun `returning an element which is an indirect child`() {
             val buildPartial = psiClass.method("buildPartial")
             val statement = buildPartial.findFirstByText("buildPartial0(result);")
             statement.shouldBeInstanceOf<PsiStatement>()
