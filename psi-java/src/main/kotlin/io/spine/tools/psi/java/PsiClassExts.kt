@@ -209,3 +209,62 @@ public fun PsiClass.implement(superInterface: PsiJavaCodeReferenceElement) {
         implements.add(superInterface)
     }
 }
+
+/**
+ * Looks for a nested class declared in this [PsiClass].
+ *
+ * @param simpleName The simple name of the class.
+ * @return The found class, or `null` if this [PsiClass] does not have such a class.
+ */
+public fun PsiClass.findNested(simpleName: String): PsiClass? =
+    innerClasses.firstOrNull { it.name == simpleName }
+
+/**
+ * Returns a nested class declared in this [PsiClass].
+ *
+ * @param simpleName The simple name of the class.
+ * @throws IllegalStateException if this [PsiClass] does not have such a class.
+ */
+public fun PsiClass.nested(simpleName: String): PsiClass =
+    innerClasses.firstOrNull { it.name == simpleName }
+        ?: error {
+            "The class `$qualifiedName` does not have a nested class named `$name`."
+        }
+
+/**
+ * Looks for a method in this [PsiClass] matching the given signature
+ * specified as [text].
+ *
+ * An example usage:
+ *
+ * ```
+ * val method = psiClass.findMethodBySignature("public Builder setName(Name value)")
+ * ```
+ *
+ * @param text The method signature as text.
+ * @return The found [PsiMethod], or `null` if this class does not have such a method.
+ */
+public fun PsiClass.findMethodBySignature(text: String): PsiMethod? {
+    val reference = elementFactory.createMethodFromText(text, null)
+    return findMethodBySignature(reference, false)
+}
+
+/**
+ * Returns a method from this [PsiClass] matching the given signature
+ * specified as [text].
+ *
+ * An example usage:
+ *
+ * ```
+ * val method = psiClass.getMethodBySignature("public Builder setName(Name value)")
+ * ```
+ *
+ * @param text The method signature as text.
+ * @throws IllegalStateException if this class does not have such a method.
+ */
+public fun PsiClass.methodWithSignature(text: String): PsiMethod =
+    findMethodBySignature(text)
+        ?: error(
+            "Could not find the method with the signature `$text` " +
+                    "in the `$qualifiedName` class."
+        )

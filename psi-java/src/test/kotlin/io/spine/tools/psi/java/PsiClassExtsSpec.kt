@@ -31,10 +31,12 @@ import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiJavaCodeReferenceElement
 import com.intellij.psi.PsiMethod
 import io.kotest.matchers.ints.shouldBeGreaterThan
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.spine.testing.TestValues
 import io.spine.tools.java.reference
+import io.spine.tools.psi.MERGE_FROM_SIGNATURE
 import io.spine.tools.psi.java.Environment.elementFactory
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -75,6 +77,20 @@ internal class PsiClassExtsSpec: PsiTest() {
         }
         method.isStatic shouldBe true
         method.isPublic shouldBe true
+    }
+
+    @Test
+    fun `find a method by its signature`() {
+        val psiFile = parse("FieldPath.java")
+        val psiClass = psiFile.topLevelClass.nested("Builder")
+        psiClass.findMethodBySignature(MERGE_FROM_SIGNATURE).shouldNotBeNull()
+    }
+
+    @Test
+    fun `return a nested class`() {
+        val psiFile = parse("FieldPath.java")
+        val psiClass = psiFile.topLevelClass.findNested("Builder")
+        psiClass.shouldNotBeNull()
     }
 
     @Test
