@@ -214,7 +214,7 @@ public fun PsiClass.implement(superInterface: PsiJavaCodeReferenceElement) {
  * Looks for a nested class declared in this [PsiClass].
  *
  * @param simpleName The simple name of the class.
- * @return The found class, or `null`.
+ * @return The found class, or `null` if this [PsiClass] does not have such a class.
  */
 public fun PsiClass.findNested(simpleName: String): PsiClass? =
     innerClasses.firstOrNull { it.name == simpleName }
@@ -223,7 +223,7 @@ public fun PsiClass.findNested(simpleName: String): PsiClass? =
  * Returns a nested class declared in this [PsiClass].
  *
  * @param simpleName The simple name of the class.
- * @throws IllegalStateException if this [PsiClass] doesn't have such a class.
+ * @throws IllegalStateException if this [PsiClass] does not have such a class.
  */
 public fun PsiClass.nested(simpleName: String): PsiClass =
     innerClasses.firstOrNull { it.name == simpleName }
@@ -242,7 +242,7 @@ public fun PsiClass.nested(simpleName: String): PsiClass =
  * ```
  *
  * @param text The method signature as text.
- * @return The found [PsiMethod], or `null`.
+ * @return The found [PsiMethod], or `null` if this class does not have such a method.
  */
 public fun PsiClass.findMethodBySignature(text: String): PsiMethod? {
     val reference = elementFactory.createMethodFromText(text, null)

@@ -36,7 +36,7 @@ import com.intellij.psi.PsiElement
  * So, the second direct child of this [PsiElement] is checked only
  * when the first child and all its descendants are checked.
  *
- * @return the found element, or `null`.
+ * @return the found element, or `null` if this [PsiElement] does not contain such an element.
  */
 public fun PsiElement.findFirstByText(
     startsWith: String,
@@ -58,8 +58,7 @@ public fun PsiElement.findFirstByText(
  * So, the second direct child of this [PsiElement] is checked only
  * when the first child and all its descendants are checked.
  *
- * @return the found element, or `null`.
- * @throws [IllegalStateException] if this [PsiElement] doesn't contain such an element.
+ * @throws [IllegalStateException] if this [PsiElement] does not contain such an element.
  */
 public fun PsiElement.getFirstByText(
     startsWith: String,
