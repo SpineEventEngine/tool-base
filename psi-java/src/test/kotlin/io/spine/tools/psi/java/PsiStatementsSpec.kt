@@ -63,6 +63,13 @@ internal class PsiStatementsSpec : PsiTest() {
         }
     }
 
+    @Test
+    fun `provide Java text`(): Unit = with(elementFactory) {
+        createStatementsFromText("", null).text shouldBe ""
+        createStatementsFromText(PRINT_STATEMENT, null).text shouldBe PRINT_STATEMENT
+        createStatementsFromText(STATEMENTS_TEXT, null).text shouldBe STATEMENTS_TEXT
+    }
+
     /**
      * Makes sure that [PsiStatements] creates its own copy of the passed code block.
      *
@@ -153,7 +160,7 @@ private val STATEMENTS_TEXT =
     java.util.Optional<io.spine.validate.ValidationError> error = result.validate();
     var violations = error.get().getConstraintViolationList();
     throw new io.spine.validate.ValidationException(violations);
-    """.trim()
+    """.trimIndent()
 
 private const val PRINT_STATEMENT = "System.out.println(\"Hello World!\");"
 

@@ -48,7 +48,7 @@ import com.intellij.psi.PsiElementFactory
 public class PsiStatements(codeBlock: PsiCodeBlock) {
 
     /**
-     * The underlying [PsiElement], which is actually used to manage
+     * The underlying [PsiCodeBlock], which is actually used to manage
      * [PsiStatements] child elements.
      *
      * PSI elements are strictly bound to each other, and they cannot be managed
@@ -56,11 +56,20 @@ public class PsiStatements(codeBlock: PsiCodeBlock) {
      * This delegate is used as a container, and manager of elements considered
      * to be children of this [PsiStatements] wrapper.
      *
-     * Use this [PsiElement] to perform more complex operations, which are not
+     * Use this [PsiCodeBlock] to perform more complex operations, which are not
      * covered by API of the class. For example, searching for a particular child
      * element by text.
      */
-    public val delegate: PsiElement = codeBlock.copy()
+    public val delegate: PsiCodeBlock = codeBlock.copy() as PsiCodeBlock
+
+    /**
+     * Returns Java text of this [PsiStatements].
+     *
+     * Please note, the returned text will not contain all formatting elements
+     * of this [PsiStatements]. Only bare statements, each going on its own line.
+     */
+    public val text: String
+        get() = delegate.statements.joinToString("\n") { it.text }
 
     /**
      * Returns the first child of this element.
