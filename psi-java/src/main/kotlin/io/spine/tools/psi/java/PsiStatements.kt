@@ -63,15 +63,6 @@ public class PsiStatements(codeBlock: PsiCodeBlock) {
     public val delegate: PsiCodeBlock = codeBlock.copy() as PsiCodeBlock
 
     /**
-     * Returns Java text of this [PsiStatements].
-     *
-     * Please note, the returned text will not contain all formatting elements
-     * of this [PsiStatements]. Only bare statements, each going on its own line.
-     */
-    public val text: String
-        get() = delegate.statements.joinToString("\n") { it.text }
-
-    /**
      * Returns the first child of this element.
      */
     public val firstChild: PsiElement

@@ -63,13 +63,6 @@ internal class PsiStatementsSpec : PsiTest() {
         }
     }
 
-    @Test
-    fun `provide Java text`(): Unit = with(elementFactory) {
-        createStatementsFromText("", null).text shouldBe ""
-        createStatementsFromText(PRINT_STATEMENT, null).text shouldBe PRINT_STATEMENT
-        createStatementsFromText(STATEMENTS_TEXT, null).text shouldBe STATEMENTS_TEXT
-    }
-
     /**
      * Makes sure that [PsiStatements] creates its own copy of the passed code block.
      *
