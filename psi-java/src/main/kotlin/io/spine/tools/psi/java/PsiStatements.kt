@@ -48,20 +48,55 @@ import com.intellij.psi.PsiElementFactory
 public class PsiStatements(codeBlock: PsiCodeBlock) {
 
     /**
-     * All children of [PsiCodeBlock] without right and left braces.
+     * The underlying [PsiElement], which is actually used to manage
+     * [PsiStatements] child elements.
+     *
+     * PSI elements are strictly bound to each other, and they cannot be managed
+     * separately neither without their parent element nor without their siblings.
+     * This delegate is used as a container, and manager of elements considered
+     * to be children of this [PsiStatements] wrapper.
+     *
+     * Use this [PsiElement] to perform more complex operations, which are not
+     * covered by API of the class. For example, searching for a particular child
+     * element by text.
      */
-    private val children = codeBlock.children
-        .copyOfRange(1, codeBlock.children.size - 1)
+    public val delegate: PsiElement = codeBlock.copy()
 
     /**
      * Returns the first child of this element.
      */
-    public val firstChild: PsiElement = children.first()
+    public val firstChild: PsiElement
+        get() {
+            check(delegate.children.size > 2) {
+                "Cannot provide the first child of `PsiStatements` because it is empty!"
+            }
+            return delegate.children
+                .first().nextSibling
+        }
 
     /**
      * Returns the last child of this element.
      */
-    public val lastChild: PsiElement = children.last()
+    public val lastChild: PsiElement
+        get() {
+            check(delegate.children.size > 2) {
+                "Cannot provide the last child of `PsiStatements` because it is empty!"
+            }
+            return delegate.children
+                .last().prevSibling
+        }
+
+    /**
+     * Adds the given [statements] in the beginning of this [PsiStatements].
+     */
+    public fun append(statements: PsiStatements): Unit =
+        delegate.addAfter(statements, lastChild)
+
+    /**
+     * Adds the given [statements] in the end of this [PsiStatements].
+     */
+    public fun prepend(statements: PsiStatements): Unit =
+        delegate.addBefore(statements, firstChild)
 }
 
 /**

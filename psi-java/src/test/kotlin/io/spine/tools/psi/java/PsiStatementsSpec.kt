@@ -31,6 +31,8 @@ import io.spine.tools.psi.java.Environment.elementFactory
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
 
 @DisplayName("`PsiStatements` should")
 internal class PsiStatementsSpec : PsiTest() {
@@ -48,6 +50,61 @@ internal class PsiStatementsSpec : PsiTest() {
         val statements = elementFactory.createStatementsFromText(STATEMENTS_TEXT, null)
         statements.firstChild.text shouldBe STATEMENT_LINES.first()
         statements.lastChild.text shouldBe STATEMENT_LINES.last()
+    }
+
+    @Test
+    fun `throw if empty statements is asked for first or last child`() {
+        val statements = elementFactory.createStatementsFromText("", null)
+        assertThrows<IllegalStateException> {
+            statements.firstChild
+        }
+        assertThrows<IllegalStateException> {
+            statements.lastChild
+        }
+    }
+
+    /**
+     * Makes sure that [PsiStatements] creates its own copy of the passed code block.
+     *
+     * Every PSI child stores information about its siblings, allowing range operations
+     * like `addRange()` accept the first child and last child instances to copy.
+     * Otherwise, it would expect a range of indexes. Removing any child from the original
+     * code block breaks this traversal, leading to exception in `addRange()` operations.
+     */
+    @Test
+    fun `create a copy of the passed 'CodeBlock'`() {
+        val passedBlock = elementFactory.createCodeBlockFromText("{$STATEMENTS_TEXT}", null)
+        val statements = PsiStatements(passedBlock)
+        execute {
+            passedBlock.statements
+                .first()
+                .delete()
+        }
+        val anotherBlock = elementFactory.createCodeBlockFromText("{}", null)
+        assertDoesNotThrow {
+            anotherBlock.add(statements)
+        }
+    }
+
+    @Test
+    fun `append the passed statements`() {
+        val statements = elementFactory.createStatementsFromText(STATEMENTS_TEXT, null)
+        val printHello = elementFactory.createStatementsFromText(PRINT_STATEMENT, null)
+        execute {
+            statements.append(printHello)
+        }
+        statements.firstChild.text shouldBe STATEMENT_LINES.first()
+        statements.lastChild.text shouldBe PRINT_STATEMENT
+    }
+
+    @Test
+    fun `prepend the passed statements`() {
+        val statements = elementFactory.createStatementsFromText(STATEMENTS_TEXT, null)
+        val printHello = elementFactory.createStatementsFromText(PRINT_STATEMENT, null)
+        statements.prepend(printHello)
+        statements.firstChild.text shouldBe PRINT_STATEMENT
+        statements.lastChild.text shouldBe STATEMENT_LINES.last()
+        println(statements.delegate.text)
     }
 
     @Nested inner class
@@ -97,6 +154,8 @@ private val STATEMENTS_TEXT =
     var violations = error.get().getConstraintViolationList();
     throw new io.spine.validate.ValidationException(violations);
     """.trim()
+
+private const val PRINT_STATEMENT = "System.out.println(\"Hello World!\");"
 
 private val STATEMENT_LINES = STATEMENTS_TEXT.lines()
     .map { it.trim() }
