@@ -51,11 +51,13 @@ public class PsiStatements(codeBlock: PsiCodeBlock) {
      * The underlying [PsiCodeBlock], which actually manages children
      * of this [PsiStatements].
      *
-     * PSI elements are linked to each other, and they cannot be managed
-     * separately without their parents, children and siblings.
+     * PSI elements are linked with each other, and they cannot be managed
+     * separately without their parents, children and siblings relations.
      * As a result, instead of copying only the children of interest from
      * the passed block, we have to copy the whole block using [PsiElement.copy].
-     * Having a hard copy of the passed block, we can safely use its children.
+     * Having a hard copy of the passed block protects from the outside changes
+     * to the original block, and allows PSI to manage the elements correctly
+     * when modified by [append] and [prepend] method.
      */
     private val delegate: PsiCodeBlock = codeBlock.copy() as PsiCodeBlock
 
@@ -64,6 +66,7 @@ public class PsiStatements(codeBlock: PsiCodeBlock) {
      */
     public val firstChild: PsiElement
         get() {
+            // Checking for `>2` because we are not interested in surrounding braces.
             check(delegate.children.size > 2) {
                 "Cannot provide the first child of `PsiStatements` because it is empty!"
             }
@@ -76,6 +79,7 @@ public class PsiStatements(codeBlock: PsiCodeBlock) {
      */
     public val lastChild: PsiElement
         get() {
+            // Checking for `>2` because we are not interested in surrounding braces.
             check(delegate.children.size > 2) {
                 "Cannot provide the last child of `PsiStatements` because it is empty!"
             }
