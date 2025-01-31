@@ -34,33 +34,30 @@ import com.intellij.psi.PsiElementFactory
  * A list of statements extracted from the given [PsiCodeBlock],
  * excluding the surrounding braces.
  *
- * This type addresses several challenges:
+ * The presence of this type addresses several challenges:
  *
  * 1. In PSI, a code block cannot be created without curly braces. As a result, even if
  *    you only need a list of statements, you must create a full block with braces.
  * 2. Inserting such a block into another code block requires range copying
  *    to skip the braces.
  * 3. While a list of statements can be [retrieved][PsiCodeBlock.getStatements] directly from
- *    the code block, formatting elements like whitespace and newlines are omitted, leaving
- *    only the raw statements. Adding these statements individually to a method body often
- *    results in invalid or non-compilable Java code.
+ *    the code block, formatting elements like whitespace and newlines are omitted,
+ *    leaving only the raw statements. Adding these statements to a method body may
+ *    result in non-compilable Java code.
  */
 public class PsiStatements(codeBlock: PsiCodeBlock) {
 
     /**
-     * The underlying [PsiCodeBlock], which is actually used to manage
-     * [PsiStatements] child elements.
+     * The underlying [PsiCodeBlock], which actually manages children
+     * of this [PsiStatements].
      *
-     * PSI elements are strictly bound to each other, and they cannot be managed
-     * separately neither without their parent element nor without their siblings.
-     * This delegate is used as a container, and manager of elements considered
-     * to be children of this [PsiStatements] wrapper.
-     *
-     * Use this [PsiCodeBlock] to perform more complex operations, which are not
-     * covered by API of the class. For example, searching for a particular child
-     * element by text.
+     * PSI elements are linked to each other, and they cannot be managed
+     * separately without their parents, children and siblings.
+     * As a result, instead of copying only the children of interest from
+     * the passed block, we have to copy the whole block using [PsiElement.copy].
+     * Having a hard copy of the passed block, we can safely use its children.
      */
-    public val delegate: PsiCodeBlock = codeBlock.copy() as PsiCodeBlock
+    private val delegate: PsiCodeBlock = codeBlock.copy() as PsiCodeBlock
 
     /**
      * Returns the first child of this element.

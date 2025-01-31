@@ -53,36 +53,13 @@ internal class PsiStatementsSpec : PsiTest() {
     }
 
     @Test
-    fun `throw if empty statements is asked for first or last child`() {
+    fun `when empty, throw if asked for the first or last child`() {
         val statements = elementFactory.createStatementsFromText("", null)
         assertThrows<IllegalStateException> {
             statements.firstChild
         }
         assertThrows<IllegalStateException> {
             statements.lastChild
-        }
-    }
-
-    /**
-     * Makes sure that [PsiStatements] creates its own copy of the passed code block.
-     *
-     * Every PSI child stores information about its siblings, allowing range operations
-     * like `addRange()` accept the first child and last child instances to copy.
-     * Otherwise, it would expect a range of indexes. Removing any child from the original
-     * code block breaks this traversal, leading to exception in `addRange()` operations.
-     */
-    @Test
-    fun `create a copy of the passed 'CodeBlock'`() {
-        val passedBlock = elementFactory.createCodeBlockFromText("{$STATEMENTS_TEXT}", null)
-        val statements = PsiStatements(passedBlock)
-        execute {
-            passedBlock.statements
-                .first()
-                .delete()
-        }
-        val anotherBlock = elementFactory.createCodeBlockFromText("{}", null)
-        assertDoesNotThrow {
-            anotherBlock.add(statements)
         }
     }
 
@@ -104,7 +81,23 @@ internal class PsiStatementsSpec : PsiTest() {
         statements.prepend(printHello)
         statements.firstChild.text shouldBe PRINT_STATEMENT
         statements.lastChild.text shouldBe STATEMENT_LINES.last()
-        println(statements.delegate.text)
+    }
+
+    @Test
+    fun `use a hard copy of the passed 'CodeBlock'`() {
+        val passedBlock = elementFactory.createCodeBlockFromText("{$STATEMENTS_TEXT}", null)
+        val statements = PsiStatements(passedBlock)
+        execute {
+            // Remove the first statement from the original PSI block.
+            // It shouldn't break `PsiStatements` if the passed block was indeed copied.
+            passedBlock.statements
+                .first()
+                .delete()
+        }
+        val emptyBlock = elementFactory.createCodeBlockFromText("{}", null)
+        assertDoesNotThrow {
+            emptyBlock.add(statements)
+        }
     }
 
     @Nested inner class
