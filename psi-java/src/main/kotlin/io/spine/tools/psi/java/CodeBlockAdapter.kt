@@ -60,9 +60,12 @@ public class CodeBlockAdapter(codeBlock: PsiCodeBlock) {
     private val delegate: PsiCodeBlock = codeBlock.copy() as PsiCodeBlock
 
     /**
-     * Returns the first body element of this code block.
+     * Returns the first element after the opening curly brace `{`.
      *
-     * Note: it can be a statement OR a formatting element like whitespace, newline.
+     * The returned element might be a statement,
+     * or a formatting element like a whitespace or a newline.
+     *
+     * @throws IllegalStateException if this [CodeBlockAdapter] has an empty body.
      */
     public val firstBodyElement: PsiElement
         get() = delegate.firstBodyElement
@@ -72,9 +75,12 @@ public class CodeBlockAdapter(codeBlock: PsiCodeBlock) {
             )
 
     /**
-     * Returns the last body element of this code block.
+     * Returns the last element before the closing curly brace `}`.
      *
-     * Note: it can be a statement OR a formatting element like whitespace, newline.
+     * The returned element might be a statement,
+     * or a formatting element like a whitespace or a newline.
+     *
+     * @throws IllegalStateException if this [CodeBlockAdapter] has an empty body.
      */
     public val lastBodyElement: PsiElement
         get() = delegate.lastBodyElement
