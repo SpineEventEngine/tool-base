@@ -27,77 +27,76 @@
 package io.spine.tools.psi.java
 
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.spine.tools.psi.java.Environment.elementFactory
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 
-@DisplayName("`PsiStatements` should")
-internal class PsiStatementsSpec : PsiTest() {
+@DisplayName("`CodeBlockAdapter` should")
+internal class CodeBlockAdapterSpec : PsiTest() {
 
     @Test
-    fun `be created from a code block`() {
-        val codeBlock = elementFactory.createCodeBlockFromText("{$STATEMENTS_TEXT}", null)
-        val statements = PsiStatements(codeBlock)
-        statements.firstChild.text shouldBe STATEMENT_LINES.first()
-        statements.lastChild.text shouldBe STATEMENT_LINES.last()
+    fun `wrap the passed PSI code block`() {
+        val original = elementFactory.createCodeBlockFromText("{$STATEMENTS_TEXT}", null)
+        val adapter = CodeBlockAdapter(original)
+        adapter.firstBodyElement.text shouldBe STATEMENT_LINES.first()
+        adapter.lastBodyElement.text shouldBe STATEMENT_LINES.last()
     }
 
     @Test
-    fun `be created from text using the factory`() {
-        val statements = elementFactory.createStatementsFromText(STATEMENTS_TEXT, null)
-        statements.firstChild.text shouldBe STATEMENT_LINES.first()
-        statements.lastChild.text shouldBe STATEMENT_LINES.last()
+    fun `be created from text using the factory extension`() {
+        val adapter = elementFactory.createCodeBlockAdapterFromText(STATEMENTS_TEXT, null)
+        adapter.firstBodyElement.text shouldBe STATEMENT_LINES.first()
+        adapter.lastBodyElement.text shouldBe STATEMENT_LINES.last()
     }
 
     @Test
-    fun `when empty, throw if asked for the first or last child`() {
-        val statements = elementFactory.createStatementsFromText("", null)
+    fun `when empty, throw if asked for the first or last body element`() {
+        val adapter = elementFactory.createCodeBlockAdapterFromText("", null)
         assertThrows<IllegalStateException> {
-            statements.firstChild
+            adapter.firstBodyElement
         }
         assertThrows<IllegalStateException> {
-            statements.lastChild
+            adapter.lastBodyElement
         }
     }
 
     @Test
-    fun `append the passed statements`() {
-        val statements = elementFactory.createStatementsFromText(STATEMENTS_TEXT, null)
-        val printHello = elementFactory.createStatementsFromText(PRINT_STATEMENT, null)
-        execute {
-            statements.append(printHello)
-        }
-        statements.firstChild.text shouldBe STATEMENT_LINES.first()
-        statements.lastChild.text shouldBe PRINT_STATEMENT
+    fun `append another code block adapter`() {
+        val statements = elementFactory.createCodeBlockAdapterFromText(STATEMENTS_TEXT, null)
+        val printHello = elementFactory.createCodeBlockAdapterFromText(PRINT_STATEMENT, null)
+        statements.append(printHello)
+        statements.firstBodyElement.text shouldBe STATEMENT_LINES.first()
+        statements.lastBodyElement.text shouldBe PRINT_STATEMENT
     }
 
     @Test
-    fun `prepend the passed statements`() {
-        val statements = elementFactory.createStatementsFromText(STATEMENTS_TEXT, null)
-        val printHello = elementFactory.createStatementsFromText(PRINT_STATEMENT, null)
+    fun `prepend another code block adapter`() {
+        val statements = elementFactory.createCodeBlockAdapterFromText(STATEMENTS_TEXT, null)
+        val printHello = elementFactory.createCodeBlockAdapterFromText(PRINT_STATEMENT, null)
         statements.prepend(printHello)
-        statements.firstChild.text shouldBe PRINT_STATEMENT
-        statements.lastChild.text shouldBe STATEMENT_LINES.last()
+        statements.firstBodyElement.text shouldBe PRINT_STATEMENT
+        statements.lastBodyElement.text shouldBe STATEMENT_LINES.last()
     }
 
     @Test
-    fun `use a hard copy of the passed 'CodeBlock'`() {
-        val passedBlock = elementFactory.createCodeBlockFromText("{$STATEMENTS_TEXT}", null)
-        val statements = PsiStatements(passedBlock)
-        execute {
-            // Remove the first statement from the original PSI block.
-            // It shouldn't break `PsiStatements` if the passed block was indeed copied.
-            passedBlock.statements
-                .first()
-                .delete()
-        }
-        val emptyBlock = elementFactory.createCodeBlockFromText("{}", null)
-        assertDoesNotThrow {
-            emptyBlock.add(statements)
-        }
+    fun `use a hard copy of the underlying code block`() {
+        val original = elementFactory.createCodeBlockFromText("{$STATEMENTS_TEXT}", null)
+        val adapter = CodeBlockAdapter(original)
+
+        // Make sure the first body elements are the same.
+        adapter.firstBodyElement.text shouldBe original.firstBodyElement!!.text
+
+        // Let's remove the first statement from the original block.
+        // It shouldn't affect the adapter if the original block was indeed hard-copied.
+        original.statements
+            .first()
+            .delete()
+
+        // Make sure the first body elements are different.
+        adapter.firstBodyElement.text shouldNotBe original.firstBodyElement!!.text
     }
 
     @Nested inner class
@@ -114,27 +113,27 @@ internal class PsiStatementsSpec : PsiTest() {
         private val methodBody = method.body!!
 
         @Test
-        fun `add statements`() {
-            val statements = elementFactory.createStatementsFromText(STATEMENTS_TEXT, null)
-            methodBody.add(statements)
+        fun `add code block adapter`() {
+            val adapter = elementFactory.createCodeBlockAdapterFromText(STATEMENTS_TEXT, null)
+            methodBody.add(adapter)
             val expected = listOf(variableStatement, returnStatement) + STATEMENT_LINES
             methodBody.statements.map { it.text } shouldBe expected
         }
 
         @Test
-        fun `add statements after the given element`() {
-            val statements = elementFactory.createStatementsFromText(STATEMENTS_TEXT, null)
+        fun `add code block adapter after the given element`() {
+            val adapter = elementFactory.createCodeBlockAdapterFromText(STATEMENTS_TEXT, null)
             val variable = methodBody.getFirstByText(variableStatement)
-            methodBody.addAfter(statements, variable)
+            methodBody.addAfter(adapter, variable)
             val expected = listOf(variableStatement) + STATEMENT_LINES + listOf(returnStatement)
             methodBody.statements.map { it.text } shouldBe expected
         }
 
         @Test
-        fun `add statements before the given element`() {
-            val statements = elementFactory.createStatementsFromText(STATEMENTS_TEXT, null)
+        fun `add code block adapter before the given element`() {
+            val adapter = elementFactory.createCodeBlockAdapterFromText(STATEMENTS_TEXT, null)
             val variable = methodBody.getFirstByText(variableStatement)
-            methodBody.addBefore(statements, variable)
+            methodBody.addBefore(adapter, variable)
             val expected = STATEMENT_LINES + listOf(variableStatement, returnStatement)
             methodBody.statements.map { it.text } shouldBe expected
         }
@@ -150,5 +149,4 @@ private val STATEMENTS_TEXT =
 
 private const val PRINT_STATEMENT = "System.out.println(\"Hello World!\");"
 
-private val STATEMENT_LINES = STATEMENTS_TEXT.lines()
-    .map { it.trim() }
+private val STATEMENT_LINES = STATEMENTS_TEXT.lines().map { it.trim() }
