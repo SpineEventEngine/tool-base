@@ -183,9 +183,14 @@ public object Environment : Closeable {
     /**
      * Obtains the instance of [PsiElementFactory] to be used for
      * the current [project][Environment.project].
+     *
+     * The returned factory is [decorated][PsiElementFactoryDecorator] to ensure
+     * that the PSI does not reject the input text from `create...FromText()`
+     * methods due to unwanted leading or trailing whitespaces.
      */
     public val elementFactory: PsiElementFactory by lazy {
-        JavaPsiFacade.getElementFactory(project)
+        val factory = JavaPsiFacade.getElementFactory(project)
+        PsiElementFactoryDecorator(factory)
     }
 
     /**
