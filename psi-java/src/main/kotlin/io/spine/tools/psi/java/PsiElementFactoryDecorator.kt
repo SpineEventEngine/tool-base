@@ -28,6 +28,7 @@ package io.spine.tools.psi.java
 
 import com.intellij.pom.java.LanguageLevel
 import com.intellij.psi.PsiAnnotation
+import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiCodeBlock
 import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
@@ -37,6 +38,7 @@ import com.intellij.psi.PsiExpression
 import com.intellij.psi.PsiField
 import com.intellij.psi.PsiJavaCodeReferenceElement
 import com.intellij.psi.PsiJavaModule
+import com.intellij.psi.PsiJavaModuleReferenceElement
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiParameter
 import com.intellij.psi.PsiRecordHeader
@@ -45,16 +47,22 @@ import com.intellij.psi.PsiStatement
 import com.intellij.psi.PsiType
 import com.intellij.psi.PsiTypeElement
 import com.intellij.psi.PsiTypeParameter
+import com.intellij.psi.javadoc.PsiDocComment
+import com.intellij.psi.javadoc.PsiDocTag
 
 /**
- * Wraps the provided [PsiElementFactory] to allow the passed text representation
- * of Java elements contain leading and trailing whitespaces.
+ * Wraps an existing [PsiElementFactory] and intercepts calls to all
+ * `create...FromText()` methods.
  *
- * This decorator performs a preliminary trimming of the passed Java text for all
- * `create...FromText()` methods that do not do it on their own. This is needed
- * because we often use multiline Kotlin strings to define text, and when being
- * interpolated, the default [trimIndent] usually does nothing to the string literal,
- * leaving all whitespaces as is. The original PSI factory often throws in such cases.
+ * The primary concern is ensuring that the PSI factory does not reject the input
+ * due to unwanted whitespace. The decorator sanitizes the input strings by trimming
+ * unwanted leading (and in some cases, trailing) whitespaces before passing them
+ * to the underlying factory.
+ *
+ * This is necessary because we often use multiline Kotlin strings to define text,
+ * and when being interpolated, the default [trimIndent] usually does nothing to
+ * the string literal, leaving all whitespaces as is. This extra whitespace can
+ * cause the underlying PSI creation methods to fail.
  *
  * For example, the code snippet below:
  * ```
@@ -90,21 +98,23 @@ import com.intellij.psi.PsiTypeParameter
  *
  * 1. Formatting usually goes somewhere inside the element definition rather before.
  * 2. At the last stage, the generated code is usually auto-formatted.
- *
- * The methods below are not overridden because they trim on their own:
- *
- * 1. [PsiElementFactory.createDocTagFromText].
- * 2. [PsiElementFactory.createDocCommentFromText].
- * 4. [PsiElementFactory.createModuleStatementFromText].
- * 5. [PsiElementFactory.createModuleReferenceFromText].
- *
- * [PsiElementFactory.createClassFromText] also left intact because the created class is nested
- * into outer `Dummy` class. So, the passed whitespaces go to definition of `Dummy`.
  */
 @Suppress("TooManyFunctions")
-internal class TrimmingPsiFactory(
+internal class PsiElementFactoryDecorator(
     private val delegate: PsiElementFactory
 ) : PsiElementFactory by delegate {
+
+    override fun createDocTagFromText(p0: String): PsiDocTag =
+        delegate.createDocTagFromText(p0.trimStart())
+
+    override fun createDocCommentFromText(p0: String): PsiDocComment =
+        delegate.createDocCommentFromText(p0.trimStart())
+
+    override fun createDocCommentFromText(p0: String, p1: PsiElement?): PsiDocComment =
+        delegate.createDocCommentFromText(p0.trimStart(), p1)
+
+    override fun createClassFromText(p0: String, p1: PsiElement?): PsiClass =
+        delegate.createClassFromText(p0.trimStart(), p1)
 
     override fun createFieldFromText(p0: String, p1: PsiElement?): PsiField =
         delegate.createFieldFromText(p0.trimStart(), p1)
@@ -142,7 +152,12 @@ internal class TrimmingPsiFactory(
     override fun createExpressionFromText(p0: String, p1: PsiElement?): PsiExpression =
         delegate.createExpressionFromText(p0.trimStart(), p1)
 
-    // Use `trim()` because this method also prohibits trailing whitespaces.
+    /**
+     * Creates a [PsiComment] element from the provided text after sanitizing it.
+     *
+     * This method fully trims the input text because the Java PSI factory prohibits
+     * both leading and trailing whitespaces in comment elements.
+     */
     override fun createCommentFromText(p0: String, p1: PsiElement?): PsiComment =
         delegate.createCommentFromText(p0.trim(), p1)
 
@@ -155,10 +170,23 @@ internal class TrimmingPsiFactory(
     override fun createEnumConstantFromText(p0: String, p1: PsiElement?): PsiEnumConstant =
         delegate.createEnumConstantFromText(p0.trimStart(), p1)
 
-    // Use `trim()` because this method also prohibits trailing whitespaces.
+    /**
+     * Creates a [PsiType] element for primitives from the provided text after sanitizing it.
+     *
+     * This method fully trims the input text because the Java PSI factory prohibits
+     * both leading and trailing whitespaces in primitive type elements.
+     */
     override fun createPrimitiveTypeFromText(p0: String): PsiType =
         delegate.createPrimitiveTypeFromText(p0.trim())
 
     override fun createModuleFromText(p0: String, p1: PsiElement?): PsiJavaModule =
         delegate.createModuleFromText(p0.trimStart(), p1)
+
+    override fun createModuleStatementFromText(p0: String, p1: PsiElement?): PsiStatement =
+        delegate.createModuleStatementFromText(p0.trimStart(), p1)
+
+    override fun createModuleReferenceFromText(
+        p0: String,
+        p1: PsiElement?
+    ): PsiJavaModuleReferenceElement = delegate.createModuleReferenceFromText(p0.trimStart(), p1)
 }
