@@ -48,21 +48,13 @@ import com.intellij.psi.PsiTypeParameter
 
 /**
  * Wraps the provided [PsiElementFactory] to allow the passed text representation
- * of Java elements contain leading whitespaces.
+ * of Java elements contain leading and trailing whitespaces.
  *
- * This decorator performs preliminary trimming of the passed Java text, so that
- * to bypass strings with leading whitespaces. PSI throws upon them.
- * We are not afraid to lose in terms of formatting because of the following:
- *
- * 1. Leading whitespaces are never used intentionally for particular elements.
- *    Formatting usually goes somewhere inside the element.
- * 2. The resulting code is usually auto-formatted.
- *
- * When calling [PsiElementFactory] from Kotlin, we can use multiline string
- * expressions to pass Java text. Such strings are never indented automatically as,
- * for example, text blocks in Java 15. It is `trimIndent()`, `trimMargin()`,
- * or just `trim()` that should be explicitly invoked. These methods behave differently;
- * it is quite easy to misuse them, leaving the resulting string with an unexpected indentation.
+ * This decorator performs a preliminary trimming of the passed Java text for all
+ * `create...FromText()` methods that do not do it on their own. This is needed
+ * because we often use multiple Kotlin strings to define text, and when being
+ * interpolated, the default [trimIndent] usually does nothing to the string literal,
+ * leaving all whitespaces as is. The original PSI factory often throws in such cases.
  *
  * For example, the code snippet below:
  * ```
@@ -86,7 +78,7 @@ import com.intellij.psi.PsiTypeParameter
  *     }
  * ```
  *
- * Instead of the expected:
+ * Instead of the expected (notice the lack of leading whitespaces):
  * ```
  * public static void print() {
  *     System.out.println("Hello world!");
@@ -94,15 +86,20 @@ import com.intellij.psi.PsiTypeParameter
  * }
  * ```
  *
- * The following methods actually bypass leading whitespaces,
- * so we do not override them. Sometimes, trims on its own
- * or use wrapping element.
+ * We are not afraid to lose in terms of formatting because of the following:
  *
- * 1. [PsiElementFactory.createDocTagFromText]. Trims on its own.
- * 2. [PsiElementFactory.createDocCommentFromText]. Trims on its own.
- * 3. [PsiElementFactory.createClassFromText]. Actually, the created class is nested in `Dummy`.
- * 4. [PsiElementFactory.createModuleStatementFromText]. Trims on its own.
- * 5. [PsiElementFactory.createModuleReferenceFromText]. Trims on its own.
+ * 1. Formatting usually goes somewhere inside the element definition rather before.
+ * 2. At the last stage, the generated code is usually auto-formatted.
+ *
+ * The methods below are not overridden because they trim on their own:
+ *
+ * 1. [PsiElementFactory.createDocTagFromText].
+ * 2. [PsiElementFactory.createDocCommentFromText].
+ * 4. [PsiElementFactory.createModuleStatementFromText].
+ * 5. [PsiElementFactory.createModuleReferenceFromText].
+ *
+ * [PsiElementFactory.createClassFromText] also left intact because the created class is nested
+ * into outer `Dummy` class. So, the passed whitespaces go to definition of `Dummy`.
  */
 @Suppress("TooManyFunctions")
 internal class TrimmingPsiFactory(
@@ -145,7 +142,7 @@ internal class TrimmingPsiFactory(
     override fun createExpressionFromText(p0: String, p1: PsiElement?): PsiExpression =
         delegate.createExpressionFromText(p0.trimStart(), p1)
 
-    // Use `trim()`.
+    // Use `trim()` because this method also prohibits trailing whitespaces.
     override fun createCommentFromText(p0: String, p1: PsiElement?): PsiComment =
         delegate.createCommentFromText(p0.trim(), p1)
 
@@ -158,7 +155,7 @@ internal class TrimmingPsiFactory(
     override fun createEnumConstantFromText(p0: String, p1: PsiElement?): PsiEnumConstant =
         delegate.createEnumConstantFromText(p0.trimStart(), p1)
 
-    // Use `trim()`.
+    // Use `trim()` because this method also prohibits trailing whitespaces.
     override fun createPrimitiveTypeFromText(p0: String): PsiType =
         delegate.createPrimitiveTypeFromText(p0.trim())
 
