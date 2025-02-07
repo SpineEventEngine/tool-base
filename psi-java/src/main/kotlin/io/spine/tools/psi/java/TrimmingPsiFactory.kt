@@ -28,7 +28,6 @@ package io.spine.tools.psi.java
 
 import com.intellij.pom.java.LanguageLevel
 import com.intellij.psi.PsiAnnotation
-import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiCodeBlock
 import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
@@ -38,7 +37,6 @@ import com.intellij.psi.PsiExpression
 import com.intellij.psi.PsiField
 import com.intellij.psi.PsiJavaCodeReferenceElement
 import com.intellij.psi.PsiJavaModule
-import com.intellij.psi.PsiJavaModuleReferenceElement
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiParameter
 import com.intellij.psi.PsiRecordHeader
@@ -47,8 +45,6 @@ import com.intellij.psi.PsiStatement
 import com.intellij.psi.PsiType
 import com.intellij.psi.PsiTypeElement
 import com.intellij.psi.PsiTypeParameter
-import com.intellij.psi.javadoc.PsiDocComment
-import com.intellij.psi.javadoc.PsiDocTag
 
 /**
  * Wraps the provided [PsiElementFactory] to allow the passed text representation
@@ -97,23 +93,21 @@ import com.intellij.psi.javadoc.PsiDocTag
  *     System.out.println("My name is Jack.");
  * }
  * ```
+ *
+ * The following methods actually bypass leading whitespaces,
+ * so we do not override them. Sometimes, trims on its own
+ * or use wrapping element.
+ *
+ * 1. [PsiElementFactory.createDocTagFromText]. Trims on its own.
+ * 2. [PsiElementFactory.createDocCommentFromText]. Trims on its own.
+ * 3. [PsiElementFactory.createClassFromText]. Actually, the created class is nested in `Dummy`.
+ * 4. [PsiElementFactory.createModuleStatementFromText]. Trims on its own.
+ * 5. [PsiElementFactory.createModuleReferenceFromText]. Trims on its own.
  */
 @Suppress("TooManyFunctions")
 internal class TrimmingPsiFactory(
     private val delegate: PsiElementFactory
 ) : PsiElementFactory by delegate {
-
-    override fun createDocTagFromText(p0: String): PsiDocTag =
-        delegate.createDocTagFromText(p0.trimStart())
-
-    override fun createDocCommentFromText(p0: String): PsiDocComment =
-        delegate.createDocCommentFromText(p0.trimStart())
-
-    override fun createDocCommentFromText(p0: String, p1: PsiElement?): PsiDocComment =
-        delegate.createDocCommentFromText(p0.trimStart(), p1)
-
-    override fun createClassFromText(p0: String, p1: PsiElement?): PsiClass =
-        delegate.createClassFromText(p0.trimStart(), p1)
 
     override fun createFieldFromText(p0: String, p1: PsiElement?): PsiField =
         delegate.createFieldFromText(p0.trimStart(), p1)
@@ -151,8 +145,9 @@ internal class TrimmingPsiFactory(
     override fun createExpressionFromText(p0: String, p1: PsiElement?): PsiExpression =
         delegate.createExpressionFromText(p0.trimStart(), p1)
 
+    // Use `trim()`.
     override fun createCommentFromText(p0: String, p1: PsiElement?): PsiComment =
-        delegate.createCommentFromText(p0.trimStart(), p1)
+        delegate.createCommentFromText(p0.trim(), p1)
 
     override fun createTypeParameterFromText(p0: String, p1: PsiElement?): PsiTypeParameter =
         delegate.createTypeParameterFromText(p0.trimStart(), p1)
@@ -163,17 +158,10 @@ internal class TrimmingPsiFactory(
     override fun createEnumConstantFromText(p0: String, p1: PsiElement?): PsiEnumConstant =
         delegate.createEnumConstantFromText(p0.trimStart(), p1)
 
+    // Use `trim()`.
     override fun createPrimitiveTypeFromText(p0: String): PsiType =
-        delegate.createPrimitiveTypeFromText(p0.trimStart())
+        delegate.createPrimitiveTypeFromText(p0.trim())
 
     override fun createModuleFromText(p0: String, p1: PsiElement?): PsiJavaModule =
         delegate.createModuleFromText(p0.trimStart(), p1)
-
-    override fun createModuleStatementFromText(p0: String, p1: PsiElement?): PsiStatement =
-        delegate.createModuleStatementFromText(p0.trimStart(), p1)
-
-    override fun createModuleReferenceFromText(
-        p0: String,
-        p1: PsiElement?
-    ): PsiJavaModuleReferenceElement = delegate.createModuleReferenceFromText(p0.trimStart(), p1)
 }
