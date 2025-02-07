@@ -183,9 +183,14 @@ public object Environment : Closeable {
     /**
      * Obtains the instance of [PsiElementFactory] to be used for
      * the current [project][Environment.project].
+     *
+     * The returned factory is decorated with [TrimmingPsiFactory], which trims
+     * the beginning of the passed text for all `create...FromText()` methods.
+     * Take a look at the docs of this decorator for details.
      */
     public val elementFactory: PsiElementFactory by lazy {
-        JavaPsiFacade.getElementFactory(project)
+        val factory = JavaPsiFacade.getElementFactory(project)
+        TrimmingPsiFactory(factory)
     }
 
     /**
