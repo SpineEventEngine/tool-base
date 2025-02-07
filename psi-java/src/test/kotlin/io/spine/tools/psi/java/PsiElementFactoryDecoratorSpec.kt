@@ -14,7 +14,7 @@ internal class PsiElementFactoryDecoratorSpec {
     companion object {
         private val project = Environment.project
         private val factory = JavaPsiFacade.getElementFactory(project)
-        private val decorator = PsiElementFactoryDecorator(factory)
+        private val decorated = PsiElementFactoryDecorator(factory)
     }
 
     @Nested
@@ -26,7 +26,7 @@ internal class PsiElementFactoryDecoratorSpec {
                 @param value The value to process.
             """
             assertDoesNotThrow {
-                decorator.createDocTagFromText(docTag)
+                decorated.createDocTagFromText(docTag)
             }
         }
 
@@ -40,8 +40,8 @@ internal class PsiElementFactoryDecoratorSpec {
                  */
             """
             assertDoesNotThrow {
-                decorator.createDocCommentFromText(docComment)
-                decorator.createDocCommentFromText(docComment, context)
+                decorated.createDocCommentFromText(docComment)
+                decorated.createDocCommentFromText(docComment, context)
             }
         }
 
@@ -52,7 +52,7 @@ internal class PsiElementFactoryDecoratorSpec {
                 }
             """
             assertDoesNotThrow {
-                decorator.createClassFromText(clazz, context)
+                decorated.createClassFromText(clazz, context)
             }
         }
 
@@ -62,7 +62,7 @@ internal class PsiElementFactoryDecoratorSpec {
                 private int myField = 10;
             """
             assertDoesNotThrow {
-                decorator.createFieldFromText(field, context)
+                decorated.createFieldFromText(field, context)
             }
         }
 
@@ -74,8 +74,8 @@ internal class PsiElementFactoryDecoratorSpec {
                 }
             """
             assertDoesNotThrow {
-                decorator.createMethodFromText(method, context)
-                decorator.createMethodFromText(method, context, languageLevel)
+                decorated.createMethodFromText(method, context)
+                decorated.createMethodFromText(method, context, languageLevel)
             }
         }
 
@@ -85,7 +85,7 @@ internal class PsiElementFactoryDecoratorSpec {
                 int number
             """
             assertDoesNotThrow {
-                decorator.createParameterFromText(parameter, context)
+                decorated.createParameterFromText(parameter, context)
             }
         }
 
@@ -95,7 +95,7 @@ internal class PsiElementFactoryDecoratorSpec {
                 int x, String y
             """
             assertDoesNotThrow {
-                decorator.createRecordHeaderFromText(recordHeader, context)
+                decorated.createRecordHeaderFromText(recordHeader, context)
             }
         }
 
@@ -105,7 +105,7 @@ internal class PsiElementFactoryDecoratorSpec {
                 BufferedReader reader = new BufferedReader(new FileReader("file.txt"))
             """
             assertDoesNotThrow {
-                decorator.createResourceFromText(resource, context)
+                decorated.createResourceFromText(resource, context)
             }
         }
 
@@ -115,7 +115,7 @@ internal class PsiElementFactoryDecoratorSpec {
                 java.util.Map<String, Integer>
             """
             assertDoesNotThrow {
-                decorator.createTypeFromText(type, context)
+                decorated.createTypeFromText(type, context)
             }
         }
 
@@ -125,7 +125,7 @@ internal class PsiElementFactoryDecoratorSpec {
                 List<String>
             """
             assertDoesNotThrow {
-                decorator.createTypeElementFromText(typeElement, context)
+                decorated.createTypeElementFromText(typeElement, context)
             }
         }
 
@@ -135,7 +135,7 @@ internal class PsiElementFactoryDecoratorSpec {
                 com.example.company.MyClass
             """
             assertDoesNotThrow {
-                decorator.createReferenceFromText(reference, context)
+                decorated.createReferenceFromText(reference, context)
             }
         }
 
@@ -148,7 +148,7 @@ internal class PsiElementFactoryDecoratorSpec {
                 }
             """
             assertDoesNotThrow {
-                decorator.createCodeBlockFromText(codeBlock, context)
+                decorated.createCodeBlockFromText(codeBlock, context)
             }
         }
 
@@ -158,7 +158,7 @@ internal class PsiElementFactoryDecoratorSpec {
                 int x = 10;
             """
             assertDoesNotThrow {
-                decorator.createStatementFromText(statement, context)
+                decorated.createStatementFromText(statement, context)
             }
         }
 
@@ -168,7 +168,7 @@ internal class PsiElementFactoryDecoratorSpec {
                 a + b
             """
             assertDoesNotThrow {
-                decorator.createExpressionFromText(expression, context)
+                decorated.createExpressionFromText(expression, context)
             }
         }
 
@@ -178,7 +178,7 @@ internal class PsiElementFactoryDecoratorSpec {
                 // This is a comment.
             """
             assertDoesNotThrow {
-                decorator.createCommentFromText(comment, context)
+                decorated.createCommentFromText(comment, context)
             }
         }
 
@@ -188,7 +188,7 @@ internal class PsiElementFactoryDecoratorSpec {
                 T extends Comparable<T>
             """
             assertDoesNotThrow {
-                decorator.createTypeParameterFromText(typeParameter, context)
+                decorated.createTypeParameterFromText(typeParameter, context)
             }
         }
 
@@ -198,7 +198,7 @@ internal class PsiElementFactoryDecoratorSpec {
                 @Override
             """
             assertDoesNotThrow {
-                decorator.createAnnotationFromText(annotation, context)
+                decorated.createAnnotationFromText(annotation, context)
             }
         }
 
@@ -208,7 +208,7 @@ internal class PsiElementFactoryDecoratorSpec {
                 VALUE
             """
             assertDoesNotThrow {
-                decorator.createEnumConstantFromText(constant, context)
+                decorated.createEnumConstantFromText(constant, context)
             }
         }
 
@@ -218,7 +218,7 @@ internal class PsiElementFactoryDecoratorSpec {
                 int
             """
             assertDoesNotThrow {
-                decorator.createPrimitiveTypeFromText(primitive)
+                decorated.createPrimitiveTypeFromText(primitive)
             }
         }
 
@@ -231,7 +231,7 @@ internal class PsiElementFactoryDecoratorSpec {
                 }
             """
             assertDoesNotThrow {
-                decorator.createModuleFromText(module, context)
+                decorated.createModuleFromText(module, context)
             }
         }
 
@@ -241,7 +241,7 @@ internal class PsiElementFactoryDecoratorSpec {
                 requires java.logging;
             """
             assertDoesNotThrow {
-                decorator.createModuleStatementFromText(statement, context)
+                decorated.createModuleStatementFromText(statement, context)
             }
         }
 
@@ -251,7 +251,7 @@ internal class PsiElementFactoryDecoratorSpec {
                 java.desktop
             """
             assertDoesNotThrow {
-                decorator.createModuleReferenceFromText(reference, context)
+                decorated.createModuleReferenceFromText(reference, context)
             }
         }
     }
