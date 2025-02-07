@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 
-@DisplayName("`TrimmingPsiFactory` should trim beginning of text passed to")
+@DisplayName("`TrimmingPsiFactory` should trim the text passed to")
 internal class TrimmingPsiFactorySpec {
 
     companion object {

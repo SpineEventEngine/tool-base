@@ -52,7 +52,7 @@ import com.intellij.psi.PsiTypeParameter
  *
  * This decorator performs a preliminary trimming of the passed Java text for all
  * `create...FromText()` methods that do not do it on their own. This is needed
- * because we often use multiple Kotlin strings to define text, and when being
+ * because we often use multiline Kotlin strings to define text, and when being
  * interpolated, the default [trimIndent] usually does nothing to the string literal,
  * leaving all whitespaces as is. The original PSI factory often throws in such cases.
  *
@@ -70,7 +70,7 @@ import com.intellij.psi.PsiTypeParameter
  * """.trimIndent()
  * ```
  *
- * Leads to the following content of `main` variable:
+ * Leads to the following content of the `main` variable:
  * ```
  *     public static void print() {
  *         System.out.println("Hello world!");
