@@ -34,30 +34,35 @@ import io.spine.tools.psi.java.Environment.project
  * Executes the given [runnable] as a PSI modification [command][CommandProcessor.executeCommand],
  * ensuring any errors thrown by the [runnable] are handled using the provided [errorHandler].
  *
- * By default, the `CoreCommandProcessor` used for PSI command processing suppresses
+ * By default, the [CoreCommandProcessor][com.intellij.openapi.command.impl.CoreCommandProcessor]
+ * used for PSI command processing
+ * [suppresses][com.intellij.openapi.command.impl.CoreCommandProcessor.executeCommand]
  * any [Throwable] thrown by the command, making it difficult for PSI users to detect
  * and handle errors.
  *
  * To address this, the given [runnable] is wrapped in a try-catch block.
  * Any thrown errors or exceptions are passed to the provided [errorHandler].
  *
- * If no custom [errorHandler] is provided, the default behavior is to print the stack
- * trace to [System.err] and terminate the process with the exit code `1`.
+ * If no custom [errorHandler] is provided, the default behavior simply
+ * rethrows anything thrown by [runnable].
  *
  * @param runnable The [Runnable] to execute as a PSI modification.
  * @param errorHandler A lambda to handle any [Throwable] thrown by the [runnable].
- *  The default handler simply rethrows an exception.
  */
 @JvmOverloads
 @JvmName("execute")
 @Suppress("TooGenericExceptionCaught") // We need everything, including `java.lang.Error`.
 public fun execute(errorHandler: (Throwable) -> Unit = { throw it }, runnable: Runnable) {
+    var caught: Throwable? = null
     val withHandledErrors = Runnable {
         try {
             runnable.run()
         } catch (t: Throwable) {
-            errorHandler(t)
+            caught = t
         }
     }
     commandProcessor.executeCommand(project, withHandledErrors, null, null)
+    if (caught != null) {
+        errorHandler(caught!!)
+    }
 }
