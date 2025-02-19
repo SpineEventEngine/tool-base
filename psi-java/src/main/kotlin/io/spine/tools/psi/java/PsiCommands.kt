@@ -1,5 +1,5 @@
 /*
- * Copyright 2024, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,12 +47,12 @@ import kotlin.system.exitProcess
  *
  * @param runnable The [Runnable] to execute as a PSI modification.
  * @param errorHandler A lambda to handle any [Throwable] thrown by the [runnable].
- *  Defaults to printing the stack trace and terminating the process with the exit code `1`.
+ *  The default handler simply rethrows an exception.
  */
 @JvmOverloads
 @JvmName("execute")
 @Suppress("TooGenericExceptionCaught") // We need everything, including `java.lang.Error`.
-public fun execute(errorHandler: (Throwable) -> Unit = ::printAndTerminate, runnable: Runnable) {
+public fun execute(errorHandler: (Throwable) -> Unit = ::rethrow, runnable: Runnable) {
     val withHandledErrors = Runnable {
         try {
             runnable.run()
@@ -63,7 +63,6 @@ public fun execute(errorHandler: (Throwable) -> Unit = ::printAndTerminate, runn
     commandProcessor.executeCommand(project, withHandledErrors, null, null)
 }
 
-private fun printAndTerminate(t: Throwable) {
-    t.printStackTrace()
-    exitProcess(1)
+private fun rethrow(t: Throwable) {
+    throw t
 }
