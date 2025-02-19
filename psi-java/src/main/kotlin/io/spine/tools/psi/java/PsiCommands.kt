@@ -29,7 +29,6 @@ package io.spine.tools.psi.java
 import com.intellij.openapi.command.CommandProcessor
 import io.spine.tools.psi.java.Environment.commandProcessor
 import io.spine.tools.psi.java.Environment.project
-import kotlin.system.exitProcess
 
 /**
  * Executes the given [runnable] as a PSI modification [command][CommandProcessor.executeCommand],
@@ -52,7 +51,7 @@ import kotlin.system.exitProcess
 @JvmOverloads
 @JvmName("execute")
 @Suppress("TooGenericExceptionCaught") // We need everything, including `java.lang.Error`.
-public fun execute(errorHandler: (Throwable) -> Unit = ::rethrow, runnable: Runnable) {
+public fun execute(errorHandler: (Throwable) -> Unit = { throw it }, runnable: Runnable) {
     val withHandledErrors = Runnable {
         try {
             runnable.run()
@@ -61,8 +60,4 @@ public fun execute(errorHandler: (Throwable) -> Unit = ::rethrow, runnable: Runn
         }
     }
     commandProcessor.executeCommand(project, withHandledErrors, null, null)
-}
-
-private fun rethrow(t: Throwable) {
-    throw t
 }
