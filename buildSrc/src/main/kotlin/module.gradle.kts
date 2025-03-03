@@ -1,5 +1,5 @@
 /*
- * Copyright 2024, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -152,14 +152,9 @@ fun Module.configureJava() {
 fun Module.configureKotlin() {
     kotlin {
         explicitApi()
-        applyJvmToolchain(BuildSettings.javaVersion.asInt())
-    }
-
-    tasks {
-        withType<KotlinCompile>().configureEach {
+        compilerOptions {
+            jvmTarget.set(BuildSettings.jvmTarget)
             setFreeCompilerArgs()
-            // https://stackoverflow.com/questions/38298695/gradle-disable-all-incremental-compilation-and-parallel-builds
-            incremental = false
         }
     }
 }
@@ -172,6 +167,12 @@ fun Module.configureTests() {
                 includeEngines("junit-jupiter")
             }
             configureLogging()
+
+            // See https://github.com/gradle/gradle/issues/18647.
+            jvmArgs(
+                "--add-opens", "java.base/java.lang=ALL-UNNAMED",
+                "--add-opens", "java.base/java.util=ALL-UNNAMED"
+            )
         }
     }
 }
