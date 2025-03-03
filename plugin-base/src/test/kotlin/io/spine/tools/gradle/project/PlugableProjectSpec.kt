@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -24,154 +24,206 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.project;
+package io.spine.tools.gradle.project
 
-import com.google.common.testing.NullPointerTester;
-import io.spine.io.Resource;
-import io.spine.logging.Level;
-import io.spine.testing.TempDir;
-import io.spine.testing.logging.LoggingTest;
-import io.spine.tools.gradle.GradlePlugin;
-import io.spine.tools.gradle.PluginScript;
-import org.gradle.api.Project;
-import org.gradle.api.plugins.JavaPlugin;
-import org.gradle.plugins.ide.idea.IdeaPlugin;
-import org.gradle.testfixtures.ProjectBuilder;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import static com.google.common.testing.NullPointerTester.Visibility.PACKAGE;
-import static com.google.common.truth.Truth.assertThat;
-import static io.spine.logging.JvmLoggerKt.toJavaLogging;
-import static io.spine.tools.gradle.GradlePlugin.implementedIn;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.google.common.testing.NullPointerTester
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import io.spine.io.Resource
+import io.spine.logging.Level
+import io.spine.logging.toJavaLogging
+import io.spine.testing.TempDir
+import io.spine.testing.logging.LoggingTest
+import io.spine.tools.gradle.GradlePlugin
+import io.spine.tools.gradle.PluginScript
+import java.util.concurrent.atomic.AtomicBoolean
+import org.gradle.api.Action
+import org.gradle.api.Project
+import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.problems.Problem
+import org.gradle.api.problems.ProblemId
+import org.gradle.api.problems.ProblemReporter
+import org.gradle.api.problems.ProblemSpec
+import org.gradle.api.problems.internal.AdditionalDataBuilderFactory
+import org.gradle.api.problems.internal.InternalProblem
+import org.gradle.api.problems.internal.InternalProblemBuilder
+import org.gradle.api.problems.internal.InternalProblemReporter
+import org.gradle.api.problems.internal.InternalProblemSpec
+import org.gradle.api.problems.internal.InternalProblems
+import org.gradle.api.problems.internal.ProblemsProgressEventEmitterHolder
+import org.gradle.internal.operations.OperationIdentifier
+import org.gradle.internal.reflect.Instantiator
+import org.gradle.plugins.ide.idea.IdeaPlugin
+import org.gradle.testfixtures.ProjectBuilder
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
 
 @DisplayName("`PlugableProject` should")
-class PlugableProjectTest {
-
-    private PlugableProject plugableProject;
-    private Project project;
+internal class PlugableProjectSpec {
+    
+    private lateinit var plugableProject: PlugableProject
+    private lateinit var project: Project
 
     @BeforeEach
-    void setUp() {
-        var tempDir = TempDir.forClass(getClass());
+    fun setUp() {
+        val tempDir = TempDir.forClass(javaClass)
         project = ProjectBuilder.builder()
-                .withName(PlugableProjectTest.class.getSimpleName())
-                .withProjectDir(tempDir)
-                .build();
-        plugableProject = new PlugableProject(project);
+            .withName(PlugableProjectSpec::class.java.simpleName)
+            .withProjectDir(tempDir)
+            .build()
+        plugableProject = PlugableProject(project)
     }
 
     @Test
-    @DisplayName("not accept `null` arguments")
-    void notAcceptNulls() {
-        var tester = new NullPointerTester()
-                .setDefault(GradlePlugin.class, implementedIn(JavaPlugin.class));
-        tester.testAllPublicInstanceMethods(plugableProject);
-        tester.testConstructors(PlugableProject.class, PACKAGE);
+    fun `not accept 'null' arguments`() {
+        val tester = NullPointerTester()
+            .setDefault(
+                GradlePlugin::class.java,
+                GradlePlugin.implementedIn(JavaPlugin::class.java)
+            )
+        tester.testAllPublicInstanceMethods(plugableProject)
+        tester.testConstructors(PlugableProject::class.java, NullPointerTester.Visibility.PACKAGE)
     }
 
     @Test
-    @DisplayName("apply a requested plugin")
-    void applyPlugin() {
-        GradlePlugin<?> plugin = implementedIn(JavaPlugin.class);
+    fun `apply a requested plugin`() {
+        val plugin: GradlePlugin<*> = GradlePlugin.implementedIn(JavaPlugin::class.java)
 
-        assertTrue(plugableProject.isNotApplied(plugin));
-        assertFalse(plugableProject.isApplied(plugin));
+        plugableProject.isNotApplied(plugin) shouldBe true
+        plugableProject.isApplied(plugin) shouldBe false
 
-        plugableProject.apply(plugin);
+        plugableProject.apply(plugin)
 
-        assertFalse(plugableProject.isNotApplied(plugin));
-        assertTrue(plugableProject.isApplied(plugin));
+        plugableProject.isNotApplied(plugin) shouldBe false
+        plugableProject.isApplied(plugin) shouldBe true
     }
 
-    @Nested
-    class LogOnDuplicate extends LoggingTest {
+    @Nested internal inner class
+    LogOnDuplicate :
+        LoggingTest(PlugableProject::class.java, Level.Companion.DEBUG.toJavaLogging()) {
 
-        private GradlePlugin<?> plugin;
-
-        LogOnDuplicate() {
-            super(PlugableProject.class, toJavaLogging(Level.Companion.getDEBUG()));
-        }
+        private lateinit var plugin: GradlePlugin<*>
 
         @BeforeEach
-        void setUp() {
-            plugin = implementedIn(JavaPlugin.class);
-            applyPlugin();
-            interceptLogging();
+        fun setUp() {
+            plugin = GradlePlugin.implementedIn(JavaPlugin::class.java)
+            applyPlugin()
+            interceptLogging()
         }
 
-        private void applyPlugin() {
-            assertFalse(plugableProject.isApplied(plugin));
-            plugableProject.apply(plugin);
-            assertTrue(plugableProject.isApplied(plugin));
+        private fun applyPlugin() {
+            plugableProject.isApplied(plugin) shouldBe false
+            plugableProject.apply(plugin)
+            plugableProject.isApplied(plugin) shouldBe true
         }
 
         @AfterEach
-        void restoreLogger() {
-            restoreLogging();
+        fun restoreLogger() {
+            restoreLogging()
         }
 
         @Test
-        @DisplayName("log if a plugin is applied twice")
-        void appliedTwice() {
-            plugableProject.apply(plugin);
-            assertTrue(plugableProject.isApplied(plugin));
+        fun `log if a plugin is applied twice`() {
+            plugableProject.apply(plugin)
+            plugableProject.isApplied(plugin) shouldBe true
 
-            var assertLogRecord = assertLog().record();
-            assertLogRecord.isDebug();
+            val assertLogRecord = assertLog().record()
+            assertLogRecord.isDebug()
             assertLogRecord.hasMessageThat()
-                           .contains(plugin.className()
-                                           .value());
+                .contains(plugin.className().value())
         }
     }
 
     @Test
-    @DisplayName("apply Gradle scripts from classpath")
-    void applyPluginScript() {
-        var resource = Resource.file("test-script.gradle", getClass().getClassLoader());
-        plugableProject.apply(PluginScript.declaredIn(resource));
-        var success = project.getExtensions()
-                             .getExtraProperties()
-                             .get("success");
-        assertThat(success).isEqualTo(true);
+    fun `apply Gradle scripts from classpath`() {
+        // See: https://github.com/gradle/gradle/issues/31862#issuecomment-2687633265
+        // and stub classes below.
+        ProblemsProgressEventEmitterHolder.init(InternalProblemsStub())
+
+        val resource = Resource.file("test-script.gradle", javaClass.classLoader)
+        plugableProject.apply(PluginScript.declaredIn(resource))
+        val success = project.extensions
+            .extraProperties["success"]
+
+        success shouldBe true
     }
 
     @Test
-    @DisplayName("execute a given action if a plugin is present")
-    void runIfPresent() {
-        var plugin = implementedIn(IdeaPlugin.class);
-        plugableProject.apply(plugin);
-        var run = new AtomicBoolean(false);
-        plugableProject.with(plugin, idea -> {
-            assertThat(idea)
-                    .isNotNull();
-            run.set(true);
-        });
-        assertThat(run.get())
-                .isTrue();
+    fun `execute a given action if a plugin is present`() {
+        val plugin = GradlePlugin.implementedIn(IdeaPlugin::class.java)
+        plugableProject.apply(plugin)
+        val run = AtomicBoolean(false)
+        plugableProject.with(plugin) { idea: IdeaPlugin? ->
+            idea shouldNotBe null
+            run.set(true)
+        }
+        run.get() shouldBe true
     }
 
     @Test
     @DisplayName("execute a given action after a plugin is applied")
-    void runWhenPresent() {
-        var plugin = implementedIn(IdeaPlugin.class);
-        var run = new AtomicBoolean(false);
-        plugableProject.with(plugin, idea -> {
-            assertThat(idea)
-                    .isNotNull();
-            run.set(true);
-        });
-        assertThat(run.get())
-                .isFalse();
-        plugableProject.apply(plugin);
-        assertThat(run.get())
-                .isTrue();
+    fun runWhenPresent() {
+        val plugin = GradlePlugin.implementedIn(IdeaPlugin::class.java)
+        val run = AtomicBoolean(false)
+        plugableProject.with(plugin) { idea: IdeaPlugin? ->
+            idea shouldNotBe null
+            run.set(true)
+        }
+        run.get() shouldBe false
+        plugableProject.apply(plugin)
+        run.get() shouldBe true
     }
+}
+
+/**
+ * The stub class for workaround for
+ * [this Gradle issue](https://github.com/gradle/gradle/issues/31862).
+ *
+ * @see <a href="https://github.com/gradle/gradle/issues/31862#issuecomment-2687633265">
+ *     Workaround</a>
+ */
+private class InternalProblemsStub : InternalProblems {
+    override fun getReporter(): ProblemReporter = notImplemented()
+    override fun getInternalReporter(): InternalProblemReporter = InternalProblemReporterStub()
+    override fun getAdditionalDataBuilderFactory(): AdditionalDataBuilderFactory = notImplemented()
+    override fun getInstantiator(): Instantiator = notImplemented()
+    override fun getProblemBuilder(): InternalProblemBuilder = notImplemented()
+}
+
+private fun notImplemented(): Nothing = TODO("Not yet implemented")
+
+/**
+ * The stub class for workaround for
+ * [this Gradle issue](https://github.com/gradle/gradle/issues/31862).
+ *
+ * @see <a href="https://github.com/gradle/gradle/issues/31862#issuecomment-2687633265">
+ *     Workaround</a>
+ */
+private class InternalProblemReporterStub : InternalProblemReporter {
+    override fun create(problemId: ProblemId, action: Action<in ProblemSpec>): Problem =
+        notImplemented()
+    override fun report(problem: Problem, id: OperationIdentifier) = notImplemented()
+    override fun report(problemId: ProblemId, spec: Action<in ProblemSpec>) = notImplemented()
+    override fun report(problem: Problem) = notImplemented()
+    override fun report(problems: MutableCollection<out Problem>) = notImplemented()
+
+    override fun throwing(
+        exception: Throwable,
+        problemId: ProblemId,
+        spec: Action<in ProblemSpec>
+    ): RuntimeException = notImplemented()
+
+    override fun throwing(exception: Throwable, problem: Problem): RuntimeException =
+        notImplemented()
+
+    override fun throwing(
+        exception: Throwable,
+        problems: MutableCollection<out Problem>
+    ): RuntimeException = notImplemented()
+
+    override fun internalCreate(action: Action<in InternalProblemSpec>): InternalProblem =
+        notImplemented()
 }
