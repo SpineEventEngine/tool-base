@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -34,6 +34,7 @@ import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.file.FileCollection;
+import org.gradle.api.tasks.TaskProvider;
 
 import java.io.File;
 import java.io.Serializable;
@@ -135,7 +136,7 @@ public final class GradleTask {
         private boolean hasOutputFiles = false;
         private final Set<File> outputs = new HashSet<>();
 
-        Builder(TaskName name, Action<Task> action) {
+        private Builder(TaskName name, Action<Task> action) {
             this.name = name;
             this.action = action;
         }
@@ -306,17 +307,18 @@ public final class GradleTask {
             var projectName = project.getDisplayName();
             var taskName = name.name();
             log.debug("Creating task `{}` in the project `{}`.", taskName, projectName);
-            Task newTask;
+            TaskProvider<Task> newTask;
             try {
-                newTask = project.task(taskName);
+                newTask = project.getTasks().register(taskName, Task.class, task -> {
+                    task.doLast(action);
+                });
             } catch (@SuppressWarnings("OverlyBroadCatchBlock") Exception e) {
                 log.error("Failed to create task `{}` in the project `{}`.", taskName, projectName);
                 throw new IllegalStateException(e);
             }
-            newTask.doLast(action);
-            dependTask(newTask, project);
-            addTaskIO(newTask);
-            var result = new GradleTask(newTask, name, project);
+            dependTask(newTask.get(), project);
+            addTaskIO(newTask.get());
+            var result = new GradleTask(newTask.get(), name, project);
             return result;
         }
 
