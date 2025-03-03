@@ -101,7 +101,7 @@ internal class ArtifactSpec {
     @Test
     fun `allow classifier for an artifact`() {
         val expectedClassifier = "de-class"
-        Artifact.newBuilder().setClassifier(expectedClassifier).classifier shouldBe
-                expectedClassifier
+        Artifact.newBuilder()
+            .setClassifier(expectedClassifier).classifier shouldBe expectedClassifier
     }
 }

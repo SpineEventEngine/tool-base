@@ -1,7 +1,5 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 /*
- * Copyright 2024, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +24,8 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 /**
  * This script uses two declarations of the constant [licenseReportVersion] because
  * currently there is no way to define a constant _before_ a build script of `buildSrc`.
@@ -39,9 +39,6 @@ plugins {
 
     // https://github.com/jk1/Gradle-License-Report/releases
     id("com.github.jk1.dependency-license-report").version("2.7")
-
-    // https://github.com/johnrengelman/shadow/releases
-    id("com.github.johnrengelman.shadow").version("7.1.2")
 }
 
 repositories {
@@ -73,12 +70,12 @@ val licenseReportVersion = "2.7"
 val grGitVersion = "4.1.1"
 
 /**
- * The version of the Kotlin Gradle plugin and Kotlin binaries used by the build process.
+ * The version of the Kotlin Gradle plugin used by the build process.
  *
  * This version may change from the [version of Kotlin][io.spine.dependency.lib.Kotlin.version]
  * used by the project.
  */
-val kotlinVersion = "1.8.22"
+val kotlinVersion = "2.1.10"
 
 /**
  * The version of Guava used in `buildSrc`.
@@ -96,7 +93,7 @@ val guavaVersion = "32.1.3-jre"
  * @see <a href="https://github.com/tbroyer/gradle-errorprone-plugin/releases">
  *     Error Prone Gradle Plugin Releases</a>
  */
-val errorPronePluginVersion = "3.1.0"
+val errorPronePluginVersion = "4.1.0"
 
 /**
  * The version of Protobuf Gradle Plugin.
@@ -123,7 +120,7 @@ val dokkaVersion = "1.9.20"
  *
  * @see <a href="https://github.com/detekt/detekt/releases">Detekt Releases</a>
  */
-val detektVersion = "1.23.0"
+val detektVersion = "1.23.8"
 
 /**
  * @see [io.spine.dependency.test.Kotest]
@@ -158,15 +155,13 @@ configurations.all {
     }
 }
 
-val jvmVersion = JavaLanguageVersion.of(11)
-
 java {
-    toolchain.languageVersion.set(jvmVersion)
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
 kotlin {
     compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_11)
+        jvmTarget.set(JvmTarget.JVM_17)
     }
 }
 

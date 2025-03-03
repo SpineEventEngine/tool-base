@@ -32,7 +32,6 @@ import org.gradle.testfixtures.ProjectBuilder;
 
 import java.io.File;
 
-import static io.spine.tools.gradle.StandardRepos.applyStandard;
 import static io.spine.tools.gradle.task.ProtobufTaskName.generateProto;
 import static io.spine.tools.gradle.task.ProtobufTaskName.generateTestProto;
 import static org.gradle.internal.impldep.com.google.common.base.Preconditions.checkNotNull;
@@ -79,23 +78,13 @@ public final class StubProject {
                 .build();
         project.getPluginManager()
                .apply("java");
-        project.task(generateProto.name());
-        project.task(generateTestProto.name());
+        project.getTasks().register(generateProto.name());
+        project.getTasks().register(generateTestProto.name());
         return project;
     }
 
     /**
-     * Configures the project to contain the {@code mavenLocal()} and {@code mavenCentral()}
-     * repositories for proper dependency resolution.
-     */
-    public StubProject withMavenRepositories() {
-        var repositories = project.getRepositories();
-        applyStandard(repositories);
-        return this;
-    }
-
-    /**
-     * Returns underlying Gradle project.
+     * Returns the underlying Gradle project.
      */
     public Project get() {
         return project;
