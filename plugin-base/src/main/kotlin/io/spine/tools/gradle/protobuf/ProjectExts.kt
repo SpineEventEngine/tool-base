@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -63,31 +63,6 @@ public val Project.generatedSourceProtoDir: Path
     get() = layout.buildDirectory.dir("generated/source/proto").get().asFile.toPath()
 
 /**
- * Obtains an absolute path to the generated code directory of this project.
- *
- * The implementation of the getter of the property handles the transition to newer versions of
- * the Protobuf Gradle Plugin. Starting from `v0.9.0` the plugin uses a project extension instead
- * of a Gradle convention object. This is so because using conventions were deprecated by Gradle
- * and is scheduled for removal in Gradle `v8.0`.
- *
- * Obtaining the value is done using reflection to avoid dependencies on both older and newer
- * versions of the API.
- */
-@Deprecated("Use `generatedDir` instead.", ReplaceWith("generatedDir"))
-public val Project.generatedFilesBaseDir: String
-    get() {
-        @Suppress("DEPRECATION")
-        return protobufGradlePluginAdapter.generatedFilesBaseDir
-    }
-
-/**
- * Obtains `generated-proto` directory of this project.
- */
-@Deprecated("Use `generatedSourceProtoDir` instead.", ReplaceWith("generatedSourceProtoDir"))
-public val Project.generatedProtoDir: Path
-    get() = generatedSourceProtoDir
-
-/**
  * Obtains the path to the directory which will be used for placing files generated
  * from proto definitions.
  */
@@ -124,24 +99,6 @@ public fun Project.descriptorSetFile(ssn: SourceSetName): File {
 }
 
 /**
- * Obtains a directory under `build/generated-proto/java` for the source set with the given name.
- */
-@Deprecated("Use `generatedJavaDir` instead.", ReplaceWith("generatedJavaDir(ssn)"))
-public fun Project.generatedProtoJavaDir(ssn: SourceSetName): Path {
-    @Suppress("DEPRECATION")
-    return generatedProto(ssn).resolve(DirectoryName.java)
-}
-
-/**
- * Obtains a directory under `build/generated-proto/grpc` for the source set with the given name.
- */
-@Deprecated("Use `generatedGrpcDir` instead.", ReplaceWith("generatedGrpcDir(ssn)"))
-public fun Project.generatedProtoGrpcDir(ssn: SourceSetName): Path {
-    @Suppress("DEPRECATION")
-    return generatedProto(ssn).resolve(DirectoryName.grpc)
-}
-
-/**
  * Obtains the directory containing generated Java source code for the specified source set.
  */
 public fun Project.generatedJavaDir(ssn: SourceSetName): Path =
@@ -158,15 +115,6 @@ public fun Project.generatedGrpcDir(ssn: SourceSetName): Path =
  */
 public fun Project.generated(ssn: SourceSetName): Path {
     return generatedDir.resolve(ssn.value)
-}
-
-/**
- * Obtains the path to the source set under `build/generated-proto`.
- */
-@Deprecated("Use `generated` instead.", ReplaceWith("generated(ssn)"))
-public fun Project.generatedProto(ssn: SourceSetName): Path {
-    @Suppress("DEPRECATION")
-    return generatedProtoDir.resolve(ssn.value)
 }
 
 /**
