@@ -39,7 +39,6 @@ import java.io.File;
 import java.nio.file.Path;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static io.spine.tools.fs.DirectoryName.build;
 
 /**
  * A default directory structure for a Spine-based Java project.
@@ -60,7 +59,6 @@ import static io.spine.tools.fs.DirectoryName.build;
 @Immutable
 public final class DefaultJavaPaths extends DefaultPaths {
 
-    private static final String BUILD_DIR = build.value();
     private static final String ROOT_NAME = DirectoryName.java.value();
 
     private DefaultJavaPaths(Path projectDir) {
