@@ -1,5 +1,5 @@
 /*
- * Copyright 2024, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,10 @@
 
 package io.spine.tools.gradle.project
 
+import com.google.common.collect.ImmutableList
+import io.spine.tools.code.Java
+import io.spine.tools.code.Kotlin
+import io.spine.tools.code.Language
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.code.SourceSetName.Companion.main
 import io.spine.tools.code.SourceSetName.Companion.test
@@ -38,6 +42,8 @@ import org.gradle.api.artifacts.Configuration
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
+import org.gradle.api.tasks.compile.JavaCompile
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 /**
  * Obtains the Java plugin extension of the project.
@@ -122,3 +128,72 @@ public fun Project.configuration(name: String): Configuration = configurations.g
 /** Obtains a configuration by its name. */
 public fun Project.configuration(name: ConfigurationName): Configuration =
     configuration(name.value())
+
+/**
+ * Tells if this project can deal with Java code.
+ *
+ * @return `true` if `java` plugin is installed, `false` otherwise.
+ */
+public fun Project.hasJava(): Boolean = hasCompileTask(Java)
+
+/**
+ * Tells if this project can deal with Kotlin code.
+ *
+ * @return `true` if any of the tasks starts with `"compile"` and ends with `"Kotlin"`.
+ */
+public fun Project.hasKotlin(): Boolean = hasCompileTask(Kotlin)
+
+/**
+ * Tells if this project has a compile task for the given language.
+ */
+public fun Project.hasCompileTask(language: Language): Boolean {
+    val currentTasks = ImmutableList.copyOf(tasks)
+    val compileTask = currentTasks.find {
+        it.name.startsWith("compile") && it.name.endsWith(language.name)
+    }
+    return compileTask != null
+}
+
+/**
+ * Verifies if the project can deal with Java or Kotlin code.
+ *
+ * The current Protobuf support of Kotlin is based on Java codegen.
+ * Therefore, it is likely that Java would be enabled in the project for
+ * Kotlin proto code to be generated.
+ * Though, it may change someday, and Kotlin support for Protobuf would be
+ * self-sufficient. This method assumes such a case when it checks the presence of
+ * Kotlin compilation tasks.
+ *
+ * @see [hasJava]
+ * @see [hasKotlin]
+ */
+public fun Project.hasJavaOrKotlin(): Boolean {
+    if (hasJava()) {
+        return true
+    }
+    return hasKotlin()
+}
+
+/**
+ * Attempts to obtain the Java compilation Gradle task for the given source set.
+ *
+ * Typically, the task is named by a pattern: `compile<SourceSet name>Java`, or just `compileJava`
+ * if the source set name is `"main"`. If the task does not fit this described pattern, this method
+ * will not find it.
+ */
+public fun Project.javaCompileFor(sourceSet: SourceSet): JavaCompile? {
+    val taskName = sourceSet.compileJavaTaskName
+    return tasks.findByName(taskName) as JavaCompile?
+}
+
+/**
+ * Attempts to obtain the Kotlin compilation Gradle task for the given source set.
+ *
+ * Typically, the task is named by a pattern: `compile<SourceSet name>Kotlin`, or just
+ * `compileKotlin` if the source set name is `"main"`. If the task does not fit this described
+ * pattern, this method will not find it.
+ */
+public fun Project.kotlinCompileFor(sourceSet: SourceSet): KotlinCompilationTask<*>? {
+    val taskName = sourceSet.getCompileTaskName("Kotlin")
+    return tasks.findByName(taskName) as KotlinCompilationTask<*>?
+}
