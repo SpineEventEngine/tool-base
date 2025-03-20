@@ -1,11 +1,11 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -50,7 +50,14 @@ public fun SourceSet.containsProtoFiles(): Boolean {
  *         by the Protobuf Gradle Plugin.
  * @see ProtobufDependencies.sourceSetExtensionName
  */
-public fun SourceSet.protoDirectorySet(): SourceDirectorySet? {
-    return extensions.getByName(sourceSetExtensionName)
+public fun SourceSet.protoDirectorySet(): SourceDirectorySet? =
+    extensions.getByName(sourceSetExtensionName)
         .let { ext -> ext as? SourceDirectorySet }
-}
+
+/**
+ * Obtains the Kotlin source directory of this source set.
+ *
+ * @return the directory set or `null` if there is no `kotlin` extension in this source set.
+ */
+public fun SourceSet.kotlinDirectorySet(): SourceDirectorySet? =
+    extensions.findByName("kotlin") as SourceDirectorySet?
