@@ -31,6 +31,8 @@ import com.google.errorprone.annotations.Immutable;
 import com.squareup.javapoet.MethodSpec;
 import io.spine.value.StringTypeValue;
 
+import java.io.Serial;
+
 /**
  * A generated Java method source code.
  *
@@ -43,6 +45,7 @@ import io.spine.value.StringTypeValue;
 @Immutable
 public class Method extends StringTypeValue {
 
+    @Serial
     private static final long serialVersionUID = 0L;
 
     /**
