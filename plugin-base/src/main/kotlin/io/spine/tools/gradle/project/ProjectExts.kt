@@ -30,6 +30,7 @@ package io.spine.tools.gradle.project
 
 import com.google.common.collect.ImmutableList
 import io.spine.tools.code.Kotlin
+import io.spine.tools.code.Java
 import io.spine.tools.code.Language
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.code.SourceSetName.Companion.main
@@ -43,6 +44,13 @@ import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.compile.JavaCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+
+/**
+ * Tells if this project can deal with Java code.
+ *
+ * @return `true` if `java` plugin is installed, `false` otherwise.
+ */
+public fun Project.hasJava(): Boolean = pluginManager.hasPlugin(Java.name.lowercase())
 
 /**
  * Obtains the Java plugin extension of the project.
@@ -130,13 +138,6 @@ public fun Project.configuration(name: ConfigurationName): Configuration =
     configuration(name.value())
 
 /**
- * Tells if this project can deal with Java code.
- *
- * @return `true` if `java` plugin is installed, `false` otherwise.
- */
-public fun Project.hasJava(): Boolean = pluginManager.hasPlugin("java")
-
-/**
  * Tells if this project can deal with Kotlin code.
  *
  * @return `true` if any of the tasks starts with `"compile"` and ends with `"Kotlin"`.
@@ -186,6 +187,6 @@ public fun Project.findJavaCompileFor(sourceSet: SourceSet): JavaCompile? {
  * If the task does not fit this described pattern, this method will not find it.
  */
 public fun Project.findKotlinCompileFor(sourceSet: SourceSet): KotlinCompilationTask<*>? {
-    val taskName = sourceSet.getCompileTaskName("Kotlin")
+    val taskName = sourceSet.getCompileTaskName(Kotlin.name)
     return tasks.findByName(taskName) as KotlinCompilationTask<*>?
 }
