@@ -29,7 +29,6 @@
 package io.spine.tools.gradle.project
 
 import com.google.common.collect.ImmutableList
-import io.spine.tools.code.Java
 import io.spine.tools.code.Kotlin
 import io.spine.tools.code.Language
 import io.spine.tools.code.SourceSetName
@@ -59,7 +58,7 @@ public val Project.javaPluginExtension: JavaPluginExtension
  * or through [JavaPluginConvention][org.gradle.api.plugins.JavaPluginConvention]
  * (available pre-7.1, now deprecated).
  * This is required to allow ProtoData to be applied with older Gradle versions,
- * such as 6.9.x, actual for Spine 1.x.
+ * such as 6.9.x, which is actual for Spine 1.x.
  */
 @Suppress("DEPRECATION" /* Gradle API for lower Gradle versions. */)
 public val Project.sourceSets: SourceSetContainer
@@ -69,6 +68,7 @@ public val Project.sourceSets: SourceSetContainer
             javaPluginExtension.sourceSets
         } catch (ignored: NoSuchMethodError) {
             val convention = convention.getByType(
+                // Use the qualified class name instead of import to avoid the deprecation warning.
                 org.gradle.api.plugins.JavaPluginConvention::class.java
             )
             convention.sourceSets
@@ -134,7 +134,7 @@ public fun Project.configuration(name: ConfigurationName): Configuration =
  *
  * @return `true` if `java` plugin is installed, `false` otherwise.
  */
-public fun Project.hasJava(): Boolean = hasCompileTask(Java)
+public fun Project.hasJava(): Boolean = pluginManager.hasPlugin("java")
 
 /**
  * Tells if this project can deal with Kotlin code.
@@ -167,21 +167,13 @@ public fun Project.hasCompileTask(language: Language): Boolean {
  * @see [hasJava]
  * @see [hasKotlin]
  */
-public fun Project.hasJavaOrKotlin(): Boolean {
-    if (hasJava()) {
-        return true
-    }
-    return hasKotlin()
-}
+public fun Project.hasJavaOrKotlin(): Boolean = hasJava() || hasKotlin()
 
 /**
- * Attempts to obtain the Java compilation Gradle task for the given source set.
- *
- * Typically, the task is named by a pattern: `compile<SourceSet name>Java`, or just `compileJava`
- * if the source set name is `"main"`. If the task does not fit this described pattern, this method
- * will not find it.
+ * Attempts to obtain the [Java compilationGradle task][SourceSet.getCompileJavaTaskName]
+ * for the given source set.
  */
-public fun Project.javaCompileFor(sourceSet: SourceSet): JavaCompile? {
+public fun Project.findJavaCompileFor(sourceSet: SourceSet): JavaCompile? {
     val taskName = sourceSet.compileJavaTaskName
     return tasks.findByName(taskName) as JavaCompile?
 }
@@ -190,10 +182,10 @@ public fun Project.javaCompileFor(sourceSet: SourceSet): JavaCompile? {
  * Attempts to obtain the Kotlin compilation Gradle task for the given source set.
  *
  * Typically, the task is named by a pattern: `compile<SourceSet name>Kotlin`, or just
- * `compileKotlin` if the source set name is `"main"`. If the task does not fit this described
- * pattern, this method will not find it.
+ * `compileKotlin` if the source set name is `"main"`.
+ * If the task does not fit this described pattern, this method will not find it.
  */
-public fun Project.kotlinCompileFor(sourceSet: SourceSet): KotlinCompilationTask<*>? {
+public fun Project.findKotlinCompileFor(sourceSet: SourceSet): KotlinCompilationTask<*>? {
     val taskName = sourceSet.getCompileTaskName("Kotlin")
     return tasks.findByName(taskName) as KotlinCompilationTask<*>?
 }

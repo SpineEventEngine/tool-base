@@ -40,7 +40,7 @@ public enum BaseTaskName implements TaskName {
     clean,
 
     /**
-     * Aggregate task that assembles all the artifacts of this project.
+     * The aggregate task that assembles all the artifacts of this project.
      */
     assemble,
 
