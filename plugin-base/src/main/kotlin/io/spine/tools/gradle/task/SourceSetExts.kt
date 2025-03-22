@@ -1,5 +1,5 @@
 /*
- * Copyright 2024, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,4 +24,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.302")
+package io.spine.tools.gradle.task
+
+import org.gradle.api.file.SourceDirectorySet
+import org.gradle.api.tasks.SourceSet
+import io.spine.tools.code.Kotlin
+
+/**
+ * Obtains the Kotlin source directory of this source set.
+ *
+ * @return the directory set or `null` if there is no `kotlin` extension in this source set.
+ */
+public fun SourceSet.findKotlinDirectorySet(): SourceDirectorySet? =
+    extensions.findByName(Kotlin.name.lowercase()) as SourceDirectorySet?

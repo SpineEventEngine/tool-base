@@ -27,6 +27,7 @@
 package io.spine.tools.gradle.protobuf
 
 import io.spine.tools.gradle.protobuf.ProtobufDependencies.sourceSetExtensionName
+import io.spine.tools.gradle.task.findKotlinDirectorySet
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.tasks.SourceSet
 
@@ -37,7 +38,7 @@ import org.gradle.api.tasks.SourceSet
  *         at least one file. Otherwise, false.
  */
 public fun SourceSet.containsProtoFiles(): Boolean {
-    val protoDirectorySet = protoDirectorySet()
+    val protoDirectorySet = findProtoDirectorySet()
         ?: return false // no `proto` extension at all.
     val isEmpty = protoDirectorySet.files.isEmpty()
     return !isEmpty
@@ -50,7 +51,19 @@ public fun SourceSet.containsProtoFiles(): Boolean {
  *         by the Protobuf Gradle Plugin.
  * @see ProtobufDependencies.sourceSetExtensionName
  */
-public fun SourceSet.protoDirectorySet(): SourceDirectorySet? =
+@Deprecated(
+    message = "Use `findProtoDirectorySet()` instead.", ReplaceWith("findProtoDirectorySet()")
+)
+public fun SourceSet.protoDirectorySet(): SourceDirectorySet? = findProtoDirectorySet()
+
+/**
+ * Obtains a [SourceDirectorySet] containing `.proto` files in this [SourceSet].
+ *
+ * @return the directory set or `null`, if there is no `proto` extension added to this `SourceSet`
+ *         by the Protobuf Gradle Plugin.
+ * @see ProtobufDependencies.sourceSetExtensionName
+ */
+public fun SourceSet.findProtoDirectorySet(): SourceDirectorySet? =
     extensions.getByName(sourceSetExtensionName)
         .let { ext -> ext as? SourceDirectorySet }
 
@@ -59,5 +72,11 @@ public fun SourceSet.protoDirectorySet(): SourceDirectorySet? =
  *
  * @return the directory set or `null` if there is no `kotlin` extension in this source set.
  */
-public fun SourceSet.kotlinDirectorySet(): SourceDirectorySet? =
-    extensions.findByName("kotlin") as SourceDirectorySet?
+@Deprecated(
+    message = "Use `findKotlinDirectorySet()` instead.",
+    ReplaceWith(
+        "findKotlinDirectorySet()",
+        imports = arrayOf("io.spine.tools.gradle.task.findKotlinDirectorySet")
+    )
+)
+public fun SourceSet.kotlinDirectorySet(): SourceDirectorySet? = findKotlinDirectorySet()
