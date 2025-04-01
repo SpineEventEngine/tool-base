@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -26,20 +26,24 @@
 
 package io.spine.tools.gradle.testing
 
-import io.spine.tools.gradle.task.TaskName
-import org.gradle.testkit.runner.BuildResult
-import org.gradle.testkit.runner.TaskOutcome
-
 /**
- * Obtains the result of the [task] from this build result.
- *
- * @throws IllegalStateException
- *          if the build result does not have a task with the given name.
+ * The umbrella object for the popular constants.
  */
-public operator fun BuildResult.get(task: TaskName): TaskOutcome {
-    val buildTask = task(task.path())
-    check(buildTask != null) {
-        "The build result does not have the task named `${task.name()}`."
-    }
-    return buildTask.outcome
+@Suppress("ConstPropertyName")
+public object Gradle {
+
+    /**
+     * The name of the project build file in the format of the Kotlin script.
+     */
+    public const val buildFile: String = "build.gradle.kts"
+
+    /**
+     * The name of the project settings file in the format of the Kotlin script.
+     */
+    public const val settingsFile: String = "settings.gradle.kts"
+
+    /**
+     * The part of the console output that tells about the successful result of the build.
+     */
+    public const val BUILD_SUCCESSFUL: String = "BUILD SUCCESSFUL"
 }
