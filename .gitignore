@@ -33,7 +33,11 @@
 
 .DS_Store
 
+# `jenv` file with the local version of Java.
 .java-version
+
+# Kotlin temp directories.
+**/.kotlin/**
 
 # IntelliJ IDEA modules and interim config files.
 *.iml
