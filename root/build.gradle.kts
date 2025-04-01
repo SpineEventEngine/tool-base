@@ -1,11 +1,11 @@
 /*
- * Copyright 2024, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -24,15 +24,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "tool-base"
+plugins {
+    module
+    `java-gradle-plugin`
+    `kotlin-dsl`
+}
 
-include(
-    "intellij-platform",
-    "intellij-platform-java",
-    "tool-base",
-    "plugin-base",
-    "plugin-testlib",
-    "psi",
-    "psi-java",
-    "root"
-)
+gradlePlugin {
+    plugins {
+        val pluginPackage = "io.spine.tools.gradle.root"
+        create("spineRootPlugin") {
+            // Make sure it matches the value of the property `SpinePlugin.Companion.ID`.
+            id = "io.spine.root"
+            implementationClass = "$pluginPackage.SpinePlugin"
+        }
+
+        create("spineSettingsPlugin") {
+            // Make sure it matches the value of the property `SpineSettingsPlugin.Companion.ID`.
+            id = "io.spine.settings"
+            implementationClass = "$pluginPackage.SpineSettingsPlugin"
+        }
+    }
+}
+
+dependencies {
+    compileOnlyApi(gradleApi())
+    compileOnlyApi(gradleKotlinDsl())
+
+    testImplementation(gradleTestKit())
+    testImplementation(gradleKotlinDsl())
+    testImplementation(project(":plugin-base"))
+    testImplementation(project(":plugin-testlib"))
+}
