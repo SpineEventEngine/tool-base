@@ -24,7 +24,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import Module_gradle.Module
 import io.spine.dependency.build.CheckerFramework
 import io.spine.dependency.build.Dokka
 import io.spine.dependency.build.ErrorProne
@@ -39,6 +38,7 @@ import io.spine.dependency.local.Logging
 import io.spine.dependency.local.Spine
 import io.spine.dependency.local.Validation
 import io.spine.dependency.test.JUnit
+import io.spine.dependency.test.Kotest
 import io.spine.dependency.test.Truth
 import io.spine.gradle.VersionWriter
 import io.spine.gradle.checkstyle.CheckStyleConfig
@@ -100,9 +100,8 @@ fun Module.addDependencies() {
         compileOnlyApi(CheckerFramework.annotations)
         ErrorProne.annotations.forEach { compileOnlyApi(it) }
 
-        implementation(Guava.lib)
-
         testImplementation(Guava.testLib)
+        testImplementation(Kotest.assertions)
         JUnit.api.forEach { testImplementation(it) }
         Truth.libs.forEach { testImplementation(it) }
         testRuntimeOnly(JUnit.runner)
