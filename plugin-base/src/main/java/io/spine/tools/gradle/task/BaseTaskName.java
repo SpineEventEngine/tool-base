@@ -25,6 +25,8 @@
  */
 package io.spine.tools.gradle.task;
 
+import com.google.common.annotations.VisibleForTesting;
+
 /**
  * Names of Gradle tasks defined by the {@code base} plugin.
  *
@@ -54,5 +56,14 @@ public enum BaseTaskName implements TaskName {
      * A lifecycle task which builds everything in the project, including running tests, producing
      * production artifacts, and generating documentation.
      */
-    build
+    build,
+
+    /**
+     * The task that prints basic Gradle usage instructions.
+     *
+     * <p>This task is primarily used in tests on bare-bones Gradle projects where other
+     * tasks are not available.
+     */
+    @VisibleForTesting
+    help
 }
