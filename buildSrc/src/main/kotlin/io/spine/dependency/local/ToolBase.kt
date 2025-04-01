@@ -38,11 +38,7 @@ object ToolBase {
 
     const val lib = "$group:spine-tool-base:$version"
     const val pluginBase = "$group:spine-plugin-base:$version"
-
-    @Deprecated(message = "Please use `pluginTestLib` instead.", ReplaceWith("pluginTestLib"))
     const val pluginTestlib = "$group:spine-plugin-testlib:$version"
-
-    const val pluginTestLib = "$group:spine-plugin-testlib:$version"
 
     const val intellijPlatformJava = "$group:intellij-platform-java:$version"
 

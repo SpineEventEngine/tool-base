@@ -190,7 +190,9 @@ fun Module.setTaskDependencies(generatedDir: String) {
             publish?.dependsOn("${project.path}:updateGitHubPages")
         }
     }
-    configureTaskDependencies()
+    afterEvaluate {
+        configureTaskDependencies()
+    }
 }
 
 fun Module.configureGitHubPages() {
