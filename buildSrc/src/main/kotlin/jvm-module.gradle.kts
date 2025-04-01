@@ -50,7 +50,6 @@ import io.spine.gradle.testing.registerTestTasks
 
 plugins {
     `java-library`
-    idea
     id("net.ltgt.errorprone")
     id("pmd-settings")
     id("project-report")

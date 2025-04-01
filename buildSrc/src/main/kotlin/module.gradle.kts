@@ -24,28 +24,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import Module_gradle.Module
 import io.spine.dependency.build.CheckerFramework
-import io.spine.dependency.lib.Coroutines
 import io.spine.dependency.build.Dokka
 import io.spine.dependency.build.ErrorProne
 import io.spine.dependency.build.FindBugs
+import io.spine.dependency.lib.Coroutines
 import io.spine.dependency.lib.Grpc
 import io.spine.dependency.lib.Guava
-import io.spine.dependency.test.JUnit
 import io.spine.dependency.lib.Jackson
 import io.spine.dependency.lib.Kotlin
-import io.spine.dependency.test.Truth
 import io.spine.dependency.local.ArtifactVersion
-import io.spine.dependency.local.Spine
 import io.spine.dependency.local.Logging
+import io.spine.dependency.local.Spine
 import io.spine.dependency.local.Validation
+import io.spine.dependency.test.JUnit
+import io.spine.dependency.test.Truth
 import io.spine.gradle.VersionWriter
 import io.spine.gradle.checkstyle.CheckStyleConfig
 import io.spine.gradle.github.pages.updateGitHubPages
 import io.spine.gradle.javac.configureErrorProne
 import io.spine.gradle.javac.configureJavac
 import io.spine.gradle.javadoc.JavadocConfig
-import io.spine.gradle.kotlin.applyJvmToolchain
 import io.spine.gradle.kotlin.setFreeCompilerArgs
 import io.spine.gradle.publish.IncrementGuard
 import io.spine.gradle.report.license.LicenseReporter
@@ -53,7 +53,6 @@ import io.spine.gradle.testing.configureLogging
 import io.spine.gradle.testing.registerTestTasks
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.dokka.gradle.DokkaTaskPartial
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     `java-library`

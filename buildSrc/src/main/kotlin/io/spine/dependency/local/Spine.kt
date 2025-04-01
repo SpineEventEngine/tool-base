@@ -84,10 +84,10 @@ object Spine {
     const val pluginBase = "$toolsGroup:spine-plugin-base:${ToolBase.version}"
 
     @Deprecated(
-        message = "Please use `ToolBase.pluginTestlib` instead`.",
-        ReplaceWith("ToolBase.pluginTestlib")
+        message = "Please use `ToolBase.pluginTestLib` instead`.",
+        ReplaceWith("ToolBase.pluginTestLib")
     )
-    const val pluginTestlib = ToolBase.pluginTestlib
+    const val pluginTestlib = ToolBase.pluginTestLib
 
     @Deprecated(
         message = "Please use `ModelCompiler.lib` instead.",
