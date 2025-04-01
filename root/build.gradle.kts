@@ -24,6 +24,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import io.spine.dependency.lib.Protobuf
+
 plugins {
     module
     `java-gradle-plugin`
@@ -50,6 +52,13 @@ gradlePlugin {
 dependencies {
     compileOnlyApi(gradleApi())
     compileOnlyApi(gradleKotlinDsl())
+    compileOnlyApi(Protobuf.javaLib)?.because("""
+        We need the `Message` interface for conversion of compilation settings that will
+        be passed to Spine Compiler plugins.
+        This is `compileOnlyApi` dependency because Protobuf Java library is going to be
+        in the execution classpath of the plugins.
+        """.trimIndent()
+    )
 
     testImplementation(gradleTestKit())
     testImplementation(gradleKotlinDsl())
