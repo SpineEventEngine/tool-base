@@ -24,7 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.dependency.lib.Protobuf
+import io.spine.gradle.isSnapshot
 
 plugins {
     module
@@ -33,9 +33,24 @@ plugins {
     `write-manifest`
 }
 
+// As defined in `versions.gradle.kts`.
+val versionToPublish: String by extra
+
 publishing.publications.withType<MavenPublication>().all {
     groupId = "io.spine.tools"
+    // It's plural because there are two plugins in the JAR.
     artifactId = "spine-root-gradle-plugins"
+    version = versionToPublish
+}
+
+// Do not publish to Gradle Plugin Portal snapshot versions.
+// It is prohibited by their policy: https://plugins.gradle.org/docs/publish-plugin
+val publishPlugins: Task by tasks.getting {
+    enabled = !versionToPublish.isSnapshot()
+}
+
+val publish: Task by tasks.getting {
+    dependsOn(publishPlugins)
 }
 
 gradlePlugin {
@@ -82,14 +97,14 @@ dependencies {
     compileOnlyApi(gradleApi())
     compileOnlyApi(gradleKotlinDsl())
 
-    implementation(Protobuf.javaLib)?.because("""
-        We need the `Message` interface for conversion of compilation settings that
-        would be passed to Spine Compiler plugins.
-        """.trimIndent()
-    )
-
-    testImplementation(gradleTestKit())
-    testImplementation(gradleKotlinDsl())
-    testImplementation(project(":plugin-base"))
-    testImplementation(project(":plugin-testlib"))
+    // Expose the below dependencies as `testFixturesApi` so that plugins
+    // that extend root project extension and settings can use them for their testing.
+    arrayOf(
+        gradleTestKit(),
+        gradleKotlinDsl(),
+        project(":plugin-base"),
+        project(":plugin-testlib")
+    ).forEach {
+        testFixturesApi(it)
+    }
 }
