@@ -30,6 +30,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.spine.tools.gradle.task.BaseTaskName
 import io.spine.tools.gradle.testing.Gradle
+import io.spine.tools.gradle.testing.under
 import io.spine.tools.gradle.testing.Gradle.BUILD_SUCCESSFUL
 import io.spine.tools.gradle.testing.get
 import io.spine.tools.gradle.testing.runGradleBuild
@@ -51,7 +52,7 @@ internal class SpineSettingsPluginSpec {
      */
     @Test
     fun `be applied via its ID`() {
-        val settingsFile = File(projectDir, Gradle.settingsFile)
+        val settingsFile = Gradle.settingsFile.under(projectDir)
         settingsFile.writeText(
             """
             plugins {
@@ -67,7 +68,7 @@ internal class SpineSettingsPluginSpec {
         )
 
         // Optionally, add an empty build.gradle file.
-        File(projectDir, Gradle.buildFile).writeText("")
+        Gradle.buildFile.under(projectDir).writeText("")
 
         // Execute the build.
         val taskName = BaseTaskName.help

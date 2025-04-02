@@ -31,6 +31,8 @@ import io.spine.tools.gradle.root.SpineSettingsExtension
 import io.spine.tools.gradle.root.SpineSettingsPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.initialization.Settings
+import org.gradle.kotlin.dsl.apply
+import org.gradle.kotlin.dsl.findByType
 import org.gradle.kotlin.dsl.getByType
 
 /**
@@ -46,7 +48,7 @@ public abstract class LibrarySettingsPlugin : Plugin<Settings> {
     @OverridingMethodsMustInvokeSuper
     override fun apply(settings: Settings) {
         if (!settings.hasRootExtension) {
-            settings.pluginManager.apply(SpineSettingsPlugin::class.java)
+            settings.apply<SpineSettingsPlugin>()
         }
     }
 
@@ -55,7 +57,7 @@ public abstract class LibrarySettingsPlugin : Plugin<Settings> {
      * the [spineSettings][SpineSettingsExtension] extension applied.
      */
     protected val Settings.hasRootExtension: Boolean
-        get() = extensions.findByType(SpineSettingsExtension::class.java) != null
+        get() = extensions.findByType<SpineSettingsExtension>() != null
 
     /**
      * Obtains the instance of [spineSettings][SpineSettingsExtension] extension

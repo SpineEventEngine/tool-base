@@ -56,6 +56,7 @@ import org.jetbrains.dokka.gradle.DokkaTaskPartial
 
 plugins {
     `java-library`
+    `java-test-fixtures`
     kotlin("jvm")
     id("net.ltgt.errorprone")
     id("detekt-code-analysis")

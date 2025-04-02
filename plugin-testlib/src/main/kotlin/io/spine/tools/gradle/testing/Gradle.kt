@@ -26,6 +26,8 @@
 
 package io.spine.tools.gradle.testing
 
+import java.io.File
+
 /**
  * The umbrella object for the popular constants.
  */
@@ -47,3 +49,9 @@ public object Gradle {
      */
     public const val BUILD_SUCCESSFUL: String = "BUILD SUCCESSFUL"
 }
+
+/**
+ * Obtains an instance of [File] having the given directory as the parent
+ * and this string as the name of the file.
+ */
+public fun String.under(dir: File): File = File(dir, this)

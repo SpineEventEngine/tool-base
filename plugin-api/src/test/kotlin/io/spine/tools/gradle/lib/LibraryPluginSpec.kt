@@ -26,40 +26,45 @@
 
 package io.spine.tools.gradle.lib
 
-import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.spine.tools.gradle.root.SpinePlugin
-import io.spine.tools.gradle.root.SpineProjectExtension
-import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.getByType
+import org.gradle.testfixtures.ProjectBuilder
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 
-/**
- * The abstract base for Gradle plugins of libraries that need to
- * introduce custom extensions in [SpineProjectExtension].
- */
-public abstract class LibraryPlugin : Plugin<Project> {
+@DisplayName("`LibraryPlugin` should")
+internal class LibraryPluginSpec {
 
-    /**
-     * Verifies if the target [project] has the [SpineProjectExtension] and if not,
-     * applies [SpinePlugin] so that the extension is created in the project.
-     */
-    @OverridingMethodsMustInvokeSuper
-    override fun apply(project: Project) {
-        if (!project.hasRootExtension) {
-            project.pluginManager.apply(SpinePlugin::class.java)
+    private lateinit var project: Project
+    private lateinit var plugin: StubPlugin
+
+    @BeforeEach
+    fun createProject() {
+        project = ProjectBuilder.builder().build()
+        plugin = StubPlugin()
+    }
+
+    @Test
+    fun `be applied to the same project more than once`() {
+        assertDoesNotThrow {
+            plugin.apply(project)
+            plugin.apply(project)
         }
     }
 
-    /**
-     * Tells if the project already has the [spine][SpineProjectExtension] extension.
-     */
-    protected val Project.hasRootExtension: Boolean
-        get() = extensions.findByName(SpineProjectExtension.NAME) != null
+    @Test
+    fun `apply 'SpinePlugin' if it is not applied yet`() {
+        val rootPlugin = SpinePlugin::class.java
+        project.plugins.findPlugin(rootPlugin) shouldBe null
 
-    /**
-     * Obtains the instance of [spine][SpineProjectExtension] extension of
-     * the project to which the plugin is applied.
-     */
-    protected val Project.rootExtension: SpineProjectExtension
-        get() = extensions.getByType<SpineProjectExtension>()
+        plugin.apply(project)
+
+        project.plugins.findPlugin(rootPlugin) shouldNotBe null
+    }
 }
+
+private class StubPlugin : LibraryPlugin()
