@@ -39,6 +39,8 @@ import org.junit.jupiter.api.assertDoesNotThrow
 @DisplayName("`LibraryPlugin` should")
 internal class LibraryPluginSpec {
 
+    private val rootPlugin = SpinePlugin::class.java
+
     private lateinit var project: Project
     private lateinit var plugin: StubPlugin
 
@@ -48,23 +50,36 @@ internal class LibraryPluginSpec {
         plugin = StubPlugin()
     }
 
+    /**
+     * This test ensures that plugins extending [LibraryPlugin] can work together
+     * assuming the fact that [LibraryPlugin] automatically applies [SpinePlugin] if
+     * it is not yet allied to the project.
+     */
     @Test
-    fun `be applied to the same project more than once`() {
+    fun `support applying descending plugin classes`() {
         assertDoesNotThrow {
             plugin.apply(project)
-            plugin.apply(project)
+            AnotherStubPlugin().apply(project)
         }
     }
 
     @Test
     fun `apply 'SpinePlugin' if it is not applied yet`() {
-        val rootPlugin = SpinePlugin::class.java
         project.plugins.findPlugin(rootPlugin) shouldBe null
 
         plugin.apply(project)
 
         project.plugins.findPlugin(rootPlugin) shouldNotBe null
     }
+
+    @Test
+    fun `apply to a project if 'SpinePlugin' is already applied`() {
+        project.pluginManager.apply(rootPlugin)
+        assertDoesNotThrow {
+            project.pluginManager.apply(StubPlugin::class.java)
+        }
+    }
 }
 
 private class StubPlugin : LibraryPlugin()
+private class AnotherStubPlugin : LibraryPlugin()
