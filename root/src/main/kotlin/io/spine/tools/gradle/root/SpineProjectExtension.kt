@@ -47,8 +47,8 @@ public abstract class SpineProjectExtension : ExtensionAware {
         /**
          * The name of the project extension.
          *
-         * This is the name that starts the `spine { }` configuration block in a project
-         * to which [SpinePlugin] is applied.
+         * This is the name that starts the `spine { }` configuration block
+         * in a project to which [SpinePlugin] is applied.
          */
         public const val NAME: String = "spine"
     }
