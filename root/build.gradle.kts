@@ -33,6 +33,11 @@ plugins {
     `write-manifest`
 }
 
+publishing.publications.withType<MavenPublication>().all {
+    groupId = "io.spine.tools"
+    artifactId = "spine-root-gradle-plugins"
+}
+
 gradlePlugin {
     website.set("https://spine.io/")
     vcsUrl.set("https://github.com/SpineEventEngine/tool-base.git")
