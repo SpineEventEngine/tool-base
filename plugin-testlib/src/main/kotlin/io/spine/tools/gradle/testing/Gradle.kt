@@ -64,6 +64,7 @@ public fun String.under(dir: File): File = File(dir, this)
  * using the given [tasks].
  *
  * @return the result of the build.
+ * @see GradleProject
  */
 public fun runGradleBuild(projectDir: File, vararg tasks: TaskName): BuildResult {
     val arguments = tasks.map { it.name() }

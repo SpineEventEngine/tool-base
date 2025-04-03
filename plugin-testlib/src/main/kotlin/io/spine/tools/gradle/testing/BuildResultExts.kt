@@ -27,8 +27,6 @@
 package io.spine.tools.gradle.testing
 
 import io.spine.tools.gradle.task.TaskName
-import java.io.File
-import org.gradle.api.Plugin
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.TaskOutcome
 
@@ -43,24 +41,4 @@ public operator fun BuildResult.get(task: TaskName): TaskOutcome {
         "The build result does not have the task named `${task.name()}`."
     }
     return buildTask.outcome
-}
-
-/**
- * Obtains a JAR file or directory in which this Java class is placed.
- */
-public fun Class<*>.classpathElement(): File =
-    File(protectionDomain.codeSource.location.file)
-
-/**
- * Obtains the directory or a JAR file containing the Gradle plugin
- * definition file for the given [pluginId].
- */
-public fun Class<Plugin<*>>.resourceDir(pluginId: String): File {
-    val pluginDescriptionUrl = classLoader.getResource(
-        "META-INF/gradle-plugins/${pluginId}.properties"
-    )!!
-    // The below climbing up via `parentFile` ends up in the directory containing `META-INF`.
-    // This is what we need to pass to `GradleRunner.withPluginClasspath(...)`.
-    val pluginDir = File(pluginDescriptionUrl.file).parentFile.parentFile.parentFile
-    return pluginDir
 }
