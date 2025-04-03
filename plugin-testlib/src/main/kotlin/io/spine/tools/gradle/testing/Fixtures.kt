@@ -52,14 +52,14 @@ public fun Class<*>.classpathElement(): File =
     File(protectionDomain.codeSource.location.file)
 
 /**
- * Obtains the directory or a JAR file containing the Gradle plugin definition file
- * for the plugin with the given ID.
+ * Obtains the directory or a JAR file containing the Gradle plugin
+ * definition file for the given [pluginId].
  */
 public fun Class<Plugin<*>>.resourceDir(pluginId: String): File {
     val pluginDescriptionUrl = classLoader.getResource(
         "META-INF/gradle-plugins/${pluginId}.properties"
     )!!
-    // This points to the directory containing `META-INF`.
+    // The below climbing up via `parentFile` ends up in the directory containing `META-INF`.
     // This is what we need to pass to `GradleRunner.withPluginClasspath(...)`.
     val pluginDir = File(pluginDescriptionUrl.file).parentFile.parentFile.parentFile
     return pluginDir
