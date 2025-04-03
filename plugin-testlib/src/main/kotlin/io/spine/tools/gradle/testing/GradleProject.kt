@@ -82,7 +82,7 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
     init {
         if (setup.additionalClasspathElements.isNotEmpty()) {
             val pluginClasspath = runner.withPluginClasspath().pluginClasspath
-            runner.withPluginClasspath(pluginClasspath + setup.additionalClasspathElements)
+            runner.withPluginClasspath(setup.additionalClasspathElements + pluginClasspath)
         } else if (setup.withDefaultPluginClasspath) {
             runner.withPluginClasspath()
         }
