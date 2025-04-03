@@ -84,7 +84,7 @@ class GradleProjectSetupSpec {
     @Test
     fun `add plugin under test classpath`() {
         setup.withPluginClasspath()
-        setup.addPluginUnderTestClasspath shouldBe true
+        setup.withDefaultPluginClasspath shouldBe true
     }
 
     @Nested

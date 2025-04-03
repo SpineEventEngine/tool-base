@@ -32,14 +32,23 @@ import io.spine.tools.gradle.root.SpineSettingsPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.initialization.Settings
 import org.gradle.kotlin.dsl.apply
-import org.gradle.kotlin.dsl.findByType
-import org.gradle.kotlin.dsl.getByType
+import io.spine.tools.gradle.root.hasRootExtension
+import io.spine.tools.gradle.root.rootExtension
 
 /**
  * The abstract base for Gradle plugins of libraries that need to introduce
  * custom extensions in [SpineSettingsExtension].
+ *
+ * @param E The type of the extension used by the plugin.
+ *  If a derived plugin class does not use an extension please pass [Unit]
+ *  as the generic argument, and `null` for the [extensionSpec] property.
+ *
+ * @property extensionSpec If provided, describes the extension to be added to
+ *   the [root extension][io.spine.tools.gradle.root.SpineProjectExtension] by the plugin.
  */
-public abstract class LibrarySettingsPlugin : Plugin<Settings> {
+public abstract class LibrarySettingsPlugin<E : Any>(
+    private val extensionSpec: ExtensionSpec<E>?
+) : Plugin<Settings> {
 
     /**
      * Verifies if the target [settings] have the [SpineSettingsExtension] and if not,
@@ -50,19 +59,8 @@ public abstract class LibrarySettingsPlugin : Plugin<Settings> {
         if (!settings.hasRootExtension) {
             settings.apply<SpineSettingsPlugin>()
         }
+        extensionSpec?.let {
+            settings.rootExtension.extensions.create(it.name, it.extensionClass.java)
+        }
     }
-
-    /**
-     * Tells if the project settings already have
-     * the [spineSettings][SpineSettingsExtension] extension applied.
-     */
-    protected val Settings.hasRootExtension: Boolean
-        get() = extensions.findByType<SpineSettingsExtension>() != null
-
-    /**
-     * Obtains the instance of [spineSettings][SpineSettingsExtension] extension
-     * applied to the project settings.
-     */
-    protected val Settings.rootExtension: SpineSettingsExtension
-        get() = extensions.getByType<SpineSettingsExtension>()
 }

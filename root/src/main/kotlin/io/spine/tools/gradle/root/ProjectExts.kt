@@ -24,24 +24,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.dependency.lib.Protobuf
+package io.spine.tools.gradle.root
 
-plugins {
-    module
-    `java-gradle-plugin`
-}
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.getByType
 
-dependencies {
-    api(project(":root"))
-    Protobuf.libs.forEach {
-        api(it)?.because("""
-            We need the `Message` interface for conversion of compilation settings that
-            would be passed to Spine Compiler plugins.
-            """.trimIndent()
-        )
-    }
+/**
+ * Tells if the project already has the [spine][SpineProjectExtension] extension.
+ *
+ * @returns `true` if the project already has the [extension][SpineProjectExtension] applied,
+ *  `false` otherwise.
+ * @see rootExtension
+ */
+public val Project.hasRootExtension: Boolean
+    get() = project.extensions.findByName(SpineProjectExtension.NAME) != null
 
-    // Propagate the test fixtures of the `root` module further so that
-    // plugins depending on this API module can use them for their testing.
-    testFixturesApi(testFixtures(project(":root")))
-}
+/**
+ * Obtains the instance of the [spine][SpineProjectExtension] extension of the project.
+ *
+ * @throws org.gradle.api.UnknownDomainObjectException if the extension is not found.
+ * @see hasRootExtension
+ */
+public val Project.rootExtension: SpineProjectExtension
+    get() = extensions.getByType<SpineProjectExtension>()

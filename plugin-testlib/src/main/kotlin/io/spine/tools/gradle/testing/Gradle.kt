@@ -26,7 +26,10 @@
 
 package io.spine.tools.gradle.testing
 
+import io.spine.tools.gradle.task.TaskName
 import java.io.File
+import org.gradle.testkit.runner.BuildResult
+import org.gradle.testkit.runner.GradleRunner
 
 /**
  * The umbrella object for the popular constants.
@@ -55,3 +58,19 @@ public object Gradle {
  * and this string as the name of the file.
  */
 public fun String.under(dir: File): File = File(dir, this)
+
+/**
+ * Runs a Gradle build for the project created in the [given directory][projectDir]
+ * using the given [tasks].
+ *
+ * @return the result of the build.
+ */
+public fun runGradleBuild(projectDir: File, vararg tasks: TaskName): BuildResult {
+    val arguments = tasks.map { it.name() }
+    val result = GradleRunner.create()
+        .withProjectDir(projectDir)
+        .withPluginClasspath()
+        .withArguments(arguments)
+        .build()
+    return result
+}

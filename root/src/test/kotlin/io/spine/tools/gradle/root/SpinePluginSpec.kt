@@ -33,6 +33,7 @@ import io.spine.tools.gradle.task.BaseTaskName
 import io.spine.tools.gradle.testing.Gradle
 import io.spine.tools.gradle.testing.Gradle.BUILD_SUCCESSFUL
 import io.spine.tools.gradle.testing.runGradleBuild
+import io.spine.tools.gradle.testing.under
 import java.io.File
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
@@ -76,7 +77,7 @@ internal class SpinePluginSpec {
 
     @Test
     fun `be applied via its ID`(@TempDir projectDir: File) {
-        File(projectDir, Gradle.buildFile).writeText(
+        Gradle.buildFile.under(projectDir).writeText(
             """
             plugins {
                 id("io.spine.root")

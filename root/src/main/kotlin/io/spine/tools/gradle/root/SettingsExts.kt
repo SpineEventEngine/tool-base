@@ -24,24 +24,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.dependency.lib.Protobuf
+package io.spine.tools.gradle.root
 
-plugins {
-    module
-    `java-gradle-plugin`
-}
+import org.gradle.api.initialization.Settings
+import org.gradle.kotlin.dsl.findByType
+import org.gradle.kotlin.dsl.getByType
 
-dependencies {
-    api(project(":root"))
-    Protobuf.libs.forEach {
-        api(it)?.because("""
-            We need the `Message` interface for conversion of compilation settings that
-            would be passed to Spine Compiler plugins.
-            """.trimIndent()
-        )
-    }
+/**
+ * Tells if the project settings already have
+ * the [spineSettings][SpineSettingsExtension] extension applied.
+ *
+ * @see rootExtension
+ */
+public val Settings.hasRootExtension: Boolean
+    get() = extensions.findByType<SpineSettingsExtension>() != null
 
-    // Propagate the test fixtures of the `root` module further so that
-    // plugins depending on this API module can use them for their testing.
-    testFixturesApi(testFixtures(project(":root")))
-}
+/**
+ * Obtains the instance of [spineSettings][SpineSettingsExtension] extension
+ * applied to the project settings.
+ *
+ * @throws org.gradle.api.UnknownDomainObjectException if the extension is not found.
+ * @see hasRootExtension
+ */
+public val Settings.rootExtension: SpineSettingsExtension
+    get() = extensions.getByType<SpineSettingsExtension>()

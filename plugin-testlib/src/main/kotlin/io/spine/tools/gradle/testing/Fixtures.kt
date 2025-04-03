@@ -28,8 +28,8 @@ package io.spine.tools.gradle.testing
 
 import io.spine.tools.gradle.task.TaskName
 import java.io.File
+import org.gradle.api.Plugin
 import org.gradle.testkit.runner.BuildResult
-import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 
 /**
@@ -46,17 +46,21 @@ public operator fun BuildResult.get(task: TaskName): TaskOutcome {
 }
 
 /**
- * Runs a Gradle build for the project created in the [given directory][projectDir]
- * using the given [tasks].
- *
- * @return the result of the build.
+ * Obtains a JAR file or directory in which this Java class is placed.
  */
-public fun runGradleBuild(projectDir: File, vararg tasks: TaskName): BuildResult {
-    val arguments = tasks.map { it.name() }
-    val result = GradleRunner.create()
-        .withProjectDir(projectDir)
-        .withPluginClasspath()
-        .withArguments(arguments)
-        .build()
-    return result
+public fun Class<*>.classpathElement(): File =
+    File(protectionDomain.codeSource.location.file)
+
+/**
+ * Obtains the directory or a JAR file containing the Gradle plugin definition file
+ * for the plugin with the given ID.
+ */
+public fun Class<Plugin<*>>.resourceDir(pluginId: String): File {
+    val pluginDescriptionUrl = classLoader.getResource(
+        "META-INF/gradle-plugins/${pluginId}.properties"
+    )!!
+    // This points to the directory containing `META-INF`.
+    // This is what we need to pass to `GradleRunner.withPluginClasspath(...)`.
+    val pluginDir = File(pluginDescriptionUrl.file).parentFile.parentFile.parentFile
+    return pluginDir
 }

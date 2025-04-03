@@ -31,7 +31,7 @@ import io.spine.tools.gradle.root.SpinePlugin
 import io.spine.tools.gradle.root.SpineProjectExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.getByType
+import io.spine.tools.gradle.root.rootExtension
 import org.gradle.kotlin.dsl.apply
 
 /**
@@ -96,20 +96,4 @@ public abstract class LibraryPlugin<E : Any>(
             _extension = project.rootExtension.extensions.create(it.name, it.extensionClass.java)
         }
     }
-
-    /**
-     * Tells if the [project] already has the [spine][SpineProjectExtension] extension.
-     *
-     * @returns `true` if the [project] already has the [extension][SpineProjectExtension] applied,
-     *  `false` otherwise.
-     */
-    protected val Project.hasRootExtension: Boolean
-        get() = project.extensions.findByName(SpineProjectExtension.NAME) != null
-
-    /**
-     * Obtains the instance of [spine][SpineProjectExtension] extension of
-     * the project to which the plugin is applied.
-     */
-    protected val Project.rootExtension: SpineProjectExtension
-        get() = extensions.getByType<SpineProjectExtension>()
 }

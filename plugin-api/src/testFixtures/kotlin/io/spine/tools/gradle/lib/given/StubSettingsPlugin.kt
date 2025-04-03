@@ -24,24 +24,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.dependency.lib.Protobuf
+@file:Suppress("unused")
 
-plugins {
-    module
-    `java-gradle-plugin`
+package io.spine.tools.gradle.lib.given
+
+import io.spine.tools.gradle.lib.ExtensionSpec
+import io.spine.tools.gradle.lib.LibrarySettingsPlugin
+import org.gradle.api.provider.Property
+
+abstract class StubSettingExtension {
+    abstract val name: Property<String>
+
+    companion object {
+        const val NAME = "nameHolder"
+    }
 }
 
-dependencies {
-    api(project(":root"))
-    Protobuf.libs.forEach {
-        api(it)?.because("""
-            We need the `Message` interface for conversion of compilation settings that
-            would be passed to Spine Compiler plugins.
-            """.trimIndent()
-        )
+class StubSettingsPlugin : LibrarySettingsPlugin<StubSettingExtension>(
+    ExtensionSpec(StubSettingExtension.NAME, StubSettingExtension::class)
+) {
+    init {
+        System.err.println(" %%%% Initializing the plugin `${this.javaClass.simpleName}`. %%%% ")
     }
-
-    // Propagate the test fixtures of the `root` module further so that
-    // plugins depending on this API module can use them for their testing.
-    testFixturesApi(testFixtures(project(":root")))
 }
