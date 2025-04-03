@@ -30,7 +30,8 @@ import kotlin.reflect.KClass
 
 /**
  * The specification of the extension added to
- * the [root extension][io.spine.tools.gradle.root.SpineProjectExtension] by a [LibraryPlugin].
+ * the [root extension][io.spine.tools.gradle.root.SpineProjectExtension]
+ * by a [LibraryPlugin].
  *
  * @param E The type of the extension.
  *

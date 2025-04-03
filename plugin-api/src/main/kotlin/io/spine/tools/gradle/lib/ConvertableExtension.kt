@@ -35,5 +35,8 @@ import com.google.protobuf.Message
  */
 public interface ConvertableExtension<P : Message> {
 
+    /**
+     * Extracts the data set in the extension into a Protobuf message.
+     */
     public fun toProto(): P
 }
