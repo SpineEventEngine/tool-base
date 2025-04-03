@@ -31,6 +31,7 @@ package io.spine.dependency.build
  *
  * @see <a href="https://plugins.gradle.org/plugin/com.gradle.plugin-publish">
  *     The plugin page at the Portal</a>
+ * @see <a href="https://plugins.gradle.org/docs/publish-plugin">Publishing Rules</a>
  */
 @Suppress("ConstPropertyName")
 object PluginPublishPlugin {
