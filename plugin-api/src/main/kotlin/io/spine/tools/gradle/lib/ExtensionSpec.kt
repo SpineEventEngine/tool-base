@@ -26,30 +26,20 @@
 
 package io.spine.tools.gradle.lib
 
-import com.google.protobuf.Message
+import kotlin.reflect.KClass
 
 /**
- * The base interface of compilation settings introduced by [LibraryPlugin]s.
+ * The specification of the extension added to
+ * the [root extension][io.spine.tools.gradle.root.SpineProjectExtension] by a [LibraryPlugin].
  *
- * Implementing classes will be extensions for settings of a [LibraryPlugin].
- * As such, they will use Gradle API for properties and action blocks.
- * To be passed to a Spine Compiler Plugin of a library the settings need to be
- * converted to a Protobuf [Message].
+ * @param E The type of the extension.
  *
- * Implementing classes need to supply the conversion by implementing the [toProto] function.
- *
- * Compilation settings come under the same name [compile][EXTENSION_NAME].
- *
- * @param T The type of the Protobuf message which passes the settings to a Spine Compiler plugin.
+ * @param name The name of the extension as it appears under
+ *   the [spine][io.spine.tools.gradle.root.SpineProjectExtension] block or
+ *   the [spineSettings][io.spine.tools.gradle.root.SpineSettingsExtension] block.
+ * @param extensionClass The class of the extension.
  */
-public interface CompilationSettings<T : Message> : ConvertableExtension<T> {
-
-    public companion object {
-
-        /**
-         * The name of the extension created under the settings of a library for
-         * tuning the compilation process of a Spine Compiler plugin of the library.
-         */
-        public const val EXTENSION_NAME: String = "compile"
-    }
-}
+public data class ExtensionSpec<E : Any>(
+    public val name: String,
+    public val extensionClass: KClass<E>
+)

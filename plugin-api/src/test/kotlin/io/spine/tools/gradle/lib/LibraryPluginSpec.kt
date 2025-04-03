@@ -35,6 +35,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
 
 @DisplayName("`LibraryPlugin` should")
 internal class LibraryPluginSpec {
@@ -79,7 +80,37 @@ internal class LibraryPluginSpec {
             project.pluginManager.apply(StubPlugin::class.java)
         }
     }
+
+    @Test
+    fun `remember the project to which it is applied`() {
+        assertThrows<UninitializedPropertyAccessException> {
+            plugin.project()
+        }
+        plugin.apply(project)
+        plugin.project() shouldBe project
+    }
+
+    @Test
+    fun `obtain root extension after the plugin is applied to the project`() {
+        plugin.run {
+            hasRootExtension() shouldBe false
+            assertThrows<UninitializedPropertyAccessException> {
+                rootExtension()
+            }
+
+            apply(project)
+
+            hasRootExtension() shouldBe true
+            rootExtension() shouldNotBe null
+        }
+    }
 }
 
-private class StubPlugin : LibraryPlugin()
-private class AnotherStubPlugin : LibraryPlugin()
+private class StubPlugin : LibraryPlugin<Unit>(null) {
+
+    fun project() = project
+    fun hasRootExtension() = hasRootExtension
+    fun rootExtension() = rootExtension
+}
+
+private class AnotherStubPlugin : LibraryPlugin<Unit>(null)

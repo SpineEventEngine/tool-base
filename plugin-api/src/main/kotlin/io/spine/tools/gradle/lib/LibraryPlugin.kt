@@ -37,11 +37,51 @@ import org.gradle.kotlin.dsl.apply
 /**
  * The abstract base for Gradle plugins of libraries that need to
  * introduce custom extensions in [SpineProjectExtension].
+ *
+ * @param E The type of the extension used by the plugin. If a derived plugin class does not
+ *  use an extension please pass [Unit] as the generic argument, and `null` for
+ *  the [extensionSpec] property.
+ *
+ * @property extensionSpec If provided, describes the extension to be added to
+ *   the [root extension][io.spine.tools.gradle.root.SpineProjectExtension] by the plugin.
  */
-public abstract class LibraryPlugin : Plugin<Project> {
+public abstract class LibraryPlugin<E : Any>(
+    private val extensionSpec: ExtensionSpec<E>?
+) : Plugin<Project> {
 
     /**
-     * Applies [SpinePlugin] to the [project].
+     * The project to which this plugin is [applied][apply].
+     *
+     * Accessing this property before the [apply] function is called will
+     * case [UninitializedPropertyAccessException].
+     */
+    protected val project: Project
+        get() = _project
+
+    /**
+     * The packing field for the [project] property.
+     */
+    private lateinit var _project: Project
+
+    /**
+     * Obtains the extension added, if any, by the plugin.
+     *
+     * This property is `null` if the plugin does not support an extension, or,
+     * if the plugin does support an extension before the [apply] function is called.
+     */
+    protected val extension: E?
+        get() = if (this::_extension.isInitialized) _extension else null
+
+    /**
+     * The backing property for the [extension] added to the project by the plugin.
+     *
+     * If the plugin does not support an extension, this property is never initialized.
+     */
+    private lateinit var _extension: E
+
+    /**
+     * Applies [SpinePlugin] to the [project] and adds the [extension][extensionSpec]
+     * if it is used by the plugin.
      *
      * Since [org.gradle.api.plugins.PluginManager.apply] does nothing
      * if a plugin is already applied, it is safe to perform the call
@@ -49,19 +89,31 @@ public abstract class LibraryPlugin : Plugin<Project> {
      */
     @OverridingMethodsMustInvokeSuper
     override fun apply(project: Project) {
+        _project = project
+        // Make sure the root extension is installed.
         project.apply<SpinePlugin>()
+        extensionSpec?.let {
+            _extension = rootExtension.extensions.create(it.name, it.extensionClass.java)
+        }
     }
 
     /**
-     * Tells if the project already has the [spine][SpineProjectExtension] extension.
+     * Tells if the [project] already has the [spine][SpineProjectExtension] extension.
+     *
+     * @returns `true` if the [project] already has the [extension][SpineProjectExtension] applied,
+     *  `false` otherwise.
      */
-    protected val Project.hasRootExtension: Boolean
-        get() = extensions.findByName(SpineProjectExtension.NAME) != null
+    protected val hasRootExtension: Boolean
+        get() = if (this::_project.isInitialized) {
+            project.extensions.findByName(SpineProjectExtension.NAME) != null
+        } else {
+            false
+        }
 
     /**
      * Obtains the instance of [spine][SpineProjectExtension] extension of
      * the project to which the plugin is applied.
      */
-    protected val Project.rootExtension: SpineProjectExtension
-        get() = extensions.getByType<SpineProjectExtension>()
+    protected val rootExtension: SpineProjectExtension
+        get() = project.extensions.getByType<SpineProjectExtension>()
 }
