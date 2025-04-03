@@ -30,6 +30,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.spine.tools.gradle.root.SpinePlugin
 import org.gradle.api.Project
+import org.gradle.api.UnknownDomainObjectException
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -93,15 +94,15 @@ internal class LibraryPluginSpec {
     @Test
     fun `obtain root extension after the plugin is applied to the project`() {
         plugin.run {
-            hasRootExtension() shouldBe false
-            assertThrows<UninitializedPropertyAccessException> {
-                rootExtension()
+            hasRootExtension(project) shouldBe false
+            assertThrows<UnknownDomainObjectException> {
+                rootExtension(project)
             }
 
             apply(project)
 
-            hasRootExtension() shouldBe true
-            rootExtension() shouldNotBe null
+            hasRootExtension(project) shouldBe true
+            rootExtension(project) shouldNotBe null
         }
     }
 }
@@ -109,8 +110,8 @@ internal class LibraryPluginSpec {
 private class StubPlugin : LibraryPlugin<Unit>(null) {
 
     fun project() = project
-    fun hasRootExtension() = hasRootExtension
-    fun rootExtension() = rootExtension
+    fun hasRootExtension(project: Project) = project.hasRootExtension
+    fun rootExtension(project: Project) = project.rootExtension
 }
 
 private class AnotherStubPlugin : LibraryPlugin<Unit>(null)

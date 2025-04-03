@@ -38,9 +38,9 @@ import org.gradle.kotlin.dsl.apply
  * The abstract base for Gradle plugins of libraries that need to
  * introduce custom extensions in [SpineProjectExtension].
  *
- * @param E The type of the extension used by the plugin. If a derived plugin class does not
- *  use an extension please pass [Unit] as the generic argument, and `null` for
- *  the [extensionSpec] property.
+ * @param E The type of the extension used by the plugin.
+ *  If a derived plugin class does not use an extension please pass [Unit]
+ *  as the generic argument, and `null` for  the [extensionSpec] property.
  *
  * @property extensionSpec If provided, describes the extension to be added to
  *   the [root extension][io.spine.tools.gradle.root.SpineProjectExtension] by the plugin.
@@ -59,7 +59,7 @@ public abstract class LibraryPlugin<E : Any>(
         get() = _project
 
     /**
-     * The packing field for the [project] property.
+     * The backing field for the [project] property.
      */
     private lateinit var _project: Project
 
@@ -93,7 +93,7 @@ public abstract class LibraryPlugin<E : Any>(
         // Make sure the root extension is installed.
         project.apply<SpinePlugin>()
         extensionSpec?.let {
-            _extension = rootExtension.extensions.create(it.name, it.extensionClass.java)
+            _extension = project.rootExtension.extensions.create(it.name, it.extensionClass.java)
         }
     }
 
@@ -103,17 +103,13 @@ public abstract class LibraryPlugin<E : Any>(
      * @returns `true` if the [project] already has the [extension][SpineProjectExtension] applied,
      *  `false` otherwise.
      */
-    protected val hasRootExtension: Boolean
-        get() = if (this::_project.isInitialized) {
-            project.extensions.findByName(SpineProjectExtension.NAME) != null
-        } else {
-            false
-        }
+    protected val Project.hasRootExtension: Boolean
+        get() = project.extensions.findByName(SpineProjectExtension.NAME) != null
 
     /**
      * Obtains the instance of [spine][SpineProjectExtension] extension of
      * the project to which the plugin is applied.
      */
-    protected val rootExtension: SpineProjectExtension
-        get() = project.extensions.getByType<SpineProjectExtension>()
+    protected val Project.rootExtension: SpineProjectExtension
+        get() = extensions.getByType<SpineProjectExtension>()
 }
