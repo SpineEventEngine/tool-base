@@ -28,6 +28,9 @@ import io.spine.dependency.lib.Protobuf
 
 plugins {
     module
+    // This module does not publish Gradle plugins.
+    // We need the `java-gradle-plugin` for `pluginUnderTestMetadata` support
+    // which is used in the tests of the abstract plugin classes provided by this module.
     `java-gradle-plugin`
 }
 
