@@ -73,6 +73,7 @@ public abstract class Versions {
     public abstract val coreJvm: Property<String>
     public abstract val gcloud: Property<String>
     public abstract val money: Property<String>
+    public abstract val rdbms: Property<String>
     public abstract val time: Property<String>
     public abstract val toolBase: Property<String>
     public abstract val validation: Property<String>
