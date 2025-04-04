@@ -93,12 +93,12 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
         replaceTokens(setup)
     }
 
+    @Suppress("ConstPropertyName") // https://bit.ly/kotlin-prop-names
     public companion object {
 
         /**
          * The ID of a Java Gradle plugin.
          */
-        @Suppress("ConstPropertyName") // https://bit.ly/kotlin-prop-names
         public const val javaPlugin: String = "java"
 
         /**
@@ -124,7 +124,7 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
 
         /**
          * Uses the pre-configured [replacements][GradleProjectSetup.replacements] and replaces
-         * the tokens in all files of the [projectDir] and its sub-folders.
+         * the tokens in all files of the [projectDir] and its subfolders.
          *
          * The contents of `projectDir/buildSrc` folder are ignored in this process — as these files
          * hardly ever may contain the tokenized values.
