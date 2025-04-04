@@ -34,4 +34,6 @@ include(
     "plugin-testlib",
     "psi",
     "psi-java",
+    "root",
+    "plugin-api"
 )

@@ -98,8 +98,8 @@ public class GradleProjectSetup internal constructor(
         private set
 
     /**
-     * Determines whether the plugin under test classpath is defined and should be added to
-     * the Gradle execution classpath.
+     * Determines whether the plugin under test classpath is defined and
+     * should be added to the Gradle execution classpath.
      *
      * The `plugin-under-test-metadata.properties` resource must be present in
      * the current classpath. The file defines the `implementation-classpath` property,
@@ -108,10 +108,34 @@ public class GradleProjectSetup internal constructor(
      * Whenever the added classpath contains a Gradle plugin, the executed Gradle scripts may
      * apply it via the `plugins` block.
      *
+     * This property is mutually exclusive [additionalClasspathElements].
+     * If the list of additional elements is not empty, this property is false.
+     * If the property is set to `true` this list is empty.
+     *
      * @see org.gradle.testkit.runner.GradleRunner.withPluginClasspath
+     * @see additionalClasspathElements
      */
-    internal var addPluginUnderTestClasspath = false
+    internal var withDefaultPluginClasspath = false
         private set
+
+    /**
+     * Determines whether the plugin under test classpath is defined and
+     * should be added to the Gradle execution classpath including elements
+     * of this list.
+     *
+     * The `plugin-under-test-metadata.properties` resource must be present in
+     * the current classpath. The file defines the `implementation-classpath` property,
+     * which contains the classpath to be added to the Gradle run.
+     *
+     * Whenever the added classpath contains a Gradle plugin, the executed Gradle scripts may
+     * apply it via the `plugins` block.
+     *
+     * This property is mutually exclusive with `true` value of [withDefaultPluginClasspath].
+     * If the property is set to `true` this list is empty.
+     *
+     * @see withDefaultPluginClasspath
+     */
+    internal val additionalClasspathElements = mutableSetOf<File>()
 
     /**
      * The text replacements to be made in the files residing under the [projectDir].
@@ -151,25 +175,27 @@ public class GradleProjectSetup internal constructor(
         }
 
     /**
-     * Sets the name of the resource directory and names of the files to be copied
-     * from the directory.
+     * Sets the name of the resource directory and names of the files
+     * to be copied from the directory.
      */
-    public fun fromResources(resourceDir: String, vararg fileNames: String) : GradleProjectSetup =
+    public fun fromResources(
+        resourceDir: String,
+        vararg fileNames: String
+    ) : GradleProjectSetup =
         fromResources(resourceDir, acceptingEndings(*fileNames))
 
     /**
      * Creates a source code file with the given content.
      *
-     * @param path
-     *          the path to the file relative to the project root directory
-     * @param lines
-     *          the content of the file
+     * @param path The path to the file relative to the project root directory.
+     * @param lines The content of the file.
      */
     public fun addFile(path: String, lines: Iterable<String>): GradleProjectSetup {
         filesToCreate[path] = lines.toList()
         return this
     }
 
+    @Suppress("ConstPropertyName")
     private companion object {
         const val debugModeErrorMsg =
             "Cannot use environment variables in the `debug` mode. Please see the documentation" +
@@ -191,9 +217,10 @@ public class GradleProjectSetup internal constructor(
      *
      * Affects the code executed during a [Gradle task][GradleProject.executeTask].
      * When turned on, all code is executed in a single JVM.
-     * This leads to a high memory consumption.
+     * This leads to high memory consumption.
      *
-     * Use this mode only for temporary debug purposes. E.g. it should never get to e.g. CI server.
+     * Use this mode only for temporary debug purposes.
+     * E.g., it should never get to a CI server.
      *
      * This method cannot be called if [withEnvironment] was called before.
      * For more information on this please see
@@ -202,18 +229,6 @@ public class GradleProjectSetup internal constructor(
     public fun enableRunnerDebug(): GradleProjectSetup {
         check(environment == null) { debugModeErrorMsg }
         debug = true
-        return this
-    }
-
-    /**
-     * Adds `--debug` command line option to the Gradle process.
-     */
-    @Deprecated(
-        message = "Please use `withLoggingLevel(LogLevel.DEBUG)`.",
-        replaceWith = ReplaceWith("withLoggingLevel(LogLevel.DEBUG)")
-    )
-    public fun debugLogging(): GradleProjectSetup {
-        arguments = arguments.withLoggingLevel(LogLevel.DEBUG)
         return this
     }
 
@@ -250,12 +265,36 @@ public class GradleProjectSetup internal constructor(
     }
 
     /**
-     * Configures this runner to include the plugin under development into the classpath.
+     * Configures this runner to include the plugin under development in the classpath.
      *
      * @see org.gradle.testkit.runner.GradleRunner.withPluginClasspath
      */
     public fun withPluginClasspath(): GradleProjectSetup {
-        addPluginUnderTestClasspath = true
+        withDefaultPluginClasspath = true
+        additionalClasspathElements.clear()
+        return this
+    }
+
+    /**
+     * Adds the classpath elements that will be joined
+     * with the default classpath of the plugin-under-test,
+     * with the resulting collection used as a plugin classpath in this project.
+     *
+     * The given elements will be inserted *before* the default classpath elements.
+     *
+     * @param customElements One or more classpath elements to add before the default classpath.
+     * @see org.gradle.testkit.runner.GradleRunner.withPluginClasspath
+     * @throws IllegalArgumentException if no elements are provided.
+     *   Please use the no-arg overload function for enabling the default classpath
+     *   without custom elements.
+     */
+    public fun withPluginClasspath(vararg customElements: File): GradleProjectSetup {
+        val elements = customElements.toList()
+        require(elements.isNotEmpty()) {
+            "`customElements` must not be empty."
+        }
+        additionalClasspathElements.addAll(elements)
+        withDefaultPluginClasspath = false
         return this
     }
 
@@ -263,10 +302,8 @@ public class GradleProjectSetup internal constructor(
      * Adds a property to be passed to the Gradle build using
      * the `"-P${name}=${value}"` command line option.
      *
-     * @param name
-     *          name of the property
-     * @param value
-     *          value of the property
+     * @param name The name of the property.
+     * @param value The value of the property.
      */
     public fun withProperty(name: String, value: String): GradleProjectSetup {
         require(name.isNotBlank())
@@ -334,8 +371,8 @@ public class GradleProjectSetup internal constructor(
      * and therefore may be somewhat re-used to speed up the test execution.
      */
     public fun withSharedTestKitDirectory() : GradleProjectSetup {
-        this.useSharedTestKit = true;
-        return this;
+        this.useSharedTestKit = true
+        return this
     }
 
     /**

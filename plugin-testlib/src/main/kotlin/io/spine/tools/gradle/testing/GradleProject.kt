@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -23,6 +23,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package io.spine.tools.gradle.testing
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue
@@ -79,7 +80,10 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
     }
 
     init {
-        if (setup.addPluginUnderTestClasspath) {
+        if (setup.additionalClasspathElements.isNotEmpty()) {
+            val pluginClasspath = runner.withPluginClasspath().pluginClasspath
+            runner.withPluginClasspath(setup.additionalClasspathElements + pluginClasspath)
+        } else if (setup.withDefaultPluginClasspath) {
             runner.withPluginClasspath()
         }
         if (setup.environment != null) {
@@ -89,12 +93,12 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
         replaceTokens(setup)
     }
 
+    @Suppress("ConstPropertyName") // https://bit.ly/kotlin-prop-names
     public companion object {
 
         /**
          * The ID of a Java Gradle plugin.
          */
-        @Suppress("ConstPropertyName") // https://bit.ly/kotlin-prop-names
         public const val javaPlugin: String = "java"
 
         /**
@@ -120,7 +124,7 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
 
         /**
          * Uses the pre-configured [replacements][GradleProjectSetup.replacements] and replaces
-         * the tokens in all files of the [projectDir] and its sub-folders.
+         * the tokens in all files of the [projectDir] and its subfolders.
          *
          * The contents of `projectDir/buildSrc` folder are ignored in this process — as these files
          * hardly ever may contain the tokenized values.

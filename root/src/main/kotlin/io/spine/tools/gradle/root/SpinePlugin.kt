@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -24,22 +24,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.testing
+package io.spine.tools.gradle.root
 
-import io.spine.tools.gradle.task.TaskName
-import org.gradle.testkit.runner.BuildResult
-import org.gradle.testkit.runner.TaskOutcome
+import io.spine.tools.gradle.root.SpineProjectExtension.Companion.NAME
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.create
 
 /**
- * Obtains the result of the [task] from this build result.
- *
- * @throws IllegalStateException
- *          if the build result does not have a task with the given name.
+ * Creates [SpineProjectExtension] in a project, if it is not already present.
  */
-public operator fun BuildResult.get(task: TaskName): TaskOutcome {
-    val buildTask = task(task.path())
-    check(buildTask != null) {
-        "The build result does not have the task named `${task.name()}`."
+public class SpinePlugin : Plugin<Project> {
+
+    override fun apply(project: Project) {
+        project.run {
+            if (extensions.findByName(NAME) == null) {
+                extensions.create<SpineProjectExtension>(NAME)
+            }
+        }
     }
-    return buildTask.outcome
+
+    public companion object {
+
+        /**
+         * The ID of the plugin.
+         */
+        public const val ID: String = "io.spine.root"
+    }
 }
