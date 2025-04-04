@@ -31,6 +31,13 @@ import org.gradle.api.Plugin
 import org.gradle.api.initialization.Settings
 import org.gradle.kotlin.dsl.create
 
+/**
+ * Adds [spineSettings][SpineSettingsExtension] extension in the [Settings]
+ * to which the plugin is applied.
+ *
+ * Before adding the extension, the plugin checks for the present of the extension.
+ * So, applying the plugin more than once has no effect.
+ */
 public class SpineSettingsPlugin : Plugin<Settings> {
 
     override fun apply(settings: Settings) {
