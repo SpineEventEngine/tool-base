@@ -19,7 +19,7 @@ Common code for development tools of the Spine SDK.
 * [`plugin-testlib`](plugin-testlib) — test fixtures for testing Gradle plugins.
 
 
-* [`psi`](psi) — utilities and Kotlin extensions for working with language independent
+* [`psi`](psi) — utilities and Kotlin extensions for working with language-independent
   part of [IntelliJ Platform PSI](https://plugins.jetbrains.com/docs/intellij/psi.html).
 
 
