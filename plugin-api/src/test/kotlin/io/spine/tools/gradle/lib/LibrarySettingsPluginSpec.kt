@@ -33,9 +33,8 @@ import io.spine.tools.gradle.task.BaseTaskName
 import io.spine.tools.gradle.testing.Gradle
 import io.spine.tools.gradle.testing.Gradle.BUILD_SUCCESSFUL
 import io.spine.tools.gradle.testing.GradleProject
-import io.spine.tools.gradle.testing.classpathElement
+import io.spine.tools.java.classpathElement
 import io.spine.tools.gradle.testing.get
-import io.spine.tools.gradle.testing.resourceDir
 import io.spine.tools.gradle.testing.under
 import java.io.File
 import org.gradle.api.Plugin
@@ -75,14 +74,13 @@ internal class LibrarySettingsPluginSpec {
         Gradle.settingsFile.under(projectDir).writeText(text)
 
         // Add the plugin class and its definition to the `GradleRunner` classpath.
-        // By default the runner picks only the `main` source set.
+        // By default, the runner picks only the `main` source set.
         @Suppress("UNCHECKED_CAST")
         val pluginClass = StubSettingsPlugin::class.java as Class<Plugin<*>>
         val testFixturesFile = pluginClass.classpathElement()
-        val testFixturesResources = pluginClass.resourceDir(PLUGIN_ID)
 
         val gradleProject = GradleProject.setupAt(projectDir)
-            .withPluginClasspath(testFixturesFile, testFixturesResources)
+            .withPluginClasspath(testFixturesFile)
             .create()
 
         // Execute the build.

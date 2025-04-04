@@ -24,42 +24,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.testing
+package io.spine.tools.java
 
 import java.io.File
 import java.net.URL
-import org.gradle.api.Plugin
+import java.net.URLClassLoader
 
 /**
- * Obtains the directory or a JAR file containing the Gradle plugin
- * definition file for the given [pluginId].
+ * Obtains the URL of the [java.security.CodeSource] from where the class is loaded.
  */
-public fun Class<Plugin<*>>.resourceDir(pluginId: String): File {
-    val pluginDescriptionUrl = classLoader.getResource(
-        "META-INF/gradle-plugins/${pluginId}.properties"
-    )!!
-    // The below climbing up via `parentFile` ends in the directory containing `META-INF`.
-    // This is what we need to pass to `GradleRunner.withPluginClasspath(...)` when
-    // testing a plugin in a source set other than `main`.
-    val pluginDir = File(pluginDescriptionUrl).parentFile.parentFile.parentFile
-    return pluginDir
-}
+private val Class<*>.codeSourceLocation: URL
+    get() = protectionDomain.codeSource.location
 
 /**
- * Creates new [File] instance assuming that the given [url] refers to a file.
+ * Obtains an instance of [URLClassLoader] for this class.
  */
-private fun File(url: URL): File {
-    val path = url.file.removeFileProtocolPrefix()
-    return File(path)
-}
+public fun Class<*>.urlClassLoader(): URLClassLoader =
+    URLClassLoader(arrayOf(codeSourceLocation), null)
 
 /**
- * Removes the `file:/` and `file:\` prefixes in this string.
- *
- * The prefix is present in the results of [URL.getFile] method.
- * We need to remove the prefix when creating new [File] instance.
+ * Obtains a JAR file or directory in which this Java class is placed.
  */
-private fun String.removeFileProtocolPrefix(): String {
-    val protocol = "file:"
-    return replace("$protocol/", "").replace("$protocol\\", "")
-}
+public fun Class<*>.classpathElement(): File = File(codeSourceLocation.file)
