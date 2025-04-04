@@ -42,7 +42,7 @@ import com.google.protobuf.Message
  *
  * @param T The type of the Protobuf message which passes the settings to a Spine Compiler plugin.
  */
-public interface CompilationSettings<T : Message> : ConvertableExtension<T> {
+public interface LibraryCompilationSettings<T : Message> : ConvertableExtension<T> {
 
     public companion object {
 
