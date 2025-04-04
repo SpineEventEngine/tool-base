@@ -91,4 +91,3 @@ internal class LibrarySettingsPluginSpec {
         result.output shouldContain BUILD_SUCCESSFUL
     }
 }
-
