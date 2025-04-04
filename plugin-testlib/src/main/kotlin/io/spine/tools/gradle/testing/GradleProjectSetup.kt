@@ -276,15 +276,22 @@ public class GradleProjectSetup internal constructor(
     }
 
     /**
-     * Adds classpath elements that would be added in addition to
-     * the classpath of the plugin under test.
+     * Adds the classpath elements that will be joined
+     * with the default classpath of the plugin-under-test,
+     * with the resulting collection used as a plugin classpath in this project.
      *
+     * The given elements will be inserted *before* the default classpath elements.
+     *
+     * @param customElements One or more classpath elements to add before the default classpath.
      * @see org.gradle.testkit.runner.GradleRunner.withPluginClasspath
+     * @throws IllegalArgumentException if no elements are provided.
+     *   Please use the no-arg overload function for enabling the default classpath
+     *   without custom elements.
      */
-    public fun withPluginClasspath(vararg additionalElements: File): GradleProjectSetup {
-        val elements = additionalElements.toList()
+    public fun withPluginClasspath(vararg customElements: File): GradleProjectSetup {
+        val elements = customElements.toList()
         require(elements.isNotEmpty()) {
-            "`additionalElements` must not be empty"
+            "`customElements` must not be empty."
         }
         additionalClasspathElements.addAll(elements)
         withDefaultPluginClasspath = false
