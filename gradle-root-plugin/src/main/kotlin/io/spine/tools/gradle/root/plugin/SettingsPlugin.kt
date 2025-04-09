@@ -26,30 +26,33 @@
 
 package io.spine.tools.gradle.root.plugin
 
-import org.gradle.api.plugins.ExtensionAware
+import io.spine.tools.gradle.root.plugin.SpineSettingsExtension.Companion.NAME
+import org.gradle.api.Plugin
+import org.gradle.api.initialization.Settings
+import org.gradle.kotlin.dsl.create
 
 /**
- * The root extension added by [SpinePlugin].
+ * Adds [spineSettings][SpineSettingsExtension] extension in the [Settings]
+ * to which the plugin is applied.
  *
- * This extension is used as a container for other extensions added by
- * Gradle plugins of Spine libraries for configuration of compilation and other features.
- *
- * ### API Note
- *
- * Even though Gradle automatically makes a class created after the abstract extension
- * class implement [ExtensionAware], we declare it explicitly to avoid the casts at
- * the use sites in our code.
+ * Before adding the extension, the plugin checks for the present of the extension.
+ * So, applying the plugin more than once has no effect.
  */
-public abstract class SpineProjectExtension : ExtensionAware {
+public class SettingsPlugin : Plugin<Settings> {
+
+    override fun apply(settings: Settings) {
+        settings.run {
+            if (extensions.findByName(NAME) == null) {
+                extensions.create<SpineSettingsExtension>(NAME)
+            }
+        }
+    }
 
     public companion object {
 
         /**
-         * The name of the project extension.
-         *
-         * This is the name that starts the `spine { }` configuration block
-         * in a project to which [SpinePlugin] is applied.
+         * The ID of the plugin.
          */
-        public const val NAME: String = "spine"
+        public const val ID: String = "io.spine.settings"
     }
 }

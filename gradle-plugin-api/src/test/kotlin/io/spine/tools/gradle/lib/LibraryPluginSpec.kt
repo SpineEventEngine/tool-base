@@ -28,7 +28,7 @@ package io.spine.tools.gradle.lib
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import io.spine.tools.gradle.root.plugin.SpinePlugin
+import io.spine.tools.gradle.root.plugin.RootPlugin
 import io.spine.tools.gradle.root.plugin.hasRootExtension
 import io.spine.tools.gradle.root.plugin.rootExtension
 import org.gradle.api.Project
@@ -43,7 +43,7 @@ import org.junit.jupiter.api.assertThrows
 @DisplayName("`LibraryPlugin` should")
 internal class LibraryPluginSpec {
 
-    private val rootPlugin = SpinePlugin::class.java
+    private val rootPlugin = RootPlugin::class.java
 
     private lateinit var project: Project
     private lateinit var plugin: StubPlugin
@@ -56,7 +56,7 @@ internal class LibraryPluginSpec {
 
     /**
      * This test ensures that plugins extending [LibraryPlugin] can work together
-     * assuming the fact that [LibraryPlugin] automatically applies [SpinePlugin] if
+     * assuming the fact that [LibraryPlugin] automatically applies [RootPlugin] if
      * it is not yet allied to the project.
      */
     @Test

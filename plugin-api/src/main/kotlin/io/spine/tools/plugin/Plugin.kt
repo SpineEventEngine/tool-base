@@ -35,4 +35,9 @@ public interface Plugin {
      * The ID of the plugin.
      */
     public val id: PluginId
+
+    /**
+     * The working directory of the plugin.
+     */
+    public val workingDirectory: WorkingDirectory
 }

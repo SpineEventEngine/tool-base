@@ -32,7 +32,7 @@ import org.gradle.api.tasks.Nested
 
 /**
  * The extension added to [Settings][org.gradle.api.initialization.Settings] of
- * a Gradle project by [SpineSettingsPlugin].
+ * a Gradle project by [SettingsPlugin].
  */
 public abstract class SpineSettingsExtension : ExtensionAware {
 
@@ -62,7 +62,7 @@ public abstract class SpineSettingsExtension : ExtensionAware {
 /**
  * Provides a way to set versions of Spine SDK components and other libraries
  * to be loaded as the dependencies of the project settings to
- * which [SpineSettingsPlugin] is applied.
+ * which [SettingsPlugin] is applied.
  */
 public abstract class Versions {
 

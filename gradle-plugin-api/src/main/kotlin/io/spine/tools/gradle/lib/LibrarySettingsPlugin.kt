@@ -28,7 +28,7 @@ package io.spine.tools.gradle.lib
 
 import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper
 import io.spine.tools.gradle.root.plugin.SpineSettingsExtension
-import io.spine.tools.gradle.root.plugin.SpineSettingsPlugin
+import io.spine.tools.gradle.root.plugin.SettingsPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.initialization.Settings
 import org.gradle.kotlin.dsl.apply
@@ -52,12 +52,12 @@ public abstract class LibrarySettingsPlugin<E : Any>(
 
     /**
      * Verifies if the target [settings] have the [SpineSettingsExtension] and if not,
-     * applies [SpineSettingsPlugin] so that the extension is created.
+     * applies [SettingsPlugin] so that the extension is created.
      */
     @OverridingMethodsMustInvokeSuper
     override fun apply(settings: Settings) {
         if (!settings.hasRootExtension) {
-            settings.apply<SpineSettingsPlugin>()
+            settings.apply<SettingsPlugin>()
         }
         extensionSpec?.let {
             settings.rootExtension.extensions.create(it.name, it.extensionClass.java)

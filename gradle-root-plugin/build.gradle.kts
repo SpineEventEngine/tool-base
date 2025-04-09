@@ -72,7 +72,7 @@ gradlePlugin {
         create("spineRootPlugin") {
             // Make sure it matches the value of the property `SpinePlugin.Companion.ID`.
             id = "io.spine.root"
-            implementationClass = "$pluginPackage.SpinePlugin"
+            implementationClass = "$pluginPackage.RootPlugin"
             displayName = "Spine Root Extension Plugin"
             description = "Adds the extension called `spine` in a project based on" +
                     " the SpineEventEngine SDK." +
@@ -83,7 +83,7 @@ gradlePlugin {
         create("spineSettingsPlugin") {
             // Make sure it matches the value of the property `SpineSettingsPlugin.Companion.ID`.
             id = "io.spine.settings"
-            implementationClass = "$pluginPackage.SpineSettingsPlugin"
+            implementationClass = "$pluginPackage.SettingsPlugin"
             displayName = "Spine Settings Plugin"
             description = "Adds the extension called `spineSettings` to" +
                     " the settings of a project based on the SpineEventEngine SDK." +
@@ -96,6 +96,8 @@ gradlePlugin {
 dependencies {
     compileOnlyApi(gradleApi())
     compileOnlyApi(gradleKotlinDsl())
+
+    api(project(":plugin-api"))
 
     // Expose the below dependencies as `testFixturesApi` so that plugins
     // that extend root project extension and settings can use them for their testing.

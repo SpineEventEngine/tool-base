@@ -26,25 +26,38 @@
 
 package io.spine.tools.gradle.root.plugin
 
-import io.spine.tools.gradle.root.plugin.SpineProjectExtension.Companion.NAME
-import org.gradle.api.Plugin
+import io.spine.tools.gradle.root.plugin.RootExtension.Companion.NAME
+import io.spine.tools.plugin.Plugin
+import io.spine.tools.plugin.PluginId
+import io.spine.tools.plugin.WorkingDirectory
+import org.gradle.api.Plugin as GradlePlugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.create
 
 /**
- * Creates [SpineProjectExtension] in a project, if it is not already present.
+ * Creates [RootExtension] in a project, if it is not already present.
  *
  * The extension is used by Gradle plugins of libraries that extend
- * the [root extension][SpineProjectExtension] with custom configuration DSL.
+ * the [root extension][RootExtension] with custom configuration DSL.
  */
-public class SpinePlugin : Plugin<Project> {
+public class RootPlugin : GradlePlugin<Project>, Plugin {
+
+    private lateinit var project: Project
 
     override fun apply(project: Project) {
+        this.project = project
         project.run {
             if (extensions.findByName(NAME) == null) {
-                extensions.create<SpineProjectExtension>(NAME)
+                extensions.create<RootExtension>(NAME)
             }
         }
+    }
+
+    override val id: PluginId = PluginId(ID)
+
+    override val workingDirectory: WorkingDirectory by lazy {
+        val parent = project.layout.buildDirectory.get().asFile.toPath()
+        WorkingDirectory(parent, id)
     }
 
     public companion object {
@@ -53,13 +66,5 @@ public class SpinePlugin : Plugin<Project> {
          * The ID of the plugin.
          */
         public const val ID: String = "io.spine.root"
-
-        /**
-         * The name of the directory under the
-         * [build][org.gradle.api.file.ProjectLayout.getBuildDirectory] directory
-         * of the project which is used for storing temporary files of the libraries
-         * based on the Spine SDK.
-         */
-        public const val ROOT_WORKING_DIR_NAME: String = "spine"
     }
 }

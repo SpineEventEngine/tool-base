@@ -26,33 +26,24 @@
 
 package io.spine.tools.gradle.root.plugin
 
-import io.spine.tools.gradle.root.plugin.SpinePlugin.Companion.ROOT_WORKING_DIR_NAME
 import org.gradle.api.Project
-import org.gradle.api.file.Directory
 import org.gradle.kotlin.dsl.getByType
 
 /**
- * Tells if the project already has the [spine][SpineProjectExtension] extension.
+ * Tells if the project already has the [spine][RootExtension] extension.
  *
- * @returns `true` if the project already has the [extension][SpineProjectExtension] applied,
+ * @returns `true` if the project already has the [extension][RootExtension] applied,
  *  `false` otherwise.
  * @see rootExtension
  */
 public val Project.hasRootExtension: Boolean
-    get() = project.extensions.findByName(SpineProjectExtension.NAME) != null
+    get() = project.extensions.findByName(RootExtension.NAME) != null
 
 /**
- * Obtains the instance of the [spine][SpineProjectExtension] extension of the project.
+ * Obtains the instance of the [spine][RootExtension] extension of the project.
  *
  * @throws org.gradle.api.UnknownDomainObjectException if the extension is not found.
  * @see hasRootExtension
  */
-public val Project.rootExtension: SpineProjectExtension
-    get() = extensions.getByType<SpineProjectExtension>()
-
-/**
- * The name of the directory under the project `build` directory which
- * is used for storing temporary files of the libraries based on the Spine SDK.
- */
-public val Project.rootWorkingDir: Directory
-    get() = layout.buildDirectory.dir(ROOT_WORKING_DIR_NAME).get()
+public val Project.rootExtension: RootExtension
+    get() = extensions.getByType<RootExtension>()

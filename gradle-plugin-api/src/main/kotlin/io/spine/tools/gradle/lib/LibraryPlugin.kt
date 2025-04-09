@@ -27,8 +27,8 @@
 package io.spine.tools.gradle.lib
 
 import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper
-import io.spine.tools.gradle.root.plugin.SpinePlugin
-import io.spine.tools.gradle.root.plugin.SpineProjectExtension
+import io.spine.tools.gradle.root.plugin.RootPlugin
+import io.spine.tools.gradle.root.plugin.RootExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import io.spine.tools.gradle.root.plugin.rootExtension
@@ -36,7 +36,7 @@ import org.gradle.kotlin.dsl.apply
 
 /**
  * The abstract base for Gradle plugins of libraries that need to
- * introduce custom extensions in [SpineProjectExtension].
+ * introduce custom extensions in [RootExtension].
  *
  * @param E The type of the extension used by the plugin.
  *  If a derived plugin class does not use an extension please pass [Unit]
@@ -80,7 +80,7 @@ public abstract class LibraryPlugin<E : Any>(
     private lateinit var _extension: E
 
     /**
-     * Applies [SpinePlugin] to the [project] and adds the [extension][extensionSpec]
+     * Applies [RootPlugin] to the [project] and adds the [extension][extensionSpec]
      * if it is used by the plugin.
      *
      * Since [org.gradle.api.plugins.PluginManager.apply] does nothing
@@ -91,7 +91,7 @@ public abstract class LibraryPlugin<E : Any>(
     override fun apply(project: Project) {
         _project = project
         // Make sure the root extension is installed.
-        project.apply<SpinePlugin>()
+        project.apply<RootPlugin>()
         extensionSpec?.let {
             _extension = project.rootExtension.extensions.create(it.name, it.extensionClass.java)
         }
