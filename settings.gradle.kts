@@ -35,5 +35,5 @@ include(
     "psi",
     "psi-java",
     "gradle-root-plugin",
-    "plugin-api"
+    "gradle-plugin-api"
 )
