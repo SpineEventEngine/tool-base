@@ -1,5 +1,5 @@
 /*
- * Copyright 2024, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,16 +65,10 @@ PomGenerator.applyTo(project)
 LicenseReporter.mergeAllReports(project)
 
 spinePublishing {
-    modules = setOf(
-        "plugin-base",
-        "plugin-testlib",
-        "tool-base",
-        "psi",
-        "psi-java"
-    )
-    modulesWithCustomPublishing = setOf(
-        "root"
-    )
+    val rootPluginModule = "root"
+    modules = productionModuleNames.toSet().minus(rootPluginModule)
+    modulesWithCustomPublishing = setOf(rootPluginModule)
+
     destinations = with(PublishingRepos) {
         setOf(
             cloudArtifactRegistry,
