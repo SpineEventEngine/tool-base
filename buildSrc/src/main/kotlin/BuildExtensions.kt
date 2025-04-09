@@ -274,7 +274,7 @@ fun JavaExec.remoteDebug(enabled: Boolean = true) {
  *
  * @param enabled If `true` the task will be suspended.
  * @throws IllegalStateException if the task with the given name is not found, or,
- *  if the taks is not of [JavaExec] type.
+ *  if the task is not of [JavaExec] type.
  */
 fun Project.setRemoteDebug(taskName: String, enabled: Boolean = true) {
     val task = tasks.findByName(taskName)
