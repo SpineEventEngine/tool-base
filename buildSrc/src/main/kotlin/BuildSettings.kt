@@ -36,7 +36,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 object BuildSettings {
     private const val JVM_VERSION = 17
     val javaVersion: JavaLanguageVersion = JavaLanguageVersion.of(JVM_VERSION)
-    val javaVersionCompat = JavaVersion.toVersion(JVM_VERSION)
-    val jvmTarget = JvmTarget.JVM_17
-    const val REMOTE_DEBUG_PORT = 5566
+    val javaVersionCompat: JavaVersion = JavaVersion.toVersion(JVM_VERSION)
+    val jvmTarget: JvmTarget = JvmTarget.JVM_17
+    const val REMOTE_DEBUG_PORT: Int = 5566
 }
