@@ -57,7 +57,7 @@ gradlePlugin {
     website.set("https://spine.io/")
     vcsUrl.set("https://github.com/SpineEventEngine/tool-base.git")
     plugins {
-        val pluginPackage = "io.spine.tools.gradle.root"
+        val pluginPackage = "io.spine.tools.gradle.root.plugin"
         val projectPluginTags = listOf(
             "spine",
             "ddd",
