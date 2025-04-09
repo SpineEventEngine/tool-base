@@ -24,35 +24,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.root
+package io.spine.tools.gradle.root.plugin
 
-import io.spine.tools.gradle.root.SpinePlugin.Companion.ROOT_WORKING_DIR_NAME
-import org.gradle.api.Project
-import org.gradle.api.file.Directory
-import org.gradle.kotlin.dsl.getByType
+import io.spine.tools.gradle.root.plugin.SpineSettingsExtension.Companion.NAME
+import org.gradle.api.Plugin
+import org.gradle.api.initialization.Settings
+import org.gradle.kotlin.dsl.create
 
 /**
- * Tells if the project already has the [spine][SpineProjectExtension] extension.
+ * Adds [spineSettings][SpineSettingsExtension] extension in the [Settings]
+ * to which the plugin is applied.
  *
- * @returns `true` if the project already has the [extension][SpineProjectExtension] applied,
- *  `false` otherwise.
- * @see rootExtension
+ * Before adding the extension, the plugin checks for the present of the extension.
+ * So, applying the plugin more than once has no effect.
  */
-public val Project.hasRootExtension: Boolean
-    get() = project.extensions.findByName(SpineProjectExtension.NAME) != null
+public class SpineSettingsPlugin : Plugin<Settings> {
 
-/**
- * Obtains the instance of the [spine][SpineProjectExtension] extension of the project.
- *
- * @throws org.gradle.api.UnknownDomainObjectException if the extension is not found.
- * @see hasRootExtension
- */
-public val Project.rootExtension: SpineProjectExtension
-    get() = extensions.getByType<SpineProjectExtension>()
+    override fun apply(settings: Settings) {
+        settings.run {
+            if (extensions.findByName(NAME) == null) {
+                extensions.create<SpineSettingsExtension>(NAME)
+            }
+        }
+    }
 
-/**
- * The name of the directory under the project `build` directory which
- * is used for storing temporary files of the libraries based on the Spine SDK.
- */
-public val Project.rootWorkingDir: Directory
-    get() = layout.buildDirectory.dir(ROOT_WORKING_DIR_NAME).get()
+    public companion object {
+
+        /**
+         * The ID of the plugin.
+         */
+        public const val ID: String = "io.spine.settings"
+    }
+}

@@ -24,32 +24,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.root
+package io.spine.tools.gradle.root.plugin
 
-import org.gradle.api.plugins.ExtensionAware
+import io.spine.tools.gradle.root.plugin.SpinePlugin.Companion.ROOT_WORKING_DIR_NAME
+import org.gradle.api.Project
+import org.gradle.api.file.Directory
+import org.gradle.kotlin.dsl.getByType
 
 /**
- * The root extension added by [SpinePlugin].
+ * Tells if the project already has the [spine][SpineProjectExtension] extension.
  *
- * This extension is used as a container for other extensions added by
- * Gradle plugins of Spine libraries for configuration of compilation and other features.
- *
- * ### API Note
- *
- * Even though Gradle automatically makes a class created after the abstract extension
- * class implement [ExtensionAware], we declare it explicitly to avoid the casts at
- * the use sites in our code.
+ * @returns `true` if the project already has the [extension][SpineProjectExtension] applied,
+ *  `false` otherwise.
+ * @see rootExtension
  */
-public abstract class SpineProjectExtension : ExtensionAware {
+public val Project.hasRootExtension: Boolean
+    get() = project.extensions.findByName(SpineProjectExtension.NAME) != null
 
-    public companion object {
+/**
+ * Obtains the instance of the [spine][SpineProjectExtension] extension of the project.
+ *
+ * @throws org.gradle.api.UnknownDomainObjectException if the extension is not found.
+ * @see hasRootExtension
+ */
+public val Project.rootExtension: SpineProjectExtension
+    get() = extensions.getByType<SpineProjectExtension>()
 
-        /**
-         * The name of the project extension.
-         *
-         * This is the name that starts the `spine { }` configuration block
-         * in a project to which [SpinePlugin] is applied.
-         */
-        public const val NAME: String = "spine"
-    }
-}
+/**
+ * The name of the directory under the project `build` directory which
+ * is used for storing temporary files of the libraries based on the Spine SDK.
+ */
+public val Project.rootWorkingDir: Directory
+    get() = layout.buildDirectory.dir(ROOT_WORKING_DIR_NAME).get()

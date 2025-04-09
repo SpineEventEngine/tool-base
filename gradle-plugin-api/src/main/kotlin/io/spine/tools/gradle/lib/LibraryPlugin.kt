@@ -27,11 +27,11 @@
 package io.spine.tools.gradle.lib
 
 import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper
-import io.spine.tools.gradle.root.SpinePlugin
-import io.spine.tools.gradle.root.SpineProjectExtension
+import io.spine.tools.gradle.root.plugin.SpinePlugin
+import io.spine.tools.gradle.root.plugin.SpineProjectExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import io.spine.tools.gradle.root.rootExtension
+import io.spine.tools.gradle.root.plugin.rootExtension
 import org.gradle.kotlin.dsl.apply
 
 /**

@@ -24,7 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.root
+package io.spine.tools.gradle.root.plugin
 
 import org.gradle.api.initialization.Settings
 import org.gradle.kotlin.dsl.findByType

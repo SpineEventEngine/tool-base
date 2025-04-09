@@ -24,9 +24,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.root
+package io.spine.tools.gradle.root.plugin
 
-import io.spine.tools.gradle.root.SpineProjectExtension.Companion.NAME
+import io.spine.tools.gradle.root.plugin.SpineProjectExtension.Companion.NAME
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.create
@@ -55,8 +55,10 @@ public class SpinePlugin : Plugin<Project> {
         public const val ID: String = "io.spine.root"
 
         /**
-         * The name of the directory under the project `build` directory which
-         * is used for storing temporary files of the libraries based on the Spine SDK.
+         * The name of the directory under the
+         * [build][org.gradle.api.file.ProjectLayout.getBuildDirectory] directory
+         * of the project which is used for storing temporary files of the libraries
+         * based on the Spine SDK.
          */
         public const val ROOT_WORKING_DIR_NAME: String = "spine"
     }
