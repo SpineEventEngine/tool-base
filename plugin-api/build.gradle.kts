@@ -35,7 +35,8 @@ plugins {
 }
 
 dependencies {
-    api(project(":root"))
+    val rootPluginProject = project(":gradle-root-plugin")
+    api(rootPluginProject)
     Protobuf.libs.forEach {
         api(it)?.because("""
             We need the `Message` interface for conversion of compilation settings that
@@ -46,5 +47,5 @@ dependencies {
 
     // Propagate the test fixtures of the `root` module further so that
     // plugins depending on this API module can use them for their testing.
-    testFixturesApi(testFixtures(project(":root")))
+    testFixturesApi(testFixtures(rootPluginProject))
 }

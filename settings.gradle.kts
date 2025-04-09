@@ -34,6 +34,6 @@ include(
     "plugin-testlib",
     "psi",
     "psi-java",
-    "root",
+    "gradle-root-plugin",
     "plugin-api"
 )

@@ -65,9 +65,15 @@ PomGenerator.applyTo(project)
 LicenseReporter.mergeAllReports(project)
 
 spinePublishing {
-    val rootPluginModule = "root"
-    modules = productionModuleNames.toSet().minus(rootPluginModule)
-    modulesWithCustomPublishing = setOf(rootPluginModule)
+    val customPublishing = arrayOf(
+        "gradle-root-plugin",
+        "intellij-platform",
+        "intellij-platform-java"
+    )
+    modules = productionModuleNames.toSet()
+        .minus(customPublishing)
+
+    modulesWithCustomPublishing = customPublishing.toSet()
 
     destinations = with(PublishingRepos) {
         setOf(
