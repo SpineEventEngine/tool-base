@@ -26,7 +26,9 @@
 
 package io.spine.tools.gradle.root
 
+import io.spine.tools.gradle.root.SpinePlugin.Companion.ROOT_WORKING_DIR_NAME
 import org.gradle.api.Project
+import org.gradle.api.file.Directory
 import org.gradle.kotlin.dsl.getByType
 
 /**
@@ -47,3 +49,10 @@ public val Project.hasRootExtension: Boolean
  */
 public val Project.rootExtension: SpineProjectExtension
     get() = extensions.getByType<SpineProjectExtension>()
+
+/**
+ * The name of the directory under the project `build` directory which
+ * is used for storing temporary files of the libraries based on the Spine SDK.
+ */
+public val Project.rootWorkingDir: Directory
+    get() = layout.buildDirectory.dir(ROOT_WORKING_DIR_NAME).get()
