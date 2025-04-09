@@ -24,6 +24,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-plugins {
-    module
+package io.spine.tools.gradle.root.plugin
+
+import org.gradle.api.plugins.ExtensionAware
+
+/**
+ * The root extension added by [RootPlugin].
+ *
+ * This extension is used as a container for other extensions added by
+ * Gradle plugins of Spine libraries for configuration of compilation and other features.
+ *
+ * ### API Note
+ *
+ * Even though Gradle automatically makes a class created after the abstract extension
+ * class implement [ExtensionAware], we declare it explicitly to avoid the casts at
+ * the use sites in our code.
+ */
+public abstract class RootExtension : ExtensionAware {
+
+    public companion object {
+
+        /**
+         * The name of the project extension.
+         *
+         * This is the name that starts the `spine { }` configuration block
+         * in a project to which [RootPlugin] is applied.
+         */
+        public const val NAME: String = "spine"
+    }
 }

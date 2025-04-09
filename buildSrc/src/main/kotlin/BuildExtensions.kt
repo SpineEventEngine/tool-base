@@ -225,12 +225,31 @@ fun Project.configureTaskDependencies() {
 }
 
 /**
- * Obtains all modules names of which do not have `"-tests"` as the suffix.
+ * Obtains all the subprojects names of which do not have the `"-tests"` suffix.
  *
- * By convention, such modules are for integration tests and should be treated differently.
+ * By convention, such modules are for integration tests and should be treated
+ * differently than production modules. E.g., they are not published by default.
+ *
+ * @see productionModuleNames
  */
-val Project.productionModules: Iterable<Project>
+val Project.productionModules: List<Project>
     get() = rootProject.subprojects.filter { !it.name.contains("-tests") }
+
+/**
+ * Obtains the names of the [productionModules].
+ *
+ * The extension could be useful for excluding modules from standard publishing:
+ * ```kotlin
+ * spinePublishing {
+ *     val customModule = "my-custom-module"
+ *     modules = productionModuleNames.toSet().minus(customModule)
+ *     modulesWithCustomPublishing = setOf(customModule)
+ *     //...
+ * }
+ * ```
+ */
+val Project.productionModuleNames: List<String>
+    get() = productionModules.map { it.name }
 
 /**
  * Sets the remote debug option for this [JavaExec] task.
@@ -255,7 +274,7 @@ fun JavaExec.remoteDebug(enabled: Boolean = true) {
  *
  * @param enabled If `true` the task will be suspended.
  * @throws IllegalStateException if the task with the given name is not found, or,
- *  if the taks is not of [JavaExec] type.
+ *  if the task is not of [JavaExec] type.
  */
 fun Project.setRemoteDebug(taskName: String, enabled: Boolean = true) {
     val task = tasks.findByName(taskName)

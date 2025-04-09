@@ -24,6 +24,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-plugins {
-    module
+package io.spine.tools.plugin
+
+import java.nio.file.Path
+import kotlin.io.path.exists
+
+/**
+ * A working directory for a plugin.
+ *
+ * @param parent The path to the parent directory.
+ * @param plugin The ID of the plugin which this working directory serves.
+ */
+public open class WorkingDirectory(
+    public val parent: Path,
+    public val plugin: PluginId) {
+
+    /**
+     * The path to the working directory.
+     */
+    public val path: Path by lazy {
+        parent.resolve(plugin.value)
+    }
+
+    /**
+     * Tells if the working directory exists.
+     */
+    public val exists: Boolean
+        get() = path.exists()
+
+    /**
+     * Creates the working directory if it does not exist yet.
+     *
+     * @return `true` if the directory was successfully created, or if it existed
+     *  prior to the call to this function.
+     */
+    public fun create(): Boolean {
+        if (!path.exists()) {
+            return path.toFile().mkdirs()
+        }
+        return true
+    }
 }

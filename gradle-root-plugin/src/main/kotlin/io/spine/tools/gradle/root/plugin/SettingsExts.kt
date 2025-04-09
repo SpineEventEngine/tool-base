@@ -24,6 +24,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-plugins {
-    module
-}
+package io.spine.tools.gradle.root.plugin
+
+import org.gradle.api.initialization.Settings
+import org.gradle.kotlin.dsl.findByType
+import org.gradle.kotlin.dsl.getByType
+
+/**
+ * Tells if the project settings already have
+ * the [spineSettings][SpineSettingsExtension] extension applied.
+ *
+ * @see rootExtension
+ */
+public val Settings.hasRootExtension: Boolean
+    get() = extensions.findByType<SpineSettingsExtension>() != null
+
+/**
+ * Obtains the instance of [spineSettings][SpineSettingsExtension] extension
+ * applied to the project settings.
+ *
+ * @throws org.gradle.api.UnknownDomainObjectException if the extension is not found.
+ * @see hasRootExtension
+ */
+public val Settings.rootExtension: SpineSettingsExtension
+    get() = extensions.getByType<SpineSettingsExtension>()

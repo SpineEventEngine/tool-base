@@ -24,6 +24,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-plugins {
-    module
+package io.spine.tools.plugin
+
+/**
+ * The base interface for tool plugins.
+ */
+public interface Plugin {
+
+    /**
+     * The ID of the plugin.
+     */
+    public val id: PluginId
+
+    /**
+     * The working directory of the plugin.
+     */
+    public val workingDirectory: WorkingDirectory
 }

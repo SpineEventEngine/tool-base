@@ -24,6 +24,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-plugins {
-    module
+package io.spine.tools.gradle.root.plugin
+
+import io.spine.tools.gradle.root.plugin.SpineSettingsExtension.Companion.NAME
+import org.gradle.api.Plugin
+import org.gradle.api.initialization.Settings
+import org.gradle.kotlin.dsl.create
+
+/**
+ * Adds [spineSettings][SpineSettingsExtension] extension in the [Settings]
+ * to which the plugin is applied.
+ *
+ * Before adding the extension, the plugin checks for the present of the extension.
+ * So, applying the plugin more than once has no effect.
+ */
+public class SettingsPlugin : Plugin<Settings> {
+
+    override fun apply(settings: Settings) {
+        settings.run {
+            if (extensions.findByName(NAME) == null) {
+                extensions.create<SpineSettingsExtension>(NAME)
+            }
+        }
+    }
+
+    public companion object {
+
+        /**
+         * The ID of the plugin.
+         */
+        public const val ID: String = "io.spine.settings"
+    }
 }

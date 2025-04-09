@@ -24,6 +24,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import io.spine.dependency.lib.Protobuf
+
 plugins {
     module
+    // This module does not publish Gradle plugins.
+    // We need the `java-gradle-plugin` for `pluginUnderTestMetadata` support
+    // which is used in the tests of the abstract plugin classes provided by this module.
+    `java-gradle-plugin`
+}
+
+dependencies {
+    val rootPluginProject = project(":gradle-root-plugin")
+    api(rootPluginProject)
+    Protobuf.libs.forEach {
+        api(it)?.because("""
+            We need the `Message` interface for conversion of compilation settings that
+            would be passed to Spine Compiler plugins.
+            """.trimIndent()
+        )
+    }
+
+    // Propagate the test fixtures of the `root` module further so that
+    // plugins depending on this API module can use them for their testing.
+    testFixturesApi(testFixtures(rootPluginProject))
 }
