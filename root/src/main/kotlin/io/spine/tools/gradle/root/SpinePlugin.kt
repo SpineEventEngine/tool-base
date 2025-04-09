@@ -33,6 +33,9 @@ import org.gradle.kotlin.dsl.create
 
 /**
  * Creates [SpineProjectExtension] in a project, if it is not already present.
+ *
+ * The extension is used by Gradle plugins of libraries that extend
+ * the [root extension][SpineProjectExtension] with custom configuration DSL.
  */
 public class SpinePlugin : Plugin<Project> {
 
@@ -50,5 +53,11 @@ public class SpinePlugin : Plugin<Project> {
          * The ID of the plugin.
          */
         public const val ID: String = "io.spine.root"
+
+        /**
+         * The name of the directory under the project `build` directory which
+         * is used for storing temporary files of the libraries based on the Spine SDK.
+         */
+        public const val ROOT_WORKING_DIR_NAME: String = "spine"
     }
 }
