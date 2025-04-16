@@ -298,4 +298,3 @@ internal fun Project.artifacts(jarFlags: JarFlags): Set<TaskProvider<Jar>> {
 
     return tasks
 }
-

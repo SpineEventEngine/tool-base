@@ -185,12 +185,8 @@ public final class Indent implements Element, Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
         var other = (Indent) o;
-        if (size != other.size) {
-            return false;
-        }
-        return level == other.level;
+        return size == other.size && level == other.level;
     }
 
     @Override

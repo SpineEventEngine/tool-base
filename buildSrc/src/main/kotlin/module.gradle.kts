@@ -29,6 +29,7 @@ import io.spine.dependency.build.ErrorProne
 import io.spine.dependency.build.FindBugs
 import io.spine.dependency.lib.Coroutines
 import io.spine.dependency.lib.Grpc
+import io.spine.dependency.lib.GrpcKotlin
 import io.spine.dependency.lib.Guava
 import io.spine.dependency.lib.Jackson
 import io.spine.dependency.lib.Kotlin
@@ -100,7 +101,7 @@ fun Module.addDependencies() {
         testImplementation(Kotest.assertions)
         JUnit.api.forEach { testImplementation(it) }
         Truth.libs.forEach { testImplementation(it) }
-        testRuntimeOnly(JUnit.runner)
+        testRuntimeOnly(JUnit.engine)
     }
 }
 
@@ -113,14 +114,16 @@ fun Module.forceConfigurations() {
                 @Suppress("DEPRECATION") // To force `Kotlin.stdLibJdk7` version.
                 force(
                     Kotlin.stdLibJdk7,
-                    JUnit.runner,
+                    JUnit.bom,
+                    JUnit.Platform.engine,
+                    JUnit.Platform.launcher,
                     Spine.base,
                     Spine.reflect,
                     Logging.lib,
                     Logging.libJvm,
                     Validation.runtime,
                     Grpc.stub,
-                    Grpc.ProtocPlugin.artifactKotlin,
+                    GrpcKotlin.ProtocPlugin.artifact,
                     Coroutines.jdk8,
                     Coroutines.core,
                     Coroutines.bom,

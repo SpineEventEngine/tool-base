@@ -44,7 +44,7 @@ internal class PluginBaseDependencyVersionsSpec {
         val version = versions.versionOf(protobufCompiler)
 
         version shouldBePresent {
-            it shouldMatch "3\\.\\d+\\.\\d+"
+            it shouldMatch "4\\.\\d+\\.\\d+"
         }
     }
 

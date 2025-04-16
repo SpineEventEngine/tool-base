@@ -277,12 +277,11 @@ public final class SourceFile extends AbstractSourceFile {
     }
 
     private static boolean containsEnum(DescriptorProto message, EnumDescriptorProto enumType) {
-        if (message.getEnumTypeList().contains(enumType)) {
-            return true;
-        }
-        return message.getNestedTypeList()
-                .stream()
-                .anyMatch(nested -> containsEnum(nested, enumType));
+        var containsType = message.getEnumTypeList().contains(enumType);
+        return containsType ||
+                message.getNestedTypeList()
+                        .stream()
+                        .anyMatch(nested -> containsEnum(nested, enumType));
     }
 
     /**

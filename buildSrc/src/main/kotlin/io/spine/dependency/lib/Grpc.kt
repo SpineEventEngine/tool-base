@@ -51,6 +51,6 @@ object Grpc {
 
         // https://github.com/grpc/grpc-kotlin
         // https://repo.maven.apache.org/maven2/io/grpc/protoc-gen-grpc-kotlin/
-        const val artifactKotlin = "$group:protoc-gen-grpc-kotlin:$kotlinPluginVersion"
+        const val artifactKotlin = "$group:protoc-gen-grpc-kotlin:$$kotlinPluginVersion"
     }
 }
