@@ -225,14 +225,11 @@ fun Project.configureTaskDependencies() {
 }
 
 /**
- * Obtains all the subprojects names of which do not have the `"-tests"` suffix.
+ * Obtains all modules that do not haveg names ending with the "-tests"` suffix.
  *
- * By convention, such modules are for integration tests and should be treated
- * differently than production modules. E.g., they are not published by default.
- *
- * @see productionModuleNames
+ * By convention, such modules are for integration tests and should be treated differently.
  */
-val Project.productionModules: List<Project>
+val Project.productionModules: Iterable<Project>
     get() = rootProject.subprojects.filter { !it.name.contains("-tests") }
 
 /**
@@ -274,7 +271,7 @@ fun JavaExec.remoteDebug(enabled: Boolean = true) {
  *
  * @param enabled If `true` the task will be suspended.
  * @throws IllegalStateException if the task with the given name is not found, or,
- *  if the task is not of [JavaExec] type.
+ *  if the taks is not of [JavaExec] type.
  */
 fun Project.setRemoteDebug(taskName: String, enabled: Boolean = true) {
     val task = tasks.findByName(taskName)

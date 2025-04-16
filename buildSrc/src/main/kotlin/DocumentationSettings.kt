@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -25,15 +25,34 @@
  */
 
 /**
- * This package contains tools for generating Java code as well as working with
- * already generated code.
+ * The documentation settings specific to this project.
+ *
+ * @see <a href="https://kotlinlang.org/docs/dokka-gradle.html#source-link-configuration">
+ *     Dokka source link configuration</a>
  */
-@Internal
-@CheckReturnValue
-@NullMarked
-package io.spine.tools.java.code;
+@Suppress("ConstPropertyName")
+object DocumentationSettings {
 
-import com.google.errorprone.annotations.CheckReturnValue;
-import io.spine.annotation.Internal;
+    /**
+     * Settings passed to Dokka for
+     * [sourceLink][[org.jetbrains.dokka.gradle.engine.parameters.DokkaSourceLinkSpec]
+     */
+    object SourceLink {
 
-import org.jspecify.annotations.NullMarked;
+        /**
+         * The URL of the remote source code
+         * [location][org.jetbrains.dokka.gradle.engine.parameters.DokkaSourceLinkSpec.remoteUrl].
+         */
+        const val url: String = "https://github.com/SpineEventEngine/base/tree/master/src"
+
+        /**
+         * The suffix used to append the source code line number to the URL.
+         *
+         * The suffix depends on the online code repository.
+         *
+         * @see <a href="https://kotlinlang.org/docs/dokka-gradle.html#fwor0d_534">
+         *     remoteLineSuffix</a>
+         */
+        const val lineSuffix: String = "#L"
+    }
+}

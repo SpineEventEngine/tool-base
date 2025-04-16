@@ -26,7 +26,7 @@
 
 package io.spine.tools.gradle.testing;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.gradle.api.Task;
 
 import static com.google.common.truth.Truth.assertAbout;

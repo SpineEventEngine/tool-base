@@ -32,11 +32,10 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
  * This object provides high-level constants, like the version of JVM, to be used
  * throughout the project.
  */
-@Suppress("unused")
 object BuildSettings {
     private const val JVM_VERSION = 17
     val javaVersion: JavaLanguageVersion = JavaLanguageVersion.of(JVM_VERSION)
-    val javaVersionCompat: JavaVersion = JavaVersion.toVersion(JVM_VERSION)
-    val jvmTarget: JvmTarget = JvmTarget.JVM_17
-    const val REMOTE_DEBUG_PORT: Int = 5566
+    val javaVersionCompat = JavaVersion.toVersion(JVM_VERSION)
+    val jvmTarget = JvmTarget.JVM_17
+    const val REMOTE_DEBUG_PORT = 5566
 }

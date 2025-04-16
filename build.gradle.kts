@@ -33,7 +33,6 @@ import io.spine.gradle.report.coverage.JacocoConfig
 import io.spine.gradle.report.license.LicenseReporter
 import io.spine.gradle.report.pom.PomGenerator
 import io.spine.gradle.standardToSpineSdk
-import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
 
 buildscript {
     standardSpineSdkRepositories()
@@ -55,6 +54,7 @@ buildscript {
 }
 
 plugins {
+    id("org.jetbrains.dokka")
     idea
     jacoco
     `project-report`
@@ -92,6 +92,8 @@ allprojects {
     repositories.standardToSpineSdk()
 }
 
-val dokkaHtmlMultiModule by tasks.getting(DokkaMultiModuleTask::class) {
-    configureStyle()
+dependencies {
+    productionModules.forEach {
+        dokka(it)
+    }
 }

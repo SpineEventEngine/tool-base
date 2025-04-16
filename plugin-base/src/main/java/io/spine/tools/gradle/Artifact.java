@@ -28,7 +28,7 @@ package io.spine.tools.gradle;
 
 import com.google.common.base.Objects;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.gradle.api.artifacts.Dependency;
 
 import java.io.File;

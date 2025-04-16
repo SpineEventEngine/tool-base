@@ -30,10 +30,10 @@
 
 @Internal
 @CheckReturnValue
-@ParametersAreNonnullByDefault
+@NullMarked
 package io.spine.tools.java.fs;
 
 import com.google.errorprone.annotations.CheckReturnValue;
 import io.spine.annotation.Internal;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.NullMarked;

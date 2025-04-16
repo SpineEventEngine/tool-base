@@ -38,7 +38,7 @@ import io.spine.code.java.ClassName;
 import io.spine.code.java.PackageName;
 import io.spine.code.java.SimpleClassName;
 import io.spine.type.Type;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.function.Function;

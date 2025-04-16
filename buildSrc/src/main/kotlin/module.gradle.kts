@@ -25,7 +25,6 @@
  */
 
 import io.spine.dependency.build.CheckerFramework
-import io.spine.dependency.build.Dokka
 import io.spine.dependency.build.ErrorProne
 import io.spine.dependency.build.FindBugs
 import io.spine.dependency.lib.Coroutines
@@ -52,13 +51,13 @@ import io.spine.gradle.report.license.LicenseReporter
 import io.spine.gradle.testing.configureLogging
 import io.spine.gradle.testing.registerTestTasks
 import org.jetbrains.dokka.gradle.DokkaTask
-import org.jetbrains.dokka.gradle.DokkaTaskPartial
 
 plugins {
     `java-library`
     `java-test-fixtures`
     kotlin("jvm")
     id("net.ltgt.errorprone")
+    id("org.jetbrains.dokka")
     id("detekt-code-analysis")
     id("pmd-settings")
     id("write-manifest")
@@ -68,10 +67,6 @@ plugins {
 }
 apply<IncrementGuard>()
 apply<VersionWriter>()
-
-apply {
-    plugin(Dokka.GradlePlugin.id)
-}
 
 CheckStyleConfig.applyTo(project)
 JavadocConfig.applyTo(project)
@@ -125,6 +120,7 @@ fun Module.forceConfigurations() {
                     Logging.libJvm,
                     Validation.runtime,
                     Grpc.stub,
+                    Grpc.ProtocPlugin.artifactKotlin,
                     Coroutines.jdk8,
                     Coroutines.core,
                     Coroutines.bom,
@@ -184,8 +180,13 @@ fun Module.configureDocTasks() {
         dependsOn(dokkaJavadoc)
     }
 
-    tasks.withType<DokkaTaskPartial>().configureEach {
-        configureForKotlin()
+    afterEvaluate {
+        dokka {
+            configureForKotlin(
+                project,
+                DocumentationSettings.SourceLink.url
+            )
+        }
     }
 }
 
