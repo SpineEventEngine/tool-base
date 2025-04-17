@@ -57,6 +57,7 @@ plugins {
     `java-library`
     `java-test-fixtures`
     kotlin("jvm")
+    id("module-testing")
     id("net.ltgt.errorprone")
     id("org.jetbrains.dokka")
     id("detekt-code-analysis")
@@ -96,12 +97,6 @@ fun Module.addDependencies() {
         compileOnlyApi(FindBugs.annotations)
         compileOnlyApi(CheckerFramework.annotations)
         ErrorProne.annotations.forEach { compileOnlyApi(it) }
-
-        testImplementation(Guava.testLib)
-        testImplementation(Kotest.assertions)
-        JUnit.api.forEach { testImplementation(it) }
-        Truth.libs.forEach { testImplementation(it) }
-        testRuntimeOnly(JUnit.engine)
     }
 }
 
@@ -114,9 +109,6 @@ fun Module.forceConfigurations() {
                 @Suppress("DEPRECATION") // To force `Kotlin.stdLibJdk7` version.
                 force(
                     Kotlin.stdLibJdk7,
-                    JUnit.bom,
-                    JUnit.Platform.engine,
-                    JUnit.Platform.launcher,
                     Spine.base,
                     Spine.reflect,
                     Logging.lib,
@@ -128,6 +120,7 @@ fun Module.forceConfigurations() {
                     Coroutines.core,
                     Coroutines.bom,
                     Coroutines.coreJvm,
+                    Coroutines.test,
                     Jackson.Junior.objects
                 )
             }
@@ -159,13 +152,7 @@ fun Module.configureKotlin() {
 
 fun Module.configureTests() {
     tasks {
-        registerTestTasks()
         test.configure {
-            useJUnitPlatform {
-                includeEngines("junit-jupiter")
-            }
-            configureLogging()
-
             // See https://github.com/gradle/gradle/issues/18647.
             jvmArgs(
                 "--add-opens", "java.base/java.lang=ALL-UNNAMED",

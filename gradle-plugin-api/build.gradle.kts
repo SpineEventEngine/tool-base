@@ -24,6 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import io.spine.dependency.lib.Jackson
 import io.spine.dependency.lib.Protobuf
 
 plugins {
@@ -44,6 +45,7 @@ dependencies {
             """.trimIndent()
         )
     }
+    implementation(enforcedPlatform(Jackson.bom))
 
     // Propagate the test fixtures of the `root` module further so that
     // plugins depending on this API module can use them for their testing.

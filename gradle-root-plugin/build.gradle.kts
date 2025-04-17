@@ -49,6 +49,7 @@ val publishPlugins: Task by tasks.getting {
     enabled = !versionToPublish.isSnapshot()
 }
 
+@Suppress("unused")
 val publish: Task by tasks.getting {
     dependsOn(publishPlugins)
 }
