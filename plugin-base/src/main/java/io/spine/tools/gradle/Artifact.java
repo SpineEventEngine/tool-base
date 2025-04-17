@@ -1,11 +1,11 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -28,7 +28,7 @@ package io.spine.tools.gradle;
 
 import com.google.common.base.Objects;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.gradle.api.artifacts.Dependency;
 
 import java.io.File;
@@ -69,9 +69,9 @@ public final class Artifact {
     private final @Nullable String extension;
 
     private Artifact(Builder builder) {
-        this.group = builder.group;
-        this.name = builder.name;
-        this.version = builder.version;
+        this.group = checkNotNull(builder.group);
+        this.name = checkNotNull(builder.name);
+        this.version = checkNotNull(builder.version);
         this.classifier = builder.classifier;
         this.extension = builder.extension;
     }
@@ -103,7 +103,7 @@ public final class Artifact {
 
     private static <T>
     T ensureProperty(Dependency dependency, Supplier<T> accessor, String propertyName) {
-        @Nullable T value = accessor.get();
+        var value = accessor.get();
         checkArgument(
                 value != null,
                 "The dependency `%s` does not have a %s.", dependency, propertyName
@@ -198,10 +198,9 @@ public final class Artifact {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Artifact)) {
+        if (!(o instanceof Artifact artifact)) {
             return false;
         }
-        var artifact = (Artifact) o;
         return Objects.equal(group, artifact.group) &&
                 Objects.equal(name, artifact.name) &&
                 Objects.equal(version, artifact.version) &&
@@ -228,11 +227,11 @@ public final class Artifact {
      */
     public static final class Builder {
 
-        private String group;
-        private String name;
-        private String version;
-        private String classifier;
-        private String extension;
+        private @Nullable String group;
+        private @Nullable String name;
+        private @Nullable String version;
+        private @Nullable String classifier;
+        private @Nullable String extension;
     
         /**
          * Prevents direct instantiation.
@@ -309,6 +308,8 @@ public final class Artifact {
         }
 
         public io.spine.tools.gradle.Dependency getDependency() {
+            checkNotNull(group);
+            checkNotNull(name);
             return new ThirdPartyDependency(group, name);
         }
 

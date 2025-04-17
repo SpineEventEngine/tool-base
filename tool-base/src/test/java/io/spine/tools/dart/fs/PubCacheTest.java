@@ -39,7 +39,6 @@ import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth8.assertThat;
 import static io.spine.tools.dart.fs.PubCache.BIN;
 import static org.junit.jupiter.api.condition.OS.WINDOWS;
 

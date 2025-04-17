@@ -29,7 +29,7 @@ package io.spine.tools.gradle;
 import com.google.common.collect.ImmutableMap;
 import io.spine.annotation.Internal;
 import io.spine.io.Resource;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Map;

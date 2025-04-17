@@ -31,7 +31,7 @@ import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.Subject;
 import io.spine.tools.gradle.task.TaskDependencies;
 import io.spine.tools.gradle.task.TaskName;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.gradle.api.Task;
 
 import static com.google.common.truth.Truth.assertThat;

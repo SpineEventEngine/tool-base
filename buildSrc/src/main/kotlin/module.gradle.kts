@@ -25,11 +25,11 @@
  */
 
 import io.spine.dependency.build.CheckerFramework
-import io.spine.dependency.build.Dokka
 import io.spine.dependency.build.ErrorProne
 import io.spine.dependency.build.FindBugs
 import io.spine.dependency.lib.Coroutines
 import io.spine.dependency.lib.Grpc
+import io.spine.dependency.lib.GrpcKotlin
 import io.spine.dependency.lib.Guava
 import io.spine.dependency.lib.Jackson
 import io.spine.dependency.lib.Kotlin
@@ -52,13 +52,14 @@ import io.spine.gradle.report.license.LicenseReporter
 import io.spine.gradle.testing.configureLogging
 import io.spine.gradle.testing.registerTestTasks
 import org.jetbrains.dokka.gradle.DokkaTask
-import org.jetbrains.dokka.gradle.DokkaTaskPartial
 
 plugins {
     `java-library`
     `java-test-fixtures`
     kotlin("jvm")
+    id("module-testing")
     id("net.ltgt.errorprone")
+    id("org.jetbrains.dokka")
     id("detekt-code-analysis")
     id("pmd-settings")
     id("write-manifest")
@@ -68,10 +69,6 @@ plugins {
 }
 apply<IncrementGuard>()
 apply<VersionWriter>()
-
-apply {
-    plugin(Dokka.GradlePlugin.id)
-}
 
 CheckStyleConfig.applyTo(project)
 JavadocConfig.applyTo(project)
@@ -100,12 +97,6 @@ fun Module.addDependencies() {
         compileOnlyApi(FindBugs.annotations)
         compileOnlyApi(CheckerFramework.annotations)
         ErrorProne.annotations.forEach { compileOnlyApi(it) }
-
-        testImplementation(Guava.testLib)
-        testImplementation(Kotest.assertions)
-        JUnit.api.forEach { testImplementation(it) }
-        Truth.libs.forEach { testImplementation(it) }
-        testRuntimeOnly(JUnit.runner)
     }
 }
 
@@ -118,17 +109,18 @@ fun Module.forceConfigurations() {
                 @Suppress("DEPRECATION") // To force `Kotlin.stdLibJdk7` version.
                 force(
                     Kotlin.stdLibJdk7,
-                    JUnit.runner,
                     Spine.base,
                     Spine.reflect,
                     Logging.lib,
                     Logging.libJvm,
                     Validation.runtime,
                     Grpc.stub,
+                    GrpcKotlin.ProtocPlugin.artifact,
                     Coroutines.jdk8,
                     Coroutines.core,
                     Coroutines.bom,
                     Coroutines.coreJvm,
+                    Coroutines.test,
                     Jackson.Junior.objects
                 )
             }
@@ -160,13 +152,7 @@ fun Module.configureKotlin() {
 
 fun Module.configureTests() {
     tasks {
-        registerTestTasks()
         test.configure {
-            useJUnitPlatform {
-                includeEngines("junit-jupiter")
-            }
-            configureLogging()
-
             // See https://github.com/gradle/gradle/issues/18647.
             jvmArgs(
                 "--add-opens", "java.base/java.lang=ALL-UNNAMED",
@@ -184,8 +170,13 @@ fun Module.configureDocTasks() {
         dependsOn(dokkaJavadoc)
     }
 
-    tasks.withType<DokkaTaskPartial>().configureEach {
-        configureForKotlin()
+    afterEvaluate {
+        dokka {
+            configureForKotlin(
+                project,
+                DocumentationSettings.SourceLink.url
+            )
+        }
     }
 }
 
