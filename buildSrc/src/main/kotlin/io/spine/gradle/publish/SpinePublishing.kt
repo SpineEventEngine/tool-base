@@ -36,8 +36,6 @@ import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.findByType
-import productionModuleNames
-import productionModules
 
 /**
  * Configures [SpinePublishing] extension.
