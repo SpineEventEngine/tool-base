@@ -230,7 +230,7 @@ all modules and does not describe the project structure per-subproject.
   <dependency>
     <groupId>io.grpc</groupId>
     <artifactId>grpc-core</artifactId>
-    <version>1.71.0</version>
+    <version>1.72.0</version>
     <scope>test</scope>
   </dependency>
   <dependency>
@@ -242,13 +242,13 @@ all modules and does not describe the project structure per-subproject.
   <dependency>
     <groupId>io.grpc</groupId>
     <artifactId>grpc-protobuf</artifactId>
-    <version>1.71.0</version>
+    <version>1.72.0</version>
     <scope>test</scope>
   </dependency>
   <dependency>
     <groupId>io.grpc</groupId>
     <artifactId>grpc-stub</artifactId>
-    <version>1.71.0</version>
+    <version>1.72.0</version>
     <scope>test</scope>
   </dependency>
   <dependency>
@@ -339,7 +339,7 @@ all modules and does not describe the project structure per-subproject.
   <dependency>
     <groupId>io.grpc</groupId>
     <artifactId>protoc-gen-grpc-java</artifactId>
-    <version>1.71.0</version>
+    <version>1.72.0</version>
   </dependency>
   <dependency>
     <groupId>io.grpc</groupId>
