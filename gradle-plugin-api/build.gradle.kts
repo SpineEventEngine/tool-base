@@ -45,7 +45,9 @@ dependencies {
             """.trimIndent()
         )
     }
-    implementation(enforcedPlatform(Jackson.bom))
+    Jackson.DataFormat.run {
+        implementation("$yaml:${Jackson.version}")
+    }
 
     // Propagate the test fixtures of the `root` module further so that
     // plugins depending on this API module can use them for their testing.
