@@ -25,6 +25,7 @@
  */
 
 import io.spine.dependency.lib.IntelliJ
+import io.spine.dependency.lib.Kotlin
 import io.spine.gradle.report.license.LicenseReporter
 
 plugins {
@@ -42,5 +43,15 @@ dependencies {
             coreImpl,
             codeStyle
         ).forEach { api(it) }
+    }
+
+    @Suppress("DEPRECATION") // `Kotlin.stdLibJdk8` required by IntelliJ Platform.
+    Kotlin.run {
+        arrayOf(
+            reflect,
+            stdLibJdk8,
+        ).forEach {
+            api("$it:$runtimeVersion")
+        }
     }
 }

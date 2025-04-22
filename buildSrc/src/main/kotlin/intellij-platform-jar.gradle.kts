@@ -44,10 +44,6 @@ plugins {
 apply<IncrementGuard>()
 LicenseReporter.generateReportIn(project)
 
-dependencies {
-    api(platform(Kotlin.bom))
-}
-
 spinePublishing {
     artifactPrefix = ""
     destinations = rootProject.the<SpinePublishing>().destinations

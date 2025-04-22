@@ -25,6 +25,7 @@
  */
 
 import io.spine.dependency.local.TestLib
+import io.spine.dependency.test.JUnit
 
 plugins {
     module
@@ -34,5 +35,6 @@ dependencies {
     api(gradleApi())
     api(gradleTestKit())
     api(TestLib.lib)
+    api("${JUnit.Jupiter.api}:${JUnit.version}")
     api(project(":plugin-base"))
 }
