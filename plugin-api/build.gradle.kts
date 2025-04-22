@@ -1,5 +1,3 @@
-import io.spine.dependency.lib.Jackson
-
 /*
  * Copyright 2025, TeamDev. All rights reserved.
  *
@@ -28,8 +26,4 @@ import io.spine.dependency.lib.Jackson
 
 plugins {
     module
-}
-
-dependencies {
-    implementation(platform(Jackson.bom))
 }
