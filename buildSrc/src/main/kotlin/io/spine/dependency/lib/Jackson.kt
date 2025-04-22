@@ -90,6 +90,6 @@ object Jackson {
     object Junior {
         const val version = Jackson.version
         const val group = "com.fasterxml.jackson.jr"
-        const val objects = "$group:jackson-jr-objects:$version"
+        const val objects = "$group:jackson-jr-objects"
     }
 }
