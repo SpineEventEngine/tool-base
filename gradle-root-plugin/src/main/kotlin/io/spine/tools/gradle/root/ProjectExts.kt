@@ -24,47 +24,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.root.plugin
+package io.spine.tools.gradle.root
 
-import io.spine.tools.gradle.root.plugin.RootExtension.Companion.NAME
-import io.spine.tools.plugin.Plugin
-import io.spine.tools.plugin.PluginId
-import io.spine.tools.plugin.WorkingDirectory
-import org.gradle.api.Plugin as GradlePlugin
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.create
+import org.gradle.kotlin.dsl.getByType
 
 /**
- * Creates [RootExtension] in a project, if it is not already present.
+ * Tells if the project already has the [spine][RootExtension] extension.
  *
- * The extension is used by Gradle plugins of libraries that extend
- * the [root extension][RootExtension] with custom configuration DSL.
+ * @returns `true` if the project already has the [extension][RootExtension] applied,
+ *  `false` otherwise.
+ * @see rootExtension
  */
-public class RootPlugin : GradlePlugin<Project>, Plugin {
+public val Project.hasRootExtension: Boolean
+    get() = project.extensions.findByName(RootExtension.NAME) != null
 
-    private lateinit var project: Project
-
-    override fun apply(project: Project) {
-        this.project = project
-        project.run {
-            if (extensions.findByName(NAME) == null) {
-                extensions.create<RootExtension>(NAME)
-            }
-        }
-    }
-
-    override val id: PluginId = PluginId(ID)
-
-    override val workingDirectory: WorkingDirectory by lazy {
-        val parent = project.layout.buildDirectory.get().asFile.toPath()
-        WorkingDirectory(parent, id)
-    }
-
-    public companion object {
-
-        /**
-         * The ID of the plugin.
-         */
-        public const val ID: String = "io.spine.root"
-    }
-}
+/**
+ * Obtains the instance of the [spine][RootExtension] extension of the project.
+ *
+ * @throws org.gradle.api.UnknownDomainObjectException if the extension is not found.
+ * @see hasRootExtension
+ */
+public val Project.rootExtension: RootExtension
+    get() = extensions.getByType<RootExtension>()

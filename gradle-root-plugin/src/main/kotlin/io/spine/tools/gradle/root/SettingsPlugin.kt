@@ -24,26 +24,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.root.plugin
+package io.spine.tools.gradle.root
 
-import org.gradle.api.Project
-import org.gradle.kotlin.dsl.getByType
-
-/**
- * Tells if the project already has the [spine][RootExtension] extension.
- *
- * @returns `true` if the project already has the [extension][RootExtension] applied,
- *  `false` otherwise.
- * @see rootExtension
- */
-public val Project.hasRootExtension: Boolean
-    get() = project.extensions.findByName(RootExtension.NAME) != null
+import org.gradle.api.Plugin
+import org.gradle.api.initialization.Settings
+import org.gradle.kotlin.dsl.create
 
 /**
- * Obtains the instance of the [spine][RootExtension] extension of the project.
+ * Adds [spineSettings][SpineSettingsExtension] extension in the [Settings]
+ * to which the plugin is applied.
  *
- * @throws org.gradle.api.UnknownDomainObjectException if the extension is not found.
- * @see hasRootExtension
+ * Before adding the extension, the plugin checks for the present of the extension.
+ * So, applying the plugin more than once has no effect.
  */
-public val Project.rootExtension: RootExtension
-    get() = extensions.getByType<RootExtension>()
+public class SettingsPlugin : Plugin<Settings> {
+
+    override fun apply(settings: Settings) {
+        settings.run {
+            if (extensions.findByName(SpineSettingsExtension.Companion.NAME) == null) {
+                extensions.create<SpineSettingsExtension>(SpineSettingsExtension.Companion.NAME)
+            }
+        }
+    }
+
+    public companion object {
+
+        /**
+         * The ID of the plugin.
+         */
+        public const val ID: String = "io.spine.settings"
+    }
+}

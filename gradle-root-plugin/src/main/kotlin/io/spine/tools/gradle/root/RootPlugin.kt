@@ -24,28 +24,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.root.plugin
+package io.spine.tools.gradle.root
 
-import io.spine.tools.gradle.root.plugin.SpineSettingsExtension.Companion.NAME
-import org.gradle.api.Plugin
-import org.gradle.api.initialization.Settings
+import io.spine.tools.plugin.Plugin
+import io.spine.tools.plugin.PluginId
+import io.spine.tools.plugin.WorkingDirectory
+import org.gradle.api.Plugin as GradlePlugin
+import org.gradle.api.Project
 import org.gradle.kotlin.dsl.create
 
 /**
- * Adds [spineSettings][SpineSettingsExtension] extension in the [Settings]
- * to which the plugin is applied.
+ * Creates [RootExtension] in a project, if it is not already present.
  *
- * Before adding the extension, the plugin checks for the present of the extension.
- * So, applying the plugin more than once has no effect.
+ * The extension is used by Gradle plugins of libraries that extend
+ * the [root extension][RootExtension] with custom configuration DSL.
  */
-public class SettingsPlugin : Plugin<Settings> {
+public class RootPlugin : GradlePlugin<Project>, Plugin {
 
-    override fun apply(settings: Settings) {
-        settings.run {
-            if (extensions.findByName(NAME) == null) {
-                extensions.create<SpineSettingsExtension>(NAME)
+    private lateinit var project: Project
+
+    override fun apply(project: Project) {
+        this.project = project
+        project.run {
+            if (extensions.findByName(RootExtension.Companion.NAME) == null) {
+                extensions.create<RootExtension>(RootExtension.Companion.NAME)
             }
         }
+    }
+
+    override val id: PluginId = PluginId(ID)
+
+    override val workingDirectory: WorkingDirectory by lazy {
+        val parent = project.layout.buildDirectory.get().asFile.toPath()
+        WorkingDirectory(parent, id)
     }
 
     public companion object {
@@ -53,6 +64,6 @@ public class SettingsPlugin : Plugin<Settings> {
         /**
          * The ID of the plugin.
          */
-        public const val ID: String = "io.spine.settings"
+        public const val ID: String = "io.spine.root"
     }
 }

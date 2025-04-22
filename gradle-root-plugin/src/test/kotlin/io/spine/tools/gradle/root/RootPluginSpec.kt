@@ -24,57 +24,75 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.root.plugin
+package io.spine.tools.gradle.root
 
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import io.spine.tools.gradle.task.BaseTaskName
 import io.spine.tools.gradle.testing.Gradle
-import io.spine.tools.gradle.testing.under
 import io.spine.tools.gradle.testing.Gradle.BUILD_SUCCESSFUL
-import io.spine.tools.gradle.testing.get
 import io.spine.tools.gradle.testing.runGradleBuild
+import io.spine.tools.gradle.testing.under
 import java.io.File
+import org.gradle.api.Project
+import org.gradle.testfixtures.ProjectBuilder
 import org.gradle.testkit.runner.TaskOutcome
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.io.TempDir
 
-@DisplayName("`SpineSettingsPlugin` should")
-internal class SettingsPluginSpec {
+@DisplayName("`SpinePlugin` should")
+internal class RootPluginSpec {
 
-    @TempDir
-    lateinit var projectDir: File
+    private val pluginClass = RootPlugin::class.java
 
-    /**
-     * Creates a settings file applying the [SettingsPlugin] and using
-     * the [SpineSettingsExtension] via its DSL.
-     */
+    private lateinit var project: Project
+
+    @BeforeEach
+    fun createProject() {
+        project = ProjectBuilder.builder().build()
+    }
+
     @Test
-    fun `be applied via its ID`() {
-        val settingsFile = Gradle.settingsFile.under(projectDir)
-        settingsFile.writeText(
+    fun `create extension when applied`() {
+        project.pluginManager.apply(pluginClass)
+        project.extensions.run {
+            findByName(RootExtension.NAME) shouldNotBe null
+            findByType(RootExtension::class.java) shouldNotBe null
+        }
+    }
+
+    @Test
+    fun `do not throw when applied twice`() {
+        assertDoesNotThrow {
+            project.pluginManager.run {
+                apply(pluginClass)
+                apply(pluginClass)
+            }
+        }
+    }
+
+    @Test
+    fun `be applied via its ID`(@TempDir projectDir: File) {
+        Gradle.buildFile.under(projectDir).writeText(
             """
             plugins {
-                id("io.spine.settings")
+                id("io.spine.root")
             }
             
-            spineSettings {
-                versions {
-                    base.set("2.0.0")
-                }            
+            spine {
+                // Nothing here so far.
             }
-            """.trimIndent()
-        )
-
-        // Optionally, add an empty build.gradle file.
-        Gradle.buildFile.under(projectDir).writeText("")
+            """.trimIndent())
 
         // Execute the build.
         val taskName = BaseTaskName.help
         val result = runGradleBuild(projectDir, taskName)
 
-        result[taskName] shouldBe TaskOutcome.SUCCESS
+        result.task(":$taskName")?.outcome shouldBe TaskOutcome.SUCCESS
         result.output shouldContain BUILD_SUCCESSFUL
     }
 }

@@ -27,13 +27,13 @@
 package io.spine.tools.gradle.lib
 
 import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper
-import io.spine.tools.gradle.root.plugin.SpineSettingsExtension
-import io.spine.tools.gradle.root.plugin.SettingsPlugin
+import io.spine.tools.gradle.root.SpineSettingsExtension
+import io.spine.tools.gradle.root.SettingsPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.initialization.Settings
 import org.gradle.kotlin.dsl.apply
-import io.spine.tools.gradle.root.plugin.hasRootExtension
-import io.spine.tools.gradle.root.plugin.rootExtension
+import io.spine.tools.gradle.root.hasRootExtension
+import io.spine.tools.gradle.root.rootExtension
 
 /**
  * The abstract base for Gradle plugins of libraries that need to introduce
