@@ -44,16 +44,8 @@ plugins {
 apply<IncrementGuard>()
 LicenseReporter.generateReportIn(project)
 
-configurations {
-    all {
-        resolutionStrategy {
-            @Suppress("DEPRECATION")
-            force(
-                Kotlin.stdLibJdk8,
-                Kotlin.reflect
-            )
-        }
-    }
+dependencies {
+    api(platform(Kotlin.bom))
 }
 
 spinePublishing {

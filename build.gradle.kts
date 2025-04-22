@@ -46,7 +46,6 @@ buildscript {
                     io.spine.dependency.local.Spine.reflect,
                     io.spine.dependency.local.Validation.java,
                     io.spine.dependency.lib.Protobuf.GradlePlugin.lib,
-                    io.spine.dependency.lib.Kotlin.stdLibJdk8
                 )
             }
         }

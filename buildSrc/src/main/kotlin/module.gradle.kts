@@ -27,19 +27,15 @@
 import io.spine.dependency.build.CheckerFramework
 import io.spine.dependency.build.ErrorProne
 import io.spine.dependency.build.FindBugs
-import io.spine.dependency.lib.Coroutines
+import io.spine.dependency.kotlinx.Coroutines
 import io.spine.dependency.lib.Grpc
 import io.spine.dependency.lib.GrpcKotlin
-import io.spine.dependency.lib.Guava
-import io.spine.dependency.lib.Jackson
 import io.spine.dependency.lib.Kotlin
 import io.spine.dependency.local.ArtifactVersion
+import io.spine.dependency.local.Base
 import io.spine.dependency.local.Logging
-import io.spine.dependency.local.Spine
+import io.spine.dependency.local.Reflect
 import io.spine.dependency.local.Validation
-import io.spine.dependency.test.JUnit
-import io.spine.dependency.test.Kotest
-import io.spine.dependency.test.Truth
 import io.spine.gradle.VersionWriter
 import io.spine.gradle.checkstyle.CheckStyleConfig
 import io.spine.gradle.github.pages.updateGitHubPages
@@ -49,8 +45,6 @@ import io.spine.gradle.javadoc.JavadocConfig
 import io.spine.gradle.kotlin.setFreeCompilerArgs
 import io.spine.gradle.publish.IncrementGuard
 import io.spine.gradle.report.license.LicenseReporter
-import io.spine.gradle.testing.configureLogging
-import io.spine.gradle.testing.registerTestTasks
 import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
@@ -101,27 +95,33 @@ fun Module.addDependencies() {
 }
 
 fun Module.forceConfigurations() {
-    with(configurations) {
+    configurations.run {
         forceVersions()
         excludeProtobufLite()
         all {
             resolutionStrategy {
-                @Suppress("DEPRECATION") // To force `Kotlin.stdLibJdk7` version.
+                eachDependency {
+                    val configuration = this@all
+                    if (configuration.name.contains("detekt", ignoreCase = true)) {
+                        if (requested.group == Kotlin.group) {
+                            useVersion(Kotlin.embeddedVersion)
+                            because("Force Kotlin version in Detekt configuration")
+                        }
+                    } else if (requested.group == Kotlin.group) {
+                        useVersion(Kotlin.runtimeVersion)
+                    }
+                    if (requested.name.contains(Coroutines.infix)) {
+                        useVersion(Coroutines.version)
+                    }
+                }
                 force(
-                    Kotlin.stdLibJdk7,
-                    Spine.base,
-                    Spine.reflect,
+                    Base.lib,
+                    Reflect.lib,
                     Logging.lib,
                     Logging.libJvm,
                     Validation.runtime,
                     Grpc.stub,
                     GrpcKotlin.ProtocPlugin.artifact,
-                    Coroutines.jdk8,
-                    Coroutines.core,
-                    Coroutines.bom,
-                    Coroutines.coreJvm,
-                    Coroutines.test,
-                    Jackson.Junior.objects
                 )
             }
         }
