@@ -25,7 +25,6 @@
  */
 
 import io.spine.dependency.lib.Jackson
-import io.spine.dependency.lib.Kotlin
 import io.spine.dependency.lib.Protobuf
 
 plugins {
