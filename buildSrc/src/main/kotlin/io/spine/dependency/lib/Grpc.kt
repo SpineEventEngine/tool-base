@@ -46,11 +46,19 @@ object Grpc {
 
     object ProtocPlugin {
         const val id = "grpc"
-        const val kotlinPluginVersion = "1.4.1"
+        @Deprecated(
+            message = "Please use `GrpcKotlin.ProtocPlugin.artifact` instead.",
+            replaceWith = ReplaceWith("GrpcKotlin.ProtocPlugin.artifact")
+        )
+        const val kotlinPluginVersion = GrpcKotlin.version
         const val artifact = "$group:protoc-gen-grpc-java:$version"
 
         // https://github.com/grpc/grpc-kotlin
         // https://repo.maven.apache.org/maven2/io/grpc/protoc-gen-grpc-kotlin/
-        const val artifactKotlin = "$group:protoc-gen-grpc-kotlin:$$kotlinPluginVersion"
+        @Deprecated(
+            message = "Please use `GrpcKotlin.ProtocPlugin.artifact` instead.",
+            replaceWith = ReplaceWith("GrpcKotlin.ProtocPlugin.artifact")
+        )
+        const val artifactKotlin = GrpcKotlin.ProtocPlugin.artifact
     }
 }
