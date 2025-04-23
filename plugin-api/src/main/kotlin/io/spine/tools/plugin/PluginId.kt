@@ -29,7 +29,7 @@ package io.spine.tools.plugin
 import org.jetbrains.annotations.VisibleForTesting
 
 /**
- * An ID for a plugin to a tool.
+ * An identifier of a plugin.
  *
  * The given [value] must satisfy the requirements checked by the [isValid] function.
  * Otherwise, [IllegalArgumentException] will be thrown.
@@ -81,7 +81,7 @@ public data class PluginId(val value: String) {
          *  3. Must contain at least one '`.'` character.
          *  4. Cannot contain consecutive `'.'` characters.
          *  5. Cannot start or end with a `'.'`.
-         *  6. Most not start from "com.gradle"`, `"org.gradle"`, or `"org.gradleware"`.
+         *  6. Must not start from "com.gradle"`, `"org.gradle"`, or `"org.gradleware"`.
          */
         @VisibleForTesting
         @Suppress("ReturnCount")
