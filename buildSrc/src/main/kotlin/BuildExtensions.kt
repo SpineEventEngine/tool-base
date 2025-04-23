@@ -230,7 +230,13 @@ fun Project.configureTaskDependencies() {
  * By convention, such modules are for integration tests and should be treated differently.
  */
 val Project.productionModules: Iterable<Project>
-    get() = rootProject.subprojects.filter { !it.name.contains("-tests") }
+    get() = rootProject.subprojects.filterNot { subproject ->
+        subproject.name.run {
+            contains("-tests")
+                    || contains("test-fixtures")
+                    || contains("integration-tests")
+        }
+    }
 
 /**
  * Obtains the names of the [productionModules].

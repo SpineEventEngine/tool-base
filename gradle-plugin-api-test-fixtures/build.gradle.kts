@@ -24,35 +24,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.protobuf
-
-import io.spine.tools.plugin.PluginId
-import io.spine.tools.gradle.ThirdPartyDependency
-import io.spine.tools.proto.fs.Directory
-
-/**
- * A factory of Protobuf-related artifact specs.
- */
-public object ProtobufDependencies {
-
-    private const val MAVEN_GROUP = "com.google.protobuf"
-
-    /** The ID of the Protobuf Gradle plugin. */
-    @JvmField
-    public val gradlePlugin: PluginId = PluginId("com.google.protobuf")
-
-    /** The name of the `SourceSet` extension installed by the Protobuf Gradle plugin. */
-    @JvmField
-    public val sourceSetExtensionName: String = Directory.rootName()
-
-    /** The Protobuf Lite Java runtime library dependency. */
-    @JvmField
-    @Suppress("unused")
-    public val protobufLite: ThirdPartyDependency =
-        ThirdPartyDependency(MAVEN_GROUP, "protobuf-lite")
-
-    /** The dependency on Protobuf Compiler. */
-    @JvmField
-    public val protobufCompiler: ThirdPartyDependency =
-        ThirdPartyDependency(MAVEN_GROUP, "protoc")
+plugins {
+    `maven-publish`
+    `java-gradle-plugin`
+    `kotlin-dsl`
 }
+
+dependencies {
+    api(project(":gradle-plugin-api"))
+}
+
+gradlePlugin {
+    plugins {
+        val packageName = "io.spine.tools.gradle.lib.given"
+        create("stubPlugin") {
+            id = "io.spine.test.stub"
+            implementationClass = "$packageName.StubPlugin"
+        }
+        create("anotherStubPlugin") {
+            id = "io.spine.test.another-stub"
+            implementationClass = "$packageName.AnotherStubPlugin"
+        }
+        create("stubSettingPlugin") {
+            id = "io.spine.test.settings"
+            implementationClass = "$packageName.StubSettingsPlugin"
+        }
+    }
+
+}
+
+//publishing {
+//    // Do nothing. We do not publish these test fixtures.
+//}

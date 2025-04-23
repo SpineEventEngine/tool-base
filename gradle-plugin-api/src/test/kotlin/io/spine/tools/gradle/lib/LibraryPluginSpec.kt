@@ -109,11 +109,3 @@ internal class LibraryPluginSpec {
     }
 }
 
-private class StubPlugin : LibraryPlugin<Unit>(null) {
-
-    fun project() = project
-    fun hasRootExtension(project: Project) = project.hasRootExtension
-    fun rootExtension(project: Project) = project.rootExtension
-}
-
-private class AnotherStubPlugin : LibraryPlugin<Unit>(null)

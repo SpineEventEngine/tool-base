@@ -29,10 +29,6 @@ import io.spine.dependency.lib.Protobuf
 
 plugins {
     module
-    // This module does not publish Gradle plugins.
-    // We need the `java-gradle-plugin` for `pluginUnderTestMetadata` support
-    // which is used in the tests of the abstract plugin classes provided by this module.
-    `java-gradle-plugin`
 }
 
 dependencies {
@@ -45,11 +41,11 @@ dependencies {
             """.trimIndent()
         )
     }
-    Jackson.DataFormat.run {
-        implementation("$yaml:${Jackson.version}")
-    }
+    implementation(Jackson.DataFormat.yamlArtifact)
 
     // Propagate the test fixtures of the `root` module further so that
     // plugins depending on this API module can use them for their testing.
     testFixturesApi(testFixtures(rootPluginProject))
+    
+    testImplementation(project(":gradle-plugin-api-test-fixtures"))
 }

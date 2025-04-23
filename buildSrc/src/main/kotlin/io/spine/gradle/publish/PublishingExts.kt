@@ -93,7 +93,7 @@ private const val PUBLISH_TASK = "publish"
  * Please note, task execution would not copy publications to the local Maven cache.
  *
  * @see <a href="https://docs.gradle.org/current/userguide/publishing_maven.html#publishing_maven:tasks">
- *     Tasks | Maven Publish Plugin</a>
+ *     Tasks | The Maven Publish Plugin</a>
  */
 internal val TaskContainer.publish: TaskProvider<Task>
     get() = named(PUBLISH_TASK)
