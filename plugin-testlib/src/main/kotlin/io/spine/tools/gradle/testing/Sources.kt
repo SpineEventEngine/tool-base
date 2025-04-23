@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -23,12 +23,13 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package io.spine.tools.gradle.testing
 
-import com.google.common.base.Charsets
 import io.spine.io.ResourceDirectory
 import io.spine.util.Exceptions.illegalStateWithCauseOf
 import java.io.IOException
+import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.Files.createDirectories
 import java.nio.file.Files.write
 import java.nio.file.Path
@@ -84,7 +85,7 @@ internal class Sources(private val setup: GradleProjectSetup) {
         val sourcePath = resolve(path)
         try {
             createDirectories(sourcePath.parent)
-            write(sourcePath, lines, Charsets.UTF_8)
+            write(sourcePath, lines, UTF_8)
         } catch (e: IOException) {
             throw illegalStateWithCauseOf(e)
         }

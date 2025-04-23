@@ -41,9 +41,9 @@ internal class ArtifactSpec {
         val expectedName = "name"
         val expectedVersion = "2.0.0"
         val artifact = artifact {
-            group = expectedGroup
-            name = expectedName
-            version = expectedVersion
+            setGroup(expectedGroup)
+            setName(expectedName)
+            setVersion(expectedVersion)
 
             // Check that builder fun is not broken.
             group shouldBe expectedGroup
@@ -65,10 +65,10 @@ internal class ArtifactSpec {
     fun `support 'extension'`() {
         val expectedExtension = randomString()
         val artifact = artifact {
-            group = randomString()
-            name = randomString()
-            version = randomString()
-            extension = expectedExtension
+            setGroup(randomString())
+            setName(randomString())
+            setVersion(randomString())
+            setExtension(expectedExtension)
 
             // Check that builder fun is not broken.
             extension shouldBe expectedExtension
@@ -83,11 +83,11 @@ internal class ArtifactSpec {
     fun `support 'classifier'`() {
         val expectedClassifier = randomString()
         val artifact = artifact {
-            group = randomString()
-            name = randomString()
-            version = randomString()
+            setGroup(randomString())
+            setName(randomString())
+            setVersion(randomString())
 
-            classifier = expectedClassifier
+            setClassifier(expectedClassifier)
 
             // Check that builder fun is not broken.
             classifier shouldBe expectedClassifier

@@ -30,10 +30,11 @@ include(
     "intellij-platform",
     "intellij-platform-java",
     "tool-base",
+    "plugin-api",
     "plugin-base",
     "plugin-testlib",
     "psi",
     "psi-java",
-    "root",
-    "plugin-api"
+    "gradle-root-plugin",
+    "gradle-plugin-api"
 )

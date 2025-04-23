@@ -63,8 +63,8 @@ public class Ordered<E : Any>(project: Project, klass: KClass<E>) :
      *
      * @param T the target type of the transformation.
      */
-    public fun <T> transform(transformer: (E) -> T): ImmutableList<T> =
+    public fun <T : Any> transform(transformer: (E) -> T): ImmutableList<T> =
         get().map(transformer).toImmutableList()
 }
 
-private fun <T> Iterable<T>.toImmutableList(): ImmutableList<T> = ImmutableList.copyOf(this)
+private fun <T : Any> Iterable<T>.toImmutableList(): ImmutableList<T> = ImmutableList.copyOf(this)

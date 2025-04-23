@@ -28,9 +28,9 @@
  * Fixtures for testing {@code io.spine.protodata.java.annotation} package.
  */
 @CheckReturnValue
-@ParametersAreNonnullByDefault
+@NullMarked
 package given.annotation;
 
 import com.google.errorprone.annotations.CheckReturnValue;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.NullMarked;

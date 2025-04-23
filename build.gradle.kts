@@ -1,5 +1,5 @@
 /*
- * Copyright 2024, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,6 @@ import io.spine.gradle.report.coverage.JacocoConfig
 import io.spine.gradle.report.license.LicenseReporter
 import io.spine.gradle.report.pom.PomGenerator
 import io.spine.gradle.standardToSpineSdk
-import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
 
 buildscript {
     standardSpineSdkRepositories()
@@ -47,7 +46,6 @@ buildscript {
                     io.spine.dependency.local.Spine.reflect,
                     io.spine.dependency.local.Validation.java,
                     io.spine.dependency.lib.Protobuf.GradlePlugin.lib,
-                    io.spine.dependency.lib.Kotlin.stdLibJdk8
                 )
             }
         }
@@ -55,6 +53,7 @@ buildscript {
 }
 
 plugins {
+    id("org.jetbrains.dokka")
     idea
     jacoco
     `project-report`
@@ -65,16 +64,16 @@ PomGenerator.applyTo(project)
 LicenseReporter.mergeAllReports(project)
 
 spinePublishing {
-    modules = setOf(
-        "plugin-base",
-        "plugin-testlib",
-        "tool-base",
-        "psi",
-        "psi-java"
+    val customPublishing = arrayOf(
+        "gradle-root-plugin",
+        "intellij-platform",
+        "intellij-platform-java"
     )
-    modulesWithCustomPublishing = setOf(
-        "root"
-    )
+    modules = productionModuleNames.toSet()
+        .minus(customPublishing)
+
+    modulesWithCustomPublishing = customPublishing.toSet()
+
     destinations = with(PublishingRepos) {
         setOf(
             cloudArtifactRegistry,
@@ -92,6 +91,8 @@ allprojects {
     repositories.standardToSpineSdk()
 }
 
-val dokkaHtmlMultiModule by tasks.getting(DokkaMultiModuleTask::class) {
-    configureStyle()
+dependencies {
+    productionModules.forEach {
+        dokka(it)
+    }
 }
