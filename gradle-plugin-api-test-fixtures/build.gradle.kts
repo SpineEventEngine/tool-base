@@ -24,14 +24,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import io.spine.gradle.report.license.LicenseReporter
+
 plugins {
     `maven-publish`
     `java-gradle-plugin`
     `kotlin-dsl`
+    `project-report`
 }
+LicenseReporter.generateReportIn(project)
 
 dependencies {
-    api(project(":gradle-plugin-api"))
+    implementation(project(":gradle-plugin-api"))
 }
 
 gradlePlugin {
@@ -50,9 +54,8 @@ gradlePlugin {
             implementationClass = "$packageName.StubSettingsPlugin"
         }
     }
-
 }
 
-//publishing {
-//    // Do nothing. We do not publish these test fixtures.
-//}
+publishing {
+    // Do nothing. We do not publish these test fixtures.
+}

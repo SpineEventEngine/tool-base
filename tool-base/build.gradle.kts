@@ -40,6 +40,7 @@ import io.spine.gradle.protobuf.setup
 
 plugins {
     module
+    `java-test-fixtures`
     protobuf
 }
 

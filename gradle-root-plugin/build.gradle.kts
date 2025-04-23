@@ -28,6 +28,7 @@ import io.spine.gradle.isSnapshot
 
 plugins {
     module
+    `java-test-fixtures`
     `kotlin-dsl`
     `plugin-publish`
     `write-manifest`

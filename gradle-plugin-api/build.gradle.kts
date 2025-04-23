@@ -31,6 +31,11 @@ plugins {
     module
 }
 
+/**
+ * The project containing two stub plugins used by the tests of this module.
+ */
+val pluginTestFixturesProject = project(":gradle-plugin-api-test-fixtures")
+
 dependencies {
     val rootPluginProject = project(":gradle-root-plugin")
     api(rootPluginProject)
@@ -43,9 +48,28 @@ dependencies {
     }
     implementation(Jackson.DataFormat.yamlArtifact)
 
-    // Propagate the test fixtures of the `root` module further so that
-    // plugins depending on this API module can use them for their testing.
-    testFixturesApi(testFixtures(rootPluginProject))
-    
-    testImplementation(project(":gradle-plugin-api-test-fixtures"))
+    testImplementation(project(":plugin-base"))
+    testImplementation(project(":plugin-testlib"))
+    testImplementation(pluginTestFixturesProject)
+}
+
+/**
+ * This task copies the directory `build/pluginUnderTestMetadata/` from
+ * the [pluginTestFixturesProject] project into the `build` directory of this project
+ * so that [io.spine.tools.gradle.testing.GradleRunner] used by
+ * [io.spine.tools.gradle.lib.LibrarySettingsPluginSpec] test can pick up the metadata file.
+ */
+val copyPluginMetadata = tasks.register<Copy>("copyPluginMetadata") {
+    val dirName = "pluginUnderTestMetadata"
+    from(pluginTestFixturesProject.layout.buildDirectory.dir(dirName))
+    into(layout.buildDirectory.dir(dirName))
+    dependsOn(pluginTestFixturesProject.tasks.build)
+}
+
+tasks.processTestResources {
+    from(copyPluginMetadata)
+}
+
+tasks.test {
+    dependsOn(copyPluginMetadata)
 }

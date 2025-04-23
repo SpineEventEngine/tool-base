@@ -28,9 +28,9 @@ package io.spine.tools.gradle.lib
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.spine.tools.gradle.lib.given.AnotherStubPlugin
+import io.spine.tools.gradle.lib.given.StubPlugin
 import io.spine.tools.gradle.root.RootPlugin
-import io.spine.tools.gradle.root.hasRootExtension
-import io.spine.tools.gradle.root.rootExtension
 import org.gradle.api.Project
 import org.gradle.api.UnknownDomainObjectException
 import org.gradle.testfixtures.ProjectBuilder

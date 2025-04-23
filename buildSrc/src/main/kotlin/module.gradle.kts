@@ -50,7 +50,6 @@ import org.jetbrains.dokka.gradle.tasks.DokkaGenerateTask
 
 plugins {
     `java-library`
-    `java-test-fixtures`
     kotlin("jvm")
     id("module-testing")
     id("net.ltgt.errorprone")
