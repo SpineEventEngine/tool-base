@@ -55,21 +55,33 @@ dependencies {
 
 /**
  * This task copies the directory `build/pluginUnderTestMetadata/` from
- * the [pluginTestFixturesProject] project into the `build` directory of this project
- * so that [io.spine.tools.gradle.testing.GradleRunner] used by
- * [io.spine.tools.gradle.lib.LibrarySettingsPluginSpec] test can pick up the metadata file.
+ * the `pluginTestFixturesProject` project into the `build` directory of this project
+ * so that `GradleRunner` used by `LibrarySettingsPluginSpec` test can pick up the metadata file.
+ *
+ * We do it in two steps:
+ *  1. Copy the directory under the build, which is done by this task.
+ *  2. Add the copied resources to the test resources by `processTestResources` task.
+ *
+ * Two steps make the copied resource directory more visible under the `build` directory.
  */
 val copyPluginMetadata = tasks.register<Copy>("copyPluginMetadata") {
     val dirName = "pluginUnderTestMetadata"
     from(pluginTestFixturesProject.layout.buildDirectory.dir(dirName))
     into(layout.buildDirectory.dir(dirName))
+    // Make sure we have the resource file ready.
     dependsOn(pluginTestFixturesProject.tasks.build)
 }
 
-tasks.processTestResources {
-    from(copyPluginMetadata)
-}
-
-tasks.test {
-    dependsOn(copyPluginMetadata)
+/**
+ * Make sure the test classpath contains the property file
+ * from the `pluginUnderTestMetadata` directory copied by
+ * the `copyPluginMetadata` task.
+ */
+tasks {
+    processTestResources {
+        from(copyPluginMetadata)
+    }
+    test {
+        dependsOn(copyPluginMetadata)
+    }
 }
