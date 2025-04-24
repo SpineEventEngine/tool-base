@@ -32,12 +32,14 @@ import org.jetbrains.annotations.VisibleForTesting
  * An identifier of a plugin.
  *
  * The given [value] must satisfy the requirements checked by the [isValid] function.
- * Otherwise, [IllegalArgumentException] will be thrown.
+ * Otherwise, the [IllegalArgumentException] will be thrown.
  *
- * **API Note**: Even though the requirements are modeled after
- * the [Gradle plugin IDs](https://bit.ly/gradle-plugin-id-policy), the API is not intended
- * only for Gradle plugins. We find them reasonable for identifying components in various
- * pluggable environments.
+ * ### API Note
+ * Even though the requirements are modeled after the
+ * [Gradle plugin IDs](https://bit.ly/gradle-plugin-id-policy),
+ * the API is not intended only for Gradle plugins.
+ *
+ * We find them reasonable for identifying components in various pluggable environments.
  */
 public data class PluginId(val value: String) {
 
@@ -45,6 +47,20 @@ public data class PluginId(val value: String) {
         require(isValid(value)) { "Invalid plugin ID: `$value`." }
     }
 
+    /**
+     * Returns the [value].
+     *
+     * This property is useful via its accessor method `id()` in the Java code.
+     *
+     * It also provides better readability in Kotlin, when we need a string value
+     * of a property which name is other than `id`.
+     * E.g., compare `gradlePlugin.id` with `gradlePlugin.value`.
+     */
+    public val id: String @JvmName("id") get() = value
+
+    /**
+     * Returns [value].
+     */
     override fun toString(): String = value
 
     internal companion object {

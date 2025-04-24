@@ -31,7 +31,6 @@ import com.google.protobuf.gradle.ExecutableLocator;
 import com.google.protobuf.gradle.GenerateProtoTask;
 import com.google.protobuf.gradle.ProtobufExtension;
 import com.google.protobuf.gradle.ProtobufExtension.GenerateProtoTaskCollection;
-import org.gradle.api.Action;
 import org.gradle.api.NamedDomainObjectContainer;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
@@ -55,7 +54,7 @@ public abstract class ProtocConfigurationPlugin implements Plugin<Project> {
     @Override
     public void apply(Project project) {
         project.getPluginManager()
-               .withPlugin(gradlePlugin.id, plugin -> applyTo(project));
+               .withPlugin(gradlePlugin.id(), plugin -> applyTo(project));
     }
 
     private void applyTo(Project project) {

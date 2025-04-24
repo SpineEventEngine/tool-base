@@ -24,35 +24,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.protobuf
+@file:Suppress("unused") // Used via publication settings.
 
-import io.spine.tools.plugin.PluginId
-import io.spine.tools.gradle.ThirdPartyDependency
-import io.spine.tools.proto.fs.Directory
+package io.spine.tools.gradle.lib.given
 
-/**
- * A factory of Protobuf-related artifact specs.
- */
-public object ProtobufDependencies {
+import io.spine.tools.gradle.lib.LibraryPlugin
+import io.spine.tools.gradle.root.hasRootExtension
+import io.spine.tools.gradle.root.rootExtension
+import org.gradle.api.Project
 
-    private const val MAVEN_GROUP = "com.google.protobuf"
+class StubPlugin : LibraryPlugin<Unit>(null) {
 
-    /** The ID of the Protobuf Gradle plugin. */
-    @JvmField
-    public val gradlePlugin: PluginId = PluginId("com.google.protobuf")
-
-    /** The name of the `SourceSet` extension installed by the Protobuf Gradle plugin. */
-    @JvmField
-    public val sourceSetExtensionName: String = Directory.rootName()
-
-    /** The Protobuf Lite Java runtime library dependency. */
-    @JvmField
-    @Suppress("unused")
-    public val protobufLite: ThirdPartyDependency =
-        ThirdPartyDependency(MAVEN_GROUP, "protobuf-lite")
-
-    /** The dependency on Protobuf Compiler. */
-    @JvmField
-    public val protobufCompiler: ThirdPartyDependency =
-        ThirdPartyDependency(MAVEN_GROUP, "protoc")
+    fun project() = project
+    fun hasRootExtension(project: Project) = project.hasRootExtension
+    fun rootExtension(project: Project) = project.rootExtension
 }
+
+class AnotherStubPlugin : LibraryPlugin<Unit>(null)

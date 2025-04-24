@@ -50,7 +50,7 @@ import org.junit.jupiter.api.io.TempDir
  * The value of this constant must match the name of the `.properties` file under
  * `resources/META-INF/gradle-plugins/` directory.
  */
-private const val PLUGIN_ID = """io.spine.test.settings.plugin"""
+private const val PLUGIN_ID = """io.spine.test.settings"""
 
 @DisplayName("`LibrarySettingsPlugin` should")
 internal class LibrarySettingsPluginSpec {

@@ -29,11 +29,12 @@ import io.spine.dependency.lib.Protobuf
 
 plugins {
     module
-    // This module does not publish Gradle plugins.
-    // We need the `java-gradle-plugin` for `pluginUnderTestMetadata` support
-    // which is used in the tests of the abstract plugin classes provided by this module.
-    `java-gradle-plugin`
 }
+
+/**
+ * The project containing two stub plugins used by the tests of this module.
+ */
+val pluginTestFixturesProject = project(":gradle-plugin-api-test-fixtures")
 
 dependencies {
     val rootPluginProject = project(":gradle-root-plugin")
@@ -45,11 +46,42 @@ dependencies {
             """.trimIndent()
         )
     }
-    Jackson.DataFormat.run {
-        implementation("$yaml:${Jackson.version}")
-    }
+    implementation(Jackson.DataFormat.yamlArtifact)
 
-    // Propagate the test fixtures of the `root` module further so that
-    // plugins depending on this API module can use them for their testing.
-    testFixturesApi(testFixtures(rootPluginProject))
+    testImplementation(project(":plugin-base"))
+    testImplementation(project(":plugin-testlib"))
+    testImplementation(pluginTestFixturesProject)
+}
+
+/**
+ * This task copies the directory `build/pluginUnderTestMetadata/` from
+ * the `pluginTestFixturesProject` project into the `build` directory of this project
+ * so that `GradleRunner` used by `LibrarySettingsPluginSpec` test can pick up the metadata file.
+ *
+ * We do it in two steps:
+ *  1. Copy the directory under the build, which is done by this task.
+ *  2. Add the copied resources to the test resources by `processTestResources` task.
+ *
+ * Two steps make the copied resource directory more visible under the `build` directory.
+ */
+val copyPluginMetadata = tasks.register<Copy>("copyPluginMetadata") {
+    val dirName = "pluginUnderTestMetadata"
+    from(pluginTestFixturesProject.layout.buildDirectory.dir(dirName))
+    into(layout.buildDirectory.dir(dirName))
+    // Make sure we have the resource file ready.
+    dependsOn(pluginTestFixturesProject.tasks.build)
+}
+
+/**
+ * Make sure the test classpath contains the property file
+ * from the `pluginUnderTestMetadata` directory copied by
+ * the `copyPluginMetadata` task.
+ */
+tasks {
+    processTestResources {
+        from(copyPluginMetadata)
+    }
+    test {
+        dependsOn(copyPluginMetadata)
+    }
 }

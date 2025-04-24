@@ -36,5 +36,6 @@ include(
     "psi",
     "psi-java",
     "gradle-root-plugin",
-    "gradle-plugin-api"
+    "gradle-plugin-api",
+    "gradle-plugin-api-test-fixtures"
 )

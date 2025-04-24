@@ -46,10 +46,10 @@ import io.spine.gradle.kotlin.setFreeCompilerArgs
 import io.spine.gradle.publish.IncrementGuard
 import io.spine.gradle.report.license.LicenseReporter
 import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.dokka.gradle.tasks.DokkaGenerateTask
 
 plugins {
     `java-library`
-    `java-test-fixtures`
     kotlin("jvm")
     id("module-testing")
     id("net.ltgt.errorprone")
@@ -163,9 +163,12 @@ fun Module.configureTests() {
 }
 
 fun Module.configureDocTasks() {
-    val dokkaJavadoc by tasks.getting(DokkaTask::class)
+    val dokkaJavadoc by tasks.getting { this as DokkaTask
+        outputDirectory.set(layout.buildDirectory.dir("dokka/javadoc"))
+    }
+
     tasks.register("javadocJar", Jar::class) {
-        from(dokkaJavadoc.outputDirectory)
+        from(dokkaJavadoc)
         archiveClassifier.set("javadoc")
         dependsOn(dokkaJavadoc)
     }

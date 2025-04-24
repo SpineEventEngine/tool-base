@@ -24,35 +24,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.protobuf
+import io.spine.gradle.report.license.LicenseReporter
 
-import io.spine.tools.plugin.PluginId
-import io.spine.tools.gradle.ThirdPartyDependency
-import io.spine.tools.proto.fs.Directory
+plugins {
+    `maven-publish`
+    `java-gradle-plugin`
+    `kotlin-dsl`
+    `project-report`
+}
+LicenseReporter.generateReportIn(project)
 
-/**
- * A factory of Protobuf-related artifact specs.
- */
-public object ProtobufDependencies {
+dependencies {
+    implementation(project(":gradle-plugin-api"))
+}
 
-    private const val MAVEN_GROUP = "com.google.protobuf"
+gradlePlugin {
+    plugins {
+        val packageName = "io.spine.tools.gradle.lib.given"
+        create("stubPlugin") {
+            id = "io.spine.test.stub"
+            implementationClass = "$packageName.StubPlugin"
+        }
+        create("anotherStubPlugin") {
+            id = "io.spine.test.another-stub"
+            implementationClass = "$packageName.AnotherStubPlugin"
+        }
+        create("stubSettingPlugin") {
+            id = "io.spine.test.settings"
+            implementationClass = "$packageName.StubSettingsPlugin"
+        }
+    }
+}
 
-    /** The ID of the Protobuf Gradle plugin. */
-    @JvmField
-    public val gradlePlugin: PluginId = PluginId("com.google.protobuf")
-
-    /** The name of the `SourceSet` extension installed by the Protobuf Gradle plugin. */
-    @JvmField
-    public val sourceSetExtensionName: String = Directory.rootName()
-
-    /** The Protobuf Lite Java runtime library dependency. */
-    @JvmField
-    @Suppress("unused")
-    public val protobufLite: ThirdPartyDependency =
-        ThirdPartyDependency(MAVEN_GROUP, "protobuf-lite")
-
-    /** The dependency on Protobuf Compiler. */
-    @JvmField
-    public val protobufCompiler: ThirdPartyDependency =
-        ThirdPartyDependency(MAVEN_GROUP, "protoc")
+publishing {
+    // Do nothing. We do not publish these test fixtures.
 }
