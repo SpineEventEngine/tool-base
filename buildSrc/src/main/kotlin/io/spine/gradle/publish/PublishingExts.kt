@@ -27,7 +27,8 @@
 package io.spine.gradle.publish
 
 import dokkaKotlinJar
-import io.spine.gradle.Repository
+import io.spine.gradle.isSnapshot
+import io.spine.gradle.repo.Repository
 import io.spine.gradle.sourceSets
 import java.util.*
 import org.gradle.api.InvalidUserDataException
@@ -169,10 +170,13 @@ private fun TaskContainer.registerCheckCredentialsTask(
 
 private fun Task.doLastCredentialsCheck(destinations: Set<Repository>) {
     doLast {
-        val destinationsStr = destinations.joinToString(", ") { it.name }
-        logger.debug(
-            "Project '${project.name}': checking the credentials for repos: $destinationsStr."
-        )
+        if (logger.isDebugEnabled) {
+            val isSnapshot = project.version.toString().isSnapshot()
+            val destinationsStr = destinations.joinToString(", ") { it.target(isSnapshot) }
+            logger.debug(
+                "Project '${project.name}': checking the credentials for repos: $destinationsStr."
+            )
+        }
         destinations.forEach { it.ensureCredentials(project) }
     }
 }
@@ -203,8 +207,8 @@ fun TaskContainer.excludeGoogleProtoFromArtifacts() {
  * Locates or creates `sourcesJar` task in this [Project].
  *
  * The output of this task is a `jar` archive. The archive contains sources from `main` source set.
- * The task makes sure that sources from the directories below will be included into
- * a resulted archive:
+ * The task makes sure that sources from the directories below will be included
+ * in the resulting archive:
  *
  *  - Kotlin
  *  - Java
@@ -248,8 +252,8 @@ internal fun Project.testJar(): TaskProvider<Jar> = tasks.getOrCreate("testJar")
  * Locates or creates `javadocJar` task in this [Project].
  *
  * The output of this task is a `jar` archive. The archive contains Javadoc,
- * generated upon Java sources from `main` source set. If javadoc for Kotlin is also needed,
- * apply Dokka plugin. It tunes `javadoc` task to generate docs upon Kotlin sources as well.
+ * generated upon Java sources from `main` source set. If Javadoc for Kotlin is also needed,
+ * apply the Dokka plugin. It tunes `javadoc` task to generate docs upon Kotlin sources as well.
  */
 fun Project.javadocJar(): TaskProvider<Jar> = tasks.getOrCreate("javadocJar") {
     archiveClassifier.set("javadoc")

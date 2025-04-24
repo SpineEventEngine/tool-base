@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -24,32 +24,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@file:JvmName("StandardRepos")
+package io.spine.gradle.repo
 
-package io.spine.tools.gradle
-
-import java.net.URI
-import org.gradle.api.artifacts.dsl.RepositoryHandler
+import org.gradle.api.GradleException
 
 /**
- * Adds the standard Maven repositories to the receiver [RepositoryHandler].
- *
- * This is analogous to the eponymous method in the build scripts with
- * the exception that this method is available at the module's test runtime.
- *
- * Note that not all the Maven repositories may be added to
- * the test projects, but only those that are required for tests.
- * We are not trying to keep these repositories in perfect synchrony with
- * the ones defined in build scripts.
+ * A name of a repository.
  */
-public fun RepositoryHandler.applyStandard() {
-    mavenLocal()
-    mavenCentral()
-    val registryBaseUrl = "https://europe-maven.pkg.dev/spine-event-engine"
-    maven {
-        it.url = URI("$registryBaseUrl/releases")
+@Suppress("unused")
+class RepoSlug(val value: String) {
+
+    companion object {
+
+        /**
+         * The name of the environment variable containing the repository slug, for which
+         * the Gradle build is performed.
+         */
+        private const val environmentVariable = "REPO_SLUG"
+
+        /**
+         * Reads `REPO_SLUG` environment variable and returns its value.
+         *
+         * In case it is not set, a [org.gradle.api.GradleException] is thrown.
+         */
+        fun fromVar(): RepoSlug {
+            val envValue = System.getenv(environmentVariable)
+            if (envValue.isNullOrEmpty()) {
+                throw GradleException("`REPO_SLUG` environment variable is not set.")
+            }
+            return RepoSlug(envValue)
+        }
     }
-    maven {
-        it.url = URI("$registryBaseUrl/snapshots")
+
+    override fun toString(): String = value
+
+    /**
+     * Returns the GitHub URL to the project repository.
+     */
+    fun gitHost(): String {
+        return "git@github.com-publish:${value}.git"
     }
 }

@@ -28,8 +28,8 @@ package io.spine.gradle.publish
 
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.artifactregistry.auth.DefaultCredentialProvider
-import io.spine.gradle.Credentials
-import io.spine.gradle.Repository
+import io.spine.gradle.repo.Credentials
+import io.spine.gradle.repo.Repository
 import java.io.IOException
 import org.gradle.api.Project
 
@@ -56,8 +56,9 @@ internal object CloudArtifactRegistry {
     private const val spineRepoLocation = "https://europe-maven.pkg.dev/spine-event-engine"
 
     val repository = Repository(
-        releases = "${spineRepoLocation}/releases",
-        snapshots = "${spineRepoLocation}/snapshots",
+        name = "CloudArtifactRegistry",
+        releases = "$spineRepoLocation/releases",
+        snapshots = "$spineRepoLocation/snapshots",
         credentialValues = this::fetchGoogleCredentials
     )
 

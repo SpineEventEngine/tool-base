@@ -5,9 +5,24 @@
 [![license][license-badge]][license]
 
 
-Common code for development tools of the Spine SDK.
+Base code for the development tool subprojects of the Spine SDK.
 
 ## Modules
+
+* [`plugin-api`](plugin-api) — the basic API for plugins (not necessarily Gradle plugins)
+  that need a working directory on the file system for doing their job.
+
+
+* [`gradle-root-plugin`](gradle-root-plugin) — provides Gradle plugins which introduce 
+  root extension for Gradle `Project` called [`spine`][spine-extension], and
+  the root extension for `Settings` called [`spineSettings`][spine-settings-extension].
+  Other plugins use these extensions for adding custom DSL. 
+
+
+* [`gradle-plugin-api`](gradle-plugin-api) — the API for tool or library authors to use
+  for extending DSL of extensions introduced by plugins from
+  the [`gradle-root-plugin`](gradle-root-plugin) module.
+
 
 * [`tool-base`](tool-base) — common components for building build-time tools, including file
   manipulations, Protobuf reflection, simple code generation, etc.
@@ -27,16 +42,12 @@ Common code for development tools of the Spine SDK.
   [Java PSI](https://plugins.jetbrains.com/docs/intellij/psi.html). 
                                                                                     
 
-* [`root`](root) — provides Gradle plugins with the root [`spine`][spine-extension] and
-  [`spineSettings`][spine-settings-extension] extensions of a Gradle project.
-
-
 * [`plugin-api`](plugin-api) — API for libraries that deal with root Gradle extensions or
   act as [Spine Compiler][spine-compiler] plugins.
 
 
-* `intellij-platform` and `intellij-platform-java` are modules for producing fat
-   JARs for corresponding IntelliJ Platform components.  
+* [`intellij-platform`](intellij-platform) and [`intellij-platform-java`](intellij-platform-java)
+  are modules for producing fat JARs for corresponding IntelliJ Platform components.  
 
 ## Language versions
 
@@ -52,5 +63,5 @@ Common code for development tools of the Spine SDK.
 [license]: http://www.apache.org/licenses/LICENSE-2.0
 [codecov]: https://codecov.io/gh/SpineEventEngine/tool-base
 [spine-compiler]: https://github.com/SpineEventEngine/ProtoData
-[spine-extension]: root/src/main/kotlin/io/spine/tools/gradle/root/SpineProjectExtension.kt
-[spine-settings-extension]: root/src/main/kotlin/io/spine/tools/gradle/root/SpineSettingsExtension.kt 
+[spine-extension]: gradle-root-plugin/src/main/kotlin/io/spine/tools/gradle/root/RootExtension.kt
+[spine-settings-extension]: gradle-root-plugin/src/main/kotlin/io/spine/tools/gradle/root/SettingsExtension.kt 

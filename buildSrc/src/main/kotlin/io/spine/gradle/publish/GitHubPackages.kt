@@ -26,8 +26,8 @@
 
 package io.spine.gradle.publish
 
-import io.spine.gradle.Credentials
-import io.spine.gradle.Repository
+import io.spine.gradle.repo.Credentials
+import io.spine.gradle.repo.Repository
 import io.spine.gradle.buildDirectory
 import net.lingala.zip4j.ZipFile
 import org.gradle.api.Project
@@ -42,10 +42,11 @@ internal object GitHubPackages {
      */
     fun repository(repoName: String): Repository {
         val githubActor: String = actor()
+        val url = "https://maven.pkg.github.com/SpineEventEngine/$repoName"
         return Repository(
-            name = "GitHub Packages",
-            releases = "https://maven.pkg.github.com/SpineEventEngine/$repoName",
-            snapshots = "https://maven.pkg.github.com/SpineEventEngine/$repoName",
+            name = "GitHub-Packages",
+            releases = url,
+            snapshots = url,
             credentialValues = { project -> project.credentialsWithToken(githubActor) }
         )
     }
