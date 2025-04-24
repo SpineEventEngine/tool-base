@@ -28,9 +28,7 @@
 
 package io.spine.gradle.publish
 
-import dokkaJavaJar
-import dokkaKotlinJar
-import io.spine.gradle.Repository
+import io.spine.gradle.repo.Repository
 import org.gradle.api.Project
 import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
 import org.gradle.kotlin.dsl.apply

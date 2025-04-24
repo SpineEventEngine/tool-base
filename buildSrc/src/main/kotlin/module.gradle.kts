@@ -46,7 +46,6 @@ import io.spine.gradle.kotlin.setFreeCompilerArgs
 import io.spine.gradle.publish.IncrementGuard
 import io.spine.gradle.report.license.LicenseReporter
 import org.jetbrains.dokka.gradle.DokkaTask
-import org.jetbrains.dokka.gradle.tasks.DokkaGenerateTask
 
 plugins {
     `java-library`

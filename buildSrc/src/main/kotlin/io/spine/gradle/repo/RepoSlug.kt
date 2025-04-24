@@ -24,19 +24,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.gradle.publish
+package io.spine.gradle.repo
 
-import io.spine.gradle.repo.Repository
+import org.gradle.api.GradleException
 
 /**
- * Repositories to which we may publish.
+ * A name of a repository.
  */
-object PublishingRepos {
+@Suppress("unused")
+class RepoSlug(val value: String) {
 
-    val cloudArtifactRegistry = CloudArtifactRegistry.repository
+    companion object {
+
+        /**
+         * The name of the environment variable containing the repository slug, for which
+         * the Gradle build is performed.
+         */
+        private const val environmentVariable = "REPO_SLUG"
+
+        /**
+         * Reads `REPO_SLUG` environment variable and returns its value.
+         *
+         * In case it is not set, a [org.gradle.api.GradleException] is thrown.
+         */
+        fun fromVar(): RepoSlug {
+            val envValue = System.getenv(environmentVariable)
+            if (envValue.isNullOrEmpty()) {
+                throw GradleException("`REPO_SLUG` environment variable is not set.")
+            }
+            return RepoSlug(envValue)
+        }
+    }
+
+    override fun toString(): String = value
 
     /**
-     * Obtains a GitHub repository by the given name.
+     * Returns the GitHub URL to the project repository.
      */
-    fun gitHub(repoName: String): Repository = GitHubPackages.repository(repoName)
+    fun gitHost(): String {
+        return "git@github.com-publish:${value}.git"
+    }
 }

@@ -27,7 +27,7 @@
 package io.spine.gradle.publish
 
 import LicenseSettings
-import io.spine.gradle.Repository
+import io.spine.gradle.repo.Repository
 import io.spine.gradle.isSnapshot
 import org.gradle.api.Project
 import org.gradle.api.artifacts.dsl.RepositoryHandler
@@ -116,10 +116,10 @@ internal sealed class PublicationHandler(
  */
 private fun RepositoryHandler.register(project: Project, repository: Repository) {
     val isSnapshot = project.version.toString().isSnapshot()
-    val target = if (isSnapshot) repository.snapshots else repository.releases
     val credentials = repository.credentials(project.rootProject)
     maven {
-        url = project.uri(target)
+        name = repository.name(isSnapshot)
+        url = project.uri(repository.target(isSnapshot))
         credentials {
             username = credentials?.username
             password = credentials?.password
