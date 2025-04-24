@@ -227,6 +227,7 @@ val RepositoryHandler.jetBrainsCacheRedirector: MavenArtifactRepository
 fun RepositoryHandler.standardToSpineSdk() {
     spineArtifacts()
 
+    @Suppress("DEPRECATION") // Still use `CloudRepo` for earlier versions.
     val spineRepos = listOf(
         Repos.spine,
         Repos.spineSnapshots,
@@ -326,8 +327,12 @@ data class Credentials(
  * @see [applyStandard]
  */
 private object Repos {
+    @Deprecated(message = "Please use `cloudArtifactRegistry.releases` instead.")
     val spine = CloudRepo.published.releases
+
+    @Deprecated(message = "Please use `artifactRegistry.snapshots` instead.")
     val spineSnapshots = CloudRepo.published.snapshots
+
     val artifactRegistry = PublishingRepos.cloudArtifactRegistry.releases
     val artifactRegistrySnapshots = PublishingRepos.cloudArtifactRegistry.snapshots
 

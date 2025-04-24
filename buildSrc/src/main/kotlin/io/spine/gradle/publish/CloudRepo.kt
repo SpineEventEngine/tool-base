@@ -33,8 +33,9 @@ import io.spine.gradle.Repository
  *
  * There is a special treatment for this repository. Usually, fetching and publishing of artifacts
  * is performed via the same URL. But it is not true for CloudRepo. Fetching is performed via
- * the public repository, and publishing via the private one. Their URLs differ in `/public` infix.
+ * the public repository and publishing via the private one. Their URLs differ in `/public` infix.
  */
+@Deprecated(message = "Please use `PublishingRepos.cloudArtifactRegistry` instead.")
 internal object CloudRepo {
 
     private const val name = "CloudRepo"
