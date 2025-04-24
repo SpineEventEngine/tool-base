@@ -34,11 +34,12 @@ import org.gradle.api.artifacts.dsl.RepositoryHandler
 /**
  * Adds the standard Maven repositories to the receiver [RepositoryHandler].
  *
- * This is analogous to the eponymous method in the build scripts with the exception that this
- * method is available at the module's test runtime.
+ * This is analogous to the eponymous method in the build scripts with
+ * the exception that this method is available at the module's test runtime.
  *
- * Note that not all the Maven repositories may be added to the test projects, but only those that
- * are required for tests. We are not trying to keep these repositories is perfect synchrony with
+ * Note that not all the Maven repositories may be added to
+ * the test projects, but only those that are required for tests.
+ * We are not trying to keep these repositories in perfect synchrony with
  * the ones defined in build scripts.
  */
 public fun RepositoryHandler.applyStandard() {
