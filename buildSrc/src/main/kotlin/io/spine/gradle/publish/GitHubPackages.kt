@@ -46,9 +46,8 @@ internal object GitHubPackages {
         return Repository(
             name = "GitHub-Packages",
             releases = url,
-            snapshots = url,
-            credentialValues = { project -> project.credentialsWithToken(githubActor) }
-        )
+            snapshots = url
+        ) { project -> project.credentialsWithToken(githubActor) }
     }
 
     private fun actor(): String {
