@@ -78,11 +78,17 @@ internal val Project.spinePublishing: SpinePublishing
     }
 
 /**
- * Tells if this project has custom publishing by checking if it is listed
- * among [SpinePublishing.modulesWithCustomPublishing] in the root project.
+ * Tells if this project has custom publishing.
+ *
+ * For a multi-module project this is checked by presence of this project
+ * in the list of [SpinePublishing.modulesWithCustomPublishing] of the root project.
+ *
+ * In a single-module project, the value of the [SpinePublishing.customPublishing]
+ * property is returned.
  */
 internal val Project.hasCustomPublishing: Boolean
     get() = rootProject.spinePublishing.modulesWithCustomPublishing.contains(name)
+            || spinePublishing.customPublishing
 
 private const val PUBLISH_TASK = "publish"
 
