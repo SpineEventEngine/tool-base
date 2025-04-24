@@ -116,6 +116,21 @@ data class Repository(
         val password = properties.getProperty("user.password")
         return Credentials(username, password)
     }
+    
+    override fun equals(other: Any?): Boolean = when {
+        this === other -> true
+        other !is Repository -> false
+        else -> name == other.name &&
+           releases == other.releases &&
+           snapshots == other.snapshots
+}
+
+    override fun hashCode(): Int {
+        var result = name.hashCode()
+        result = 31 * result + releases.hashCode()
+        result = 31 * result + snapshots.hashCode()
+        return result
+    }
 
     override fun toString(): String {
         return name
