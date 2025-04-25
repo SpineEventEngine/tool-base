@@ -51,6 +51,7 @@ import org.gradle.api.Project
  * Ordering said hooks is a non-trivial operation and the result is usually quite fragile.
  * Thus, we choose to do this small piece of configuration manually.
  */
+@Suppress("ConstPropertyName") // https://bit.ly/kotlin-prop-names
 internal object CloudArtifactRegistry {
 
     private const val spineRepoLocation = "https://europe-maven.pkg.dev/spine-event-engine"
