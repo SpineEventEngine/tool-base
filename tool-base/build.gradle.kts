@@ -170,6 +170,7 @@ fun Project.applyGeneratedDirectories(generatedDir: String) {
  * somewhere inside either ProtoData or McJava.
  */
 project.afterEvaluate {
+    @Suppress("unused") // Used via `by` syntax.
     val sourcesJar by tasks.getting {
         this as Jar
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
