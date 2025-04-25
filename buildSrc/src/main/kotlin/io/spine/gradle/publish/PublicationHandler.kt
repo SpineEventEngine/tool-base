@@ -154,7 +154,7 @@ internal sealed class PublicationHandler(
     }
 
     /**
-     * The abstract base for factories of producing instances of classes
+     * The abstract base for factories producing instances of classes
      * derived from [io.spine.gradle.publish.PublicationHandler].
      *
      * The factory maintains associations between a path of the project to
@@ -165,6 +165,7 @@ internal sealed class PublicationHandler(
      *
      * Otherwise, a new handler is created and associated with the project.
      *
+     * @param H The type of the publication handlers produced by this repository.
      * @see serving
      */
     abstract class HandlerFactory<H : PublicationHandler> {
