@@ -24,48 +24,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.task
+package io.spine.tools.gradle.protobuf
 
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.code.SourceSetName.Companion.main
 import io.spine.tools.code.SourceSetName.Companion.test
-import io.spine.tools.gradle.protobuf.ProtobufTaskName
-
-private const val NEW_CLASS_NAME = "io.spine.tools.gradle.protobuf.ProtobufTaskName"
-
-private const val IMPORT = "NEW_CLASS_NAME"
+import io.spine.tools.gradle.task.TaskName
+import io.spine.tools.gradle.task.TaskWithSourceSetName
 
 /**
  * Names of Gradle tasks defined by the Protobuf Gradle plugin.
  *
+ * ### API Note
+ *
+ * The class is made open only to support package migration of
+ * [io.spine.tools.gradle.task.ProtobufTaskName], which is deprecated in favor of
+ * this one. Once the deprecated class is removed, this class should become final.
+ *
  * @see <a href="https://github.com/google/protobuf-gradle-plugin">Protobuf Gradle plugin</a>
  */
-@Deprecated(
-    message = "Please use `$NEW_CLASS_NAME`.",
-    replaceWith = ReplaceWith(
-        "ProtobufTaskName",
-        imports = [IMPORT]
-    )
-)
-public class ProtobufTaskName(value: String, ssn: SourceSetName) :
-    ProtobufTaskName(value, ssn) {
+public open class ProtobufTaskName(value: String, ssn: SourceSetName) :
+    TaskWithSourceSetName(value, ssn) {
 
     public companion object {
 
         /**
          * Obtains a name of the `generateProto` task for the specified source set.
          */
-        @Deprecated(
-            message =
-                "Please use `$NEW_CLASS_NAME.generateProto` instead.",
-            replaceWith = ReplaceWith(
-                "ProtobufTaskName.generateProto",
-                imports = [IMPORT]
-            )
-        )
         @JvmStatic
         public fun generateProto(ssn: SourceSetName): TaskName =
-            ProtobufTaskName.generateProto(ssn)
+            ProtobufTaskName("generate${ssn.toInfix()}Proto", ssn)
 
         /**
          * Generates production code from Protobuf.
@@ -73,16 +61,8 @@ public class ProtobufTaskName(value: String, ssn: SourceSetName) :
          * Note that this task is not a public API of the plugin.
          * Users should be conscious and cautious when depending on it.
          */
-        @Deprecated(
-            message =
-                "Please use `$NEW_CLASS_NAME.generateProto` instead.",
-            replaceWith = ReplaceWith(
-                "ProtobufTaskName.generateProto",
-                imports = [IMPORT]
-            )
-        )
         @JvmField
-        public val generateProto: TaskName = ProtobufTaskName.generateProto(main)
+        public val generateProto: TaskName = generateProto(main)
 
         /**
          * Generates test code from Protobuf.
@@ -90,15 +70,7 @@ public class ProtobufTaskName(value: String, ssn: SourceSetName) :
          * Note that this task is not a public API of the plugin.
          * Users should be conscious and cautious when depending on it.
          */
-        @Deprecated(
-            message =
-                "Please use `$NEW_CLASS_NAME.generateTestProto` instead.",
-            replaceWith = ReplaceWith(
-                "ProtobufTaskName.generateTestProto",
-                imports = [IMPORT]
-            )
-        )
         @JvmField
-        public val generateTestProto: TaskName = ProtobufTaskName.generateProto(test)
+        public val generateTestProto: TaskName = generateProto(test)
     }
 }

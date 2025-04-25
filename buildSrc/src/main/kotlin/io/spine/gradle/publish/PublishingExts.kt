@@ -59,6 +59,13 @@ internal val Project.publications: PublicationContainer
     get() = publishingExtension.publications
 
 /**
+ * Obtains an instance, if available, of [SpinePublishing] extension
+ * applied to this project.
+ */
+internal val Project.localSpinePublishing: SpinePublishing?
+    get() = extensions.findByType<SpinePublishing>()
+
+/**
  * Obtains [SpinePublishing] extension from this [Project].
  *
  * If this [Project] doesn't have one, it returns [SpinePublishing]
@@ -66,7 +73,7 @@ internal val Project.publications: PublicationContainer
  */
 internal val Project.spinePublishing: SpinePublishing
     get() {
-        val local = this.extensions.findByType<SpinePublishing>()
+        val local = localSpinePublishing
         if (local != null) {
             return local
         }

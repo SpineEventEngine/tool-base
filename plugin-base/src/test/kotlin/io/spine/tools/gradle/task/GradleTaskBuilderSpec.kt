@@ -37,8 +37,8 @@ import io.spine.tools.gradle.task.GivenTaskName.preClean
 import io.spine.tools.gradle.task.GivenTaskName.verifyModel
 import io.spine.tools.gradle.task.JavaTaskName.Companion.classes
 import io.spine.tools.gradle.task.JavaTaskName.Companion.compileJava
-import io.spine.tools.gradle.task.ProtobufTaskName.Companion.generateProto
-import io.spine.tools.gradle.task.ProtobufTaskName.Companion.generateTestProto
+import io.spine.tools.gradle.protobuf.ProtobufTaskName.Companion.generateProto
+import io.spine.tools.gradle.protobuf.ProtobufTaskName.Companion.generateTestProto
 import io.spine.tools.gradle.testing.GradleProject
 import io.spine.tools.gradle.testing.NoOp
 import java.io.File
@@ -156,6 +156,6 @@ internal class GradleTaskBuilderSpec {
             inputs.files.files
         )
         inputFiles shouldHaveSize 1
-        inputFiles[0]!!.canonicalFile shouldBe input.canonicalFile
+        inputFiles[0].canonicalFile shouldBe input.canonicalFile
     }
 }
