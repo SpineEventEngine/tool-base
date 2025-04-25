@@ -32,16 +32,29 @@ import org.gradle.api.Project
 
 /**
  * A Maven repository.
+ *
+ * @param name The human-readable name which is also used in the publishing task names
+ *   for identifying the target repository.
+ *   The name must match the [regex].
+ * @param releases The URL for publishing release versions of artifacts.
+ * @param snapshots The URL for publishing [snapshot][io.spine.gradle.isSnapshot] versions.
+ * @param credentialsFile The path to the file which contains the credentials for the registry.
+ * @param credentialValues The function to obtain an instance of [Credentials] from
+ *   a Gradle [Project], if [credentialsFile] is not specified.
  */
 data class Repository(
+    private val name: String,
     private val releases: String,
     private val snapshots: String,
     private val credentialsFile: String? = null,
-    private val credentialValues: ((Project) -> Credentials?)? = null,
-    private val name: String
+    private val credentialValues: ((Project) -> Credentials?)? = null
 ) {
-    init {
+
+    companion object {
         val regex = Regex("[A-Za-z0-9_\\-.]+")
+    }
+
+    init {
         require(regex.matches(name)) {
             "The repository name `$name` does not match the regex `$regex`."
         }
@@ -102,6 +115,21 @@ data class Repository(
         val username = properties.getProperty("user.name")
         val password = properties.getProperty("user.password")
         return Credentials(username, password)
+    }
+    
+    override fun equals(other: Any?): Boolean = when {
+        this === other -> true
+        other !is Repository -> false
+        else -> name == other.name &&
+           releases == other.releases &&
+           snapshots == other.snapshots
+}
+
+    override fun hashCode(): Int {
+        var result = name.hashCode()
+        result = 31 * result + releases.hashCode()
+        result = 31 * result + snapshots.hashCode()
+        return result
     }
 
     override fun toString(): String {

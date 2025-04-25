@@ -60,7 +60,8 @@ internal class StandardJavaPublicationHandler(
 ) : PublicationHandler(project, destinations) {
 
     /**
-     * Creates a new "mavenJava" [org.gradle.api.publish.maven.MavenPublication] in the given project.
+     * Creates a new `"mavenJava"` [MavenPublication][org.gradle.api.publish.maven.MavenPublication]
+     * in the [project] associated with this publication handler.
      */
     override fun handlePublications() {
         val jars = project.artifacts(jarFlags)

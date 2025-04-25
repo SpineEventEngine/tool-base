@@ -47,21 +47,44 @@ internal sealed class PublicationHandler(
     protected val project: Project,
     private val destinations: Set<Repository>
 ) {
+    /**
+     * Tells if this publication handler already [applied][apply].
+     *
+     * This safeguard is needed because we call the [apply] method
+     * under [Project.afterEvaluate] block, which could be called more than once.
+     * This flag helps to ensure that we call the [doApply] only once, thus
+     * avoiding repeated calls of the publication settings code.
+     */
+    private var applied = false
 
-    fun apply() = with(project) {
-        if (!hasCustomPublishing) {
-            apply(plugin = MAVEN_PUBLISH)
-        }
-
-        pluginManager.withPlugin(MAVEN_PUBLISH) {
-            handlePublications()
-            registerDestinations()
-            configurePublishTask(destinations)
+    fun apply() {
+        synchronized(this) {
+            if (applied) {
+                return@synchronized
+            }
+            doApply()
+            this.applied = true
         }
     }
 
     /**
-     * Either handles publications already declared in the given project,
+     * Configures the publication of the associated [project].
+     */
+    private fun doApply() {
+        project.run {
+            if (!hasCustomPublishing) {
+                apply(plugin = MAVEN_PUBLISH)
+            }
+            pluginManager.withPlugin(MAVEN_PUBLISH) {
+                handlePublications()
+                registerDestinations()
+                configurePublishTask(destinations)
+            }
+        }
+    }
+
+    /**
+     * Either handles publications already declared in the associated [project]
      * or creates new ones.
      */
     abstract fun handlePublications()

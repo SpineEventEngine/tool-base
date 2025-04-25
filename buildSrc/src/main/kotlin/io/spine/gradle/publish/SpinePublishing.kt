@@ -196,18 +196,27 @@ open class SpinePublishing(private val project: Project) {
     var modules: Set<String> = emptySet()
 
     /**
-     * Controls whether the published module needs standard publications.
-     *
-     * If `true`, the module should configure publications on its own.
-     * Otherwise, the extension will configure standard [ones][StandardJavaPublicationHandler].
-     *
-     * This property is analogue of [modulesWithCustomPublishing] for projects,
-     * for which [spinePublishing] is configured individually.
-     *
-     * Setting of this property and having a non-empty [modules] will lead
-     * to an exception.
+     * Controls whether the [module][project] needs standard publications.
      *
      * Default value is `false`.
+     *
+     * In a single module [project], settings this property to `true` it tells
+     * that the project configures the publication in a specific way and
+     * [CustomPublicationHandler] should be used.
+     * Otherwise, the extension will configure the
+     * [standard publication][StandardJavaPublicationHandler].
+     *
+     * This property is an analogue of [modulesWithCustomPublishing] in
+     * [multi-module][Project.getSubprojects] projects,
+     * for which [spinePublishing] is configured individually.
+     *
+     * Setting of this property to `true` and having a non-empty [modules] property
+     * in the project to which the extension is applied will lead to [IllegalStateException].
+     *
+     * Settings this property to `true` in a subproject serves only the documentation purposes.
+     * This subproject still must be listed in the [modulesWithCustomPublishing] property in
+     * the extension of the [rootProject][Project.getRootProject], so that its publication
+     * can be configured in a specific way.
      */
     var customPublishing = false
 
@@ -270,7 +279,7 @@ open class SpinePublishing(private val project: Project) {
      * }
      * ```
      *
-     * The resulting artifact is available under "proto" classifier.
+     * The resulting artifact is available under the "proto" classifier.
      * For example, in Gradle 7+, one could depend on it like this:
      *
      * ```
