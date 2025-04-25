@@ -46,9 +46,9 @@ private const val MAVEN_PUBLISH = "maven-publish"
  * @param project The project to which the handler is applied.
  * @param destinations The repositories for publishing artifacts of this project.
  *   In a multi-module project the destinations can be re-defined by
- *   specifying custom values of in
+ *   specifying custom values in
  *   the [`spinePublishing`][io.spine.gradle.publish.SpinePublishing.destinations]
- *   of the subproject.
+ *   extension applied to the subproject.
  */
 internal sealed class PublicationHandler(
     protected val project: Project,
