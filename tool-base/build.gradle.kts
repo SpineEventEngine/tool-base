@@ -1,5 +1,5 @@
 /*
- * Copyright 2024, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -162,17 +162,5 @@ fun Project.applyGeneratedDirectories(generatedDir: String) {
             isDownloadJavadoc = true
             isDownloadSources = true
         }
-    }
-}
-
-/**
- * Make the `sourcesJar` task accept duplicated input which seems to occur
- * somewhere inside either ProtoData or McJava.
- */
-project.afterEvaluate {
-    @Suppress("unused") // Used via `by` syntax.
-    val sourcesJar by tasks.getting {
-        this as Jar
-        duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
 }
