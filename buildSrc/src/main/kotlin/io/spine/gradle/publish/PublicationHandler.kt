@@ -43,7 +43,7 @@ private const val MAVEN_PUBLISH = "maven-publish"
  * Abstract base for handlers of publications in a project
  * with [spinePublishing] settings declared.
  *
- * @param project The project to which the handler applied.
+ * @param project The project to which the handler is applied.
  * @param destinations The repositories for publishing artifacts of this project.
  *   In a multi-module project the destinations can be re-defined by
  *   specifying custom values of in
