@@ -54,7 +54,9 @@ internal sealed class PublicationHandler(
     protected val project: Project,
     protected var destinations: Set<Repository>
 ) {
-
+    /**
+     * Remembers if the [apply] function was called by this handler.
+     */
     private var applied: Boolean = false
 
     /**
@@ -80,9 +82,18 @@ internal sealed class PublicationHandler(
                 return
             }
             project.run {
+                // We apply the `maven-publish` plugin for modules with standard
+                // publishing automatically because they don't need custom DSL
+                // in their `build.gradle.kts` files.
+                // All the job is done by the `SpinePublishing` extension and
+                // `StandardPublicationHandler` instance associated with this project.
                 if (!hasCustomPublishing) {
                     apply(plugin = MAVEN_PUBLISH)
                 }
+                // And we do not apply the plugin for modules with custom publishing
+                // because they will need the `maven-publish` DSL to tune the publishing.
+                // Therefore, we only arrange the execution of our code when the plugin
+                // is applied.
                 pluginManager.withPlugin(MAVEN_PUBLISH) {
                     handlePublications()
                     registerDestinations()
