@@ -42,43 +42,53 @@ private const val MAVEN_PUBLISH = "maven-publish"
 /**
  * Abstract base for handlers of publications in a project
  * with [spinePublishing] settings declared.
+ *
+ * @param project The project to which the handler applied.
+ * @param destinations The repositories for publishing artifacts of this project.
+ *   In a multi-module project the destinations can be re-defined by
+ *   specifying custom values of in
+ *   the [`spinePublishing`][io.spine.gradle.publish.SpinePublishing.destinations]
+ *   of the subproject.
  */
 internal sealed class PublicationHandler(
     protected val project: Project,
-    private val destinations: Set<Repository>
+    protected var destinations: Set<Repository>
 ) {
-    /**
-     * Tells if this publication handler already [applied][apply].
-     *
-     * This safeguard is needed because we call the [apply] method
-     * under [Project.afterEvaluate] block, which could be called more than once.
-     * This flag helps to ensure that we call the [doApply] only once, thus
-     * avoiding repeated calls of the publication settings code.
-     */
-    private var applied = false
 
-    fun apply() {
-        synchronized(this) {
-            if (applied) {
-                return@synchronized
-            }
-            doApply()
-            this.applied = true
+    private var applied: Boolean = false
+
+    /**
+     * Overwrites the [destinations] property with the given set.
+     */
+    fun publishTo(alternativeDestinations: Set<Repository>) {
+        if (alternativeDestinations.isEmpty()) {
+            project.logger.info(
+                "The project ${project.path} is not going to be published because" +
+                        " the publication handler `${this@PublicationHandler}`" +
+                        " got an empty set of new `destinations`."
+            )
         }
+        destinations = alternativeDestinations
     }
 
     /**
      * Configures the publication of the associated [project].
      */
-    private fun doApply() {
-        project.run {
-            if (!hasCustomPublishing) {
-                apply(plugin = MAVEN_PUBLISH)
+    fun apply() {
+        synchronized(project) {
+            if (applied) {
+                return
             }
-            pluginManager.withPlugin(MAVEN_PUBLISH) {
-                handlePublications()
-                registerDestinations()
-                configurePublishTask(destinations)
+            project.run {
+                if (!hasCustomPublishing) {
+                    apply(plugin = MAVEN_PUBLISH)
+                }
+                pluginManager.withPlugin(MAVEN_PUBLISH) {
+                    handlePublications()
+                    registerDestinations()
+                    configurePublishTask(destinations)
+                    applied = true
+                }
             }
         }
     }
@@ -130,6 +140,65 @@ internal sealed class PublicationHandler(
                 url.set(LicenseSettings.url)
             }
         }
+    }
+
+    /**
+     * The abstract base for factories of producing instances of classes
+     * derived from [io.spine.gradle.publish.PublicationHandler].
+     *
+     * The factory maintains associations between a path of the project to
+     * its publication handler.
+     *
+     * If the handler already exists, its settings are updated when
+     * the [serving] factory method is called.
+     *
+     * Otherwise, a new handler is created and associated with the project.
+     *
+     * @see serving
+     */
+    abstract class HandlerFactory<H : PublicationHandler> {
+
+        /**
+         * Maps a project path to the associated handler, if available.
+         */
+        private val handlers = mutableMapOf<String, H>()
+
+        /**
+         * Obtains an instance of [PublicationHandler] for the given project.
+         *
+         * If the handler for the given [project] was already created, the handler
+         * gets new [destinations], [overwriting][publishTo] previously specified.
+         *
+         * @return the handler for the given project which would handle publishing to
+         *  the specified [destinations].
+         */
+        fun serving(project: Project, destinations: Set<Repository>, vararg params: Any): H {
+            synchronized(handlers) {
+                val path = project.path
+                var handler = handlers[path]
+                if (handler == null) {
+                    handler = create(project, destinations, *params)
+                    handlers[path] = handler
+                } else {
+                    handler.publishTo(destinations)
+                }
+                return handler
+            }
+        }
+
+        /**
+         * Creates a new publication handler for the given project.
+         *
+         * @param project The project to which the handler applies.
+         * @param destinations The repositories for publishing artifacts of this project.
+         * @param params Optional parameters to be passed as constructor parameters for
+         *  classes of the type [H].
+         */
+        protected abstract fun create(
+            project: Project,
+            destinations: Set<Repository>,
+            vararg params: Any
+        ): H
     }
 }
 
