@@ -39,6 +39,7 @@ import io.spine.tools.java.fs.DefaultJavaPaths
 import io.spine.tools.resolve
 import java.io.File
 import java.nio.file.Path
+import kotlin.io.path.Path
 import org.gradle.api.Project
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.tasks.SourceSet
@@ -51,16 +52,10 @@ public val Project.protobufExtension: ProtobufExtension?
 
 /**
  * Obtains the directory where the Protobuf Gradle Plugin should place the generated code.
- *
- * The directory is fixed to be `$buildDir/generated/source/proto` and cannot be
- * changed by the settings of the plugin. Even though [ProtobufExtension] has a property
- * [generatedFilesBaseDir][ProtobufExtension.getGeneratedFilesBaseDir], which is supposed
- * to be used for this purpose, it is declared with `@PackageScope` and thus cannot be
- * accessed from outside the plugin. The Protobuf Gradle Plugin (at v0.9.2) does not
- * modify the value of the property either.
  */
 public val Project.generatedSourceProtoDir: Path
-    get() = layout.buildDirectory.dir("generated/source/proto").get().asFile.toPath()
+    get() = protobufExtension?.generatedFilesBaseDir?.let { Path(it) }
+        ?: error("Unable to obtain `ProtobufExtension` in the project `$path`.")
 
 /**
  * Obtains the path to the directory which will be used for placing files generated

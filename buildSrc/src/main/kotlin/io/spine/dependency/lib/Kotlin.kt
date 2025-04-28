@@ -55,7 +55,7 @@ object Kotlin {
     const val group = "org.jetbrains.kotlin"
 
     const val bom = "$group:kotlin-bom:$runtimeVersion"
-    
+
     const val scriptRuntime = "$group:kotlin-script-runtime"
     const val stdLib       = "$group:kotlin-stdlib"
     const val stdLibCommon = "$group:kotlin-stdlib-common"
