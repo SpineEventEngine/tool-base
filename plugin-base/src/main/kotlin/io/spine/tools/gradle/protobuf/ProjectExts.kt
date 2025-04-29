@@ -54,8 +54,19 @@ public val Project.protobufExtension: ProtobufExtension?
  * Obtains the directory where the Protobuf Gradle Plugin should place the generated code.
  */
 public val Project.generatedSourceProtoDir: Path
-    get() = protobufExtension?.generatedFilesBaseDir?.let { Path(it) }
-        ?: error("Unable to obtain `ProtobufExtension` in the project `$path`.")
+    get() {
+        val legacyPath = layout.buildDirectory.dir("generated/source/proto").get().asFile.toPath()
+        protobufExtension?.let {
+            return try {
+                it.generatedFilesBaseDir.let { Path(it) }
+            } catch (_: Throwable) {
+                // Probably we're running on an older version of the Protobuf Gradle Plugin
+                // which has `package-access` for the `getGeneratedFilesDir()` method.
+                legacyPath
+            }
+        }
+        return legacyPath
+    }
 
 /**
  * Obtains the path to the directory which will be used for placing files generated
