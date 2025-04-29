@@ -60,8 +60,8 @@ public val Project.generatedSourceProtoDir: Path
             return try {
                 it.generatedFilesBaseDir.let { Path(it) }
             } catch (_: Throwable) {
-                // Probably we're running on an older version with `getGeneratedFilesDir()`
-                // having `package-access`.
+                // Probably we're running on an older version of the Protobuf Gradle Plugin
+                // which has `package-access` for the `getGeneratedFilesDir()` method.
                 legacyPath
             }
         }
