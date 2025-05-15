@@ -44,6 +44,14 @@ plugins {
     protobuf
 }
 
+configurations {
+    all {
+        resolutionStrategy {
+            Grpc.forceArtifacts(project, this@all, this@resolutionStrategy)
+        }
+    }
+}
+
 dependencies {
     api(JavaX.annotations)
     api(JavaPoet.lib)
@@ -53,11 +61,6 @@ dependencies {
     api(Base.lib)
 
     implementation(Logging.lib)
-
-    enforcedPlatform(Grpc.bom).let {
-        testImplementation(it)
-        testFixturesImplementation(it)
-    }
 
     listOf(
         Grpc.protobuf,
