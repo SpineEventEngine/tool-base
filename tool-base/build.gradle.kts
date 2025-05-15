@@ -54,6 +54,11 @@ dependencies {
 
     implementation(Logging.lib)
 
+    enforcedPlatform(Grpc.bom).let {
+        testImplementation(it)
+        testFixturesImplementation(it)
+    }
+
     listOf(
         Grpc.protobuf,
         Grpc.core,
@@ -144,23 +149,6 @@ fun Project.applyGeneratedDirectories(generatedDir: String) {
             kotlin.srcDirs(
                 generatedTestKotlin,
             )
-        }
-    }
-
-    idea {
-        module {
-            generatedSourceDirs.addAll(files(
-                generatedJava,
-                generatedKotlin,
-                generatedGrpc,
-            ))
-            testSources.from(
-                generatedTestJava,
-                generatedTestKotlin,
-                generatedTestGrpc,
-            )
-            isDownloadJavadoc = true
-            isDownloadSources = true
         }
     }
 }
