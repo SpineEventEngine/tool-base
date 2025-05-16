@@ -44,6 +44,14 @@ plugins {
     protobuf
 }
 
+configurations {
+    all {
+        resolutionStrategy {
+            Grpc.forceArtifacts(project, this@all, this@resolutionStrategy)
+        }
+    }
+}
+
 dependencies {
     api(JavaX.annotations)
     api(JavaPoet.lib)
@@ -144,23 +152,6 @@ fun Project.applyGeneratedDirectories(generatedDir: String) {
             kotlin.srcDirs(
                 generatedTestKotlin,
             )
-        }
-    }
-
-    idea {
-        module {
-            generatedSourceDirs.addAll(files(
-                generatedJava,
-                generatedKotlin,
-                generatedGrpc,
-            ))
-            testSources.from(
-                generatedTestJava,
-                generatedTestKotlin,
-                generatedTestGrpc,
-            )
-            isDownloadJavadoc = true
-            isDownloadSources = true
         }
     }
 }

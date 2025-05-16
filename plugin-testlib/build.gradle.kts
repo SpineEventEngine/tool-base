@@ -35,6 +35,6 @@ dependencies {
     api(gradleApi())
     api(gradleTestKit())
     api(TestLib.lib)
-    api(JUnit.Jupiter.apiArtifact)
+    api(JUnit.Jupiter.run { artifacts[api] }!!)
     api(project(":plugin-base"))
 }

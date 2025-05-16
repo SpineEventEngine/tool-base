@@ -24,17 +24,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.gradle.javadoc
+package io.spine.dependency.boms
 
-import org.gradle.api.tasks.TaskContainer
-import org.gradle.api.tasks.javadoc.Javadoc
+import io.spine.dependency.DependencyWithBom
+import io.spine.dependency.kotlinx.Coroutines
+import io.spine.dependency.lib.Jackson
+import io.spine.dependency.lib.Kotlin
+import io.spine.dependency.lib.Grpc
+import io.spine.dependency.test.JUnit
 
 /**
- * Finds a [Javadoc] Gradle task by the passed name.
+ * The collection of references to BOMs applied by [BomsPlugin].
+ *
+ * @see <a href="https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#Bill_of_Materials_.28BOM.29_POMs">
+ * Maven Bill of Materials</a>
  */
-fun TaskContainer.javadocTask(named: String) = this.getByName(named) as Javadoc
+object Boms {
 
-/**
- * Finds a default [Javadoc] Gradle task.
- */
-fun TaskContainer.javadocTask() = this.getByName("javadoc") as Javadoc
+    /**
+     * The base production BOMs.
+     */
+    val core: List<DependencyWithBom> = listOf(
+        Kotlin,
+        Coroutines
+    )
+
+    /**
+     * The BOMs for testing dependencies.
+     */
+    val testing: List<DependencyWithBom> = listOf(
+        JUnit
+    )
+
+    /**
+     * Technology-based BOMs.
+     */
+    object Optional {
+        val jackson = Jackson.bom
+        val grpc = Grpc.bom
+    }
+}

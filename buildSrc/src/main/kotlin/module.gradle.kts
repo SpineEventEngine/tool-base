@@ -24,11 +24,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import io.spine.dependency.boms.BomsPlugin
 import io.spine.dependency.build.CheckerFramework
 import io.spine.dependency.build.ErrorProne
 import io.spine.dependency.build.FindBugs
 import io.spine.dependency.kotlinx.Coroutines
-import io.spine.dependency.lib.Grpc
 import io.spine.dependency.lib.GrpcKotlin
 import io.spine.dependency.lib.Kotlin
 import io.spine.dependency.local.ArtifactVersion
@@ -52,14 +52,14 @@ plugins {
     kotlin("jvm")
     id("module-testing")
     id("net.ltgt.errorprone")
-    id("org.jetbrains.dokka")
-    id("detekt-code-analysis")
     id("pmd-settings")
+    id("detekt-code-analysis")
     id("write-manifest")
-    jacoco
+    id("dokka-for-kotlin")
     `project-report`
-    idea
+    jacoco
 }
+apply<BomsPlugin>()
 apply<IncrementGuard>()
 apply<VersionWriter>()
 
@@ -99,27 +99,12 @@ fun Module.forceConfigurations() {
         excludeProtobufLite()
         all {
             resolutionStrategy {
-                eachDependency {
-                    val configuration = this@all
-                    if (configuration.name.contains("detekt", ignoreCase = true)) {
-                        if (requested.group == Kotlin.group) {
-                            useVersion(Kotlin.embeddedVersion)
-                            because("Force Kotlin version in Detekt configuration")
-                        }
-                    } else if (requested.group == Kotlin.group) {
-                        useVersion(Kotlin.runtimeVersion)
-                    }
-                    if (requested.name.contains(Coroutines.infix)) {
-                        useVersion(Coroutines.version)
-                    }
-                }
                 force(
                     Base.lib,
                     Reflect.lib,
                     Logging.lib,
                     Logging.libJvm,
                     Validation.runtime,
-                    Grpc.stub,
                     GrpcKotlin.ProtocPlugin.artifact,
                 )
             }

@@ -50,6 +50,7 @@ import org.gradle.api.problems.internal.InternalProblemBuilder
 import org.gradle.api.problems.internal.InternalProblemReporter
 import org.gradle.api.problems.internal.InternalProblemSpec
 import org.gradle.api.problems.internal.InternalProblems
+import org.gradle.api.problems.internal.ProblemsInfrastructure
 import org.gradle.api.problems.internal.ProblemsProgressEventEmitterHolder
 import org.gradle.internal.operations.OperationIdentifier
 import org.gradle.internal.reflect.Instantiator
@@ -188,8 +189,7 @@ internal class PlugableProjectSpec {
 private class InternalProblemsStub : InternalProblems {
     override fun getReporter(): ProblemReporter = notImplemented()
     override fun getInternalReporter(): InternalProblemReporter = InternalProblemReporterStub()
-    override fun getAdditionalDataBuilderFactory(): AdditionalDataBuilderFactory = notImplemented()
-    override fun getInstantiator(): Instantiator = notImplemented()
+    override fun getInfrastructure(): ProblemsInfrastructure = notImplemented()
     override fun getProblemBuilder(): InternalProblemBuilder = notImplemented()
 }
 
