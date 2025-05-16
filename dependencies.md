@@ -628,6 +628,10 @@
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-compiler-embeddable. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-compiler-embeddable. **Version** : 2.1.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -637,6 +641,10 @@
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-daemon-client. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-daemon-embeddable. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -664,7 +672,15 @@
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-reflect. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-reflect. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-script-runtime. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -688,7 +704,15 @@
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-common. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -696,7 +720,15 @@
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-jdk7. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-jdk7. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-jdk8. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -727,6 +759,10 @@
 1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-core-jvm. **Version** : 1.10.2.
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-core-jvm. **Version** : 1.6.4.
+     * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
+     * **License:** [The Apache Software License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-jdk8. **Version** : 1.10.2.
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
@@ -859,7 +895,7 @@
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu May 15 20:47:39 WEST 2025** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Fri May 16 18:56:52 WEST 2025** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -1267,7 +1303,7 @@ This report was generated on **Thu May 15 20:47:39 WEST 2025** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu May 15 20:47:39 WEST 2025** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Fri May 16 18:56:52 WEST 2025** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -1809,6 +1845,10 @@ This report was generated on **Thu May 15 20:47:39 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-compiler-embeddable. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-compiler-embeddable. **Version** : 2.1.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -1818,6 +1858,10 @@ This report was generated on **Thu May 15 20:47:39 WEST 2025** using [Gradle-Lic
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-daemon-client. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-daemon-embeddable. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -1845,11 +1889,19 @@ This report was generated on **Thu May 15 20:47:39 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-reflect. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-reflect. **Version** : 2.1.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-sam-with-receiver-compiler-plugin-embeddable. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-script-runtime. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -1873,7 +1925,15 @@ This report was generated on **Thu May 15 20:47:39 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-common. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -1881,7 +1941,15 @@ This report was generated on **Thu May 15 20:47:39 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-jdk7. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-jdk7. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-jdk8. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -1912,6 +1980,10 @@ This report was generated on **Thu May 15 20:47:39 WEST 2025** using [Gradle-Lic
 1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-core-jvm. **Version** : 1.10.2.
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-core-jvm. **Version** : 1.6.4.
+     * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
+     * **License:** [The Apache Software License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-jdk8. **Version** : 1.10.2.
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
@@ -2040,7 +2112,7 @@ This report was generated on **Thu May 15 20:47:39 WEST 2025** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu May 15 20:47:39 WEST 2025** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Fri May 16 18:56:52 WEST 2025** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -2554,7 +2626,7 @@ This report was generated on **Thu May 15 20:47:39 WEST 2025** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu May 15 20:47:39 WEST 2025** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Fri May 16 18:56:52 WEST 2025** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -3840,7 +3912,7 @@ This report was generated on **Thu May 15 20:47:39 WEST 2025** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu May 15 20:47:40 WEST 2025** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Fri May 16 18:56:53 WEST 2025** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -4358,6 +4430,10 @@ This report was generated on **Thu May 15 20:47:40 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-compiler-embeddable. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-compiler-embeddable. **Version** : 2.1.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -4370,6 +4446,10 @@ This report was generated on **Thu May 15 20:47:40 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-daemon-embeddable. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-daemon-embeddable. **Version** : 2.1.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -4378,7 +4458,15 @@ This report was generated on **Thu May 15 20:47:40 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-reflect. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-reflect. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-script-runtime. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -4402,7 +4490,15 @@ This report was generated on **Thu May 15 20:47:40 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-common. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -4410,7 +4506,15 @@ This report was generated on **Thu May 15 20:47:40 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-jdk7. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-jdk7. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-jdk8. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -4433,6 +4537,10 @@ This report was generated on **Thu May 15 20:47:40 WEST 2025** using [Gradle-Lic
 1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-core-jvm. **Version** : 1.10.2.
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-core-jvm. **Version** : 1.6.4.
+     * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
+     * **License:** [The Apache Software License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-jdk8. **Version** : 1.10.2.
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
@@ -4561,7 +4669,7 @@ This report was generated on **Thu May 15 20:47:40 WEST 2025** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Fri May 16 18:56:53 WEST 2025** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -5183,6 +5291,10 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-compiler-embeddable. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-compiler-embeddable. **Version** : 2.1.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -5192,6 +5304,10 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-daemon-client. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-daemon-embeddable. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -5219,7 +5335,15 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-reflect. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-reflect. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-script-runtime. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -5243,7 +5367,15 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-common. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -5251,7 +5383,15 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-jdk7. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-jdk7. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-jdk8. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -5282,6 +5422,10 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
 1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-core-jvm. **Version** : 1.10.2.
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-core-jvm. **Version** : 1.6.4.
+     * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
+     * **License:** [The Apache Software License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-jdk8. **Version** : 1.10.2.
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
@@ -5410,7 +5554,7 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Fri May 16 18:56:53 WEST 2025** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -6131,6 +6275,10 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-compiler-embeddable. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-compiler-embeddable. **Version** : 2.1.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -6140,6 +6288,10 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-daemon-client. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-daemon-embeddable. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -6167,7 +6319,15 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-reflect. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-reflect. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-script-runtime. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -6191,7 +6351,15 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-common. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -6199,7 +6367,15 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-jdk7. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-jdk7. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-jdk8. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -6230,6 +6406,10 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
 1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-core-jvm. **Version** : 1.10.2.
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-core-jvm. **Version** : 1.6.4.
+     * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
+     * **License:** [The Apache Software License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-jdk8. **Version** : 1.10.2.
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
@@ -6358,7 +6538,7 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Fri May 16 18:56:54 WEST 2025** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -7221,6 +7401,10 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-compiler-embeddable. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-compiler-embeddable. **Version** : 2.1.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -7233,6 +7417,10 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-daemon-embeddable. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-daemon-embeddable. **Version** : 2.1.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -7241,7 +7429,15 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-reflect. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-reflect. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-script-runtime. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -7265,7 +7461,15 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-common. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -7273,7 +7477,15 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-jdk7. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-jdk7. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-jdk8. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -7296,6 +7508,10 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
 1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-core-jvm. **Version** : 1.10.2.
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-core-jvm. **Version** : 1.6.4.
+     * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
+     * **License:** [The Apache Software License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-jdk8. **Version** : 1.10.2.
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
@@ -7433,7 +7649,7 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Fri May 16 18:56:54 WEST 2025** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -8949,6 +9165,10 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-compiler-embeddable. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-compiler-embeddable. **Version** : 2.1.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -8958,6 +9178,10 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-daemon-client. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-daemon-embeddable. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -8985,7 +9209,15 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-reflect. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-reflect. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-script-runtime. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -9009,7 +9241,15 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-common. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -9017,7 +9257,15 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-jdk7. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-jdk7. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-jdk8. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -9048,6 +9296,10 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
 1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-core-jvm. **Version** : 1.10.2.
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-core-jvm. **Version** : 1.6.4.
+     * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
+     * **License:** [The Apache Software License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-jdk8. **Version** : 1.10.2.
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
@@ -9238,7 +9490,7 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Fri May 16 18:56:54 WEST 2025** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
@@ -9905,6 +10157,10 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-compiler-embeddable. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-compiler-embeddable. **Version** : 2.1.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -9917,6 +10173,10 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-daemon-embeddable. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-daemon-embeddable. **Version** : 2.1.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
@@ -9925,7 +10185,15 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-reflect. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-reflect. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-script-runtime. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -9949,7 +10217,15 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-common. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -9957,7 +10233,15 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-jdk7. **Version** : 2.0.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
 1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-jdk7. **Version** : 2.1.21.
+     * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
+     * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlin. **Name** : kotlin-stdlib-jdk8. **Version** : 2.0.21.
      * **Project URL:** [https://kotlinlang.org/](https://kotlinlang.org/)
      * **License:** [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -9980,6 +10264,10 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
 1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-core-jvm. **Version** : 1.10.2.
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-core-jvm. **Version** : 1.6.4.
+     * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
+     * **License:** [The Apache Software License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
 1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-coroutines-jdk8. **Version** : 1.10.2.
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
@@ -10108,4 +10396,4 @@ This report was generated on **Thu May 15 20:47:41 WEST 2025** using [Gradle-Lic
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Thu May 15 20:47:42 WEST 2025** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
+This report was generated on **Fri May 16 18:56:55 WEST 2025** using [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
