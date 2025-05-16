@@ -99,20 +99,6 @@ fun Module.forceConfigurations() {
         excludeProtobufLite()
         all {
             resolutionStrategy {
-                eachDependency {
-                    val configuration = this@all
-                    if (configuration.name.contains("detekt", ignoreCase = true)) {
-                        if (requested.group == Kotlin.group) {
-                            useVersion(Kotlin.embeddedVersion)
-                            because("Force Kotlin version in Detekt configuration")
-                        }
-                    } else if (requested.group == Kotlin.group) {
-                        useVersion(Kotlin.runtimeVersion)
-                    }
-                    if (requested.name.contains(Coroutines.infix)) {
-                        useVersion(Coroutines.version)
-                    }
-                }
                 force(
                     Base.lib,
                     Reflect.lib,
