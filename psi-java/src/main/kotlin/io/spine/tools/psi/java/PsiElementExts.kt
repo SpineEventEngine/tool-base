@@ -27,6 +27,8 @@
 package io.spine.tools.psi.java
 
 import com.intellij.psi.PsiElement
+import io.spine.string.Separator
+import io.spine.string.ti
 
 /**
  * Looks for the first child of this [PsiElement], the text representation
@@ -65,17 +67,21 @@ public fun PsiElement.getFirstByText(
     contains: String = startsWith
 ): PsiElement =
     findFirstByText(startsWith, contains)
-        ?: error(
-            """
+        ?: run {
+            val msg = """
             A child PSI element could not be found.
             File: ${this.containingFile.name}
             Parent element: `$this`
             Code:
             ```
-            """.trimIndent() +
-            this.node.text +
+            """.ti() +
+            Separator.nl() +
+            node.text +
+            Separator.nl() +
             """
             ```            
             Search criteria: [startsWith=`$startsWith`, contains=`$contains`].                            
-            """.trimIndent()
-        )
+            """.ti()
+
+            error(msg)
+        }
