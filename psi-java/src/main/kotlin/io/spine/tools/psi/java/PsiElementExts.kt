@@ -65,8 +65,17 @@ public fun PsiElement.getFirstByText(
     contains: String = startsWith
 ): PsiElement =
     findFirstByText(startsWith, contains)
-        ?: error {
-            "The element was not found." +
-                    "Search criteria: [startsWith=`$startsWith`, contains=`$contains`]." +
-                    "Searched element: `$this`."
-        }
+        ?: error(
+            """
+            A child PSI element could not be found.
+            File: ${this.containingFile.name}
+            Parent element: `$this`
+            Code:
+            ```
+            """.trimIndent() +
+            this.node.text +
+            """
+            ```            
+            Search criteria: [startsWith=`$startsWith`, contains=`$contains`].                            
+            """.trimIndent()
+        )
