@@ -67,9 +67,10 @@ public fun PsiElement.getFirstByText(
     findFirstByText(startsWith, contains)
         ?: error(
             """
-            The child element was not found.
+            A child PSI element could not be found.
             File: ${this.containingFile.name}
             Parent element: `$this`
+            Code:
             ```
             """.trimIndent() +
             this.node.text +
