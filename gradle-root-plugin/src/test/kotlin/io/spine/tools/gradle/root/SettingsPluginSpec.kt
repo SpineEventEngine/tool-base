@@ -40,7 +40,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
-@DisplayName("`SpineSettingsPlugin` should")
+@DisplayName("`SettingsPlugin` should")
 internal class SettingsPluginSpec {
 
     @TempDir
@@ -48,7 +48,7 @@ internal class SettingsPluginSpec {
 
     /**
      * Creates a settings file applying the [SettingsPlugin] and using
-     * the [SpineSettingsExtension] via its DSL.
+     * the [RootSettingsExtension] via its DSL.
      */
     @Test
     fun `be applied via its ID`() {

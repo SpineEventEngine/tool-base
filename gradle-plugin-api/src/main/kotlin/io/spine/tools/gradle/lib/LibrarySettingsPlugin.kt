@@ -27,17 +27,16 @@
 package io.spine.tools.gradle.lib
 
 import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper
-import io.spine.tools.gradle.root.SpineSettingsExtension
+import io.spine.tools.gradle.root.RootSettingsExtension
 import io.spine.tools.gradle.root.SettingsPlugin
+import io.spine.tools.gradle.root.hasRootExtension
 import org.gradle.api.Plugin
 import org.gradle.api.initialization.Settings
 import org.gradle.kotlin.dsl.apply
-import io.spine.tools.gradle.root.hasRootExtension
-import io.spine.tools.gradle.root.rootExtension
 
 /**
  * The abstract base for Gradle plugins of libraries that need to introduce
- * custom extensions in [SpineSettingsExtension].
+ * custom extensions in [RootSettingsExtension].
  *
  * @param E The type of the extension used by the plugin.
  *  If a derived plugin class does not use an extension please pass [Unit]
@@ -51,7 +50,7 @@ public abstract class LibrarySettingsPlugin<E : Any>(
 ) : Plugin<Settings> {
 
     /**
-     * Verifies if the target [settings] have the [SpineSettingsExtension] and if not,
+     * Verifies if the target [settings] have the [RootSettingsExtension] and if not,
      * applies [SettingsPlugin] so that the extension is created.
      */
     @OverridingMethodsMustInvokeSuper
@@ -59,8 +58,6 @@ public abstract class LibrarySettingsPlugin<E : Any>(
         if (!settings.hasRootExtension) {
             settings.apply<SettingsPlugin>()
         }
-        extensionSpec?.let {
-            settings.rootExtension.extensions.create(it.name, it.extensionClass.java)
-        }
+        extensionSpec?.createIn(settings)
     }
 }

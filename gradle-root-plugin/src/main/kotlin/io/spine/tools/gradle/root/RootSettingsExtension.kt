@@ -26,25 +26,34 @@
 
 package io.spine.tools.gradle.root
 
-import org.gradle.api.initialization.Settings
-import org.gradle.kotlin.dsl.findByType
-import org.gradle.kotlin.dsl.getByType
+import org.gradle.api.plugins.ExtensionAware
+import org.gradle.api.tasks.Nested
 
 /**
- * Tells if the project settings already have
- * the [spineSettings][RootSettingsExtension] extension applied.
- *
- * @see rootExtension
+ * The extension added to [Settings][org.gradle.api.initialization.Settings] of
+ * a Gradle project by [SettingsPlugin].
  */
-public val Settings.hasRootExtension: Boolean
-    get() = extensions.findByType<RootSettingsExtension>() != null
+public abstract class RootSettingsExtension : ExtensionAware {
 
-/**
- * Obtains the instance of [spineSettings][RootSettingsExtension] extension
- * applied to the project settings.
- *
- * @throws org.gradle.api.UnknownDomainObjectException if the extension is not found.
- * @see hasRootExtension
- */
-public val Settings.rootExtension: RootSettingsExtension
-    get() = extensions.getByType<RootSettingsExtension>()
+    /**
+     * Allows specifying versions of dependencies that are automatically
+     * added by the Gradle plugins of Spine SDK.
+     */
+    @get:Nested
+    public abstract val versions: Versions
+
+    /**
+     * Allows configuring versions via the action block.
+     */
+    public fun versions(action: Versions.() -> Unit) {
+        action(versions)
+    }
+
+    public companion object {
+
+        /**
+         * The name of the settings extension.
+         */
+        public const val NAME: String = "spineSettings"
+    }
+}

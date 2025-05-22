@@ -27,11 +27,10 @@
 package io.spine.tools.gradle.lib
 
 import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper
-import io.spine.tools.gradle.root.RootPlugin
 import io.spine.tools.gradle.root.RootExtension
+import io.spine.tools.gradle.root.RootPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import io.spine.tools.gradle.root.rootExtension
 import org.gradle.kotlin.dsl.apply
 
 /**
@@ -93,7 +92,7 @@ public abstract class LibraryPlugin<E : Any>(
         // Make sure the root extension is installed.
         project.apply<RootPlugin>()
         extensionSpec?.let {
-            _extension = project.rootExtension.extensions.create(it.name, it.extensionClass.java)
+            _extension = it.createIn(project)
         }
     }
 }
