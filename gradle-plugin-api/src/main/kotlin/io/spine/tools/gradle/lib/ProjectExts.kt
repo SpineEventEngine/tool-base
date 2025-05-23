@@ -24,26 +24,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.root
+package io.spine.tools.gradle.lib
 
+import io.spine.tools.gradle.root.rootExtension
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.getByType
 
 /**
- * Tells if the project already has the [spine][RootExtension] extension.
- *
- * @returns `true` if the project already has the [extension][RootExtension] applied,
- *  `false` otherwise.
- * @see rootExtension
+ * Obtains the extension of the specified type [T] as an extension
+ * immediately nested under the [rootExtension].
  */
-public val Project.hasRootExtension: Boolean
-    get() = project.extensions.findByName(RootExtension.NAME) != null
-
-/**
- * Obtains the instance of the [spine][RootExtension] extension of the project.
- *
- * @throws org.gradle.api.UnknownDomainObjectException if the extension is not found.
- * @see hasRootExtension
- */
-public val Project.rootExtension: RootExtension
-    get() = extensions.getByType<RootExtension>()
+public inline fun <reified T : Any> Project.spineExtension(): T =
+    rootExtension.extensions.getByType<T>()

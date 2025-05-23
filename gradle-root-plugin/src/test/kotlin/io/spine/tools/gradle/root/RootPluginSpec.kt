@@ -44,7 +44,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.io.TempDir
 
-@DisplayName("`SpinePlugin` should")
+@DisplayName("`RootPlugin` should")
 internal class RootPluginSpec {
 
     private val pluginClass = RootPlugin::class.java

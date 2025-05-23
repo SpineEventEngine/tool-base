@@ -32,7 +32,6 @@ import io.spine.tools.gradle.lib.given.AnotherStubPlugin
 import io.spine.tools.gradle.lib.given.StubExtension
 import io.spine.tools.gradle.lib.given.StubPlugin
 import io.spine.tools.gradle.root.RootPlugin
-import io.spine.tools.gradle.root.spineExtension
 import org.gradle.api.Project
 import org.gradle.api.UnknownDomainObjectException
 import org.gradle.testfixtures.ProjectBuilder
