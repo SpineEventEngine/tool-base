@@ -52,6 +52,3 @@ abstract class StubExtension {
 }
 
 class AnotherStubPlugin : LibraryPlugin<Unit>(null)
-
-//TODO:2025-05-22:alexander.yevsyukov: Add custom extension and test its addition
-// via using the `Project.spineExtension()` function.
