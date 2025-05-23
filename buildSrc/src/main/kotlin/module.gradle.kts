@@ -28,9 +28,7 @@ import io.spine.dependency.boms.BomsPlugin
 import io.spine.dependency.build.CheckerFramework
 import io.spine.dependency.build.ErrorProne
 import io.spine.dependency.build.FindBugs
-import io.spine.dependency.kotlinx.Coroutines
 import io.spine.dependency.lib.GrpcKotlin
-import io.spine.dependency.lib.Kotlin
 import io.spine.dependency.local.ArtifactVersion
 import io.spine.dependency.local.Base
 import io.spine.dependency.local.Logging
