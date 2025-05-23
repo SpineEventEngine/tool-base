@@ -49,7 +49,7 @@ public data class ExtensionSpec<E : Any>(
     public val extensionClass: KClass<E>
 ) {
     /**
-     * Creates an extension in under the [rootExtension][Project.rootExtension] of
+     * Creates an extension under the [rootExtension][Project.rootExtension] of
      * the given project, if the extension is not already available.
      *
      * @return the newly created extension, or the one that already exists.
@@ -60,7 +60,7 @@ public data class ExtensionSpec<E : Any>(
     }
 
     /**
-     * Creates an extension in under the [rootExtension][Settings.rootExtension] of
+     * Creates an extension under the [rootExtension][Settings.rootExtension] of
      * the given settings, if the extension is not already available.
      *
      * @return the newly created extension, or the one that already exists.
@@ -76,4 +76,3 @@ public data class ExtensionSpec<E : Any>(
         return existing ?: create(name, extensionClass.java)
     }
 }
-
