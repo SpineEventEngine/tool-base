@@ -47,3 +47,10 @@ public val Project.hasRootExtension: Boolean
  */
 public val Project.rootExtension: RootExtension
     get() = extensions.getByType<RootExtension>()
+
+/**
+ * Obtains the extension of the specified type [T] as an extension
+ * immediately nested under the [rootExtension].
+ */
+public inline fun <reified T : Any> Project.spineExtension(): T =
+    rootExtension.extensions.getByType<T>()

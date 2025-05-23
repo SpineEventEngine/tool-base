@@ -28,16 +28,30 @@
 
 package io.spine.tools.gradle.lib.given
 
+import io.spine.tools.gradle.lib.ExtensionSpec
 import io.spine.tools.gradle.lib.LibraryPlugin
 import io.spine.tools.gradle.root.hasRootExtension
 import io.spine.tools.gradle.root.rootExtension
 import org.gradle.api.Project
+import org.gradle.api.provider.Property
 
-class StubPlugin : LibraryPlugin<Unit>(null) {
-
+class StubPlugin : LibraryPlugin<StubExtension>(
+    ExtensionSpec(StubExtension.NAME, StubExtension::class)
+) {
     fun project() = project
     fun hasRootExtension(project: Project) = project.hasRootExtension
     fun rootExtension(project: Project) = project.rootExtension
 }
 
+abstract class StubExtension {
+    abstract val property: Property<String>
+
+    companion object {
+        const val NAME = "stubExtension"
+    }
+}
+
 class AnotherStubPlugin : LibraryPlugin<Unit>(null)
+
+//TODO:2025-05-22:alexander.yevsyukov: Add custom extension and test its addition
+// via using the `Project.spineExtension()` function.
