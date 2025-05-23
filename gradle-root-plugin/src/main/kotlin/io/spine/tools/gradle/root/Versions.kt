@@ -26,38 +26,7 @@
 
 package io.spine.tools.gradle.root
 
-import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.Nested
-
-/**
- * The extension added to [Settings][org.gradle.api.initialization.Settings] of
- * a Gradle project by [SettingsPlugin].
- */
-public abstract class SpineSettingsExtension : ExtensionAware {
-
-    /**
-     * Allows specifying versions of dependencies that are automatically
-     * added by the Gradle plugins of Spine SDK.
-     */
-    @get:Nested
-    public abstract val versions: Versions
-
-    /**
-     * Allows configuring versions via the action block.
-     */
-    public fun versions(action: Versions.() -> Unit) {
-        action(versions)
-    }
-
-    public companion object {
-
-        /**
-         * The name of the settings extension.
-         */
-        public const val NAME: String = "spineSettings"
-    }
-}
 
 /**
  * Provides a way to set versions of Spine SDK components and other libraries

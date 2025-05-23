@@ -26,21 +26,53 @@
 
 package io.spine.tools.gradle.lib
 
+import io.spine.tools.gradle.root.rootExtension
 import kotlin.reflect.KClass
+import org.gradle.api.Project
+import org.gradle.api.initialization.Settings
+import org.gradle.api.plugins.ExtensionContainer
 
 /**
  * The specification of the extension added to
- * the [root extension][io.spine.tools.gradle.root.SpineProjectExtension]
+ * the [root extension][io.spine.tools.gradle.root.RootExtension]
  * by a [LibraryPlugin].
  *
  * @param E The type of the extension.
  *
  * @param name The name of the extension as it appears under
- *   the [spine][io.spine.tools.gradle.root.SpineProjectExtension] block or
- *   the [spineSettings][io.spine.tools.gradle.root.SpineSettingsExtension] block.
+ *   the [spine][io.spine.tools.gradle.root.RootExtension] block or
+ *   the [spineSettings][io.spine.tools.gradle.root.RootSettingsExtension] block.
  * @param extensionClass The class of the extension.
  */
 public data class ExtensionSpec<E : Any>(
     public val name: String,
     public val extensionClass: KClass<E>
-)
+) {
+    /**
+     * Creates an extension under the [rootExtension][Project.rootExtension] of
+     * the given project, if the extension is not already available.
+     *
+     * @return the newly created extension, or the one that already exists.
+     */
+    public fun createIn(project: Project): E {
+        val ext = project.rootExtension.extensions.findOrCreate()
+        return ext
+    }
+
+    /**
+     * Creates an extension under the [rootExtension][Settings.rootExtension] of
+     * the given settings, if the extension is not already available.
+     *
+     * @return the newly created extension, or the one that already exists.
+     */
+    public fun createIn(settings: Settings): E {
+        val ext = settings.rootExtension.extensions.findOrCreate()
+        return ext
+    }
+
+    private fun ExtensionContainer.findOrCreate(): E {
+        @Suppress("UNCHECKED_CAST") // The type is ensured by the creation code below.
+        val existing: E? = findByName(name) as E?
+        return existing ?: create(name, extensionClass.java)
+    }
+}

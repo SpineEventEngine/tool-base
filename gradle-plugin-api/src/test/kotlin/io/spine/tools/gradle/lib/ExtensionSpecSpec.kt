@@ -24,75 +24,62 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.root
+package io.spine.tools.gradle.lib
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import io.kotest.matchers.string.shouldContain
-import io.spine.tools.gradle.task.BaseTaskName
-import io.spine.tools.gradle.testing.Gradle
-import io.spine.tools.gradle.testing.Gradle.BUILD_SUCCESSFUL
-import io.spine.tools.gradle.testing.runGradleBuild
-import io.spine.tools.gradle.testing.under
-import java.io.File
+import io.spine.tools.gradle.root.RootPlugin
+import io.spine.tools.gradle.root.rootExtension
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
-import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertDoesNotThrow
-import org.junit.jupiter.api.io.TempDir
 
-@DisplayName("`RootPlugin` should")
-internal class RootPluginSpec {
-
-    private val pluginClass = RootPlugin::class.java
+/**
+ * This test suite tests only the features of the [ExtensionSpec.createIn]
+ * function which accepts [Project] because obtaining an instance of
+ * [Settings][org.gradle.api.initialization.Settings] is close to impossible
+ * with the v8.14 of Gradle Test Kit we use.
+ *
+ * We are not compromising on the reliability of the code much here because:
+ *  1. The main logic of finding or creating an extension in an
+ *   [ExtensionAware][org.gradle.api.plugins.ExtensionAware] instance
+ *   is done by [ExtensionSpec.findOrCreate] function.
+ *
+ *  2. Application of a [LibrarySettingsPlugin] which calls [ExtensionSpec.createIn]
+ *   with the [Settings][org.gradle.api.initialization.Settings] parameter is done
+ *   by [LibrarySettingsPluginSpec] test suite.
+ */
+@DisplayName("`ExtensionSpec` should")
+internal class ExtensionSpecSpec {
 
     private lateinit var project: Project
+    private lateinit var extensionSpec: ExtensionSpec<*>
 
     @BeforeEach
     fun createProject() {
         project = ProjectBuilder.builder().build()
+        project.plugins.apply(RootPlugin::class.java)
+        extensionSpec = ExtensionSpec(StubExtension.NAME, StubExtension::class)
     }
 
     @Test
-    fun `create extension when applied`() {
-        project.pluginManager.apply(pluginClass)
-        project.extensions.run {
-            findByName(RootExtension.NAME) shouldNotBe null
-            findByType(RootExtension::class.java) shouldNotBe null
-        }
+    fun `create a new instance in the given project`() {
+        extensionSpec.createIn(project)
+        project.rootExtension.extensions.findByName(StubExtension.NAME) shouldNotBe null
     }
 
     @Test
-    fun `do not throw when applied twice`() {
-        assertDoesNotThrow {
-            project.pluginManager.run {
-                apply(pluginClass)
-                apply(pluginClass)
-            }
-        }
+    fun `obtain already created instance of an extension in the given project`() {
+        val ext = extensionSpec.createIn(project)
+        extensionSpec.createIn(project) shouldBe ext
     }
+}
 
-    @Test
-    fun `be applied via its ID`(@TempDir projectDir: File) {
-        Gradle.buildFile.under(projectDir).writeText(
-            """
-            plugins {
-                id("io.spine.root")
-            }
-            
-            spine {
-                // Nothing here so far.
-            }
-            """.trimIndent())
-
-        // Execute the build.
-        val taskName = BaseTaskName.help
-        val result = runGradleBuild(projectDir, taskName)
-
-        result.task(":$taskName")?.outcome shouldBe TaskOutcome.SUCCESS
-        result.output shouldContain BUILD_SUCCESSFUL
+@Suppress("UtilityClassWithPublicConstructor") // Make `detekt` happy.
+abstract class StubExtension {
+    companion object {
+        const val NAME = "stub"
     }
 }

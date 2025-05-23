@@ -26,12 +26,13 @@
 
 package io.spine.tools.gradle.root
 
+import io.spine.tools.gradle.root.RootSettingsExtension.Companion.NAME
 import org.gradle.api.Plugin
 import org.gradle.api.initialization.Settings
 import org.gradle.kotlin.dsl.create
 
 /**
- * Adds [spineSettings][SpineSettingsExtension] extension in the [Settings]
+ * Adds [spineSettings][RootSettingsExtension] extension in the [Settings]
  * to which the plugin is applied.
  *
  * Before adding the extension, the plugin checks for the present of the extension.
@@ -41,8 +42,8 @@ public class SettingsPlugin : Plugin<Settings> {
 
     override fun apply(settings: Settings) {
         settings.run {
-            if (extensions.findByName(SpineSettingsExtension.Companion.NAME) == null) {
-                extensions.create<SpineSettingsExtension>(SpineSettingsExtension.Companion.NAME)
+            if (extensions.findByName(NAME) == null) {
+                extensions.create<RootSettingsExtension>(NAME)
             }
         }
     }

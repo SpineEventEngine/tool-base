@@ -29,6 +29,7 @@ package io.spine.tools.gradle.lib
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.spine.tools.gradle.lib.given.AnotherStubPlugin
+import io.spine.tools.gradle.lib.given.StubExtension
 import io.spine.tools.gradle.lib.given.StubPlugin
 import io.spine.tools.gradle.root.RootPlugin
 import org.gradle.api.Project
@@ -94,7 +95,7 @@ internal class LibraryPluginSpec {
     }
 
     @Test
-    fun `obtain root extension after the plugin is applied to the project`() {
+    fun `obtain the root extension after the plugin is applied to the project`() {
         plugin.run {
             hasRootExtension(project) shouldBe false
             assertThrows<UnknownDomainObjectException> {
@@ -106,6 +107,18 @@ internal class LibraryPluginSpec {
             hasRootExtension(project) shouldBe true
             rootExtension(project) shouldNotBe null
         }
+    }
+
+    @Test
+    fun `add the extension specified the 'extensionSpec' parameter`() {
+        // We have not applied the plugin yet.
+        assertThrows<UnknownDomainObjectException> {
+            project.spineExtension<StubExtension>()
+        }
+
+        plugin.apply(project)
+
+        project.spineExtension<StubExtension>() shouldNotBe null
     }
 }
 
