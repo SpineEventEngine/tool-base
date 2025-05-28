@@ -29,7 +29,7 @@ package io.spine.tools.gradle
 import org.gradle.api.logging.Logger
 
 /**
- * Prints lazily evaluated message, if `debug` logging is enabled.
+ * Prints a lazily evaluated message, if `debug` logging is enabled.
  */
 public inline fun Logger.debug(message: () -> String) {
     if (isDebugEnabled) {
@@ -38,7 +38,7 @@ public inline fun Logger.debug(message: () -> String) {
 }
 
 /**
- * Prints lazily evaluated message, if `info` logging is enabled.
+ * Prints a lazily evaluated message, if `info` logging is enabled.
  */
 public inline fun Logger.info(message: () -> String) {
     if (isInfoEnabled) {
@@ -47,7 +47,7 @@ public inline fun Logger.info(message: () -> String) {
 }
 
 /**
- * Prints lazily evaluated message, if `warn` logging is enabled.
+ * Prints a lazily evaluated message, if `warn` logging is enabled.
  */
 public inline fun Logger.warn(message: () -> String) {
     if (isWarnEnabled) {
@@ -56,7 +56,7 @@ public inline fun Logger.warn(message: () -> String) {
 }
 
 /**
- * Prints lazily evaluated message, if `error` logging is enabled.
+ * Prints a lazily evaluated message, if `error` logging is enabled.
  */
 public inline fun Logger.error(message: () -> String) {
     if (isErrorEnabled) {
@@ -70,10 +70,8 @@ public inline fun Logger.error(message: () -> String) {
  * The logging level for the message is `debug`. If `debug` logging is not enabled,
  * the function is still executed.
  *
- * @param action
- *         the name of the action to invoke
- * @param fn
- *         the action
+ * @param action The name of the action to invoke.
+ * @param fn The action.
  * @return the result of invoking the action.
  */
 @Suppress("ImplicitDefaultLocale", "MagicNumber") // intended in `String.format()` below.
