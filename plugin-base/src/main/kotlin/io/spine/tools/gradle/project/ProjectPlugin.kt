@@ -24,42 +24,73 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.lib
+package io.spine.tools.gradle.project
 
 import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper
 import io.spine.tools.gradle.ExtensionSpec
-import io.spine.tools.gradle.root.RootSettingsExtension
-import io.spine.tools.gradle.root.SettingsPlugin
-import io.spine.tools.gradle.root.hasRootExtension
-import io.spine.tools.gradle.root.rootExtension
-import org.gradle.api.Plugin
-import org.gradle.api.initialization.Settings
-import org.gradle.kotlin.dsl.apply
+import org.gradle.api.Project
+import org.gradle.api.plugins.ExtensionAware
+import org.gradle.api.Plugin as GradlePlugin
 
 /**
- * The abstract base for Gradle plugins of libraries that need to introduce
- * custom extensions in [RootSettingsExtension].
+ * The abstract base for Gradle project plugins.
  *
  * @param E The type of the extension used by the plugin.
  *  If a derived plugin class does not use an extension please pass [Unit]
- *  as the generic argument, and `null` for the [extensionSpec] property.
+ *  as the generic argument, and `null` for  the [extensionSpec] property.
  *
  * @property extensionSpec If provided, describes the extension to be added to
- *   the [root extension][io.spine.tools.gradle.root.SpineProjectExtension] by the plugin.
+ *   the [extensionParent] by the plugin.
  */
-public abstract class LibrarySettingsPlugin<E : Any>(
+public abstract class ProjectPlugin<E : Any>(
     private val extensionSpec: ExtensionSpec<E>?
-) : Plugin<Settings> {
+) : GradlePlugin<Project> {
 
     /**
-     * Verifies if the target [settings] have the [RootSettingsExtension] and if not,
-     * applies [SettingsPlugin] so that the extension is created.
+     * Tells if this plugin has an extension.
      */
-    @OverridingMethodsMustInvokeSuper
-    override fun apply(settings: Settings) {
-        if (!settings.hasRootExtension) {
-            settings.apply<SettingsPlugin>()
+    public val hasExtension: Boolean = extensionSpec != null
+
+    /**
+     * The container for the extension added by this plugin, if it [has one][hasExtension].
+     *
+     * Otherwise, `null`.
+     */
+    protected abstract val extensionParent: ExtensionAware?
+
+    /**
+     * The project to which this plugin is [applied][apply].
+     *
+     * Accessing this property before the [apply] function is called will
+     * case [UninitializedPropertyAccessException].
+     */
+    protected val project: Project
+        get() = _project
+
+    /**
+     * The backing field for the [project] property.
+     */
+    private lateinit var _project: Project
+
+    /**
+     * Obtains the extension added, if any, by the plugin.
+     *
+     * This property should be accessed _after_ the plugin is [applied][apply].
+     * Failing
+     *
+     * This property is `null` if the plugin does not [support an extension][hasExtension].
+     *
+     */
+    protected val extension: E? by lazy {
+        if (hasExtension) {
+            extensionSpec!!.createIn(extensionParent!!)
+        } else {
+            null
         }
-        extensionSpec?.createIn(settings.rootExtension)
+    }
+
+    @OverridingMethodsMustInvokeSuper
+    override fun apply(project: Project) {
+        _project = project
     }
 }

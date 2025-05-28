@@ -24,49 +24,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.lib
+package io.spine.tools.gradle
 
-import io.spine.tools.gradle.root.rootExtension
 import kotlin.reflect.KClass
-import org.gradle.api.Project
-import org.gradle.api.initialization.Settings
+import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.plugins.ExtensionContainer
 
 /**
- * The specification of the extension added to
- * the [root extension][io.spine.tools.gradle.root.RootExtension]
- * by a [LibraryPlugin].
+ * The specification of the extension added to the an [ExtensionAware] instance.
  *
  * @param E The type of the extension.
  *
- * @param name The name of the extension as it appears under
- *   the [spine][io.spine.tools.gradle.root.RootExtension] block or
- *   the [spineSettings][io.spine.tools.gradle.root.RootSettingsExtension] block.
+ * @param name The name of the extension as it appears under the parent DSL element.
  * @param extensionClass The class of the extension.
+ * @see createIn
  */
 public data class ExtensionSpec<E : Any>(
     public val name: String,
     public val extensionClass: KClass<E>
 ) {
     /**
-     * Creates an extension under the [rootExtension][Project.rootExtension] of
-     * the given project, if the extension is not already available.
+     * Creates an extension under the given [ExtensionAware] instance,
+     * if the extension is not already available.
      *
      * @return the newly created extension, or the one that already exists.
      */
-    public fun createIn(project: Project): E {
-        val ext = project.rootExtension.extensions.findOrCreate()
-        return ext
-    }
-
-    /**
-     * Creates an extension under the [rootExtension][Settings.rootExtension] of
-     * the given settings, if the extension is not already available.
-     *
-     * @return the newly created extension, or the one that already exists.
-     */
-    public fun createIn(settings: Settings): E {
-        val ext = settings.rootExtension.extensions.findOrCreate()
+    public fun createIn(parent: ExtensionAware): E {
+        val ext = parent.extensions.findOrCreate()
         return ext
     }
 

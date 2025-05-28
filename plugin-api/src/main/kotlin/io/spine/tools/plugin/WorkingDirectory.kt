@@ -26,6 +26,7 @@
 
 package io.spine.tools.plugin
 
+import java.nio.file.InvalidPathException
 import java.nio.file.Path
 import kotlin.io.path.exists
 
@@ -33,17 +34,43 @@ import kotlin.io.path.exists
  * A working directory for a plugin.
  *
  * @param parent The path to the parent directory.
- * @param plugin The ID of the plugin which this working directory serves.
+ * @param name The name of the working directory under the given `parent`.
+ *  The name can contain letters, numbers, underscores, dashes, and dots.
+ *  Though, it cannot be a relative path leading to the parent directory, i.e. `..`.
  */
 public open class WorkingDirectory(
     public val parent: Path,
-    public val plugin: PluginId) {
+    public val name: String
+) {
 
+    private companion object {
+        val regex = Regex("[A-Za-z0-9_\\-.]+")
+    }
+
+    init {
+        val validName = try {
+            if (name.isBlank()) {
+                false
+            } else {
+                val subPath = parent.resolve(name).normalize()
+                // Check that the `name` does not "climb" up and matches the `regex`.
+                subPath.startsWith(parent)
+                        && !subPath.equals(parent)
+                        && regex.matches(name)
+            }
+        } catch (_: InvalidPathException) {
+            false
+        }
+        require(validName) {
+            "Unable to resolve the subdirectory `$name` under `$parent`."
+        }
+    }
+    
     /**
      * The path to the working directory.
      */
-    public val path: Path by lazy {
-        parent.resolve(plugin.value)
+    public open val path: Path by lazy {
+        parent.resolve(name)
     }
 
     /**

@@ -24,33 +24,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.lib
+package io.spine.tools.gradle
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import io.spine.tools.gradle.root.RootPlugin
-import io.spine.tools.gradle.root.rootExtension
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-/**
- * This test suite tests only the features of the [ExtensionSpec.createIn]
- * function which accepts [Project] because obtaining an instance of
- * [Settings][org.gradle.api.initialization.Settings] is close to impossible
- * with the v8.14 of Gradle Test Kit we use.
- *
- * We are not compromising on the reliability of the code much here because:
- *  1. The main logic of finding or creating an extension in an
- *   [ExtensionAware][org.gradle.api.plugins.ExtensionAware] instance
- *   is done by [ExtensionSpec.findOrCreate] function.
- *
- *  2. Application of a [LibrarySettingsPlugin] which calls [ExtensionSpec.createIn]
- *   with the [Settings][org.gradle.api.initialization.Settings] parameter is done
- *   by [LibrarySettingsPluginSpec] test suite.
- */
 @DisplayName("`ExtensionSpec` should")
 internal class ExtensionSpecSpec {
 
@@ -60,18 +43,17 @@ internal class ExtensionSpecSpec {
     @BeforeEach
     fun createProject() {
         project = ProjectBuilder.builder().build()
-        project.plugins.apply(RootPlugin::class.java)
         extensionSpec = ExtensionSpec(StubExtension.NAME, StubExtension::class)
     }
 
     @Test
-    fun `create a new instance in the given project`() {
+    fun `create a new instance in the given 'ExtensionAware' instance`() {
         extensionSpec.createIn(project)
-        project.rootExtension.extensions.findByName(StubExtension.NAME) shouldNotBe null
+        project.extensions.findByName(StubExtension.NAME) shouldNotBe null
     }
 
     @Test
-    fun `obtain already created instance of an extension in the given project`() {
+    fun `obtain already created instance of an extension 'ExtensionAware' instance`() {
         val ext = extensionSpec.createIn(project)
         extensionSpec.createIn(project) shouldBe ext
     }

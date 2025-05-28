@@ -74,7 +74,7 @@ public val Project.sourceSets: SourceSetContainer
         return try {
             // Prior to Gradle 7.1 this line will throw `NoSuchMethodError`.
             javaPluginExtension.sourceSets
-        } catch (ignored: NoSuchMethodError) {
+        } catch (_: NoSuchMethodError) {
             val convention = convention.getByType(
                 // Use the qualified class name instead of import to avoid the deprecation warning.
                 org.gradle.api.plugins.JavaPluginConvention::class.java
@@ -97,9 +97,9 @@ public fun Project.sourceSet(name: SourceSetName): SourceSet = sourceSets.getByN
 
 private fun Project.toArtifactBuilder(): Artifact.Builder =
     Artifact.newBuilder().apply {
-        group = project.group.toString()
-        name = project.name
-        version = project.version.toString()
+        setGroup(project.group.toString())
+        setName(project.name)
+        setVersion(project.version.toString())
     }
 
 /**
