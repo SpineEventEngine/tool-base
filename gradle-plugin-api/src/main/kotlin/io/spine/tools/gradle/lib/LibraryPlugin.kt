@@ -68,6 +68,6 @@ public abstract class LibraryPlugin<E : Any>(
     override fun apply(project: Project) {
         super.apply(project)
         project.apply<RootPlugin>()
-        extension
+        createExtension()
     }
 }

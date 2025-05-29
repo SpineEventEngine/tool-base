@@ -64,7 +64,7 @@ public class RootPlugin :
      */
     override fun apply(project: Project) {
         super.apply(project)
-        extension
+        createExtension()
     }
 
     public companion object {

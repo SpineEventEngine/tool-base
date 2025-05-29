@@ -27,6 +27,7 @@
 package io.spine.tools.gradle.project
 
 import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper
+import io.spine.string.qualifiedClassName
 import io.spine.tools.gradle.ExtensionSpec
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
@@ -75,20 +76,43 @@ public abstract class ProjectPlugin<E : Any>(
     /**
      * Obtains the extension added, if any, by the plugin.
      *
-     * This property should be accessed _after_ the plugin is [applied][apply].
-     * Failing
+     * This property must be accessed _after_ the plugin is [applied][apply].
+     * Otherwise, [IllegalStateException] will be thrown.
      *
      * This property is `null` if the plugin does not [support an extension][hasExtension].
-     *
      */
     protected val extension: E? by lazy {
         if (hasExtension) {
+            check(this::_project.isInitialized) {
+                "Unable to obtain an extension:" +
+                        " the plugin `$qualifiedClassName` has not been applied yet."
+            }
             extensionSpec!!.createIn(extensionParent!!)
         } else {
             null
         }
     }
 
+    /**
+     * Ensures that the extension has been created if the plugin provides one.
+     *
+     * If the extension has been already created, it is returned as the result
+     * of this function.
+     *
+     * ### API note
+     * This function exists to make the code self-documented at the call sites.
+     * We need to force the extension creation at some places, and the call to
+     * this function is easier to understand than an expression containing
+     * just the [extension] property.
+     *
+     * @return the extension created under the [extensionParent], or
+     *   `null` if the plugin does not have an extension.
+     */
+    protected fun createExtension(): E? = extension
+
+    /**
+     * Remembers the project.
+     */
     @OverridingMethodsMustInvokeSuper
     override fun apply(project: Project) {
         _project = project
