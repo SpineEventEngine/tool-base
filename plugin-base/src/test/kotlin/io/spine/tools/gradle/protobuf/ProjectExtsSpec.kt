@@ -24,16 +24,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.project
+package io.spine.tools.gradle.protobuf
 
-import io.kotest.matchers.collections.shouldContainExactly
-import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotContain
 import io.spine.tools.code.SourceSetName
+import io.spine.tools.code.SourceSetName.Companion.main
+import io.spine.tools.code.SourceSetName.Companion.test
 import java.nio.file.Path
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.tasks.SourceSet.MAIN_SOURCE_SET_NAME
+import org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -42,60 +46,60 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
 /**
- * Tests Gradle-related extensions of [org.gradle.api.Project].
- *
- * For tests of Protobuf-specific extensions please see
- * [io.spine.tools.gradle.protobuf.ProjectExtensionsSpec].
- *
- * @see [io.spine.tools.gradle.protobuf.ProjectExtensionsSpec]
+ * Tests for extensions of [Project] related to Protobuf.
  */
-@DisplayName("`Project` extensions for Gradle should")
-class ProjectExtensionsSpec {
+@DisplayName("`Project` extensions for Protobuf should")
+class ProjectExtsSpec {
 
     lateinit var project: Project
 
     @BeforeEach
     fun setUp(@TempDir projectPath: Path) {
         project = ProjectBuilder.builder()
-            .withName("gradle-prj-ext")
+            .withName("protobuf-prj-ext")
             .withProjectDir(projectPath.toFile())
             .build()
         with(project) {
             pluginManager.apply(JavaPlugin::class.java)
             group = "io.spine.tests"
-            version = "1.2.3"
+            version = "3.2.1"
         }
     }
 
     @Nested
-    @DisplayName("obtain artifact by source set name")
-    inner class ObtainingArtifact {
+    @DisplayName("obtain descriptor set file by source set name")
+    inner class ObtainingDescriptorSetFile {
 
         @Test
-        fun main() {
-            project.artifact(SourceSetName.main) shouldBe project.artifact
+        fun `without 'main' in the file name`() {
+            project.descriptorSetFile(main).name shouldNotContain MAIN_SOURCE_SET_NAME
         }
 
         @Test
-        fun test() {
-            project.artifact(SourceSetName.test) shouldBe project.testArtifact
-        }
+        fun `with source set name in the file name`() {
+            project.descriptorSetFile(test).name shouldContain TEST_SOURCE_SET_NAME
 
-        @Test
-        fun custom() {
-            val customName = SourceSetName("slowTests")
-
-            project.artifact(customName).fileSafeId() shouldContain customName.value
+            val customSourceSet = SourceSetName("integrationTest")
+            project.descriptorSetFile(customSourceSet).name shouldContain
+                    customSourceSet.value
         }
     }
 
-    @Test
-    fun `obtain names of source sets`() {
-        val sourceSets = project.sourceSets
-        val sourceSetNames = project.sourceSetNames
 
-        sourceSetNames shouldHaveSize sourceSets.size
-        sourceSetNames shouldContainExactly sourceSets.map { s -> SourceSetName(s.name) }
+    @Nested
+    @DisplayName("obtain `protoDirectorySet`")
+    inner class ObtainingProtoDirectorySet {
+
+        @Test
+        fun `equal to 'null' if no 'proto' extension added`() {
+            project.protoDirectorySet(main) shouldBe null
+        }
+
+        @Test
+        fun `from the 'proto' extension`() {
+            project.plugins.apply(ProtobufDependencies.gradlePlugin.id)
+
+            project.protoDirectorySet(main) shouldNotBe null
+        }
     }
-
 }
