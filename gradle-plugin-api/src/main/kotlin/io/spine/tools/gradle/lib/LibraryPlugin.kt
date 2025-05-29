@@ -63,7 +63,8 @@ public abstract class LibraryPlugin<E : Any>(
      */
     override val workingDirectory: WorkingDirectory by lazy {
         val rootPlugin = project.plugins.findPlugin(RootPlugin::class.java)
-        WorkingDirectory(rootPlugin!!.workingDirectory.path, id.value)
+        val root = rootPlugin!!.workingDirectory.path
+        WorkingDirectory(root, id.value)
     }
 
     /**
