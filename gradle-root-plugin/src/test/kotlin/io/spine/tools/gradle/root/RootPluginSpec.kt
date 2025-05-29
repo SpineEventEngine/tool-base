@@ -60,8 +60,9 @@ internal class RootPluginSpec {
     fun `create extension when applied`() {
         project.pluginManager.apply(pluginClass)
         project.extensions.run {
-            findByName(RootExtension.NAME) shouldNotBe null
-            findByType(RootExtension::class.java) shouldNotBe null
+            val ext = findByName(RootExtension.NAME)
+            ext shouldNotBe null
+            findByType(RootExtension::class.java) shouldBe ext
         }
     }
 
