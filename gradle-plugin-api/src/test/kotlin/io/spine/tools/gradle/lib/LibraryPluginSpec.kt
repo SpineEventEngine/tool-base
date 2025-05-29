@@ -28,6 +28,8 @@ package io.spine.tools.gradle.lib
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.string.shouldEndWith
+import io.spine.io.toUnix
 import io.spine.tools.gradle.lib.given.AnotherStubPlugin
 import io.spine.tools.gradle.lib.given.StubExtension
 import io.spine.tools.gradle.lib.given.StubPlugin
@@ -119,6 +121,12 @@ internal class LibraryPluginSpec {
         plugin.apply(project)
 
         project.spineExtension<StubExtension>() shouldNotBe null
+    }
+
+    @Test
+    fun `have the working directory under the work directory of the root plugin`() {
+        plugin.apply(project)
+        plugin.workingDirectory.path.toString().toUnix() shouldEndWith "build/spine/${plugin.id}"
     }
 }
 
