@@ -29,6 +29,8 @@ package io.spine.tools.gradle.root
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldEndWith
+import io.spine.io.toUnix
 import io.spine.tools.gradle.task.BaseTaskName
 import io.spine.tools.gradle.testing.Gradle
 import io.spine.tools.gradle.testing.Gradle.BUILD_SUCCESSFUL
@@ -95,5 +97,12 @@ internal class RootPluginSpec {
 
         result.task(":$taskName")?.outcome shouldBe TaskOutcome.SUCCESS
         result.output shouldContain BUILD_SUCCESSFUL
+    }
+
+    @Test
+    fun `have a working directory under the 'build'`() {
+        val plugin = RootPlugin()
+        plugin.apply(project)
+        plugin.workingDirectory.path.toString().toUnix() shouldEndWith "build/spine"
     }
 }
