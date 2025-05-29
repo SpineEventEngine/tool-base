@@ -29,9 +29,12 @@ package io.spine.tools.plugin
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import java.nio.file.Files
+import java.nio.file.Path
+import kotlin.io.path.exists
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.io.TempDir
 
 @DisplayName("`WorkingDirectory` should")
 class WorkingDirectorySpec {
@@ -39,8 +42,7 @@ class WorkingDirectorySpec {
     private val errorMessageStart = "Unable to resolve the subdirectory"
 
     @Test
-    fun `initialize a valid working directory`() {
-        val parent = Files.createTempDirectory("testParent")
+    fun `initialize a valid working directory`(@TempDir parent: Path) {
         val name = "validSubDir"
 
         val workingDirectory = WorkingDirectory(parent, name)
@@ -50,10 +52,8 @@ class WorkingDirectorySpec {
     }
 
     @Test
-    fun `fail initialization with blank directory name`() {
-        val parent = Files.createTempDirectory("testParent")
+    fun `fail initialization with blank directory name`(@TempDir parent: Path) {
         val name = "  "
-
         val exception = assertThrows<IllegalArgumentException> {
             WorkingDirectory(parent, name)
         }
@@ -61,8 +61,7 @@ class WorkingDirectorySpec {
     }
 
     @Test
-    fun `fail initialization with invalid path`() {
-        val parent = Files.createTempDirectory("testParent")
+    fun `fail initialization with invalid path`(@TempDir parent: Path) {
         val name = "invalid/name\\with:chars"
 
         val exception = assertThrows<IllegalArgumentException> {
@@ -72,8 +71,7 @@ class WorkingDirectorySpec {
     }
 
     @Test
-    fun `fail initialization if name resolves to the parent directory`() {
-        val parent = Files.createTempDirectory("testParent")
+    fun `fail initialization if name resolves to the parent directory`(@TempDir parent: Path) {
         val name = ".."
 
         val exception = assertThrows<IllegalArgumentException> {
@@ -83,8 +81,7 @@ class WorkingDirectorySpec {
     }
 
     @Test
-    fun `return false for exists when directory does not exist`() {
-        val parent = Files.createTempDirectory("testParent")
+    fun `return false for exists when directory does not exist`(@TempDir parent: Path) {
         val name = "nonExistentDir"
         val workingDirectory = WorkingDirectory(parent, name)
 
@@ -92,8 +89,7 @@ class WorkingDirectorySpec {
     }
 
     @Test
-    fun `return 'true' for exists when directory already exists`() {
-        val parent = Files.createTempDirectory("testParent")
+    fun `return 'true' for exists when directory already exists`(@TempDir parent: Path) {
         val name = "existingDir"
         val path = parent.resolve(name)
         Files.createDirectory(path)
@@ -103,21 +99,19 @@ class WorkingDirectorySpec {
     }
 
     @Test
-    fun `create directory and return 'true' when it does not exist`() {
-        val parent = Files.createTempDirectory("testParent")
+    fun `create directory and return 'true' when it does not exist`(@TempDir parent: Path) {
         val name = "newDir"
         val workingDirectory = WorkingDirectory(parent, name)
 
         val created = workingDirectory.create()
 
         created shouldBe true
-        Files.exists(workingDirectory.path) shouldBe true
+        workingDirectory.path.exists() shouldBe true
         workingDirectory.exists shouldBe true
     }
 
     @Test
-    fun `return 'true' when 'create' is called on existing directory`() {
-        val parent = Files.createTempDirectory("testParent")
+    fun `return 'true' when 'create' is called on existing directory`(@TempDir parent: Path) {
         val name = "existingDir"
         val path = parent.resolve(name)
         Files.createDirectory(path)
