@@ -24,6 +24,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-plugins {
-    module
+package io.spine.tools.gradle
+
+import kotlin.reflect.KClass
+import org.gradle.api.plugins.ExtensionAware
+import org.gradle.api.plugins.ExtensionContainer
+
+/**
+ * The specification of the extension added to the an [ExtensionAware] instance.
+ *
+ * @param E The type of the extension.
+ *
+ * @param name The name of the extension as it appears under the parent DSL element.
+ * @param extensionClass The class of the extension.
+ * @see createIn
+ */
+public data class ExtensionSpec<E : Any>(
+    public val name: String,
+    public val extensionClass: KClass<E>
+) {
+    /**
+     * Creates an extension under the given [ExtensionAware] instance,
+     * if the extension is not already available.
+     *
+     * @return the newly created extension, or the one that already exists.
+     */
+    public fun createIn(parent: ExtensionAware): E {
+        val ext = parent.extensions.findOrCreate()
+        return ext
+    }
+
+    private fun ExtensionContainer.findOrCreate(): E {
+        @Suppress("UNCHECKED_CAST") // The type is ensured by the creation code below.
+        val existing: E? = findByName(name) as E?
+        return existing ?: create(name, extensionClass.java)
+    }
 }

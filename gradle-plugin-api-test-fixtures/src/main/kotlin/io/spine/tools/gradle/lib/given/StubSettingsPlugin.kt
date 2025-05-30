@@ -28,7 +28,7 @@
 
 package io.spine.tools.gradle.lib.given
 
-import io.spine.tools.gradle.lib.ExtensionSpec
+import io.spine.tools.gradle.ExtensionSpec
 import io.spine.tools.gradle.lib.LibrarySettingsPlugin
 import org.gradle.api.provider.Property
 

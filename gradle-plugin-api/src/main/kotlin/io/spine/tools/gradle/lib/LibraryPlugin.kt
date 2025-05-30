@@ -27,72 +27,47 @@
 package io.spine.tools.gradle.lib
 
 import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper
+import io.spine.tools.gradle.ExtensionSpec
+import io.spine.tools.gradle.project.ProjectPlugin
 import io.spine.tools.gradle.root.RootExtension
 import io.spine.tools.gradle.root.RootPlugin
-import org.gradle.api.Plugin
+import io.spine.tools.gradle.root.rootExtension
 import org.gradle.api.Project
+import org.gradle.api.plugins.ExtensionAware
 import org.gradle.kotlin.dsl.apply
 
 /**
  * The abstract base for Gradle plugins of libraries that need to
  * introduce custom extensions in [RootExtension].
  *
- * @param E The type of the extension used by the plugin.
- *  If a derived plugin class does not use an extension please pass [Unit]
- *  as the generic argument, and `null` for  the [extensionSpec] property.
- *
- * @property extensionSpec If provided, describes the extension to be added to
+ * @param extensionSpec If provided, describes the extension to be added to
  *   the [root extension][RootExtension] by the plugin.
  */
 public abstract class LibraryPlugin<E : Any>(
-    private val extensionSpec: ExtensionSpec<E>?
-) : Plugin<Project> {
+    extensionSpec: ExtensionSpec<E>?
+) : ProjectPlugin<E>(extensionSpec) {
 
     /**
-     * The project to which this plugin is [applied][apply].
-     *
-     * Accessing this property before the [apply] function is called will
-     * case [UninitializedPropertyAccessException].
+     * Returns [Project.rootExtension].
      */
-    protected val project: Project
-        get() = _project
+    override val extensionParent: ExtensionAware?
+        get() = project.rootExtension
 
     /**
-     * The backing field for the [project] property.
-     */
-    private lateinit var _project: Project
-
-    /**
-     * Obtains the extension added, if any, by the plugin.
+     * Applies the plugin the [project].
      *
-     * This property is `null` if the plugin does not support an extension, or,
-     * if the plugin does support an extension before the [apply] function is called.
-     */
-    protected val extension: E?
-        get() = if (this::_extension.isInitialized) _extension else null
-
-    /**
-     * The backing property for the [extension] added to the project by the plugin.
+     * The [extension], if it is introduced by the plugin is available after
+     * this function is called.
      *
-     * If the plugin does not support an extension, this property is never initialized.
-     */
-    private lateinit var _extension: E
-
-    /**
-     * Applies [RootPlugin] to the [project] and adds the [extension][extensionSpec]
-     * if it is used by the plugin.
-     *
+     * The function forces applying the [RootPlugin] so that [RootExtension] is available.
      * Since [org.gradle.api.plugins.PluginManager.apply] does nothing
      * if a plugin is already applied, it is safe to perform the call
      * without any previous checks.
      */
     @OverridingMethodsMustInvokeSuper
     override fun apply(project: Project) {
-        _project = project
-        // Make sure the root extension is installed.
+        super.apply(project)
         project.apply<RootPlugin>()
-        extensionSpec?.let {
-            _extension = it.createIn(project)
-        }
+        createExtension()
     }
 }

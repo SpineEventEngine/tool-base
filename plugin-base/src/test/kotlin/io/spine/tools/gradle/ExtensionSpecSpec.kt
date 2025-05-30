@@ -24,20 +24,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.plugin
+package io.spine.tools.gradle
 
-/**
- * The base interface for tool plugins.
- */
-public interface Plugin {
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import org.gradle.api.Project
+import org.gradle.testfixtures.ProjectBuilder
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 
-    /**
-     * The ID of the plugin.
-     */
-    public val id: PluginId
+@DisplayName("`ExtensionSpec` should")
+internal class ExtensionSpecSpec {
 
-    /**
-     * The working directory of the plugin.
-     */
-    public val workingDirectory: WorkingDirectory
+    private lateinit var project: Project
+    private lateinit var extensionSpec: ExtensionSpec<*>
+
+    @BeforeEach
+    fun createProject() {
+        project = ProjectBuilder.builder().build()
+        extensionSpec = ExtensionSpec(StubExtension.NAME, StubExtension::class)
+    }
+
+    @Test
+    fun `create a new instance in the given 'ExtensionAware' instance`() {
+        extensionSpec.createIn(project)
+        project.extensions.findByName(StubExtension.NAME) shouldNotBe null
+    }
+
+    @Test
+    fun `obtain already created instance of an extension 'ExtensionAware' instance`() {
+        val ext = extensionSpec.createIn(project)
+        extensionSpec.createIn(project) shouldBe ext
+    }
+}
+
+@Suppress("UtilityClassWithPublicConstructor") // Make `detekt` happy.
+abstract class StubExtension {
+    companion object {
+        const val NAME = "stub"
+    }
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright 2024, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -26,11 +26,99 @@
 
 package io.spine.tools.gradle
 
+import com.google.common.annotations.VisibleForTesting
+import io.spine.tools.gradle.PluginId.Companion.isValid
+
 /**
- * An identifier of a Gradle plugin.
+ * An identifier of a plugin.
+ *
+ * The given [value] must satisfy the requirements checked by the [isValid] function.
+ * Otherwise, the [IllegalArgumentException] will be thrown.
+ *
+ * ### API Note
+ * Even though the requirements are modeled after the
+ * [Gradle plugin IDs](https://bit.ly/gradle-plugin-id-policy),
+ * the API is not intended only for Gradle plugins.
+ *
+ * We find them reasonable for identifying components in various pluggable environments.
  */
-@Deprecated(
-    message = "Please use `io.spine.tools.plugin.PluginId` instead.",
-    replaceWith = ReplaceWith("PluginId", imports = ["io.spine.tools.plugin.PluginId"])
-)
-public data class PluginId(@JvmField public val id: String)
+public data class PluginId(val value: String) {
+
+    init {
+        require(isValid(value)) { "Invalid plugin ID: `$value`." }
+    }
+
+    /**
+     * Returns the [value].
+     *
+     * This property is useful via its accessor method `id()` in the Java code.
+     *
+     * It also provides better readability in Kotlin, when we need a string value
+     * of a property which name is other than `id`.
+     * E.g., compare `gradlePlugin.id` with `gradlePlugin.value`.
+     */
+    public val id: String @JvmName("id") get() = value
+
+    /**
+     * Returns [value].
+     */
+    override fun toString(): String = value
+
+    internal companion object {
+
+        /**
+         * The part separator in the ID value.
+         */
+        private const val SEPARATOR = '.'
+
+        /**
+         * Must start with a lowercase letter and contain only lowercase letters,
+         * digits, `'.'`, and `'-'`.
+         */
+        private val allowedCharsRegex by lazy {
+            Regex("^[a-z][a-z0-9.-]*$")
+        }
+
+        /**
+         * Plugin names forbidden by the Gradle
+         * [plugin ID policy](https://bit.ly/gradle-plugin-id-policy).
+         */
+        private val forbiddenNamespaces = listOf(
+            "org.gradle",
+            "com.gradle",
+            "com.gradleware"
+        )
+
+        /**
+         * Validates the given [id] to satisfy the naming constraints.
+         *
+         * The ID must satisfy the following conditions:
+         *  1. Start with a lowercase letter.
+         *  2. Contain only lowercase letters, digits, `'.'`, and `'-'`.
+         *  3. Must contain at least one '`.'` character.
+         *  4. Cannot contain consecutive `'.'` characters.
+         *  5. Cannot start or end with a `'.'`.
+         *  6. Must not start from "com.gradle"`, `"org.gradle"`, or `"org.gradleware"`.
+         */
+        @VisibleForTesting
+        @Suppress("ReturnCount")
+        fun isValid(id: String): Boolean {
+            if (!allowedCharsRegex.matches(id)) {
+                return false
+            }
+            if (!id.contains(SEPARATOR)) {
+                return false
+            }
+            if (id.startsWith(SEPARATOR) || id.endsWith(SEPARATOR)) {
+                return false
+            }
+            if (id.contains("$SEPARATOR$SEPARATOR")) {
+                return false
+            }
+            if (forbiddenNamespaces.any { id.startsWith(it) }) {
+                return false
+            }
+            return true
+        }
+    }
+}

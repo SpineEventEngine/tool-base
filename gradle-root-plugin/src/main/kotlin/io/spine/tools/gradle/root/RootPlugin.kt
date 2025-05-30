@@ -26,12 +26,12 @@
 
 package io.spine.tools.gradle.root
 
-import io.spine.tools.plugin.Plugin
-import io.spine.tools.plugin.PluginId
-import io.spine.tools.plugin.WorkingDirectory
-import org.gradle.api.Plugin as GradlePlugin
+import io.spine.tools.gradle.ExtensionSpec
+import io.spine.tools.gradle.project.ProjectPlugin
+import io.spine.tools.gradle.root.RootExtension.Companion.NAME
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.create
+import org.gradle.api.file.Directory
+import org.gradle.api.plugins.ExtensionAware
 
 /**
  * Creates [RootExtension] in a project, if it is not already present.
@@ -39,24 +39,27 @@ import org.gradle.kotlin.dsl.create
  * The extension is used by Gradle plugins of libraries that extend
  * the [root extension][RootExtension] with custom configuration DSL.
  */
-public class RootPlugin : GradlePlugin<Project>, Plugin {
+public class RootPlugin :
+    ProjectPlugin<RootExtension>(ExtensionSpec(NAME, RootExtension::class)) {
 
-    private lateinit var project: Project
+    override val extensionParent: ExtensionAware?
+        get() = project
 
-    override fun apply(project: Project) {
-        this.project = project
-        project.run {
-            if (extensions.findByName(RootExtension.Companion.NAME) == null) {
-                extensions.create<RootExtension>(RootExtension.Companion.NAME)
-            }
-        }
+    /**
+     * Obtains the directory which serves as the root for all the Spine plugins.
+     *
+     * Conventionally, the path to this directory is `$projectDir/build/spine`.
+     */
+    public val workingDirectory: Directory by lazy {
+        project.rootWorkingDir
     }
 
-    override val id: PluginId = PluginId(ID)
-
-    override val workingDirectory: WorkingDirectory by lazy {
-        val parent = project.layout.buildDirectory.get().asFile.toPath()
-        WorkingDirectory(parent, id)
+    /**
+     * Applies the plugin to the given project by forcing creation of the [extension].
+     */
+    override fun apply(project: Project) {
+        super.apply(project)
+        createExtension()
     }
 
     public companion object {

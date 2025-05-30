@@ -24,11 +24,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.plugin
+package io.spine.tools.gradle
 
+import io.kotest.assertions.withClue
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 @DisplayName("`PluginId` should")
@@ -65,7 +66,9 @@ internal class PluginIdSpec {
         )
 
         invalidIds.forEach { id ->
-            PluginId.isValid(id) shouldBe false
+            withClue("The ID `$id` should be invalid.") {
+                PluginId.isValid(id) shouldBe false
+            }
             assertThrows<IllegalArgumentException> { PluginId(id) }
         }
     }

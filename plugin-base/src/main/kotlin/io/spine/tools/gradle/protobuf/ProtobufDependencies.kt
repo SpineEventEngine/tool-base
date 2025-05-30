@@ -26,7 +26,7 @@
 
 package io.spine.tools.gradle.protobuf
 
-import io.spine.tools.plugin.PluginId
+import io.spine.tools.gradle.PluginId
 import io.spine.tools.gradle.ThirdPartyDependency
 import io.spine.tools.proto.fs.Directory
 

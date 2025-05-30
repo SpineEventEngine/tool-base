@@ -99,7 +99,7 @@ dependencies {
     compileOnlyApi(gradleApi())
     compileOnlyApi(gradleKotlinDsl())
 
-    api(project(":plugin-api"))
+    api(project(":plugin-base"))
 
     // Expose the below dependencies as `testFixturesApi` so that plugins
     // that extend root project extension and settings can use them for their testing.

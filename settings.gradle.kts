@@ -30,7 +30,6 @@ include(
     "intellij-platform",
     "intellij-platform-java",
     "tool-base",
-    "plugin-api",
     "plugin-base",
     "plugin-testlib",
     "psi",

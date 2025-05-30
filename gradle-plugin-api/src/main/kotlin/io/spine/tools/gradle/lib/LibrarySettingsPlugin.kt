@@ -27,9 +27,11 @@
 package io.spine.tools.gradle.lib
 
 import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper
+import io.spine.tools.gradle.ExtensionSpec
 import io.spine.tools.gradle.root.RootSettingsExtension
 import io.spine.tools.gradle.root.SettingsPlugin
 import io.spine.tools.gradle.root.hasRootExtension
+import io.spine.tools.gradle.root.rootExtension
 import org.gradle.api.Plugin
 import org.gradle.api.initialization.Settings
 import org.gradle.kotlin.dsl.apply
@@ -43,7 +45,7 @@ import org.gradle.kotlin.dsl.apply
  *  as the generic argument, and `null` for the [extensionSpec] property.
  *
  * @property extensionSpec If provided, describes the extension to be added to
- *   the [root extension][io.spine.tools.gradle.root.SpineProjectExtension] by the plugin.
+ *   the [root extension][io.spine.tools.gradle.root.RootExtension] by the plugin.
  */
 public abstract class LibrarySettingsPlugin<E : Any>(
     private val extensionSpec: ExtensionSpec<E>?
@@ -58,6 +60,6 @@ public abstract class LibrarySettingsPlugin<E : Any>(
         if (!settings.hasRootExtension) {
             settings.apply<SettingsPlugin>()
         }
-        extensionSpec?.createIn(settings)
+        extensionSpec?.createIn(settings.rootExtension)
     }
 }

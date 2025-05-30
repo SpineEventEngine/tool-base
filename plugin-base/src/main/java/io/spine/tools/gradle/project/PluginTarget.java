@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -34,7 +34,7 @@ import org.gradle.api.Project;
 import java.util.function.Consumer;
 
 /**
- * A target of Gradle plugin application.
+ * A target of a Gradle plugin application.
  *
  * <p>Typically, represented by a Gradle {@link org.gradle.api.Project}.
  */
@@ -43,8 +43,9 @@ public interface PluginTarget {
     /**
      * Executes the given {@code action} if the given plugin is applied.
      *
-     * <p>If the plugin is already applied, the action is executed at once. If the plugin is NOT
-     * applied, the action is only executed when and it the plugin will be applied.
+     * <p>If the plugin is already applied, the action is executed at once.
+     * If the plugin is NOT applied, the action is only executed when, and
+     * only when, the plugin is applied.
      *
      * @param plugin
      *         the trigger plugin

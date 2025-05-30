@@ -24,62 +24,48 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.lib
+package io.spine.tools.gradle.root
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import io.spine.tools.gradle.root.RootPlugin
-import io.spine.tools.gradle.root.rootExtension
+import io.kotest.matchers.string.shouldEndWith
+import io.spine.io.toUnix
 import org.gradle.api.Project
+import org.gradle.api.UnknownDomainObjectException
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
-/**
- * This test suite tests only the features of the [ExtensionSpec.createIn]
- * function which accepts [Project] because obtaining an instance of
- * [Settings][org.gradle.api.initialization.Settings] is close to impossible
- * with the v8.14 of Gradle Test Kit we use.
- *
- * We are not compromising on the reliability of the code much here because:
- *  1. The main logic of finding or creating an extension in an
- *   [ExtensionAware][org.gradle.api.plugins.ExtensionAware] instance
- *   is done by [ExtensionSpec.findOrCreate] function.
- *
- *  2. Application of a [LibrarySettingsPlugin] which calls [ExtensionSpec.createIn]
- *   with the [Settings][org.gradle.api.initialization.Settings] parameter is done
- *   by [LibrarySettingsPluginSpec] test suite.
- */
-@DisplayName("`ExtensionSpec` should")
-internal class ExtensionSpecSpec {
+@DisplayName("`Project` extensions of the 'root' package should")
+class ProjectExtsSpec {
 
     private lateinit var project: Project
-    private lateinit var extensionSpec: ExtensionSpec<*>
 
     @BeforeEach
     fun createProject() {
         project = ProjectBuilder.builder().build()
-        project.plugins.apply(RootPlugin::class.java)
-        extensionSpec = ExtensionSpec(StubExtension.NAME, StubExtension::class)
     }
 
     @Test
-    fun `create a new instance in the given project`() {
-        extensionSpec.createIn(project)
-        project.rootExtension.extensions.findByName(StubExtension.NAME) shouldNotBe null
+    fun `provide a working directory under the 'build'`() {
+        project.rootWorkingDir.toString().toUnix() shouldEndWith "build/spine"
     }
 
     @Test
-    fun `obtain already created instance of an extension in the given project`() {
-        val ext = extensionSpec.createIn(project)
-        extensionSpec.createIn(project) shouldBe ext
+    fun `tell if a project has 'RootExtension'`() {
+        project.hasRootExtension shouldBe false
+        RootPlugin().apply(project)
+        project.hasRootExtension shouldBe true
     }
-}
 
-@Suppress("UtilityClassWithPublicConstructor") // Make `detekt` happy.
-abstract class StubExtension {
-    companion object {
-        const val NAME = "stub"
+    @Test
+    fun `obtain 'RootExtension' after the 'RootPlugin' is applied`() {
+        assertThrows<UnknownDomainObjectException> {
+            project.rootExtension
+        }
+        RootPlugin().apply(project)
+        project.rootExtension shouldNotBe null
     }
 }
