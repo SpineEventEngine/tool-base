@@ -26,13 +26,17 @@
 
 package io.spine.tools.gradle.root
 
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldEndWith
 import io.spine.io.toUnix
 import org.gradle.api.Project
+import org.gradle.api.UnknownDomainObjectException
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 @DisplayName("`Project` extensions of the 'root' package should")
 class ProjectExtsSpec {
@@ -47,5 +51,21 @@ class ProjectExtsSpec {
     @Test
     fun `provide a working directory under the 'build'`() {
         project.rootWorkingDir.toString().toUnix() shouldEndWith "build/spine"
+    }
+
+    @Test
+    fun `tell if a project has 'RootExtension'`() {
+        project.hasRootExtension shouldBe false
+        RootPlugin().apply(project)
+        project.hasRootExtension shouldBe true
+    }
+
+    @Test
+    fun `obtain 'RootExtension' after the 'RootPlugin' is applied`() {
+        assertThrows<UnknownDomainObjectException> {
+            project.rootExtension
+        }
+        RootPlugin().apply(project)
+        project.rootExtension shouldNotBe null
     }
 }
