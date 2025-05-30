@@ -26,47 +26,26 @@
 
 package io.spine.tools.gradle.root
 
-import io.spine.tools.gradle.ExtensionSpec
-import io.spine.tools.gradle.project.ProjectPlugin
-import io.spine.tools.gradle.root.RootExtension.Companion.NAME
+import io.kotest.matchers.string.shouldEndWith
+import io.spine.io.toUnix
 import org.gradle.api.Project
-import org.gradle.api.file.Directory
-import org.gradle.api.plugins.ExtensionAware
+import org.gradle.testfixtures.ProjectBuilder
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 
-/**
- * Creates [RootExtension] in a project, if it is not already present.
- *
- * The extension is used by Gradle plugins of libraries that extend
- * the [root extension][RootExtension] with custom configuration DSL.
- */
-public class RootPlugin :
-    ProjectPlugin<RootExtension>(ExtensionSpec(NAME, RootExtension::class)) {
+@DisplayName("`Project` extensions of the 'root' package should")
+class ProjectExtsSpec {
 
-    override val extensionParent: ExtensionAware?
-        get() = project
+    private lateinit var project: Project
 
-    /**
-     * Obtains the directory which serves as the root for all the Spine plugins.
-     *
-     * Conventionally, the path to this directory is `$projectDir/build/spine`.
-     */
-    public val workingDirectory: Directory by lazy {
-        project.rootWorkingDir
+    @BeforeEach
+    fun createProject() {
+        project = ProjectBuilder.builder().build()
     }
 
-    /**
-     * Applies the plugin to the given project by forcing creation of the [extension].
-     */
-    override fun apply(project: Project) {
-        super.apply(project)
-        createExtension()
-    }
-
-    public companion object {
-
-        /**
-         * The ID of the plugin.
-         */
-        public const val ID: String = "io.spine.root"
+    @Test
+    fun `provide a working directory under the 'build'`() {
+        project.rootWorkingDir.toString().toUnix() shouldEndWith "build/spine"
     }
 }
