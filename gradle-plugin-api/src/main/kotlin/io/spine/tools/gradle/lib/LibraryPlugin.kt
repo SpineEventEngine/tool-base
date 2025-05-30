@@ -28,12 +28,10 @@ package io.spine.tools.gradle.lib
 
 import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper
 import io.spine.tools.gradle.ExtensionSpec
+import io.spine.tools.gradle.project.ProjectPlugin
 import io.spine.tools.gradle.root.RootExtension
 import io.spine.tools.gradle.root.RootPlugin
 import io.spine.tools.gradle.root.rootExtension
-import io.spine.tools.gradle.project.ProjectPlugin
-import io.spine.tools.plugin.Plugin
-import io.spine.tools.plugin.WorkingDirectory
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.kotlin.dsl.apply
@@ -47,25 +45,13 @@ import org.gradle.kotlin.dsl.apply
  */
 public abstract class LibraryPlugin<E : Any>(
     extensionSpec: ExtensionSpec<E>?
-) : ProjectPlugin<E>(extensionSpec), Plugin {
+) : ProjectPlugin<E>(extensionSpec) {
 
     /**
      * Returns [Project.rootExtension].
      */
     override val extensionParent: ExtensionAware?
         get() = project.rootExtension
-
-    /**
-     * Obtains a working directory of the plugin.
-     *
-     * The working directory of a library plugin is a subdirectory of
-     * the [RootPlugin.workingDirectory] with the name after the [id] of the plugin.
-     */
-    override val workingDirectory: WorkingDirectory by lazy {
-        val rootPlugin = project.plugins.findPlugin(RootPlugin::class.java)
-        val root = rootPlugin!!.workingDirectory.path
-        WorkingDirectory(root, id.value)
-    }
 
     /**
      * Applies the plugin the [project].

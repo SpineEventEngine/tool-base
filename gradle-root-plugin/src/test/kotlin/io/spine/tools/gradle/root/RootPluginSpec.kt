@@ -103,6 +103,6 @@ internal class RootPluginSpec {
     fun `have a working directory under the 'build'`() {
         val plugin = RootPlugin()
         plugin.apply(project)
-        plugin.workingDirectory.path.toString().toUnix() shouldEndWith "build/spine"
+        plugin.workingDirectory.toString().toUnix() shouldEndWith "build/spine"
     }
 }

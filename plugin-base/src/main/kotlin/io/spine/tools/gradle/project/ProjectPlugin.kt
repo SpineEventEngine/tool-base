@@ -44,7 +44,7 @@ import org.gradle.api.Plugin as GradlePlugin
  *   the [extensionParent] by the plugin.
  */
 public abstract class ProjectPlugin<E : Any>(
-    private val extensionSpec: ExtensionSpec<E>?
+    protected val extensionSpec: ExtensionSpec<E>?
 ) : GradlePlugin<Project> {
 
     /**

@@ -32,7 +32,6 @@ import io.spine.tools.gradle.ExtensionSpec
 import io.spine.tools.gradle.lib.LibraryPlugin
 import io.spine.tools.gradle.root.hasRootExtension
 import io.spine.tools.gradle.root.rootExtension
-import io.spine.tools.plugin.PluginId
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
 
@@ -42,8 +41,6 @@ class StubPlugin : LibraryPlugin<StubExtension>(
     fun project() = project
     fun hasRootExtension(project: Project) = project.hasRootExtension
     fun rootExtension(project: Project) = project.rootExtension
-
-    override val id: PluginId = PluginId("io.spine.tests.stub-plugin")
 }
 
 abstract class StubExtension {
@@ -54,6 +51,4 @@ abstract class StubExtension {
     }
 }
 
-class AnotherStubPlugin : LibraryPlugin<Unit>(null) {
-    override val id: PluginId = PluginId("io.spine.tests.another-stub-plugin")
-}
+class AnotherStubPlugin : LibraryPlugin<Unit>(null)

@@ -45,7 +45,7 @@ import org.gradle.kotlin.dsl.apply
  *  as the generic argument, and `null` for the [extensionSpec] property.
  *
  * @property extensionSpec If provided, describes the extension to be added to
- *   the [root extension][io.spine.tools.gradle.root.SpineProjectExtension] by the plugin.
+ *   the [root extension][io.spine.tools.gradle.root.RootExtension] by the plugin.
  */
 public abstract class LibrarySettingsPlugin<E : Any>(
     private val extensionSpec: ExtensionSpec<E>?

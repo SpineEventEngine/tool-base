@@ -29,10 +29,8 @@ package io.spine.tools.gradle.root
 import io.spine.tools.gradle.ExtensionSpec
 import io.spine.tools.gradle.project.ProjectPlugin
 import io.spine.tools.gradle.root.RootExtension.Companion.NAME
-import io.spine.tools.plugin.Plugin
-import io.spine.tools.plugin.PluginId
-import io.spine.tools.plugin.WorkingDirectory
 import org.gradle.api.Project
+import org.gradle.api.file.Directory
 import org.gradle.api.plugins.ExtensionAware
 
 /**
@@ -42,21 +40,19 @@ import org.gradle.api.plugins.ExtensionAware
  * the [root extension][RootExtension] with custom configuration DSL.
  */
 public class RootPlugin :
-    ProjectPlugin<RootExtension>(ExtensionSpec(NAME, RootExtension::class)), Plugin {
+    ProjectPlugin<RootExtension>(ExtensionSpec(NAME, RootExtension::class)) {
 
     override val extensionParent: ExtensionAware?
         get() = project
-
-    override val id: PluginId = PluginId(ID)
 
     /**
      * Obtains the directory which serves as the root for all the Spine plugins.
      *
      * Conventionally, the path to this directory is `$projectDir/build/spine`.
      */
-    override val workingDirectory: WorkingDirectory by lazy {
-        val parent = project.layout.buildDirectory.get().asFile.toPath()
-        WorkingDirectory(parent, NAME)
+    public val workingDirectory: Directory by lazy {
+        val provider = project.layout.buildDirectory.dir(extensionSpec!!.name)
+        provider.get()
     }
 
     /**
