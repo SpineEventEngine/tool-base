@@ -30,7 +30,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import io.spine.string.qualifiedClassName
-import io.spine.tools.gradle.ExtensionSpec
+import io.spine.tools.gradle.DslSpec
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.testfixtures.ProjectBuilder
@@ -43,14 +43,14 @@ import org.junit.jupiter.api.assertThrows
 class ProjectPluginSpec {
 
     private lateinit var project: Project
-    private lateinit var extensionSpec: ExtensionSpec<StubExtension>
+    private lateinit var dslSpec: DslSpec<StubExtension>
 
     @BeforeEach
     fun setUp() {
         project = ProjectBuilder.builder()
             .withName("stub-project")
             .build()
-        extensionSpec = ExtensionSpec("stub", StubExtension::class)
+        dslSpec = DslSpec("stub", StubExtension::class)
     }
 
     @Test
@@ -75,7 +75,7 @@ class ProjectPluginSpec {
 
     @Test
     fun `create an extension when requested after the plugin is applied`() {
-        val plugin = StubPlugin(extensionSpec)
+        val plugin = StubPlugin(dslSpec)
 
         plugin.hasExtension shouldBe true
         plugin.apply(project)
@@ -85,7 +85,7 @@ class ProjectPluginSpec {
 
     @Test
     fun `throw 'ISE' when trying to create an extension before 'apply'`() {
-        val plugin = StubPlugin(extensionSpec)
+        val plugin = StubPlugin(dslSpec)
         val e = assertThrows<IllegalStateException> {
             plugin.doCreateExtension()
         }
@@ -94,7 +94,7 @@ class ProjectPluginSpec {
 
     @Test
     fun `return the already created extension when 'createExtension' called repeatedly`() {
-        val plugin = StubPlugin(extensionSpec)
+        val plugin = StubPlugin(dslSpec)
 
         plugin.apply(project)
         
@@ -105,9 +105,9 @@ class ProjectPluginSpec {
 
 abstract class StubExtension
 
-private class StubPlugin<E: Any>(spec: ExtensionSpec<E>?) : ProjectPlugin<E>(spec) {
+private class StubPlugin<E: Any>(spec: DslSpec<E>?) : ProjectPlugin<E>(spec) {
 
-    override val extensionParent: ExtensionAware?
+    override val dslParent: ExtensionAware?
         get() = project as ExtensionAware
 
     /**

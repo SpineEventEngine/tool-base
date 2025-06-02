@@ -28,7 +28,7 @@ package io.spine.tools.gradle.project
 
 import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper
 import io.spine.string.qualifiedClassName
-import io.spine.tools.gradle.ExtensionSpec
+import io.spine.tools.gradle.DslSpec
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.Plugin as GradlePlugin
@@ -38,26 +38,26 @@ import org.gradle.api.Plugin as GradlePlugin
  *
  * @param E The type of the extension used by the plugin.
  *  If a derived plugin class does not use an extension please pass [Unit]
- *  as the generic argument, and `null` for  the [extensionSpec] property.
+ *  as the generic argument, and `null` for  the [dslSpec] property.
  *
- * @property extensionSpec If provided, describes the extension to be added to
- *   the [extensionParent] by the plugin.
+ * @property dslSpec If provided, describes the extension to be added to
+ *   the [dslParent] by the plugin.
  */
 public abstract class ProjectPlugin<E : Any>(
-    protected val extensionSpec: ExtensionSpec<E>?
+    protected val dslSpec: DslSpec<E>?
 ) : GradlePlugin<Project> {
 
     /**
      * Tells if this plugin has an extension.
      */
-    public val hasExtension: Boolean = extensionSpec != null
+    public val hasExtension: Boolean = dslSpec != null
 
     /**
      * The container for the extension added by this plugin, if it [has one][hasExtension].
      *
      * Otherwise, `null`.
      */
-    protected abstract val extensionParent: ExtensionAware?
+    protected abstract val dslParent: ExtensionAware?
 
     /**
      * The project to which this plugin is [applied][apply].
@@ -87,7 +87,7 @@ public abstract class ProjectPlugin<E : Any>(
                 "Unable to obtain an extension:" +
                         " the plugin `$qualifiedClassName` has not been applied yet."
             }
-            extensionSpec!!.findOrCreateIn(extensionParent!!)
+            dslSpec!!.findOrCreateIn(dslParent!!)
         } else {
             null
         }
@@ -105,7 +105,7 @@ public abstract class ProjectPlugin<E : Any>(
      * this function is easier to understand than an expression containing
      * just the [extension] property.
      *
-     * @return the extension created under the [extensionParent], or
+     * @return the extension created under the [dslParent], or
      *   `null` if the plugin does not have an extension.
      */
     protected fun createExtension(): E? = extension

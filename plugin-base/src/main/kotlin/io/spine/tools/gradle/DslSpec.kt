@@ -26,12 +26,24 @@
 
 package io.spine.tools.gradle
 
+import io.spine.string.simpleClassName
 import kotlin.reflect.KClass
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.plugins.ExtensionContainer
 
 /**
- * The specification of the extension added to an [ExtensionAware] instance.
+ * The specification of an extension added to an [ExtensionAware] instance.
+ *
+ * An instance of this class helps a Gradle plugin that need to
+ * introduce a custom extension to a [project][org.gradle.api.Project] or
+ * another [ExtensionAware] instance for providing DSL for tuning features
+ * offered by the plugin.
+ *
+ * Authors of the Gradle plugin class should call the [findOrCreateIn] function
+ * passing appropriate [ExtensionAware] under which the extension will be created.
+ * Presumably, the call to [findOrCreateIn] should be made in
+ * the [apply][org.gradle.api.Plugin.apply] function of the plugin or shortly
+ * _after_ the plugin is applied.
  *
  * @param E The type of the extension.
  *
@@ -40,27 +52,36 @@ import org.gradle.api.plugins.ExtensionContainer
  * @param extensionClass The class of the extension.
  * @see findOrCreateIn
  */
-public open class ExtensionSpec<E : Any>(
+public open class DslSpec<E : Any>(
     public val name: String,
     public val extensionClass: KClass<E>
 ) {
     /**
-     * Creates an extension under the given [ExtensionAware] instance,
-     * if the extension is not already available.
-     * 
-     * The function 
+     * Obtains an instance of the extension from the given DSL parent object.
      *
+     * If the extension is already [available][ExtensionContainer.findByName] by its [name],
+     * it is returned.
+     *
+     * Otherwise, a new extension is [created][createIn], and its instance is returned.
+     * 
      * @return the newly created extension, or the one that already exists.
      */
     public fun findOrCreateIn(parent: ExtensionAware): E {
+        val container = parent.extensions
         @Suppress("UNCHECKED_CAST") // The type is ensured by the creation code below.
-        val existing: E? = parent.extensions.findByName(name) as E?
-        val ext = existing ?: createIn(parent.extensions)
+        val existing: E? = container.findByName(name) as E?
+        val ext = existing ?: createIn(container)
         return ext
     }
 
     /**
      * Creates an extension in the given [container] using the [name] and [extensionClass].
+     *
+     * The default implementation creates an extension using the Java counterpart of
+     * the [extensionClass], and the given [name] via the [ExtensionContainer.create] method.
+     *
+     * Overriding classes may use other methods offered by the [ExtensionContainer] interface
+     * to tailor the extension creation for the needs of the served plugin.
      */
     protected open fun createIn(container: ExtensionContainer): E {
         return container.create(name, extensionClass.java)
@@ -68,7 +89,7 @@ public open class ExtensionSpec<E : Any>(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is ExtensionSpec<*>) return false
+        if (other !is DslSpec<*>) return false
 
         if (name != other.name) return false
         if (extensionClass != other.extensionClass) return false
@@ -82,7 +103,10 @@ public open class ExtensionSpec<E : Any>(
         return result
     }
 
+    /**
+     * Obtains diagnostic representation of the DSL specification.
+     */
     override fun toString(): String {
-        return "ExtensionSpec(name='$name', extensionClass=$extensionClass)"
+        return "$simpleClassName(name='$name', extensionClass=$extensionClass)"
     }
 }

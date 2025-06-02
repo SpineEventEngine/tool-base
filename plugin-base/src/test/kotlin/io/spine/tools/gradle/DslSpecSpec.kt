@@ -35,29 +35,30 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import com.google.common.testing.EqualsTester
+import io.spine.string.simply
 
-@DisplayName("`ExtensionSpec` should")
-internal class ExtensionSpecSpec {
+@DisplayName("`DslSpec` should")
+internal class DslSpecSpec {
 
     private lateinit var project: Project
-    private lateinit var extensionSpec: ExtensionSpec<*>
+    private lateinit var dslSpec: DslSpec<*>
 
     @BeforeEach
     fun createProject() {
         project = ProjectBuilder.builder().build()
-        extensionSpec = ExtensionSpec(StubExtension.NAME, StubExtension::class)
+        dslSpec = DslSpec(StubExtension.NAME, StubExtension::class)
     }
 
     @Test
     fun `create a new instance in the given 'ExtensionAware' instance`() {
-        extensionSpec.findOrCreateIn(project)
+        dslSpec.findOrCreateIn(project)
         project.extensions.findByName(StubExtension.NAME) shouldNotBe null
     }
 
     @Test
     fun `obtain already created instance of an extension 'ExtensionAware' instance`() {
-        val ext = extensionSpec.findOrCreateIn(project)
-        extensionSpec.findOrCreateIn(project) shouldBe ext
+        val ext = dslSpec.findOrCreateIn(project)
+        dslSpec.findOrCreateIn(project) shouldBe ext
     }
 
     @Nested
@@ -65,10 +66,10 @@ internal class ExtensionSpecSpec {
 
         @Test
         fun `have correct 'equals' and 'hashCode' implementations`() {
-            val spec1 = ExtensionSpec(StubExtension.NAME, StubExtension::class)
-            val spec2 = ExtensionSpec(StubExtension.NAME, StubExtension::class)
-            val differentNameSpec = ExtensionSpec("different", StubExtension::class)
-            val differentClassSpec = ExtensionSpec(
+            val spec1 = DslSpec(StubExtension.NAME, StubExtension::class)
+            val spec2 = DslSpec(StubExtension.NAME, StubExtension::class)
+            val differentNameSpec = DslSpec("different", StubExtension::class)
+            val differentClassSpec = DslSpec(
                 DifferentStubExtension.NAME,
                 DifferentStubExtension::class
             )
@@ -82,11 +83,10 @@ internal class ExtensionSpecSpec {
 
         @Test
         fun `have 'toString' implementation`() {
-            // Create a new instance without relying on the project setup
-            val spec = ExtensionSpec(StubExtension.NAME, StubExtension::class)
+            val cls = StubExtension::class
+            val spec = DslSpec(StubExtension.NAME, cls)
             val expectedString =
-                "ExtensionSpec(name='${StubExtension.NAME}'," +
-                        " extensionClass=${StubExtension::class})"
+                "${simply<DslSpec<*>>()}(name='${StubExtension.NAME}', extensionClass=$cls)"
             spec.toString() shouldBe expectedString
         }
     }

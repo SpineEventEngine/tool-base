@@ -28,7 +28,7 @@
 
 package io.spine.tools.gradle.lib.given
 
-import io.spine.tools.gradle.ExtensionSpec
+import io.spine.tools.gradle.DslSpec
 import io.spine.tools.gradle.lib.LibraryPlugin
 import io.spine.tools.gradle.root.hasRootExtension
 import io.spine.tools.gradle.root.rootExtension
@@ -36,7 +36,7 @@ import org.gradle.api.Project
 import org.gradle.api.provider.Property
 
 class StubPlugin : LibraryPlugin<StubExtension>(
-    ExtensionSpec(StubExtension.NAME, StubExtension::class)
+    DslSpec(StubExtension.NAME, StubExtension::class)
 ) {
     fun project() = project
     fun hasRootExtension(project: Project) = project.hasRootExtension

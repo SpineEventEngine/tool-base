@@ -28,7 +28,7 @@
 
 package io.spine.tools.gradle.lib.given
 
-import io.spine.tools.gradle.ExtensionSpec
+import io.spine.tools.gradle.DslSpec
 import io.spine.tools.gradle.lib.LibrarySettingsPlugin
 import org.gradle.api.provider.Property
 
@@ -41,7 +41,7 @@ abstract class StubSettingExtension {
 }
 
 class StubSettingsPlugin : LibrarySettingsPlugin<StubSettingExtension>(
-    ExtensionSpec(StubSettingExtension.NAME, StubSettingExtension::class)
+    DslSpec(StubSettingExtension.NAME, StubSettingExtension::class)
 ) {
     init {
         System.err.println(" %%%% Initializing the plugin `${this.javaClass.simpleName}`. %%%% ")
