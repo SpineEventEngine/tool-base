@@ -49,4 +49,12 @@ public abstract class ProjectPlugin<E : Any>(
      */
     protected val project: Project
         get() = target
+
+    /**
+     * Overrides to rename the parameter.
+     */
+    @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
+    override fun apply(project: Project) {
+        super.apply(project)
+    }
 }
