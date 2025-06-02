@@ -87,7 +87,7 @@ public abstract class ProjectPlugin<E : Any>(
                 "Unable to obtain an extension:" +
                         " the plugin `$qualifiedClassName` has not been applied yet."
             }
-            extensionSpec!!.createIn(extensionParent!!)
+            extensionSpec!!.findOrCreateIn(extensionParent!!)
         } else {
             null
         }

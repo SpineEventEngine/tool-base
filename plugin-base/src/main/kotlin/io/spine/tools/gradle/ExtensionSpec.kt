@@ -31,32 +31,58 @@ import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.plugins.ExtensionContainer
 
 /**
- * The specification of the extension added to the an [ExtensionAware] instance.
+ * The specification of the extension added to an [ExtensionAware] instance.
  *
  * @param E The type of the extension.
  *
- * @param name The name of the extension as it appears under the parent DSL element.
+ * @param name The name of the extension as it appears under
+ *   the [parent DSL][findOrCreateIn] element.
  * @param extensionClass The class of the extension.
- * @see createIn
+ * @see findOrCreateIn
  */
-public data class ExtensionSpec<E : Any>(
+public open class ExtensionSpec<E : Any>(
     public val name: String,
     public val extensionClass: KClass<E>
 ) {
     /**
      * Creates an extension under the given [ExtensionAware] instance,
      * if the extension is not already available.
+     * 
+     * The function 
      *
      * @return the newly created extension, or the one that already exists.
      */
-    public fun createIn(parent: ExtensionAware): E {
-        val ext = parent.extensions.findOrCreate()
+    public fun findOrCreateIn(parent: ExtensionAware): E {
+        @Suppress("UNCHECKED_CAST") // The type is ensured by the creation code below.
+        val existing: E? = parent.extensions.findByName(name) as E?
+        val ext = existing ?: createIn(parent.extensions)
         return ext
     }
 
-    private fun ExtensionContainer.findOrCreate(): E {
-        @Suppress("UNCHECKED_CAST") // The type is ensured by the creation code below.
-        val existing: E? = findByName(name) as E?
-        return existing ?: create(name, extensionClass.java)
+    /**
+     * Creates an extension in the given [container] using the [name] and [extensionClass].
+     */
+    protected open fun createIn(container: ExtensionContainer): E {
+        return container.create(name, extensionClass.java)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ExtensionSpec<*>) return false
+
+        if (name != other.name) return false
+        if (extensionClass != other.extensionClass) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = name.hashCode()
+        result = 31 * result + extensionClass.hashCode()
+        return result
+    }
+
+    override fun toString(): String {
+        return "ExtensionSpec(name='$name', extensionClass=$extensionClass)"
     }
 }

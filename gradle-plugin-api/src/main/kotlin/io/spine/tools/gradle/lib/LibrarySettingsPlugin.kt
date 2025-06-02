@@ -60,6 +60,6 @@ public abstract class LibrarySettingsPlugin<E : Any>(
         if (!settings.hasRootExtension) {
             settings.apply<SettingsPlugin>()
         }
-        extensionSpec?.createIn(settings.rootExtension)
+        extensionSpec?.findOrCreateIn(settings.rootExtension)
     }
 }

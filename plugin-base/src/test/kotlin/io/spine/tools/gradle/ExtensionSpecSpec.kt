@@ -32,7 +32,9 @@ import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import com.google.common.testing.EqualsTester
 
 @DisplayName("`ExtensionSpec` should")
 internal class ExtensionSpecSpec {
@@ -48,14 +50,45 @@ internal class ExtensionSpecSpec {
 
     @Test
     fun `create a new instance in the given 'ExtensionAware' instance`() {
-        extensionSpec.createIn(project)
+        extensionSpec.findOrCreateIn(project)
         project.extensions.findByName(StubExtension.NAME) shouldNotBe null
     }
 
     @Test
     fun `obtain already created instance of an extension 'ExtensionAware' instance`() {
-        val ext = extensionSpec.createIn(project)
-        extensionSpec.createIn(project) shouldBe ext
+        val ext = extensionSpec.findOrCreateIn(project)
+        extensionSpec.findOrCreateIn(project) shouldBe ext
+    }
+
+    @Nested
+    inner class `provide 'Object' functions` {
+
+        @Test
+        fun `have correct 'equals' and 'hashCode' implementations`() {
+            val spec1 = ExtensionSpec(StubExtension.NAME, StubExtension::class)
+            val spec2 = ExtensionSpec(StubExtension.NAME, StubExtension::class)
+            val differentNameSpec = ExtensionSpec("different", StubExtension::class)
+            val differentClassSpec = ExtensionSpec(
+                DifferentStubExtension.NAME,
+                DifferentStubExtension::class
+            )
+
+            EqualsTester()
+                .addEqualityGroup(spec1, spec2) // Objects that should be equal
+                .addEqualityGroup(differentNameSpec) // Different name
+                .addEqualityGroup(differentClassSpec) // Different class
+                .testEquals()
+        }
+
+        @Test
+        fun `have 'toString' implementation`() {
+            // Create a new instance without relying on the project setup
+            val spec = ExtensionSpec(StubExtension.NAME, StubExtension::class)
+            val expectedString =
+                "ExtensionSpec(name='${StubExtension.NAME}'," +
+                        " extensionClass=${StubExtension::class})"
+            spec.toString() shouldBe expectedString
+        }
     }
 }
 
@@ -63,5 +96,12 @@ internal class ExtensionSpecSpec {
 abstract class StubExtension {
     companion object {
         const val NAME = "stub"
+    }
+}
+
+@Suppress("UtilityClassWithPublicConstructor") // Make `detekt` happy.
+abstract class DifferentStubExtension {
+    companion object {
+        const val NAME = "differentStub"
     }
 }
