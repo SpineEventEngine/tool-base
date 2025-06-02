@@ -26,16 +26,15 @@
 
 package io.spine.tools.gradle
 
+import com.google.common.testing.EqualsTester
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.spine.string.simply
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import com.google.common.testing.EqualsTester
-import io.spine.string.simply
 
 @DisplayName("`DslSpec` should")
 internal class DslSpecSpec {
@@ -61,34 +60,30 @@ internal class DslSpecSpec {
         dslSpec.findOrCreateIn(project) shouldBe ext
     }
 
-    @Nested
-    inner class `provide 'Object' functions` {
+    @Test
+    fun `provide 'equals' and 'hashCode' implementations`() {
+        val spec1 = DslSpec(StubExtension.NAME, StubExtension::class)
+        val spec2 = DslSpec(StubExtension.NAME, StubExtension::class)
+        val differentNameSpec = DslSpec("different", StubExtension::class)
+        val differentClassSpec = DslSpec(
+            DifferentStubExtension.NAME,
+            DifferentStubExtension::class
+        )
 
-        @Test
-        fun `have correct 'equals' and 'hashCode' implementations`() {
-            val spec1 = DslSpec(StubExtension.NAME, StubExtension::class)
-            val spec2 = DslSpec(StubExtension.NAME, StubExtension::class)
-            val differentNameSpec = DslSpec("different", StubExtension::class)
-            val differentClassSpec = DslSpec(
-                DifferentStubExtension.NAME,
-                DifferentStubExtension::class
-            )
+        EqualsTester()
+            .addEqualityGroup(spec1, spec2) // Objects that should be equal
+            .addEqualityGroup(differentNameSpec) // Different name
+            .addEqualityGroup(differentClassSpec) // Different class
+            .testEquals()
+    }
 
-            EqualsTester()
-                .addEqualityGroup(spec1, spec2) // Objects that should be equal
-                .addEqualityGroup(differentNameSpec) // Different name
-                .addEqualityGroup(differentClassSpec) // Different class
-                .testEquals()
-        }
-
-        @Test
-        fun `have 'toString' implementation`() {
-            val cls = StubExtension::class
-            val spec = DslSpec(StubExtension.NAME, cls)
-            val expectedString =
-                "${simply<DslSpec<*>>()}(name='${StubExtension.NAME}', extensionClass=$cls)"
-            spec.toString() shouldBe expectedString
-        }
+    @Test
+    fun `implement 'toString' for diagnostics`() {
+        val cls = StubExtension::class
+        val spec = DslSpec(StubExtension.NAME, cls)
+        val expectedString =
+            "${simply<DslSpec<*>>()}(name='${StubExtension.NAME}', extensionClass=$cls)"
+        spec.toString() shouldBe expectedString
     }
 }
 
