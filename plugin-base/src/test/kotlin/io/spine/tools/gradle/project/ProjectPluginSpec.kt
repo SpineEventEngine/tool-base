@@ -43,14 +43,14 @@ import org.junit.jupiter.api.assertThrows
 class ProjectPluginSpec {
 
     private lateinit var project: Project
-    private lateinit var dslSpec: DslSpec<StubExtension>
+    private lateinit var dslSpec: DslSpec<*>
 
     @BeforeEach
     fun setUp() {
         project = ProjectBuilder.builder()
             .withName("stub-project")
             .build()
-        dslSpec = DslSpec("stub", StubExtension::class)
+        dslSpec = StubExtension.dslSpec
     }
 
     @Test
@@ -103,8 +103,24 @@ class ProjectPluginSpec {
     }
 }
 
-abstract class StubExtension
+abstract class StubExtension {
 
+    companion object {
+
+        /**
+         * The recommended way for encapsulating a `DslSpec` instance.
+         */
+        val dslSpec = DslSpec("stub", StubExtension::class)
+    }
+}
+
+/**
+ * This stub plugin class accepts a [DslSpec] instance as a parameter for
+ * the needs of test that check plugins that work without extensions.
+ *
+ * The real plugin classes are expected to pass a [DslSpec] to a constructor
+ * of the inherited class.
+ */
 private class StubPlugin<E: Any>(spec: DslSpec<E>?) : ProjectPlugin<E>(spec) {
 
     override val dslParent: ExtensionAware?
