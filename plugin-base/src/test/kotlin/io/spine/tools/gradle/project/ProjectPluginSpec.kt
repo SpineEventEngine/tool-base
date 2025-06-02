@@ -103,6 +103,7 @@ class ProjectPluginSpec {
     }
 }
 
+@Suppress("UtilityClassWithPublicConstructor") // Make `detekt` happy.
 abstract class StubExtension {
 
     companion object {
