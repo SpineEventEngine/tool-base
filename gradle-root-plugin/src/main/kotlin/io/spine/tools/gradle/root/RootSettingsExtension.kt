@@ -26,6 +26,7 @@
 
 package io.spine.tools.gradle.root
 
+import io.spine.tools.gradle.DslSpec
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.tasks.Nested
 
@@ -55,5 +56,9 @@ public abstract class RootSettingsExtension : ExtensionAware {
          * The name of the settings extension.
          */
         public const val NAME: String = "spineSettings"
+
+        public val dslSpec: DslSpec<RootSettingsExtension> by lazy {
+            DslSpec(NAME, RootSettingsExtension::class)
+        }
     }
 }
