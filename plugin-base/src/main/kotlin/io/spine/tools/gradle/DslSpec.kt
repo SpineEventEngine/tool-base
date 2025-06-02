@@ -75,10 +75,10 @@ public open class DslSpec<E : Any>(
     }
 
     /**
-     * Creates an extension in the given [container] using the [name] and [extensionClass].
+     * Creates an extension in the given [container] using the [name] and the [extensionClass].
      *
-     * The default implementation creates an extension using the Java counterpart of
-     * the [extensionClass], and the given [name] via the [ExtensionContainer.create] method.
+     * The default implementation uses the [ExtensionContainer.create] method which accepts
+     * the name and the Java counterpart of the [extensionClass].
      *
      * Overriding classes may use other methods offered by the [ExtensionContainer] interface
      * to tailor the extension creation for the needs of the served plugin.
