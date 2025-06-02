@@ -26,12 +26,9 @@
 
 package io.spine.tools.gradle.project
 
-import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper
-import io.spine.string.qualifiedClassName
+import io.spine.tools.gradle.AbstractPlugin
 import io.spine.tools.gradle.DslSpec
 import org.gradle.api.Project
-import org.gradle.api.plugins.ExtensionAware
-import org.gradle.api.Plugin as GradlePlugin
 
 /**
  * The abstract base for Gradle project plugins.
@@ -40,81 +37,16 @@ import org.gradle.api.Plugin as GradlePlugin
  *  If a derived plugin class does not use an extension please pass [Unit]
  *  as the generic argument, and `null` for  the [dslSpec] property.
  *
- * @property dslSpec If provided, describes the extension to be added to
- *   the [dslParent] by the plugin.
+ * @param dslSpec The specification of the DSL extension added by the plugin, or `null`
+ *   if the plugin does not extend the project or its extensions.
  */
 public abstract class ProjectPlugin<E : Any>(
-    protected val dslSpec: DslSpec<E>?
-) : GradlePlugin<Project> {
-
-    /**
-     * Tells if this plugin has an extension.
-     */
-    public val hasExtension: Boolean = dslSpec != null
-
-    /**
-     * The container for the extension added by this plugin, if it [has one][hasExtension].
-     *
-     * Otherwise, `null`.
-     */
-    protected abstract val dslParent: ExtensionAware?
+    dslSpec: DslSpec<E>?
+) : AbstractPlugin<Project, E>(dslSpec) {
 
     /**
      * The project to which this plugin is [applied][apply].
-     *
-     * Accessing this property before the [apply] function is called will
-     * case [UninitializedPropertyAccessException].
      */
     protected val project: Project
-        get() = _project
-
-    /**
-     * The backing field for the [project] property.
-     */
-    private lateinit var _project: Project
-
-    /**
-     * Obtains the extension added, if any, by the plugin.
-     *
-     * This property must be accessed _after_ the plugin is [applied][apply].
-     * Otherwise, [IllegalStateException] will be thrown.
-     *
-     * This property is `null` if the plugin does not [support an extension][hasExtension].
-     */
-    protected val extension: E? by lazy {
-        if (hasExtension) {
-            check(this::_project.isInitialized) {
-                "Unable to obtain an extension:" +
-                        " the plugin `$qualifiedClassName` has not been applied yet."
-            }
-            dslSpec!!.findOrCreateIn(dslParent!!)
-        } else {
-            null
-        }
-    }
-
-    /**
-     * Ensures that the extension has been created if the plugin provides one.
-     *
-     * If the extension has been already created, it is returned as the result
-     * of this function.
-     *
-     * ### API note
-     * This function exists to make the code self-documented at the call sites.
-     * We need to force the extension creation at some places, and the call to
-     * this function is easier to understand than an expression containing
-     * just the [extension] property.
-     *
-     * @return the extension created under the [dslParent], or
-     *   `null` if the plugin does not have an extension.
-     */
-    protected fun createExtension(): E? = extension
-
-    /**
-     * Remembers the project.
-     */
-    @OverridingMethodsMustInvokeSuper
-    override fun apply(project: Project) {
-        _project = project
-    }
+        get() = target
 }
