@@ -61,7 +61,7 @@ internal class DslSpecSpec {
     }
 
     @Test
-    fun `provide 'equals' and 'hashCode' implementations`() {
+    fun `provide 'equals' and 'hashCode'`() {
         val spec1 = DslSpec(StubExtension.NAME, StubExtension::class)
         val spec2 = DslSpec(StubExtension.NAME, StubExtension::class)
         val differentNameSpec = DslSpec("different", StubExtension::class)
@@ -71,9 +71,9 @@ internal class DslSpecSpec {
         )
 
         EqualsTester()
-            .addEqualityGroup(spec1, spec2) // Objects that should be equal
-            .addEqualityGroup(differentNameSpec) // Different name
-            .addEqualityGroup(differentClassSpec) // Different class
+            .addEqualityGroup(spec1, spec2)
+            .addEqualityGroup(differentNameSpec)
+            .addEqualityGroup(differentClassSpec)
             .testEquals()
     }
 
