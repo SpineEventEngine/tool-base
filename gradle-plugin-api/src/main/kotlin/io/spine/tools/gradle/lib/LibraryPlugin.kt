@@ -27,7 +27,7 @@
 package io.spine.tools.gradle.lib
 
 import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper
-import io.spine.tools.gradle.ExtensionSpec
+import io.spine.tools.gradle.DslSpec
 import io.spine.tools.gradle.project.ProjectPlugin
 import io.spine.tools.gradle.root.RootExtension
 import io.spine.tools.gradle.root.RootPlugin
@@ -40,17 +40,17 @@ import org.gradle.kotlin.dsl.apply
  * The abstract base for Gradle plugins of libraries that need to
  * introduce custom extensions in [RootExtension].
  *
- * @param extensionSpec If provided, describes the extension to be added to
+ * @param dslSpec If provided, describes the extension to be added to
  *   the [root extension][RootExtension] by the plugin.
  */
 public abstract class LibraryPlugin<E : Any>(
-    extensionSpec: ExtensionSpec<E>?
-) : ProjectPlugin<E>(extensionSpec) {
+    dslSpec: DslSpec<E>?
+) : ProjectPlugin<E>(dslSpec) {
 
     /**
      * Returns [Project.rootExtension].
      */
-    override val extensionParent: ExtensionAware?
+    override val dslParent: ExtensionAware?
         get() = project.rootExtension
 
     /**

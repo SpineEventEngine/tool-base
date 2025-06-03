@@ -26,36 +26,64 @@
 
 package io.spine.tools.gradle
 
+import com.google.common.testing.EqualsTester
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.spine.string.simply
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-@DisplayName("`ExtensionSpec` should")
-internal class ExtensionSpecSpec {
+@DisplayName("`DslSpec` should")
+internal class DslSpecSpec {
 
     private lateinit var project: Project
-    private lateinit var extensionSpec: ExtensionSpec<*>
+    private lateinit var dslSpec: DslSpec<*>
 
     @BeforeEach
     fun createProject() {
         project = ProjectBuilder.builder().build()
-        extensionSpec = ExtensionSpec(StubExtension.NAME, StubExtension::class)
+        dslSpec = DslSpec(StubExtension.NAME, StubExtension::class)
     }
 
     @Test
     fun `create a new instance in the given 'ExtensionAware' instance`() {
-        extensionSpec.createIn(project)
+        dslSpec.findOrCreateIn(project)
         project.extensions.findByName(StubExtension.NAME) shouldNotBe null
     }
 
     @Test
     fun `obtain already created instance of an extension 'ExtensionAware' instance`() {
-        val ext = extensionSpec.createIn(project)
-        extensionSpec.createIn(project) shouldBe ext
+        val ext = dslSpec.findOrCreateIn(project)
+        dslSpec.findOrCreateIn(project) shouldBe ext
+    }
+
+    @Test
+    fun `provide 'equals' and 'hashCode'`() {
+        val spec1 = DslSpec(StubExtension.NAME, StubExtension::class)
+        val spec2 = DslSpec(StubExtension.NAME, StubExtension::class)
+        val differentNameSpec = DslSpec("different", StubExtension::class)
+        val differentClassSpec = DslSpec(
+            DifferentStubExtension.NAME,
+            DifferentStubExtension::class
+        )
+
+        EqualsTester()
+            .addEqualityGroup(spec1, spec2)
+            .addEqualityGroup(differentNameSpec)
+            .addEqualityGroup(differentClassSpec)
+            .testEquals()
+    }
+
+    @Test
+    fun `implement 'toString' for diagnostics`() {
+        val cls = StubExtension::class
+        val spec = DslSpec(StubExtension.NAME, cls)
+        val expectedString =
+            "${simply<DslSpec<*>>()}(name='${StubExtension.NAME}', extensionClass=$cls)"
+        spec.toString() shouldBe expectedString
     }
 }
 
@@ -63,5 +91,12 @@ internal class ExtensionSpecSpec {
 abstract class StubExtension {
     companion object {
         const val NAME = "stub"
+    }
+}
+
+@Suppress("UtilityClassWithPublicConstructor") // Make `detekt` happy.
+abstract class DifferentStubExtension {
+    companion object {
+        const val NAME = "differentStub"
     }
 }

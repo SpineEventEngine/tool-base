@@ -26,10 +26,9 @@
 
 package io.spine.tools.gradle.root
 
-import io.spine.tools.gradle.root.RootSettingsExtension.Companion.NAME
-import org.gradle.api.Plugin
+import io.spine.tools.gradle.AbstractPlugin
 import org.gradle.api.initialization.Settings
-import org.gradle.kotlin.dsl.create
+import org.gradle.api.plugins.ExtensionAware
 
 /**
  * Adds [spineSettings][RootSettingsExtension] extension in the [Settings]
@@ -38,14 +37,16 @@ import org.gradle.kotlin.dsl.create
  * Before adding the extension, the plugin checks for the present of the extension.
  * So, applying the plugin more than once has no effect.
  */
-public class SettingsPlugin : Plugin<Settings> {
+public class SettingsPlugin : AbstractPlugin<Settings, RootSettingsExtension>(
+    RootSettingsExtension.dslSpec
+) {
+    override val dslParent: ExtensionAware?
+        get() = target
 
+    @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
     override fun apply(settings: Settings) {
-        settings.run {
-            if (extensions.findByName(NAME) == null) {
-                extensions.create<RootSettingsExtension>(NAME)
-            }
-        }
+        super.apply(settings)
+        createExtension()
     }
 
     public companion object {

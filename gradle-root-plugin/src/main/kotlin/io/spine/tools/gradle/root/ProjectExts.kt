@@ -38,7 +38,7 @@ import org.gradle.api.file.Directory
  * @see rootExtension
  */
 public val Project.hasRootExtension: Boolean
-    get() = project.extensions.findByName(RootExtension.NAME) != null
+    get() = extensions.findByName(RootExtension.NAME) != null
 
 /**
  * Obtains the instance of the [spine][RootExtension] extension of the project.

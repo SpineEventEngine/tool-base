@@ -26,7 +26,7 @@
 
 package io.spine.tools.gradle.root
 
-import io.spine.tools.gradle.ExtensionSpec
+import io.spine.tools.gradle.DslSpec
 import io.spine.tools.gradle.project.ProjectPlugin
 import io.spine.tools.gradle.root.RootExtension.Companion.NAME
 import org.gradle.api.Project
@@ -40,9 +40,9 @@ import org.gradle.api.plugins.ExtensionAware
  * the [root extension][RootExtension] with custom configuration DSL.
  */
 public class RootPlugin :
-    ProjectPlugin<RootExtension>(ExtensionSpec(NAME, RootExtension::class)) {
+    ProjectPlugin<RootExtension>(DslSpec(NAME, RootExtension::class)) {
 
-    override val extensionParent: ExtensionAware?
+    override val dslParent: ExtensionAware?
         get() = project
 
     /**
