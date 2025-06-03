@@ -57,6 +57,10 @@ public abstract class RootSettingsExtension : ExtensionAware {
          */
         public const val NAME: String = "spineSettings"
 
+        /**
+         * Describes that [RootSettingsExtension] goes with the [NAME]
+         * in the [Settings][org.gradle.api.initialization.Settings] DSL.
+         */
         public val dslSpec: DslSpec<RootSettingsExtension> by lazy {
             DslSpec(NAME, RootSettingsExtension::class)
         }
