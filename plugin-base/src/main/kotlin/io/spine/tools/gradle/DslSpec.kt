@@ -106,7 +106,6 @@ public open class DslSpec<E : Any>(
     /**
      * Obtains diagnostic representation of the DSL specification.
      */
-    override fun toString(): String {
-        return "$simpleClassName(name='$name', extensionClass=$extensionClass)"
-    }
+    override fun toString(): String =
+        "$simpleClassName(name='$name', extensionClass=$extensionClass)"
 }
