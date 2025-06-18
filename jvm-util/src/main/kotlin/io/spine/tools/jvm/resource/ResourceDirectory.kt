@@ -26,6 +26,7 @@
 
 package io.spine.tools.jvm.resource
 
+import io.spine.tools.io.Copy
 import java.net.URISyntaxException
 import java.nio.file.Path
 import java.nio.file.Paths
