@@ -26,8 +26,6 @@
 
 package io.spine.tools.code.manifest
 
-import com.google.common.annotations.VisibleForTesting
-
 /**
  * A test-only implementation of the [Dependency] interface that complements
  * the production [MavenArtifact] class which implements the same interface.
@@ -41,7 +39,6 @@ import com.google.common.annotations.VisibleForTesting
  *
  * @see Dependencies.parse
  */
-@VisibleForTesting
 internal data class IvyDependency(val org: String, val name: String, val rev: String): Dependency {
 
     companion object {

@@ -26,8 +26,6 @@
 
 package io.spine.tools.code.manifest
 
-import com.google.common.annotations.VisibleForTesting
-
 /**
  * Dependencies of a software component.
  */
@@ -47,7 +45,6 @@ public class Dependencies(public val list: List<Dependency>){
          * Parses comma-separated list of dependencies, with each of them enclosed in
          * double quotes (").
          */
-        @VisibleForTesting
         internal fun parse(value: String): Dependencies {
             if (value.isEmpty()) {
                 return Dependencies(listOf())

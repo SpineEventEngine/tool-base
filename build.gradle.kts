@@ -80,6 +80,7 @@ spinePublishing {
             gitHub("tool-base")
         )
     }
+    artifactPrefix = ""
 }
 
 allprojects {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,40 +24,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.code.manifest
+package io.spine.tools.gradle
 
-import io.kotest.matchers.shouldBe
-import io.spine.testing.TestValues.randomString
-import org.junit.jupiter.api.BeforeEach
+import io.kotest.matchers.optional.shouldBePresent
+import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.string.shouldMatch
+import io.spine.tools.gradle.protobuf.ProtobufDependencies.protobufCompiler
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-internal class IvyDependencySpec {
+@DisplayName("plugin-base `DependencyVersions` should")
+internal class DependencyVersionsSpec {
 
-    private lateinit var org: String
-    private lateinit var name: String
-    private lateinit var rev: String
+    private val versions: DependencyVersions =
+        DependencyVersions.ofPluginBase
 
-    private lateinit var strForm: String
+    @Test
+    @DisplayName("contain the version of Protobuf compiler")
+    fun containProtoc() {
+        val version = versions.versionOf(protobufCompiler)
 
-    @BeforeEach
-    fun generateParts() {
-        org = randomString()
-        name = randomString()
-        rev = randomString()
-        strForm = "${IvyDependency.PREFIX} org=\"$org\" name=\"$name\" rev=\"$rev\""
+        version shouldBePresent {
+            it shouldMatch "^[3|4]\\.\\d+\\.\\d+"
+        }
     }
 
     @Test
-    fun `provide string form with all components`() {
-        val idep = IvyDependency(org, name, rev)
+    @DisplayName("contain the version the module itself")
+    fun containOwnVersion() {
+        val protoc = ThirdPartyDependency(Artifact.SPINE_TOOLS_GROUP, Artifact.PLUGIN_BASE_ID)
+        val version = versions.versionOf(protoc)
 
-        idep.toString() shouldBe strForm
-    }
-
-    @Test
-    fun `parse string representation`() {
-        val idep = IvyDependency.parse(strForm)
-
-        idep shouldBe IvyDependency(org, name, rev)
+        version shouldBePresent {
+            it shouldNotBe ""
+        }
     }
 }

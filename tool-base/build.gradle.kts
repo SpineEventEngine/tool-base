@@ -53,7 +53,7 @@ configurations {
 }
 
 dependencies {
-    api(JavaX.annotations)
+    //api(JavaX.annotations)
     api(JavaPoet.lib)
     api(Roaster.api)
     api(Roaster.jdt)
@@ -71,8 +71,6 @@ dependencies {
         testImplementation(it)
         testFixturesImplementation(it)
     }
-
-    testImplementation(TestLib.lib)
 }
 
 sourceSets {

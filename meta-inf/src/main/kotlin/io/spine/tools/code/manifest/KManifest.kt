@@ -26,9 +26,7 @@
 
 package io.spine.tools.code.manifest
 
-import com.google.common.annotations.VisibleForTesting
-import com.google.common.collect.ImmutableList
-import io.spine.io.Resource
+import io.spine.tools.code.resource.Resource
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.net.JarURLConnection
@@ -92,7 +90,6 @@ public class KManifest(public val impl: Manifest) {
         /**
          * Loads the manifest from the given input stream.
          */
-        @VisibleForTesting
         internal fun load(stream: InputStream): KManifest {
             stream.use {
                 val impl = Manifest(it)
@@ -197,8 +194,7 @@ private fun loadNonJar(cls: Class<*>): KManifest {
 /**
  * Obtains the list of all manifests visible to the given class.
  */
-@VisibleForTesting
-public fun manifestsVisibleTo(cls: Class<*>): ImmutableList<URL> {
+public fun manifestsVisibleTo(cls: Class<*>): List<URL> {
     val manifestResource = Resource.file(KManifest.RESOURCE_FILE, cls.classLoader)
     val result = manifestResource.locateAll()
     return result
