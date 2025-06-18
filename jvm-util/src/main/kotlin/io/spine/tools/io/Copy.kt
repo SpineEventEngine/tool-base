@@ -29,7 +29,6 @@ package io.spine.tools.io
 import io.spine.tools.io.IoPreconditions.checkIsDirectory
 import java.nio.file.Files
 import java.nio.file.Path
-import java.util.function.Predicate
 import kotlin.io.path.createDirectories
 import kotlin.io.path.exists
 import kotlin.io.path.isDirectory
@@ -57,7 +56,7 @@ public object Copy {
     public fun copyDir(
         dir: Path,
         target: Path,
-        matching: Predicate<Path> = Predicate { path: Path -> true }
+        matching: (Path) -> Boolean = { path -> true }
     ) {
         checkIsDirectory(dir)
         checkIsDirectory(target)
@@ -69,8 +68,10 @@ public object Copy {
      *
      * Both paths must point to existing directories.
      *
-     * Files under the directory and all nested directories and files under them are copied
-     * into the target directory. The directory itself is not copied.
+     * Files under the directory and all nested directories and files under
+     * them are copied into the target directory.
+     *
+     * The directory itself is not copied.
      *
      * @param dir The directory content of which will be copied.
      * @param target The new parent directory.
@@ -78,7 +79,7 @@ public object Copy {
     public fun copyContent(dir: Path, target: Path) {
         checkIsDirectory(dir)
         checkIsDirectory(target)
-        doCopy(dir, target, { path: Path? -> true }, false)
+        doCopy(dir, target, { path: Path -> true }, false)
     }
 
     /**
@@ -90,14 +91,11 @@ public object Copy {
      * Files under the directory and all nested directories and files under them are copied
      * into the target directory. The directory itself is not copied.
      *
-     * @param dir
-     * the directory content of which will be copied
-     * @param target
-     * the new parent directory
-     * @param matching
-     * the predicate accepting the copied content
+     * @param dir The directory content of which will be copied.
+     * @param target The new parent directory.
+     * @param matching The predicate accepting the copied content.
      */
-    public fun copyContent(dir: Path, target: Path, matching: Predicate<Path>) {
+    public fun copyContent(dir: Path, target: Path, matching: (Path) -> Boolean) {
         checkIsDirectory(dir)
         checkIsDirectory(target)
         doCopy(dir, target, matching, false)
@@ -107,7 +105,7 @@ public object Copy {
 private fun doCopy(
     dir: Path,
     target: Path,
-    matching: Predicate<Path>,
+    matching: (Path) -> Boolean,
     withEnclosingDir: Boolean
 ) {
     val oldParent = if (withEnclosingDir) {

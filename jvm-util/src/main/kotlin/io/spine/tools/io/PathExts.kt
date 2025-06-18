@@ -37,8 +37,8 @@ import kotlin.Int.Companion.MAX_VALUE
 import kotlin.use
 
 /**
- * Obtains all subdirectories and files enclosed in this directory that match
- * the passed predicate.
+ * Obtains all subdirectories and files enclosed in this directory
+ * that match the given predicate.
  */
 public fun Path.contentMatching(matching: Predicate<Path>): List<Path> {
     val predicate: BiPredicate<Path, BasicFileAttributes> =

@@ -30,7 +30,6 @@ import io.spine.tools.io.Copy
 import java.net.URISyntaxException
 import java.nio.file.Path
 import java.nio.file.Paths
-import java.util.function.Predicate
 import kotlin.io.path.exists
 
 /**
@@ -75,7 +74,7 @@ public class ResourceDirectory private constructor(
      * @param target The path to an existing directory on the file system.
      * @see copyContentTo
      */
-    public fun copyContentTo(target: Path, matching: Predicate<Path>) {
+    public fun copyContentTo(target: Path, matching: (Path) -> Boolean) {
         checkTarget(target)
         val from = toPath()
         Copy.copyContent(from, target, matching)
@@ -100,7 +99,7 @@ public class ResourceDirectory private constructor(
      * @see .copyContentTo
      * @see Copy.copyDir
      */
-    public fun copyTo(target: Path, matching: Predicate<Path>) {
+    public fun copyTo(target: Path, matching: (Path) -> Boolean) {
         checkTarget(target)
         val from = toPath()
         Copy.copyDir(from, target, matching)
