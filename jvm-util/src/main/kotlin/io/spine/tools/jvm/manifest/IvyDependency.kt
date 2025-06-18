@@ -31,7 +31,7 @@ package io.spine.tools.jvm.manifest
  * the production [MavenArtifact] class which implements the same interface.
  *
  * The purpose of this class is to provide a quasi-production class with
- * a dependency string format\ that contains spaces and quotes.
+ * a dependency string format that contains spaces and quotes.
  * This allows having meaningful tests for the [Dependencies] class
  * handing escaping of unusual characters.
  *

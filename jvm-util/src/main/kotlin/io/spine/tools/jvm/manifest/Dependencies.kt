@@ -100,8 +100,8 @@ private fun String.unescapeQuotes() = replace(QUOTE_ESCAPED, QUOTE)
  *
  * For a detailed explanation of this regexp, please visit this
  * [blog post](https://www.metaltoad.com/blog/regex-quoted-string-escapable-quotes).
- * The only difference with the one described in the post is that this regexp handles only
- * double quotes.
+ * The only difference with the one described in the post is that this regexp handles
+ * only double quotes.
  *
  * @see Dependencies.toString
  * @see Dependencies.parse
@@ -122,8 +122,8 @@ private fun splitDeps(value: String): List<String> {
 /**
  * Parses a dependency from the given string representation.
  *
- * @throws IllegalStateException if the given string does not start with a prefix of supported
- *          dependency format.
+ * @throws IllegalStateException if the given string does not start with a prefix of
+ * a supported dependency format.
  */
 private fun parseDependency(value: String): Dependency = when {
     value.startsWith(MavenArtifact.PREFIX) -> MavenArtifact.parse(value)
