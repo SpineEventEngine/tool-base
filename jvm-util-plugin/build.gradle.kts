@@ -26,6 +26,7 @@
 
 import io.spine.dependency.lib.Kotlin
 import io.spine.gradle.report.license.LicenseReporter
+import io.spine.gradle.isSnapshot
 
 plugins {
     `uber-jar-module`
@@ -42,6 +43,44 @@ description = "Utilities for working with JVM projects under Gradle."
 
 kotlin {
     explicitApi()
+}
+
+publishing.publications.withType<MavenPublication>().all {
+    groupId = "io.spine.tools"
+    artifactId = "jvm-util-plugin"
+    version = versionToPublish
+}
+
+// Do not publish to Gradle Plugin Portal snapshot versions.
+// It is prohibited by their policy: https://plugins.gradle.org/docs/publish-plugin
+val publishPlugins: Task by tasks.getting {
+    enabled = !versionToPublish.isSnapshot()
+}
+
+@Suppress("unused")
+val publish: Task by tasks.getting {
+    dependsOn(publishPlugins)
+}
+
+gradlePlugin {
+    website.set("https://spine.io/")
+    vcsUrl.set("https://github.com/SpineEventEngine/tool-base.git")
+    plugins {
+        val pluginTags = listOf(
+            "gradle",
+            "kotlin",
+            "java",
+            "jvm"
+        )
+        
+        create("jvmUtilPlugin") {
+            id = "io.spine.jvm-util"
+            implementationClass = "io.spine.tools.gradle.jvm.plugin.JvmUtilPlugin"
+            displayName = "Spine JVM Utilities Plugin"
+            description = "Provides utilities for working with JVM projects under Gradle."
+            tags.set(pluginTags)
+        }
+    }
 }
 
 dependencies {
