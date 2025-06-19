@@ -26,7 +26,7 @@
 
 package io.spine.tools.dependency
 
-import io.spine.tools.jvm.requireNonEmpty
+import io.spine.tools.util.requireNonEmpty
 
 /**
  * A software module with a group and name.

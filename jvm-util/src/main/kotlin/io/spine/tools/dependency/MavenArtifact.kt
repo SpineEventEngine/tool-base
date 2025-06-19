@@ -27,7 +27,7 @@
 package io.spine.tools.dependency
 
 import io.spine.tools.dependency.MavenArtifact.Companion.PREFIX
-import io.spine.tools.jvm.requireNonEmpty
+import io.spine.tools.util.requireNonEmpty
 
 /**
  * A dependency on a software artifact stored in a Maven repository.
