@@ -26,51 +26,40 @@
 
 package io.spine.tools.jvm.maven
 
+import kotlin.reflect.KProperty0
+
 /**
  * A dependency on a software artifact stored in a Maven repository.
+ *
+ * @param group The group to which the artifact belongs.
+ * @param name The ID of the artifact within the group.
+ * @param version The version of the artifact.
  */
-public data class MavenArtifact(val coordinates: String) : Dependency {
-
-    /**
-     * Creates an artifact with the given parts of the Maven coordinates.
-     */
-    public constructor(group: String, name: String, version: String) :
-            this("$group$SEPARATOR$name$SEPARATOR$version")
-
-    /**
-     * The group to which the artifact belongs.
-     */
-    public val group: String
-
-    /**
-     * The ID of the artifact within the group.
-     */
-    public val name: String
-
-    /**
-     * The version of the artifact.
-     */
+public data class MavenArtifact(
+    public val group: String,
+    public val name: String,
     public val version: String
+) : Dependency {
 
     init {
-        val parts = coordinates.split(SEPARATOR)
-        require(parts.size == STRING_NOTATION_PARTS_COUNT) {
-            "Maven coordinates must have $STRING_NOTATION_PARTS_COUNT parts. " +
-                    "Encountered: `$coordinates`."
-        }
+        ::group.requireNonEmpty()
+        ::name.requireNonEmpty()
+        ::version.requireNonEmpty()    }
 
-        fun requireNonEmpty(value: String, propName: String): String {
-            require(value.isNotEmpty()) {
-                "The `${propName}` part of Maven coordinates must not be empty." +
-                        " Encountered: `$coordinates`."
-            }
-            return value
-        }
+    /**
+     * The Maven coordinates of this artifact in the format "group:name:version".
+     */
+    public val coordinates: String
+        get() = "$group$SEPARATOR$name$SEPARATOR$version"
 
-        group = requireNonEmpty(parts[0], "group")
-        name = requireNonEmpty(parts[1], "name")
-        version = requireNonEmpty(parts[2], "version")
-    }
+    /**
+     * Creates an artifact from the given Maven coordinates string.
+     */
+    public constructor(coordinates: String) : this(
+        parseGroup(coordinates),
+        parseName(coordinates),
+        parseVersion(coordinates)
+    )
 
     public companion object {
 
@@ -96,6 +85,42 @@ public data class MavenArtifact(val coordinates: String) : Dependency {
         private const val STRING_NOTATION_PARTS_COUNT = 3
 
         /**
+         * Parses and validates the group part from Maven coordinates.
+         */
+        private fun parseGroup(coordinates: String): String {
+            val parts = validateAndSplit(coordinates)
+            return parts[0]
+        }
+
+        /**
+         * Parses and validates the name part from Maven coordinates.
+         */
+        private fun parseName(coordinates: String): String {
+            val parts = validateAndSplit(coordinates)
+            return parts[1]
+        }
+
+        /**
+         * Parses and validates the version part from Maven coordinates.
+         */
+        private fun parseVersion(coordinates: String): String {
+            val parts = validateAndSplit(coordinates)
+            return parts[2]
+        }
+
+        /**
+         * Validates and splits Maven coordinates into parts.
+         */
+        private fun validateAndSplit(coordinates: String): List<String> {
+            val parts = coordinates.split(SEPARATOR)
+            require(parts.size == STRING_NOTATION_PARTS_COUNT) {
+                "Maven coordinates must have $STRING_NOTATION_PARTS_COUNT parts. " +
+                        "Encountered: `$coordinates`."
+            }
+            return parts
+        }
+
+        /**
          * Obtains the instance from the given string representation.
          *
          * @param value Maven coordinates with the leading [PREFIX].
@@ -113,4 +138,10 @@ public data class MavenArtifact(val coordinates: String) : Dependency {
      * `maven:<group>:<artifact>:<version>`.
      */
     override fun toString(): String = "$PREFIX$coordinates"
+}
+
+private fun KProperty0<String>.requireNonEmpty() {
+    require(get().isNotEmpty()) {
+        "The property `${name}` cannot be empty"
+    }
 }
