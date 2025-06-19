@@ -1,11 +1,11 @@
 /*
- * Copyright 2024, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -24,19 +24,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "tool-base"
+package io.spine.tools.gradle.jvmutil
 
-include(
-    "intellij-platform",
-    "intellij-platform-java",
-    "tool-base",
-    "plugin-base",
-    "plugin-testlib",
-    "psi",
-    "psi-java",
-    "gradle-root-plugin",
-    "gradle-plugin-api",
-    "gradle-plugin-api-test-fixtures",
-    "jvm-util",
-    "jvm-util-plugin"
-)
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+
+/**
+ * A Gradle plugin that provides JVM utilities.
+ */
+public class JvmUtilPlugin : Plugin<Project> {
+
+    /**
+     * Applies the plugin to the given project.
+     */
+    override fun apply(project: Project) {
+        // Plugin implementation will be added here.
+    }
+}
