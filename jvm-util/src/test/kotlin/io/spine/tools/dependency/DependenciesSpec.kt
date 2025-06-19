@@ -28,24 +28,23 @@ package io.spine.tools.dependency
 
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import io.spine.testing.TestValues.randomString
-import io.spine.tools.dependency.Dependencies
-import io.spine.tools.dependency.IvyDependency
-import io.spine.tools.dependency.MavenArtifact
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 @DisplayName("`Dependencies` should")
 internal class DependenciesSpec {
 
     @Test
     fun `escapes quotes in string form`() {
-        val org = "io.spine"
+        val group = "io.spine.tools"
         val name = "tool-base"
-        val rev = "2.0.0"
+        val ver = "2.0.0"
 
-        val ivyDep = IvyDependency(org, name, rev)
+        val ivyDep = IvyDependency(group, name, ver)
         val escaped = ivyDep.toString().replace("\"", "\\\"")
 
         val deps = Dependencies(listOf(ivyDep))
@@ -59,6 +58,31 @@ internal class DependenciesSpec {
      * space characters to test parsing against spaces and commas inside coordinates.
      */
     private fun unusualVersion(): String = randomString() + ", and then, some"
+
+    @Test
+    fun `reject dependencies with duplicate modules and provide detailed error message`() {
+        val group = "io.spine.tools"
+        val name = "tool-base"
+        val version1 = "1.0.0"
+        val version2 = "2.0.0"
+
+        val dep1 = MavenArtifact(group, name, version1)
+        val dep2 = MavenArtifact(group, name, version2)
+        val module = Module(group, name)
+
+        val exception = assertThrows<IllegalArgumentException> {
+            Dependencies(listOf(dep1, dep2))
+        }
+
+        val errorMessage = exception.message ?: ""
+
+        errorMessage.let {
+            it shouldContain "Artifacts with the same module found."
+            it shouldContain "Duplicated module: `$module`"
+            it shouldContain dep1.toString()
+            it shouldContain dep2.toString()
+        }
+    }
 
     @Nested
     inner class Parse {

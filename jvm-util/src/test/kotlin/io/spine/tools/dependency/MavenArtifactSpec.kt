@@ -161,4 +161,16 @@ class MavenArtifactSpec {
         ma.coordinates shouldBe coordinates
         ma.toString() shouldBe "$PREFIX$coordinates"
     }
+
+    @Test
+    fun `have module property calculated from group and name`() {
+        val group = randomString()
+        val name = randomString()
+        val version = randomString()
+
+        val ma = MavenArtifact(group, name, version)
+        val expectedModule = Module(group, name)
+
+        ma.module shouldBe expectedModule
+    }
 }

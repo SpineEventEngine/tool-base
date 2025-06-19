@@ -28,8 +28,34 @@ package io.spine.tools.dependency
 
 /**
  * Dependencies of a software component.
+ *
+ * @param list The list of dependencies.
+ *   The list must not contain two dependencies that are [MavenArtifact] with
+ *   the same [module][Module].
+ * @throws IllegalArgumentException if the list contains two dependencies with the same module.
  */
 public class Dependencies(public val list: List<Dependency>) {
+
+    init {
+        val moduleToArtifacts = mutableMapOf<Module, MutableList<MavenArtifact>>()
+
+        list.filterIsInstance<MavenArtifact>().forEach { artifact ->
+            val module = artifact.module
+            moduleToArtifacts.computeIfAbsent(module) { mutableListOf() }.add(artifact)
+        }
+
+        val duplicatedModules = moduleToArtifacts.filter { it.value.size > 1 }
+        require(duplicatedModules.isEmpty()) {
+            val duplicates = duplicatedModules.entries
+                .joinToString("\n") { (module, duplicates) ->
+                    "Duplicated module: `$module`\n" +
+                            "Artifacts:\n" +
+                            duplicates.joinToString("\n") { "  - `$it`" }
+                }
+            "Artifacts with the same module found. Please correct the dependencies.\n" +
+            duplicates
+        }
+    }
 
     public companion object {
 
@@ -40,7 +66,7 @@ public class Dependencies(public val list: List<Dependency>) {
          * @see parse
          */
         public const val SEPARATOR: String = ","
-        
+
         /**
          * Parses comma-separated list of dependencies, with each of them enclosed in
          * double quotes (").

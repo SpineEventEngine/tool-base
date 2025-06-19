@@ -52,6 +52,12 @@ public data class MavenArtifact(
         ::version.requireNonEmpty()    }
 
     /**
+     * The module to which this artifact belongs.
+     */
+    public val module: Module
+        get() = Module(group, name)
+
+    /**
      * The Maven coordinates of this artifact in the format "group:name:version[:classifier][@extension]".
      */
     public val coordinates: String
