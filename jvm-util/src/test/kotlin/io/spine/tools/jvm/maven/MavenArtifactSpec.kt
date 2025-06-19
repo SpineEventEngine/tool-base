@@ -55,7 +55,7 @@ class MavenArtifactSpec {
     }
 
     @Test
-    fun `require 3 parts in Maven coordinates`() {
+    fun `require at least 3 parts in Maven coordinates`() {
         assertThrows<IllegalArgumentException> {
             MavenArtifact.withCoordinates("fiz")
         }
@@ -98,6 +98,67 @@ class MavenArtifactSpec {
         val coordinates = "$group:$name:$version"
         val ma = MavenArtifact.withCoordinates(coordinates)
 
+        ma.toString() shouldBe "$PREFIX$coordinates"
+    }
+
+    @Test
+    fun `support 'classifier'`() {
+        val group = randomString()
+        val name = randomString()
+        val version = randomString()
+        val classifier = randomString()
+
+        val coordinates = "$group:$name:$version:$classifier"
+        val ma = MavenArtifact.withCoordinates(coordinates)
+
+        ma.group shouldBe group
+        ma.name shouldBe name
+        ma.version shouldBe version
+        ma.classifier shouldBe classifier
+        ma.extension shouldBe null
+
+        ma.coordinates shouldBe coordinates
+        ma.toString() shouldBe "$PREFIX$coordinates"
+    }
+
+    @Test
+    fun `support 'extension'`() {
+        val group = randomString()
+        val name = randomString()
+        val version = randomString()
+        val extension = randomString()
+
+        val coordinates = "$group:$name:$version@$extension"
+        val ma = MavenArtifact.withCoordinates(coordinates)
+
+        ma.group shouldBe group
+        ma.name shouldBe name
+        ma.version shouldBe version
+        ma.classifier shouldBe null
+        ma.extension shouldBe extension
+
+        ma.coordinates shouldBe coordinates
+        ma.toString() shouldBe "$PREFIX$coordinates"
+    }
+
+    @Test
+    fun `support both 'classifier' and 'extension'`() {
+        val group = randomString()
+        val name = randomString()
+        val version = randomString()
+        val classifier = randomString()
+        val extension = randomString()
+
+        val coordinates = "$group:$name:$version:$classifier@$extension"
+        val ma = MavenArtifact.withCoordinates(coordinates)
+
+        ma.group shouldBe group
+        ma.name shouldBe name
+        ma.version shouldBe version
+        ma.classifier shouldBe classifier
+        ma.extension shouldBe extension
+
+        ma.coordinates shouldBe coordinates
         ma.toString() shouldBe "$PREFIX$coordinates"
     }
 }

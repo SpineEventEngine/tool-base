@@ -35,11 +35,15 @@ import io.spine.tools.jvm.requireNonEmpty
  * @param group The group to which the artifact belongs.
  * @param name The ID of the artifact within the group.
  * @param version The version of the artifact.
+ * @param classifier The classifier of the artifact, if any.
+ * @param extension The extension of the artifact, if any.
  */
 public data class MavenArtifact(
     public val group: String,
     public val name: String,
-    public val version: String
+    public val version: String,
+    public val classifier: String? = null,
+    public val extension: String? = null
 ) : Dependency {
 
     init {
@@ -48,10 +52,15 @@ public data class MavenArtifact(
         ::version.requireNonEmpty()    }
 
     /**
-     * The Maven coordinates of this artifact in the format "group:name:version".
+     * The Maven coordinates of this artifact in the format "group:name:version[:classifier][@extension]".
      */
     public val coordinates: String
-        get() = "$group$SEPARATOR$name$SEPARATOR$version"
+        get() {
+            val result = StringBuilder("$group$SEPARATOR$name$SEPARATOR$version")
+            classifier?.let { result.append("$SEPARATOR$it") }
+            extension?.let { result.append("@$it") }
+            return result.toString()
+        }
 
     public companion object {
 
@@ -68,35 +77,42 @@ public data class MavenArtifact(
 
 
         /**
-         * Number of parts in a Gradle-style notation representing a Maven artifact.
+         * Minimum number of parts in a Gradle-style notation representing a Maven artifact.
          *
-         * For the sake of simplicity, we expect that a notation always has exactly 3 parts,
-         * the group ID, the artifact name, and the version. Other possible configurations
-         * are not supported.
+         * A notation must have at least 3 parts: the group ID, the artifact name, and the version.
+         * It may also include a classifier and an extension.
          */
-        private const val STRING_NOTATION_PARTS_COUNT = 3
+        private const val MIN_STRING_NOTATION_PARTS_COUNT = 3
 
         /**
          * Validates and splits Maven coordinates into parts.
          */
-        private fun validateAndSplit(coordinates: String): List<String> {
-            val parts = coordinates.split(SEPARATOR)
-            require(parts.size == STRING_NOTATION_PARTS_COUNT) {
-                "Maven coordinates must have $STRING_NOTATION_PARTS_COUNT parts. " +
+        private fun validateAndSplit(coordinates: String): Pair<List<String>, String?> {
+            // Split by @ to separate extension if present
+            val mainParts = coordinates.split("@", limit = 2)
+            val mainCoordinates = mainParts[0]
+            val extension = if (mainParts.size > 1) mainParts[1] else null
+
+            // Split the main coordinates by :
+            val parts = mainCoordinates.split(SEPARATOR)
+            require(parts.size >= MIN_STRING_NOTATION_PARTS_COUNT) {
+                "Maven coordinates must have at least $MIN_STRING_NOTATION_PARTS_COUNT parts. " +
                         "Encountered: `$coordinates`."
             }
-            return parts
+            return Pair(parts, extension)
         }
 
         /**
          * Creates an artifact from the given Maven coordinates string.
          */
         public fun withCoordinates(coordinates: String): MavenArtifact {
-            val parts = validateAndSplit(coordinates)
+            val (parts, extension) = validateAndSplit(coordinates)
             return MavenArtifact(
                 group = parts[0],
                 name = parts[1],
-                version = parts[2]
+                version = parts[2],
+                classifier = if (parts.size > 3) parts[3] else null,
+                extension = extension
             )
         }
 
@@ -119,4 +135,3 @@ public data class MavenArtifact(
      */
     override fun toString(): String = "$PREFIX$coordinates"
 }
-
