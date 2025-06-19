@@ -59,6 +59,14 @@ public data class Version(
         }
 
     /**
+     * Returns `true` if the version contains `snapshot` (in any case),
+     * `false` otherwise.
+     */
+    public fun isSnapshot(): Boolean {
+        return toString().contains("snapshot", ignoreCase = true)
+    }
+
+    /**
      * Compares this version with the specified version for order
      * according to semantic versioning rules.
      *

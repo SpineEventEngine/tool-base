@@ -50,7 +50,7 @@ class VersionSpec {
                 it.buildMetadata shouldBe null
             }
         }
-        
+
         @Test
         fun `pre-release identifier`() {
             val version = Version(1, 2, 3, "alpha")
@@ -62,7 +62,7 @@ class VersionSpec {
                 it.buildMetadata shouldBe null
             }
         }
-            
+
         @Test
         fun `build metadata`() {
             val version = Version(1, 2, 3, null, "build.123")
@@ -117,7 +117,7 @@ class VersionSpec {
         }
     }
 
-    
+
     @Nested
     @DisplayName("parse from string")
     inner class Parsing {
@@ -190,6 +190,58 @@ class VersionSpec {
             shouldThrow<IllegalStateException> {
                 Version.parse("1.a.3")
             }
+        }
+    }
+
+    @Nested
+    @DisplayName("detect snapshot versions")
+    inner class SnapshotDetection {
+
+        private fun assertIsSnapshot(
+            major: Int = 1,
+            minor: Int = 2,
+            patch: Int = 3,
+            preRelease: String? = null,
+            buildMetadata: String? = null,
+            expected: Boolean
+        ) {
+            Version(major, minor, patch, preRelease, buildMetadata).isSnapshot() shouldBe expected
+        }
+
+        @Test
+        fun `when pre-release contains 'snapshot'`() {
+            assertIsSnapshot(preRelease = "snapshot", expected = true)
+            assertIsSnapshot(preRelease = "SNAPSHOT", expected = true)
+            assertIsSnapshot(preRelease = "Snapshot", expected = true)
+            assertIsSnapshot(preRelease = "alpha-snapshot", expected = true)
+            assertIsSnapshot(preRelease = "alpha.SNAPSHOT", expected = true)
+        }
+
+        @Test
+        fun `when build metadata contains 'snapshot'`() {
+            assertIsSnapshot(buildMetadata = "snapshot", expected = true)
+            assertIsSnapshot(buildMetadata = "SNAPSHOT", expected = true)
+            assertIsSnapshot(buildMetadata = "Snapshot", expected = true)
+            assertIsSnapshot(buildMetadata = "build.snapshot", expected = true)
+            assertIsSnapshot(buildMetadata = "build.SNAPSHOT", expected = true)
+        }
+
+        @Test
+        fun `when both pre-release and build metadata contain 'snapshot'`() {
+            assertIsSnapshot(
+                preRelease = "snapshot", buildMetadata = "build.snapshot",
+                expected = true
+            )
+            assertIsSnapshot(preRelease = "SNAPSHOT", buildMetadata = "build", expected = true)
+            assertIsSnapshot(preRelease = "alpha", buildMetadata = "SNAPSHOT", expected = true)
+        }
+
+        @Test
+        fun `return 'false' when neither pre-release nor build metadata contain 'snapshot'`() {
+            assertIsSnapshot(expected = false)
+            assertIsSnapshot(preRelease = "alpha", expected = false)
+            assertIsSnapshot(buildMetadata = "build", expected = false)
+            assertIsSnapshot(preRelease = "beta", buildMetadata = "build", expected = false)
         }
     }
 
