@@ -27,6 +27,7 @@
 package io.spine.tools.version
 
 import io.spine.tools.jvm.jar.KManifest
+import io.spine.tools.version.Version.Companion.SEPARATOR
 import java.util.jar.Attributes.Name.IMPLEMENTATION_VERSION
 
 /**
@@ -64,6 +65,7 @@ public data class Version(
      * @return a negative integer, zero, or a positive integer as this version is less than,
      *   equal to, or greater than the specified version.
      */
+    @Suppress("ReturnCount")
     override fun compareTo(other: Version): Int {
         // Compare major, minor, patch.
         val majorComparison = major.compareTo(other.major)
@@ -86,48 +88,6 @@ public data class Version(
 
         // Build metadata does not affect precedence.
         return 0
-    }
-
-    /**
-     * Compares two pre-release version strings according to semantic versioning rules.
-     *
-     * @param first The first pre-release string to compare.
-     * @param second The second pre-release string to compare.
-     * @return a negative integer, zero, or a positive integer as the first pre-release
-     *   is less than, equal to, or greater than the second pre-release.
-     */
-    private fun comparePreRelease(first: String, second: String): Int {
-        val firstParts = first.split(SEPARATOR)
-        val secondParts = second.split(SEPARATOR)
-
-        // Compare each identifier
-        val minLength = minOf(firstParts.size, secondParts.size)
-        for (i in 0 until minLength) {
-            val firstPart = firstParts[i]
-            val secondPart = secondParts[i]
-
-            // Numeric identifiers always have lower precedence than non-numeric identifiers.
-            val firstIsNumeric = firstPart.all { it.isDigit() }
-            val secondIsNumeric = secondPart.all { it.isDigit() }
-
-            if (firstIsNumeric && secondIsNumeric) {
-                // Compare as integers
-                val numComparison = firstPart.toInt().compareTo(secondPart.toInt())
-                if (numComparison != 0) return numComparison
-            } else if (firstIsNumeric) {
-                return -1
-            } else if (secondIsNumeric) {
-                return 1
-            } else {
-                // Compare lexically.
-                val lexicalComparison = firstPart.compareTo(secondPart)
-                if (lexicalComparison != 0) return lexicalComparison
-            }
-        }
-
-        // If all identifiers are equal up to the length of the shorter one,
-        // the longer set of identifiers has a higher precedence.
-        return firstParts.size.compareTo(secondParts.size)
     }
 
     public companion object {
@@ -205,4 +165,47 @@ public data class Version(
             return Version(major, minor, patch, preRelease, buildMetadata)
         }
     }
+}
+
+/**
+ * Compares two pre-release version strings according to semantic versioning rules.
+ *
+ * @param first The first pre-release string to compare.
+ * @param second The second pre-release string to compare.
+ * @return a negative integer, zero, or a positive integer as the first pre-release
+ *   is less than, equal to, or greater than the second pre-release.
+ */
+@Suppress("ReturnCount")
+private fun comparePreRelease(first: String, second: String): Int {
+    val firstParts = first.split(SEPARATOR)
+    val secondParts = second.split(SEPARATOR)
+
+    // Compare each identifier.
+    val minLength = minOf(firstParts.size, secondParts.size)
+    for (i in 0 until minLength) {
+        val firstPart = firstParts[i]
+        val secondPart = secondParts[i]
+
+        // Numeric identifiers always have lower precedence than non-numeric identifiers.
+        val firstIsNumeric = firstPart.all { it.isDigit() }
+        val secondIsNumeric = secondPart.all { it.isDigit() }
+
+        if (firstIsNumeric && secondIsNumeric) {
+            // Compare as integers
+            val numComparison = firstPart.toInt().compareTo(secondPart.toInt())
+            if (numComparison != 0) return numComparison
+        } else if (firstIsNumeric) {
+            return -1
+        } else if (secondIsNumeric) {
+            return 1
+        } else {
+            // Compare lexically.
+            val lexicalComparison = firstPart.compareTo(secondPart)
+            if (lexicalComparison != 0) return lexicalComparison
+        }
+    }
+
+    // If all identifiers are equal up to the length of the shorter one,
+    // the longer set of identifiers has a higher precedence.
+    return firstParts.size.compareTo(secondParts.size)
 }
