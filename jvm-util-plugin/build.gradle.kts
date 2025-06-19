@@ -30,8 +30,13 @@ import io.spine.gradle.report.license.LicenseReporter
 plugins {
     `uber-jar-module`
     kotlin("jvm")
+    `plugin-publish`
+    `write-manifest`
 }
 LicenseReporter.generateReportIn(project)
+
+// As defined in `versions.gradle.kts`.
+val versionToPublish: String by extra
 
 description = "Utilities for working with JVM projects under Gradle."
 
