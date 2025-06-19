@@ -45,14 +45,13 @@ public data class Module(
     }
 
     /**
-     * The module identifier in the format "group:name".
+     * The module identifier in the format `"group:name"`.
      */
     public val identifier: String
         get() = "$group:$name"
 
     /**
-     * Obtains the string representation in the format:
-     * `<group>:<name>`.
+     * Returns the [identifier] of the module.
      */
     override fun toString(): String = identifier
 }
