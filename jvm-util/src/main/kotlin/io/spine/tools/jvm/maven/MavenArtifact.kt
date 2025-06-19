@@ -26,7 +26,8 @@
 
 package io.spine.tools.jvm.maven
 
-import kotlin.reflect.KProperty0
+import io.spine.tools.jvm.maven.MavenArtifact.Companion.PREFIX
+import io.spine.tools.jvm.requireNonEmpty
 
 /**
  * A dependency on a software artifact stored in a Maven repository.
@@ -119,8 +120,3 @@ public data class MavenArtifact(
     override fun toString(): String = "$PREFIX$coordinates"
 }
 
-private fun KProperty0<String>.requireNonEmpty() {
-    require(get().isNotEmpty()) {
-        "The property `${name}` cannot be empty"
-    }
-}
