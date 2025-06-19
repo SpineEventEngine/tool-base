@@ -70,7 +70,7 @@ internal class DependenciesSpec {
             val group = randomString()
             val name = randomString()
             val version = unusualVersion()
-            val ma = MavenArtifact("$group:$name:$version")
+            val ma = MavenArtifact.withCoordinates("$group:$name:$version")
             val depStr = "\"$ma\""
 
             val deps = Dependencies.parse(depStr)
@@ -87,7 +87,7 @@ internal class DependenciesSpec {
                 MavenArtifact("io.spine", "core-java", "2.0.1"),
             )
             val str = Dependencies(original).toString()
-            
+
             val parsed = Dependencies.parse(str).list
 
             parsed shouldBe original

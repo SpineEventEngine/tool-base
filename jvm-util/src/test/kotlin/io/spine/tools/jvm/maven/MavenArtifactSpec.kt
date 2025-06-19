@@ -48,7 +48,7 @@ class MavenArtifactSpec {
     fun `require 'maven' prefix when parsing`() {
         val coordinates = "com.example:foo-bar:1.0"
         assertThrows<IllegalArgumentException> { MavenArtifact.parse(coordinates) }
-        
+
         val parsed = MavenArtifact.parse(PREFIX + coordinates)
 
         parsed.coordinates shouldBe coordinates
@@ -57,22 +57,22 @@ class MavenArtifactSpec {
     @Test
     fun `require 3 parts in Maven coordinates`() {
         assertThrows<IllegalArgumentException> {
-            MavenArtifact("fiz")
+            MavenArtifact.withCoordinates("fiz")
         }
         assertThrows<IllegalArgumentException> {
-            MavenArtifact("fiz:baz")
-        }
-
-        assertThrows<IllegalArgumentException> {
-            MavenArtifact(":baz:bar")
+            MavenArtifact.withCoordinates("fiz:baz")
         }
 
         assertThrows<IllegalArgumentException> {
-            MavenArtifact("fiz::bar")
+            MavenArtifact.withCoordinates(":baz:bar")
         }
 
         assertThrows<IllegalArgumentException> {
-            MavenArtifact("fiz:baz:")
+            MavenArtifact.withCoordinates("fiz::bar")
+        }
+
+        assertThrows<IllegalArgumentException> {
+            MavenArtifact.withCoordinates("fiz:baz:")
         }
     }
 
@@ -82,7 +82,7 @@ class MavenArtifactSpec {
         val name = "tool-base"
         val version = "2.0.0"
 
-        val ma = MavenArtifact("$group:$name:$version")
+        val ma = MavenArtifact.withCoordinates("$group:$name:$version")
 
         ma.group shouldBe group
         ma.name shouldBe name
@@ -96,7 +96,7 @@ class MavenArtifactSpec {
         val version = randomString()
 
         val coordinates = "$group:$name:$version"
-        val ma = MavenArtifact(coordinates)
+        val ma = MavenArtifact.withCoordinates(coordinates)
 
         ma.toString() shouldBe "$PREFIX$coordinates"
     }

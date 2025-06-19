@@ -52,15 +52,6 @@ public data class MavenArtifact(
     public val coordinates: String
         get() = "$group$SEPARATOR$name$SEPARATOR$version"
 
-    /**
-     * Creates an artifact from the given Maven coordinates string.
-     */
-    public constructor(coordinates: String) : this(
-        parseGroup(coordinates),
-        parseName(coordinates),
-        parseVersion(coordinates)
-    )
-
     public companion object {
 
         /**
@@ -85,30 +76,6 @@ public data class MavenArtifact(
         private const val STRING_NOTATION_PARTS_COUNT = 3
 
         /**
-         * Parses and validates the group part from Maven coordinates.
-         */
-        private fun parseGroup(coordinates: String): String {
-            val parts = validateAndSplit(coordinates)
-            return parts[0]
-        }
-
-        /**
-         * Parses and validates the name part from Maven coordinates.
-         */
-        private fun parseName(coordinates: String): String {
-            val parts = validateAndSplit(coordinates)
-            return parts[1]
-        }
-
-        /**
-         * Parses and validates the version part from Maven coordinates.
-         */
-        private fun parseVersion(coordinates: String): String {
-            val parts = validateAndSplit(coordinates)
-            return parts[2]
-        }
-
-        /**
          * Validates and splits Maven coordinates into parts.
          */
         private fun validateAndSplit(coordinates: String): List<String> {
@@ -121,6 +88,18 @@ public data class MavenArtifact(
         }
 
         /**
+         * Creates an artifact from the given Maven coordinates string.
+         */
+        public fun withCoordinates(coordinates: String): MavenArtifact {
+            val parts = validateAndSplit(coordinates)
+            return MavenArtifact(
+                group = parts[0],
+                name = parts[1],
+                version = parts[2]
+            )
+        }
+
+        /**
          * Obtains the instance from the given string representation.
          *
          * @param value Maven coordinates with the leading [PREFIX].
@@ -129,7 +108,7 @@ public data class MavenArtifact(
         public fun parse(value: String): MavenArtifact {
             require(value.startsWith(PREFIX))
             val coordinates = value.substring(PREFIX.length)
-            return MavenArtifact(coordinates)
+            return withCoordinates(coordinates)
         }
     }
 
