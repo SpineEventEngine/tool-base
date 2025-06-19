@@ -32,7 +32,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-@DisplayName("Version should")
+@DisplayName("`Version` should")
 class VersionSpec {
 
     @Nested
@@ -42,41 +42,49 @@ class VersionSpec {
         @Test
         fun `major, minor, and patch versions`() {
             val version = Version(1, 2, 3)
-            version.major shouldBe 1
-            version.minor shouldBe 2
-            version.patch shouldBe 3
-            version.preRelease shouldBe null
-            version.buildMetadata shouldBe null
+            version.let {
+                it.major shouldBe 1
+                it.minor shouldBe 2
+                it.patch shouldBe 3
+                it.preRelease shouldBe null
+                it.buildMetadata shouldBe null
+            }
         }
-
+        
         @Test
         fun `pre-release identifier`() {
             val version = Version(1, 2, 3, "alpha")
-            version.major shouldBe 1
-            version.minor shouldBe 2
-            version.patch shouldBe 3
-            version.preRelease shouldBe "alpha"
-            version.buildMetadata shouldBe null
+            version.let {
+                it.major shouldBe 1
+                it.minor shouldBe 2
+                it.patch shouldBe 3
+                it.preRelease shouldBe "alpha"
+                it.buildMetadata shouldBe null
+            }
         }
-
+            
         @Test
         fun `build metadata`() {
             val version = Version(1, 2, 3, null, "build.123")
-            version.major shouldBe 1
-            version.minor shouldBe 2
-            version.patch shouldBe 3
-            version.preRelease shouldBe null
-            version.buildMetadata shouldBe "build.123"
+            version.let {
+                it.major shouldBe 1
+                it.minor shouldBe 2
+                it.patch shouldBe 3
+                it.preRelease shouldBe null
+                it.buildMetadata shouldBe "build.123"
+            }
         }
 
         @Test
         fun `pre-release and build metadata`() {
             val version = Version(1, 2, 3, "beta", "build.456")
-            version.major shouldBe 1
-            version.minor shouldBe 2
-            version.patch shouldBe 3
-            version.preRelease shouldBe "beta"
-            version.buildMetadata shouldBe "build.456"
+            version.let {
+                it.major shouldBe 1
+                it.minor shouldBe 2
+                it.patch shouldBe 3
+                it.preRelease shouldBe "beta"
+                it.buildMetadata shouldBe "build.456"
+            }
         }
     }
 
@@ -109,58 +117,64 @@ class VersionSpec {
         }
     }
 
+    
     @Nested
     @DisplayName("parse from string")
     inner class Parsing {
 
         @Test
         fun `simple version`() {
-            val version = Version.parse("1.2.3")
-            version.major shouldBe 1
-            version.minor shouldBe 2
-            version.patch shouldBe 3
-            version.preRelease shouldBe null
-            version.buildMetadata shouldBe null
+            Version.parse("1.2.3").let {
+                it.major shouldBe 1
+                it.minor shouldBe 2
+                it.patch shouldBe 3
+                it.preRelease shouldBe null
+                it.buildMetadata shouldBe null
+            }
         }
 
         @Test
         fun `version with pre-release`() {
-            val version = Version.parse("1.2.3-alpha")
-            version.major shouldBe 1
-            version.minor shouldBe 2
-            version.patch shouldBe 3
-            version.preRelease shouldBe "alpha"
-            version.buildMetadata shouldBe null
+            Version.parse("1.2.3-alpha").let {
+                it.major shouldBe 1
+                it.minor shouldBe 2
+                it.patch shouldBe 3
+                it.preRelease shouldBe "alpha"
+                it.buildMetadata shouldBe null
+            }
         }
 
         @Test
         fun `version with build metadata`() {
-            val version = Version.parse("1.2.3+build.123")
-            version.major shouldBe 1
-            version.minor shouldBe 2
-            version.patch shouldBe 3
-            version.preRelease shouldBe null
-            version.buildMetadata shouldBe "build.123"
+            Version.parse("1.2.3+build.123").let {
+                it.major shouldBe 1
+                it.minor shouldBe 2
+                it.patch shouldBe 3
+                it.preRelease shouldBe null
+                it.buildMetadata shouldBe "build.123"
+            }
         }
 
         @Test
         fun `version with pre-release and build metadata`() {
-            val version = Version.parse("1.2.3-beta+build.456")
-            version.major shouldBe 1
-            version.minor shouldBe 2
-            version.patch shouldBe 3
-            version.preRelease shouldBe "beta"
-            version.buildMetadata shouldBe "build.456"
+            Version.parse("1.2.3-beta+build.456").let {
+                it.major shouldBe 1
+                it.minor shouldBe 2
+                it.patch shouldBe 3
+                it.preRelease shouldBe "beta"
+                it.buildMetadata shouldBe "build.456"
+            }
         }
 
         @Test
         fun `complex pre-release identifiers`() {
-            val version = Version.parse("1.2.3-alpha.1.beta.2")
-            version.major shouldBe 1
-            version.minor shouldBe 2
-            version.patch shouldBe 3
-            version.preRelease shouldBe "alpha.1.beta.2"
-            version.buildMetadata shouldBe null
+            Version.parse("1.2.3-alpha.1.beta.2").let {
+                it.major shouldBe 1
+                it.minor shouldBe 2
+                it.patch shouldBe 3
+                it.preRelease shouldBe "alpha.1.beta.2"
+                it.buildMetadata shouldBe null
+            }
         }
 
         @Test

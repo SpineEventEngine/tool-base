@@ -57,6 +57,16 @@ public class Dependencies(public val list: List<Dependency>) {
         }
     }
 
+    /**
+     * Finds a dependency that represents the given module.
+     *
+     * @param module The module to find the dependency for.
+     * @return the dependency representing the given module, or `null` if no such dependency exists.
+     */
+    public fun find(module: Module): Dependency? =
+        list.filterIsInstance<MavenArtifact>()
+            .find { it.module == module }
+
     public companion object {
 
         /**

@@ -120,4 +120,37 @@ internal class DependenciesSpec {
             parsed shouldBe original
         }
     }
+
+    @Nested
+    inner class Find {
+
+        @Test
+        fun `existing module`() {
+            val group = "io.spine.tools"
+            val name = "tool-base"
+            val version = "2.0.0"
+            val module = Module(group, name)
+            val artifact = MavenArtifact(group, name, version)
+            val ivyDep = IvyDependency("org.gradle", "wrapper", "7.4.2")
+
+            val dependencies = Dependencies(listOf(artifact, ivyDep))
+
+            val found = dependencies.find(module)
+
+            found shouldBe artifact
+        }
+
+        @Test
+        fun `non-existing module`() {
+            val artifact = MavenArtifact("io.spine.tools", "tool-base", "2.0.0")
+            val ivyDep = IvyDependency("org.gradle", "wrapper", "7.4.2")
+            val nonExistingModule = Module("io.spine", "core-java")
+
+            val dependencies = Dependencies(listOf(artifact, ivyDep))
+
+            val found = dependencies.find(nonExistingModule)
+
+            found shouldBe null
+        }
+    }
 }
