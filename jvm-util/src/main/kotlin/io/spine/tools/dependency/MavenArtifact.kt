@@ -24,9 +24,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.jvm.maven
+package io.spine.tools.dependency
 
-import io.spine.tools.jvm.maven.MavenArtifact.Companion.PREFIX
+import io.spine.tools.dependency.MavenArtifact.Companion.PREFIX
 import io.spine.tools.jvm.requireNonEmpty
 
 /**

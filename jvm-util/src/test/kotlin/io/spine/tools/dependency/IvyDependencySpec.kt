@@ -24,10 +24,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.jvm.maven
+package io.spine.tools.dependency
 
 import io.kotest.matchers.shouldBe
 import io.spine.testing.TestValues.randomString
+import io.spine.tools.dependency.IvyDependency
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 

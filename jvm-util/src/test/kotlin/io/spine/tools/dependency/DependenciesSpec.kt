@@ -24,11 +24,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.jvm.maven
+package io.spine.tools.dependency
 
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.spine.testing.TestValues.randomString
+import io.spine.tools.dependency.Dependencies
+import io.spine.tools.dependency.IvyDependency
+import io.spine.tools.dependency.MavenArtifact
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test

@@ -24,7 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.jvm.maven
+package io.spine.tools.dependency
 
 /**
  * A test-only implementation of the [Dependency] interface that complements
