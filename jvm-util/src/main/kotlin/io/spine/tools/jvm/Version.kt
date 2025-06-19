@@ -26,7 +26,7 @@
 
 package io.spine.tools.jvm
 
-import io.spine.tools.jvm.manifest.KManifest
+import io.spine.tools.jvm.jar.KManifest
 import java.util.jar.Attributes.Name.IMPLEMENTATION_VERSION
 
 /**

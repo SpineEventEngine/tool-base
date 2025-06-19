@@ -24,7 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.jvm.manifest
+package io.spine.tools.jvm.jar
 
 import io.spine.tools.jvm.resource.Resource
 import java.io.ByteArrayOutputStream
@@ -51,15 +51,6 @@ public class KManifest(public val impl: Manifest) {
          * The path to the manifest file in program resources.
          */
         public const val RESOURCE_FILE: String = "META-INF/MANIFEST.MF"
-
-        /**
-         * The name of the custom manifest attribute containing a list of dependencies
-         * of a software component.
-         *
-         * @see Dependencies.parse
-         */
-        @JvmField
-        public val DEPENDS_ON_ATTR: Name = Name("Depends-On")
 
         /**
          * The name of a commonly used manifest attribute,
@@ -122,18 +113,6 @@ public class KManifest(public val impl: Manifest) {
      * Obtains the [`Bundle-Description`][BUNDLE_DESCRIPTION] attribute of the manifest.
      */
     public val bundleDescription: String? = mainAttributes[BUNDLE_DESCRIPTION]?.toString()
-
-    /**
-     * Obtains the dependencies declared in the ['Depends-On'][DEPENDS_ON_ATTR] attribute
-     * of the manifest.
-     */
-    public val dependencies: Dependencies
-        get() {
-            val dependsOnAttr = mainAttributes[DEPENDS_ON_ATTR]
-            val depsValue = dependsOnAttr.toString()
-            val deps = Dependencies.parse(depsValue)
-            return deps
-        }
 
     /**
      * Prints the content of the underlying [Manifest] instance in

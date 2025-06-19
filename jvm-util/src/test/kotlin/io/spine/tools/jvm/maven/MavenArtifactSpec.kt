@@ -24,12 +24,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.jvm.manifest
+package io.spine.tools.jvm.maven
 
 import io.kotest.matchers.shouldBe
 import io.spine.testing.TestValues.randomString
-import io.spine.tools.jvm.manifest.MavenArtifact
-import io.spine.tools.jvm.manifest.MavenArtifact.Companion.PREFIX
+import io.spine.tools.jvm.maven.MavenArtifact.Companion.PREFIX
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
