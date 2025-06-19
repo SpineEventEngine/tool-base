@@ -197,6 +197,7 @@ class VersionSpec {
     @DisplayName("detect snapshot versions")
     inner class SnapshotDetection {
 
+        @Suppress("LongParameterList")
         private fun assertIsSnapshot(
             major: Int = 1,
             minor: Int = 2,
