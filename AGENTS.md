@@ -44,7 +44,7 @@ It outlines conventions, expectations, and usage goals to ensure
 
 ## 🤖 Agent roles
 
-### 🗨️ ChatGPT
+### 🗨️ Helping with understanding and improvements
 
 - Explain code, APIs, and architecture
 - Refactor or simplify logic
@@ -55,7 +55,7 @@ It outlines conventions, expectations, and usage goals to ensure
 - Generate Gradle configurations
 - Assist with naming and conceptual clarity
 
-### 🔧 Codex — code completion and code generation
+### 🔧 Code completion and code generation
 
 - Complete functions, classes, and tests
 - Generate Kotlin idioms (e.g., extension functions, DSLs)
@@ -75,19 +75,21 @@ It outlines conventions, expectations, and usage goals to ensure
     - Smart casts
     - Data classes
     - Sealed classes
-2. Apply **Java interop** only when needed (e.g., using annotations or legacy libraries)
-3. Use **Kotlin DSL** when modifying or generating Gradle files
-4. Generate code that **compiles cleanly** and **passes static analysis**
-5. Respect **existing architecture**, naming conventions, and project structure
-6. Use `@file:JvmName`, `@JvmStatic`, etc., where appropriate.
+2. Immutable data structures. 
+3. Apply **Java interop** only when needed (e.g., using annotations or legacy libraries).
+4. Use **Kotlin DSL** when modifying or generating Gradle files.
+5. Generate code that **compiles cleanly** and **passes static analysis**.
+6. Respect **existing architecture**, naming conventions, and project structure.
+7. Use `@file:JvmName`, `@JvmStatic`, etc., where appropriate.
 
 ### ❌ Avoid
 
+- Mutable data structures
 - Java-style verbosity (e.g., builders with setters)
 - Redundant null checks (`?.let` misuse)
 - Using `!!` unless clearly justified
 - Mixing Groovy and Kotlin DSLs in build logic
-- Overuse of reflection unless requested
+- Using reflection unless requested
 
 ### General guidance
 - Adhere to the [Spine Event Engine Documentation](https://github.com/SpineEventEngine/documentation/wiki)
