@@ -164,10 +164,9 @@ AGENTS.md # LLM agent instructions (this file)
 ```
 ---
 
-## 📄 Documentation tasks for ChatGPT
+## 📄 Documentation tasks
 
-- Generate and update **KDoc** for public APIs
-- Draft/update **README.md**, **CONTRIBUTING.md**
+- Generate and update **KDoc** for `public` and `internal` APIs
 - Suggest better **names** and **abstractions**
 - Help format inline comments and design rationale
 - Generate changelogs based on Git commit summaries
@@ -176,17 +175,20 @@ AGENTS.md # LLM agent instructions (this file)
 
 ## 🧪 Testing responsibilities
 
-- **Codex** should generate tests for:
+- Generate tests for:
     - Public functions
     - Edge cases
-    - Custom serializers / deserializers
     - Extension functions and DSLs
 
-- **ChatGPT** may suggest:
+- Suggest:
     - Test coverage improvements
+    - Performance testing
     - Property-based testing
-    - Mocking and test lifecycle setups
 
+### Testing guidelines
+ - Do not use mocks, use stubs.
+ - Prefer [Kotest assertions](https://kotest.io/docs/assertions/assertions.html) over
+   assertions from JUnit or Google Truth.
 ---
 
 ## 🚨 Safety rules for Agents
