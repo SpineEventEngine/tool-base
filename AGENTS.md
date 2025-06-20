@@ -1,7 +1,8 @@
 This project follows best practices recommended by leading LLM vendors such as OpenAI, Anthropic, and Google.
 
-- Adhere to the [Spine Event Engine documentation wiki](https://github.com/SpineEventEngine/documentation/wiki) for coding style and contribution procedures.
-- When modifying code, run `./gradlew build` before committing. Changes limited to documentation or comments do not require running tests.
+- Keep communication respectful and avoid sharing sensitive data.
+- Follow the [Spine Event Engine documentation wiki](https://github.com/SpineEventEngine/documentation/wiki) for code style and contribution procedures. Referencing the guidelines is sufficient—do not copy code from the wiki.
+- Run `./gradlew build` before committing when modifying code. Changes limited to documentation or comments do not require running tests.
 ## Table of Contents
 1. [The purpose of this document](#the-purpose-of-this-document)
 2. [Project overview](#project-overview)
