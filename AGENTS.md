@@ -261,7 +261,7 @@ Safety rules ensure that LLM-generated code maintains project scalability and re
     // ChatGPT: explain this logic.
     // Codex: complete this function.
    ```
-- Agents, should ensure pull request messages are concise and descriptive:
+- Agents should ensure pull request messages are concise and descriptive:
   ```text
   feat(chatgpt): suggested DSL refactoring for query handlers  
   fix(codex): completed missing case in sealed class hierarchy
