@@ -1,8 +1,7 @@
-# `AGENTS.md`
+This project follows best practices recommended by leading LLM vendors such as OpenAI, Anthropic, and Google.
 
-> Guidance for Large Language Model (LLM) Agents (ChatGPT & Codex) collaborating on this project.
-
----
+- Adhere to the [Spine Event Engine documentation wiki](https://github.com/SpineEventEngine/documentation/wiki) for coding style and contribution procedures.
+- When modifying code, run `./gradlew build` before committing. Changes limited to documentation or comments do not require running tests.
 ## Table of Contents
 1. [The purpose of this document](#the-purpose-of-this-document)
 2. [Project overview](#project-overview)
