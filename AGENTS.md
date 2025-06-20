@@ -40,7 +40,7 @@ with AI to maintain a high-quality codebase.
 
 - **Languages**: Kotlin (primary), Java (secondary).
 - **Build Tool**: Gradle with Kotlin DSL.
-- **Architecture**: Event-driven Domain-Driven Design (DDD).
+- **Architecture**: Event-driven Command Query Responsibility Segregation (CQRS).
 - **Testing**: JUnit 5
 - **Style**: Kotlin idiomatic code preferred over Java-style code
 - **Tools Used**: Gradle plugins, IntelliJ IDEA Platform, KSP, KotlinPoet 
