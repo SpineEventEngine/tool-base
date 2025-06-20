@@ -243,6 +243,8 @@ version.gradle.kts # Declares the project version.
 
 ## 🚨 Safety rules for Agents
 
+Safety rules ensure that LLM-generated code maintains project scalability and reliability:
+
 - Do **not** auto-update external dependencies without explicit request.
 - Do **not** inject analytics or telemetry code.
 - Flag any usage of unsafe constructs (e.g., reflection, I/O on the main thread).
@@ -268,14 +270,16 @@ version.gradle.kts # Declares the project version.
 
 - When agents or humans add TODO comments, they **must** follow the format described on
   the [dedicated page](https://github.com/SpineEventEngine/documentation/wiki/TODO-comments).
+
 ---
 
 ## 🧭 LLM Goals
- - Help developers move faster without sacrificing code quality
- - Provide language-aware guidance on Kotlin/Java idioms
- - Lower the barrier to onboarding new contributors
- - Enable collaborative, explainable, and auditable development with AI
 
+These goals guide how agents (ChatGPT, Codex) are used in this project to:
+- Help developers move faster without sacrificing code quality
+- Provide language-aware guidance on Kotlin/Java idioms
+- Lower the barrier to onboarding new contributors
+- Enable collaborative, explainable, and auditable development with AI
 --- 
 
 ## 👋 Welcome, Agents!
