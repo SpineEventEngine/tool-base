@@ -1,6 +1,6 @@
 ## Table of Contents
 1. [Purpose](#-purpose)
-2. [Project overview](#️-project-overview)
+2. [Project overview](#-project-overview)
 3. [Agent responsibilities](#-agent-responsibilities)
 4. [Coding guidelines for Agents](#-coding-guidelines-for-agents)
 5. [Running builds](#running-builds)
