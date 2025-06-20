@@ -15,19 +15,24 @@
 9. [Safety Rules](#safety-rules)
 10. [Interaction Tips](#interaction-tips)
 
-## 🧠 The purpose of this document
+## 🧠 Purpose
 
-This file defines how LLM agents (e.g. **ChatGPT** and **Codex**) should
-**interact with the codebase**, **generate content**, and **assist in development workflows**
-for this project, which is based on **Kotlin** and **Java**.
+This document explains how to use **ChatGPT** and **Codex** effectively in this Kotlin/Java project.
 
-It outlines conventions, expectations, and usage goals to ensure
-**productive, safe, and consistent collaboration**.
-                                                            
+It outlines:
+
+- Agent responsibilities (who does what).
+- Coding and architectural guidelines agents must follow.
+- Instructions for creating and testing agent-generated outputs.
+
+Whether you are a developer, tester, or contributor, this guide will help you collaborate
+with AI to maintain a high-quality codebase.
+
 ### Terminology
-- **LLM**: Use when referring to the general technology.
-- **Agents**: Refers to ChatGPT, Codex, or any LLM.
- - Specific names (**ChatGPT** / **Codex** / **Claude**): Only when functionality diverges.
+- **LLM**: Refers to the general category of language models (e.g., ChatGPT, Codex, Claude).
+- **Agents**: A broader term for LLMs collaborating on this project. 
+- Use specific names (**ChatGPT**, **Codex**) when they excel at different tasks 
+  (e.g., scaffolding versus explanation).
 
 ---
 
@@ -42,44 +47,53 @@ It outlines conventions, expectations, and usage goals to ensure
 
 ---
 
-## 🤖 Agent roles
+## 🤖 Agent responsibilities
 
-### 🗨️ Helping with understanding and improvements
+| Task/Feature                      | Primary Agent | Supporting Agent | Notes                                      |
+|-----------------------------------|---------------|------------------|--------------------------------------------|
+| Writing Documentation (like KDoc) | ChatGPT       | Codex            | Use for readable, structured docs.         |
+| Explaining APIs/Architecture      | ChatGPT       | -                | Great for clarity in team workflows.       |
+| Code Generation (e.g., tests)     | Codex         | ChatGPT          | Codex produces quick scaffolding.          |
+| Code Refactoring Suggestions      | ChatGPT       | Codex            | Use ChatGPT for design-level improvements. |
+| Completing Functions/Classes      | Codex         | -                | Codex is better for direct completions.    |
+| Debugging/Test Suggestions        | ChatGPT       | Codex            | ChatGPT suggests missing scenarios.        |
 
-- Explain code, APIs, and architecture
-- Refactor or simplify logic
-- Help with design decisions and trade-offs
-- Generate documentation (KDoc, Markdown)
-- Suggest tests and edge cases
-- Summarize diffs or changes
-- Generate Gradle configurations
-- Assist with naming and conceptual clarity
 
-### 🔧 Code completion and code generation
+### Tagging pull request messages
 
-- Complete functions, classes, and tests
-- Generate Kotlin idioms (e.g., extension functions, DSLs)
-- Follow patterns from nearby code
-- Generate test scaffolds and fixtures
-- Fill in `when` branches, sealed class hierarchies, etc.
-
+While crafting GitHub PR messages, tag agent roles as needed:
+```text
+feat(chatgpt): Updated README with clearer KDoc examples
+fix(codex): Completed missing `when` branches in tests
+```
+##### Why tag pull requests?
+Tagging PRs helps the team:
+  - Track which agent contributed to specific changes.
+  - Understand whether a PR needs extra human review based on the agent’s role.
+  - Make decisions about multi-agent collaboration in reviews.
 ---
 
 ## 🧾 Coding guidelines for Agents
 
 ### ✅ Preferred
 
-1. Use **idiomatic Kotlin**, including:
-    - Extension functions
-    - `when` expressions
-    - Smart casts
-    - Data classes
-    - Sealed classes
+1. Kotlin idioms are **preferred** over Java-style approaches, including:
+   - Extension functions
+   - `when` expressions
+   - Smart casts
+   - Data classes
+   - Sealed classes
+
 2. Immutable data structures. 
+
 3. Apply **Java interop** only when needed (e.g., using annotations or legacy libraries).
+
 4. Use **Kotlin DSL** when modifying or generating Gradle files.
+
 5. Generate code that **compiles cleanly** and **passes static analysis**.
+
 6. Respect **existing architecture**, naming conventions, and project structure.
+
 7. Use `@file:JvmName`, `@JvmStatic`, etc., where appropriate.
 
 ### ❌ Avoid
@@ -106,8 +120,13 @@ It outlines conventions, expectations, and usage goals to ensure
 ### Naming convention for variables
 - Prefer simple nouns over composite nouns. E.g., `user` is better than `userAccount`.
 
+### Safety Rules Checklist
+- ✅ Ensure all generated code compiles and passes static analysis.
+- ❌ Avoid unnecessary reflection or unsafe code (e.g., `!!` in Kotlin).
+- ✅ Do not auto-update external dependencies unless explicitly allowed.
+
 ---
-## Incrementing a patch version for each pull request
+## Version policy
 
 ### We use semver
 The version number of the project is kept in the file named `version.gradle.kts` which resides
@@ -116,18 +135,33 @@ in the root of the project.
 The version numbers in these files follow the conventions of
 [Semantic Versioning 2.0.0](https://semver.org/).
 
-### Incrementing the version
-When creating a pull request, the version **must** be updated by incrementing
-the **last component** of the version number by one.
-For example, the version `"2.0.0-SNAPSHOT.42"` should become `"2.0.0-SNAPSHOT.43"`   
+### Increment a patch version for each pull request
 
-If the last component has leading zeroes, keep the padding of zeroes so that the width of
-the last component stays the same. For example, the version `"2.0.0-SNAPSHOT.009"` should become
-`"2.0.0-SNAPSHOT.010"`.
+1. Open the `version.gradle.kts` file in the root directory.
 
-### What if?
-Not incrementing the version will result in **build failure** because we have a GitHub workflow
-which checks for the increment.
+2. Increment the **last number** of the version. Retain zero-padding if applicable:
+    - Example: `"2.0.0-SNAPSHOT.009"` → `"2.0.0-SNAPSHOT.010"`
+
+3. Commit the `version.gradle.kts` file in a separate commit with the comment of the following
+   format:
+    ```text
+    Bump version -> `$newVersion`
+    ```
+    where `$newVersion` is the version number without quotes. For example:
+    ```text
+    Bump version -> `2.0.0-SNAPSHOT.010`
+    ```
+4. Run `./gradlew clean build`
+
+5. Commit updated files `pom.xml` and `dependencies.md` with the following comment: 
+   ```text
+   Update dependency reports.
+   ```
+
+### What happens if you forget to increment the version?
+
+Build failure! A GitHub workflow checks for correct version increments.
+
 
 ### Resolving conflicts in `version.gradle.kts`
 A branch conflict over the version number should be resolved as described below.
@@ -139,16 +173,29 @@ A branch conflict over the version number should be resolved as described below.
 
 ## Running builds
 
-1. When modifying code, run `./gradlew build` before committing.
-2. If Protobuf (`.proto`) files are modified **always** run `./gradlew clean build`.
-3. Documentation-only changes do not require running tests.
+1. When modifying code, run:
+   ```bash
+   ./gradlew build
+   ```
+   
+2. If Protobuf (`.proto`) files are modified run:
+   ```bash
+   ./gradlew clean build
+   ````
 
+3. Documentation-only changes run:
+   ```bash
+   ./gradlew dokka
+   ```
+   Documentation-only changes do not require running tests!
 ---
 
 ## 📁 Project structure expectations
 
 ```yaml
-<module1>
+.github
+buildSrc/
+<module-1>
   src/
   ├── main/
   │ ├── kotlin/ # Kotlin source files
@@ -156,13 +203,13 @@ A branch conflict over the version number should be resolved as described below.
   ├── test/
   │ └── kotlin/ # Unit and integration tests
   build.gradle.kts # Kotlin-based build configuration
-<module2>
-<module3>
+<module-2>
+<module-3>
 build.gradle.kts # Kotlin-based build configuration
 settings.gradle.kts # Project structure and settings
 README.md # Project overview
 AGENTS.md # LLM agent instructions (this file)
-
+version.gradle.kts # Declares the project version. 
 ```
 ---
 
@@ -175,22 +222,23 @@ AGENTS.md # LLM agent instructions (this file)
 
 ---
 
-## 🧪 Testing responsibilities
+## 🧪 Testing
 
-- Generate tests for:
-    - Public functions
-    - Edge cases
-    - Extension functions and DSLs
+### Guidelines
+- Do not use mocks, use stubs.
+- Prefer [Kotest assertions](https://kotest.io/docs/assertions/assertions.html) over
+  assertions from JUnit or Google Truth.
 
-- Suggest:
-    - Test coverage improvements
-    - Performance testing
-    - Property-based testing
+### Responsibilities
 
-### Testing guidelines
- - Do not use mocks, use stubs.
- - Prefer [Kotest assertions](https://kotest.io/docs/assertions/assertions.html) over
-   assertions from JUnit or Google Truth.
+#### Codex
+- Generate unit tests for APIs (handles edge cases/scenarios).
+- Supply scaffolds for typical Kotlin patterns (`when`, sealed classes).
+
+#### ChatGPT
+- Suggest test coverage improvements.
+- Propose property-based testing or rare edge case scenarios.
+
 ---
 
 ## 🚨 Safety rules for Agents
@@ -202,7 +250,7 @@ AGENTS.md # LLM agent instructions (this file)
 
 ---
 
-## 💬 Interaction tips
+## 💬 Interaction tips – key to effective collaboration!
 
 - Human programmers may use inline comments to guide agents:
   ```kotlin
