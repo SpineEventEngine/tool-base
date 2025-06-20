@@ -10,9 +10,9 @@
 4. [Coding guidelines](#coding-guidelines)
 5. [Running builds](#running-builds)
 6. [Incrementing a version](#incrementing-a-patch-version)
-7. [Documentation Tasks](#documentation-tasks)
-8. [Testing Responsibilities](#testing-responsibilities)
-9. [Safety Rules](#safety-rules)
+7. [Documentation tasks](#documentation-tasks)
+8. [Testing responsibilities](#testing-responsibilities)
+9. [Safety rules for Agents](#-safety-rules-for-agents)
 10. [Interaction Tips](#interaction-tips)
 
 ## 🧠 Purpose
@@ -51,12 +51,12 @@ with AI to maintain a high-quality codebase.
 
 | Task/Feature                      | Primary Agent | Supporting Agent | Notes                                      |
 |-----------------------------------|---------------|------------------|--------------------------------------------|
-| Writing Documentation (like KDoc) | ChatGPT       | Codex            | Use for readable, structured docs.         |
-| Explaining APIs/Architecture      | ChatGPT       | -                | Great for clarity in team workflows.       |
-| Code Generation (e.g., tests)     | Codex         | ChatGPT          | Codex produces quick scaffolding.          |
-| Code Refactoring Suggestions      | ChatGPT       | Codex            | Use ChatGPT for design-level improvements. |
-| Completing Functions/Classes      | Codex         | -                | Codex is better for direct completions.    |
-| Debugging/Test Suggestions        | ChatGPT       | Codex            | ChatGPT suggests missing scenarios.        |
+| Writing documentation (like KDoc) | ChatGPT       | Codex            | Use for readable, structured docs.         |
+| Explaining APIs and architecture  | ChatGPT       | -                | Great for clarity in team workflows.       |
+| Code generation (e.g., tests)     | Codex         | ChatGPT          | Codex produces quick scaffolding.          |
+| Code refactoring suggestions      | ChatGPT       | Codex            | Use ChatGPT for design-level improvements. |
+| Completing functions or classes   | Codex         | -                | Codex is better for direct completions.    |
+| Debugging and test suggestions    | ChatGPT       | Codex            | ChatGPT suggests missing scenarios.        |
 
 
 ### Tagging pull request messages
@@ -66,7 +66,7 @@ While crafting GitHub PR messages, tag agent roles as needed:
 feat(chatgpt): Updated README with clearer KDoc examples
 fix(codex): Completed missing `when` branches in tests
 ```
-##### Why tag pull requests?
+#### Why tag pull requests?
 Tagging PRs helps the team:
   - Track which agent contributed to specific changes.
   - Understand whether a PR needs extra human review based on the agent’s role.
@@ -215,10 +215,12 @@ version.gradle.kts # Declares the project version.
 
 ## 📄 Documentation tasks
 
-- Generate and update **KDoc** for `public` and `internal` APIs
-- Suggest better **names** and **abstractions**
-- Help format inline comments and design rationale
-- Generate changelogs based on Git commit summaries
+- Generate and update **KDoc** for `public` and `internal` APIs.
+  Remember to focus on structure for readability.
+
+- Suggest better **names** and **abstractions**.
+
+- Help format inline comments and design rationale.
 
 ---
 
@@ -242,8 +244,6 @@ version.gradle.kts # Declares the project version.
 ---
 
 ## 🚨 Safety rules for Agents
-
-Safety rules ensure that LLM-generated code maintains project scalability and reliability:
 
 - Do **not** auto-update external dependencies without explicit request.
 - Do **not** inject analytics or telemetry code.
