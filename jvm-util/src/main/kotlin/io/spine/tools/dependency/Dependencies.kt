@@ -139,10 +139,8 @@ public class Dependencies(public val list: List<Dependency>) {
      * @throws java.io.IOException if an I/O error occurs
      */
     public fun store(file: File) {
-        if (file.exists() && file.isDirectory) {
-           throw IllegalArgumentException(
-               "Cannot store dependencies to the directory: `${file.absolutePath}`."
-           )
+        require(!file.exists() || !file.isDirectory) {
+            "Cannot store dependencies to the directory: `${file.absolutePath}`."
         }
 
         // Create parent directories if they don't exist.
