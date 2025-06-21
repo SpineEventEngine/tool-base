@@ -102,15 +102,13 @@ Each module follows a standard structure:
 
 ## Coding Best Practices
 
-- Prefer Kotlin idioms over Java-style approaches
-- Use immutable data structures
-- Apply Java interop only when needed
-- Use Kotlin DSL for Gradle files
-- Write clear, incremental commits with descriptive messages
-- Include automated tests for functionality changes
-- Keep pull requests focused and small
-- When the Kotlin code modified or added make sure it passes the detekt check:
-  `./gradlew :<module_name>:detekt`
+- Prefer Kotlin idioms over Java-style approaches.
+- Use immutable data structures.
+- Apply Java interop only when needed.
+- Use Kotlin DSL for Gradle files.
+- Write clear, incremental commits with descriptive messages.
+- Include automated tests for functionality changes.
+- Keep pull requests focused and small.
 
 ## Code Formatting Guidelines
 - Start parameter descriptions with a capital letter.
@@ -133,26 +131,26 @@ Each module follows a standard structure:
 
 ## Testing Guidelines
 
-- Use stubs instead of mocks for test doubles
-- Prefer Kotest assertions over JUnit or Google Truth
-- Ensure tests cover edge cases and typical scenarios
+- Use stubs instead of mocks for test doubles.
+- Prefer Kotest assertions over JUnit or Google Truth.
+- Ensure tests cover edge cases and typical scenarios.
 - When writing tests, avoid comments that explain the code. Prefer self-explanatory code.
 
 ## Junie Assistance Tips
 
 When working with Junie AI on the Spine Tool-Base project:
 
-1. **Project Navigation**: Use `search_project` to find relevant files and code segments
-2. **Code Understanding**: Request file structure with `get_file_structure` before editing
-3. **Code Editing**: Make minimal changes with `search_replace` to maintain project consistency
-4. **Testing**: Verify changes with `run_test` on relevant test files
-5. **Documentation**: Follow KDoc style for documentation
-6. **Kotlin Idioms**: Prefer Kotlin-style solutions over Java-style approaches
-7. **Version Updates**: Remember to update `version.gradle.kts` for PRs
+1. **Project Navigation**: Use `search_project` to find relevant files and code segments.
+2. **Code Understanding**: Request file structure with `get_file_structure` before editing.
+3. **Code Editing**: Make minimal changes with `search_replace` to maintain project consistency.
+4. **Testing**: Verify changes with `run_test` on relevant test files.
+5. **Documentation**: Follow KDoc style for documentation.
+6. **Kotlin Idioms**: Prefer Kotlin-style solutions over Java-style approaches.
+7. **Version Updates**: Remember to update `version.gradle.kts` for PRs.
 
 ## Common Tasks
 
-- **Adding a new dependency**: Update relevant files in `buildSrc` directory
-- **Creating a new module**: Follow existing module structure patterns
-- **Documentation**: Use KDoc style for public and internal APIs
-- **Testing**: Create comprehensive tests using Kotest assertions
+- **Adding a new dependency**: Update relevant files in `buildSrc` directory.
+- **Creating a new module**: Follow existing module structure patterns.
+- **Documentation**: Use KDoc style for public and internal APIs.
+- **Testing**: Create comprehensive tests using Kotest assertions.
