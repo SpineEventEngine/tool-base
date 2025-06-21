@@ -3,19 +3,19 @@ This project follows best practices recommended by leading LLM vendors such as O
 - Adhere to the [Spine Event Engine documentation wiki](https://github.com/SpineEventEngine/documentation/wiki) for coding style and contribution procedures.
 - When modifying code, run `./gradlew build` before committing. Changes limited to documentation or comments do not require running tests.
 ## Table of Contents
-1. [🧠 Purpose](#purpose)
-2. [🛠️ Project overview](#project-overview)
-3. [🤖 Agent responsibilities](#agent-responsibilities)
-4. [🧾 Coding guidelines for Agents](#coding-guidelines-for-agents)
+1. [🧠 Purpose](#-purpose)
+2. [🛠️ Project overview](#-project-overview)
+3. [🤖 Agent responsibilities](#-agent-responsibilities)
+4. [🧾 Coding guidelines for Agents](#-coding-guidelines-for-agents)
 5. [Running builds](#running-builds)
 6. [Version policy](#version-policy)
-7. [📁 Project structure expectations](#project-structure-expectations)
-8. [📄 Documentation tasks](#documentation-tasks)
-9. [🧪 Testing](#testing)
-10. [🚨 Safety rules for Agents](#safety-rules-for-agents)
-11. [💬 Interaction tips – key to effective collaboration!](#interaction-tips-key-to-effective-collaboration)
-12. [🧭 LLM Goals](#llm-goals)
-13. [👋 Welcome, Agents!](#welcome-agents)
+7. [📁 Project structure expectations](#-project-structure-expectations)
+8. [📄 Documentation tasks](#-documentation-tasks)
+9. [🧪 Testing](#-testing)
+10. [🚨 Safety rules for Agents](#-safety-rules-for-agents)
+11. [💬 Interaction tips – key to effective collaboration!](#-interaction-tips--key-to-effective-collaboration)
+12. [🧭 LLM Goals](#-llm-goals)
+13. [👋 Welcome, Agents!](#-welcome-agents)
 
 ## 🧠 Purpose
 
