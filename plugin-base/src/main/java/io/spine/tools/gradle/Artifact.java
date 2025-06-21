@@ -28,6 +28,7 @@ package io.spine.tools.gradle;
 
 import com.google.common.base.Objects;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.gradle.api.artifacts.Dependency;
 
@@ -55,7 +56,7 @@ public final class Artifact {
     /**
      * The artifact ID of the published {@code plugin-base} module.
      */
-    public static final String PLUGIN_BASE_ID = "spine-plugin-base";
+    public static final String PLUGIN_BASE_ID = "plugin-base";
 
     private static final char COLON = ':';
     private static final char AT = '@';
@@ -101,12 +102,12 @@ public final class Artifact {
                 .build();
     }
 
-    private static <T>
-    T ensureProperty(Dependency dependency, Supplier<T> accessor, String propertyName) {
+    private static <T extends @Nullable Object >
+    @NonNull T ensureProperty(Dependency dependency, Supplier<T> accessor, String propertyName) {
         var value = accessor.get();
         checkArgument(
                 value != null,
-                "The dependency `%s` does not have a %s.", dependency, propertyName
+                "The dependency `%s` does not have a property named `%s`.", dependency, propertyName
         );
         return value;
     }
