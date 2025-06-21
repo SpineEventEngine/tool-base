@@ -28,6 +28,7 @@ package io.spine.tools.version
 
 import io.spine.tools.jvm.jar.KManifest
 import io.spine.tools.version.Version.Companion.SEPARATOR
+import io.spine.tools.version.Version.Companion.SNAPSHOT
 import java.util.jar.Attributes.Name.IMPLEMENTATION_VERSION
 
 /**
@@ -59,12 +60,10 @@ public data class Version(
         }
 
     /**
-     * Returns `true` if the version contains `snapshot` (in any case),
-     * `false` otherwise.
+     * Returns `true` if the version contains `SNAPSHOT` (in any case), `false` otherwise.
      */
-    public fun isSnapshot(): Boolean {
-        return toString().contains(SNAPSHOT, ignoreCase = true)
-    }
+    public val isSnapshot: Boolean
+        get() = preRelease.containsSnapshot || buildMetadata.containsSnapshot
 
     /**
      * Compares this version with the specified version for order
@@ -75,15 +74,9 @@ public data class Version(
      */
     @Suppress("ReturnCount")
     override fun compareTo(other: Version): Int {
-        // Compare major, minor, patch.
-        val majorComparison = major.compareTo(other.major)
-        if (majorComparison != 0) return majorComparison
-
-        val minorComparison = minor.compareTo(other.minor)
-        if (minorComparison != 0) return minorComparison
-
-        val patchComparison = patch.compareTo(other.patch)
-        if (patchComparison != 0) return patchComparison
+        comparePart(major, other.major)?.let { return it }
+        comparePart(minor, other.minor)?.let { return it }
+        comparePart(patch, other.patch)?.let { return it }
 
         // Pre-release versions have lower precedence than the associated normal version.
         if (preRelease == null && other.preRelease != null) return 1
@@ -97,6 +90,13 @@ public data class Version(
         // Build metadata does not affect precedence.
         return 0
     }
+
+    /**
+     * Returns the string representation of this version.
+     *
+     * @return the string representation of this version
+     */
+    override fun toString(): String = value
 
     public companion object {
 
@@ -178,6 +178,14 @@ public data class Version(
             return Version(major, minor, patch, preRelease, buildMetadata)
         }
     }
+}
+
+private val String?.containsSnapshot: Boolean
+    get() = this?.contains(SNAPSHOT, ignoreCase = true) ?: false
+
+private fun comparePart(first: Int, second: Int): Int? {
+    val comparison = first.compareTo(second)
+    return if (comparison != 0) comparison else null
 }
 
 /**

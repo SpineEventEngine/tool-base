@@ -117,6 +117,20 @@ class VersionSpec {
         }
     }
 
+    @Test
+    fun ` provide 'toString' returning 'value'`() {
+        val simpleVersion = Version(1, 2, 3)
+        simpleVersion.toString() shouldBe simpleVersion.value
+
+        val preReleaseVersion = Version(1, 2, 3, "alpha")
+        preReleaseVersion.toString() shouldBe preReleaseVersion.value
+
+        val buildMetadataVersion = Version(1, 2, 3, null, "build.123")
+        buildMetadataVersion.toString() shouldBe buildMetadataVersion.value
+
+        val fullVersion = Version(1, 2, 3, "beta", "build.456")
+        fullVersion.toString() shouldBe fullVersion.value
+    }
 
     @Nested
     @DisplayName("parse from string")
@@ -206,7 +220,7 @@ class VersionSpec {
             buildMetadata: String? = null,
             expected: Boolean
         ) {
-            Version(major, minor, patch, preRelease, buildMetadata).isSnapshot() shouldBe expected
+            Version(major, minor, patch, preRelease, buildMetadata).isSnapshot shouldBe expected
         }
 
         @Test
