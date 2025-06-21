@@ -275,10 +275,10 @@ version.gradle.kts # Declares the project version.
 ## 🧭 LLM Goals
 
 These goals guide how agents (ChatGPT, Codex) are used in this project to:
-- Help developers move faster without sacrificing code quality
-- Provide language-aware guidance on Kotlin/Java idioms
-- Lower the barrier to onboarding new contributors
-- Enable collaborative, explainable, and auditable development with AI
+- Help developers move faster without sacrificing code quality.
+- Provide language-aware guidance on Kotlin/Java idioms.
+- Lower the barrier to onboarding new contributors.
+- Enable collaborative, explainable, and auditable development with AI.
 --- 
 
 ## 👋 Welcome, Agents!
