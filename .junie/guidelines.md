@@ -113,6 +113,7 @@ Each module follows a standard structure:
   `./gradlew :<module_name>:detekt`
 
 ## Code Formatting Guidelines
+- Start parameter descriptions with a capital letter.
 - In-line code fragments are always surrounded with back ticks. E.g., `code`.
 - File and directory names are code and should be formatted as such.
 - Block code fragments in documentation and diagnostic messages must be surrounded
