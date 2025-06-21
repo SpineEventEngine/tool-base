@@ -37,11 +37,11 @@ with AI to maintain a high-quality codebase.
 ## 🛠️ Project overview
 
 - **Languages**: Kotlin (primary), Java (secondary).
-- **Build Tool**: Gradle with Kotlin DSL.
-- **Architecture**: Event-driven Domain-Driven Design (DDD).
-- **Testing**: JUnit 5
-- **Style**: Kotlin idiomatic code preferred over Java-style code
-- **Tools Used**: Gradle plugins, IntelliJ IDEA Platform, KSP, KotlinPoet 
+- **Build tool**: Gradle with Kotlin DSL.
+- **Architecture**: Event-driven Command Query Responsibility Segregation (CQRS).
+- **Static analysis**: detekt, ErrorProne, Checkstyle, PMD. 
+- **Testing**: JUnit 5, Kotest Assertions, Codecov.
+- **Tools used**: Gradle plugins, IntelliJ IDEA Platform, KSP, KotlinPoet, Dokka. 
 
 ---
 
@@ -104,10 +104,10 @@ Tagging PRs helps the team:
 - Using reflection unless requested
 
 ### General guidance
-- Adhere to the [Spine Event Engine Documentation](https://github.com/SpineEventEngine/documentation/wiki)
+- Adhere to the [Spine Event Engine Documentation][spine-docs]
   for coding style and contribution procedures. 
 
-- The conventions on the [Spine Event Engine Documentation](https://github.com/SpineEventEngine/documentation/wiki)
+- The conventions on the [Spine Event Engine Documentation][spine-docs]
   page and other pages in this Wiki area **take precedence over** standard Kotlin or
   Java conventions.
 
@@ -131,7 +131,7 @@ The version number of the project is kept in the file named `version.gradle.kts`
 in the root of the project.
 
 The version numbers in these files follow the conventions of
-[Semantic Versioning 2.0.0](https://semver.org/).
+[Semantic Versioning 2.0.0][semver].
 
 ### Increment a patch version for each pull request
 
@@ -226,7 +226,7 @@ version.gradle.kts # Declares the project version.
 
 ### Guidelines
 - Do not use mocks, use stubs.
-- Prefer [Kotest assertions](https://kotest.io/docs/assertions/assertions.html) over
+- Prefer [Kotest assertions][kotest-assertions] over
   assertions from JUnit or Google Truth.
 
 ### Responsibilities
@@ -267,7 +267,7 @@ version.gradle.kts # Declares the project version.
 - Encourage `// TODO:` or `// FIXME:` comments to be clarified by ChatGPT.
 
 - When agents or humans add TODO comments, they **must** follow the format described on
-  the [dedicated page](https://github.com/SpineEventEngine/documentation/wiki/TODO-comments).
+  the [dedicated page][todo-comments].
 
 ---
 
@@ -284,3 +284,9 @@ These goals guide how agents (ChatGPT, Codex) are used in this project to:
  - You are here to help.
  - Stay consistent, stay clear, and help this Kotlin/Java codebase become more robust,
    elegant, and maintainable.
+
+<!-- External links -->
+[spine-docs]: https://github.com/SpineEventEngine/documentation/wiki
+[semver]: https://semver.org/
+[kotest-assertions]: https://kotest.io/docs/assertions/assertions.html
+[todo-comments]: https://github.com/SpineEventEngine/documentation/wiki/TODO-comments
