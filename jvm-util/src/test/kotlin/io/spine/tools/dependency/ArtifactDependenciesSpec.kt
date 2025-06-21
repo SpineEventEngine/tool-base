@@ -28,6 +28,7 @@ package io.spine.tools.dependency
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.collections.shouldHaveSize
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -39,14 +40,20 @@ import java.nio.file.Path
 @DisplayName("`ArtifactDependencies` should")
 internal class ArtifactDependenciesSpec {
 
+    private lateinit var toolBase: MavenArtifact
+    private lateinit var emptyDependencies: Dependencies
+
+    @BeforeEach
+    fun setUp() {
+        toolBase = MavenArtifact("io.spine.tools", "tool-base", "2.0.0")
+        emptyDependencies = Dependencies(emptyList())
+    }
+
     @Test
     fun `return artifact identifier in toString`() {
-        val artifact = MavenArtifact("io.spine.tools", "tool-base", "2.0.0")
-        val dependencies = Dependencies(emptyList())
+        val artifactDependencies = ArtifactDependencies(toolBase, emptyDependencies)
 
-        val artifactDependencies = ArtifactDependencies(artifact, dependencies)
-
-        artifactDependencies.toString() shouldBe artifact.toString()
+        artifactDependencies.toString() shouldBe toolBase.toString()
     }
 
     @Nested
@@ -55,50 +62,50 @@ internal class ArtifactDependenciesSpec {
         @TempDir
         lateinit var tempDir: Path
 
+        private lateinit var coreJava: MavenArtifact
+        private lateinit var gradleWrapper: IvyDependency
+        private lateinit var dependencies: Dependencies
+        private lateinit var artifactDependencies: ArtifactDependencies
+
+        @BeforeEach
+        fun setUp() {
+            coreJava = MavenArtifact("io.spine", "core-java", "2.0.1")
+            gradleWrapper = IvyDependency("org.gradle", "wrapper", "7.4.2")
+            dependencies = Dependencies(listOf(coreJava, gradleWrapper))
+            artifactDependencies = ArtifactDependencies(toolBase, dependencies)
+        }
+
         @Test
         fun `store and load with no dependencies`() {
-            val artifact = MavenArtifact("io.spine.tools", "tool-base", "2.0.0")
-            val dependencies = Dependencies(emptyList())
-            val artifactDependencies = ArtifactDependencies(artifact, dependencies)
+            val noDependencies = Dependencies(emptyList())
+            val artifactWithNoDeps = ArtifactDependencies(toolBase, noDependencies)
 
             val file = tempDir.resolve("artifact-dependencies.txt").toFile()
 
-            artifactDependencies.store(file)
+            artifactWithNoDeps.store(file)
 
             val loaded = ArtifactDependencies.load(file)
 
-            loaded.artifact shouldBe artifact
+            loaded.artifact shouldBe toolBase
             loaded.dependencies.list shouldHaveSize 0
         }
 
         @Test
         fun `store and load with dependencies`() {
-            val artifact = MavenArtifact("io.spine.tools", "tool-base", "2.0.0")
-            val dep1 = MavenArtifact("io.spine", "core-java", "2.0.1")
-            val dep2 = IvyDependency("org.gradle", "wrapper", "7.4.2")
-            val dependencies = Dependencies(listOf(dep1, dep2))
-            val artifactDependencies = ArtifactDependencies(artifact, dependencies)
-
             val file = tempDir.resolve("artifact-dependencies.txt").toFile()
 
             artifactDependencies.store(file)
 
             val loaded = ArtifactDependencies.load(file)
 
-            loaded.artifact shouldBe artifact
+            loaded.artifact shouldBe toolBase
             loaded.dependencies.list shouldHaveSize 2
-            loaded.dependencies.list[0] shouldBe dep1
-            loaded.dependencies.list[1] shouldBe dep2
+            loaded.dependencies.list[0] shouldBe coreJava
+            loaded.dependencies.list[1] shouldBe gradleWrapper
         }
 
         @Test
         fun `verify file content`() {
-            val artifact = MavenArtifact("io.spine.tools", "tool-base", "2.0.0")
-            val dep1 = MavenArtifact("io.spine", "core-java", "2.0.1")
-            val dep2 = IvyDependency("org.gradle", "wrapper", "7.4.2")
-            val dependencies = Dependencies(listOf(dep1, dep2))
-            val artifactDependencies = ArtifactDependencies(artifact, dependencies)
-
             val file = tempDir.resolve("artifact-dependencies.txt").toFile()
 
             artifactDependencies.store(file)
@@ -106,9 +113,9 @@ internal class ArtifactDependenciesSpec {
             val lines = Files.readAllLines(file.toPath())
 
             lines shouldHaveSize 3
-            lines[0] shouldBe artifact.toString()
-            lines[1] shouldBe dep1.toString()
-            lines[2] shouldBe dep2.toString()
+            lines[0] shouldBe toolBase.toString()
+            lines[1] shouldBe coreJava.toString()
+            lines[2] shouldBe gradleWrapper.toString()
         }
     }
 
@@ -119,12 +126,15 @@ internal class ArtifactDependenciesSpec {
         @TempDir
         lateinit var tempDir: Path
 
+        private lateinit var artifactDependencies: ArtifactDependencies
+
+        @BeforeEach
+        fun setUp() {
+            artifactDependencies = ArtifactDependencies(toolBase, emptyDependencies)
+        }
+
         @Test
         fun `storing to a directory`() {
-            val artifact = MavenArtifact("io.spine.tools", "tool-base", "2.0.0")
-            val dependencies = Dependencies(emptyList())
-            val artifactDependencies = ArtifactDependencies(artifact, dependencies)
-
             assertThrows<IllegalArgumentException> {
                 artifactDependencies.store(tempDir.toFile())
             }
@@ -163,6 +173,64 @@ internal class ArtifactDependenciesSpec {
 
             assertThrows<IllegalArgumentException> {
                 ArtifactDependencies.load(file)
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("load from resource")
+    inner class LoadFromResource {
+
+        private val resourcePath = "artifact-dependencies.txt"
+
+        private lateinit var coreJavaArtifact: MavenArtifact
+        private lateinit var gradleWrapperDependency: IvyDependency
+
+        @BeforeEach
+        fun setUp() {
+            coreJavaArtifact = MavenArtifact("io.spine", "core-java", "2.0.1")
+            gradleWrapperDependency = IvyDependency("org.gradle", "wrapper", "7.4.2")
+        }
+
+        @Test
+        fun `using class loader`() {
+            val loaded = ArtifactDependencies.loadFromResource(
+                resourcePath,
+                ArtifactDependenciesSpec::class.java.classLoader
+            )
+
+            loaded.artifact shouldBe toolBase
+            loaded.dependencies.list.let {
+                it shouldHaveSize 2
+                it[0] shouldBe coreJavaArtifact
+                it[1] shouldBe gradleWrapperDependency
+            }
+        }
+
+        @Test
+        fun `using class`() {
+            val loaded = ArtifactDependencies.loadFromResource(
+                resourcePath, 
+                ArtifactDependenciesSpec::class.java
+            )
+
+            loaded.artifact shouldBe toolBase
+            loaded.dependencies.list.let {
+                it shouldHaveSize 2
+                it[0] shouldBe coreJavaArtifact
+                it[1] shouldBe gradleWrapperDependency
+            }
+        }
+
+        @Test
+        fun `throw when resource does not exist`() {
+            val nonExistentPath = "non-existent.txt"
+
+            assertThrows<IllegalStateException> {
+                ArtifactDependencies.loadFromResource(
+                    nonExistentPath, 
+                    ArtifactDependenciesSpec::class.java
+                )
             }
         }
     }

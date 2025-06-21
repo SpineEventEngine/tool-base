@@ -26,11 +26,10 @@
 
 package io.spine.tools.gradle.jvm.plugin
 
+import io.spine.tools.gradle.jvm.plugin.WriteDependencies.Companion.TASK_NAME
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginExtension
-import org.gradle.api.tasks.TaskContainer
-import io.spine.tools.gradle.jvm.plugin.WriteDependencies.Companion.TASK_NAME
 
 /**
  * A Gradle plugin that provides JVM utilities.

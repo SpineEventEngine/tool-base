@@ -26,6 +26,7 @@
 
 package io.spine.tools.dependency
 
+import io.spine.tools.jvm.resource.Resource
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.StandardOpenOption.CREATE
@@ -68,7 +69,7 @@ public data class ArtifactDependencies(
         // Write the artifact as the first line, followed by its dependencies.
         val lines = mutableListOf(artifact.toString())
         lines.addAll(dependencies.list.map { it.toString() })
-        
+
         Files.write(file.toPath(), lines, CREATE, TRUNCATE_EXISTING, WRITE)
     }
 
@@ -95,13 +96,55 @@ public data class ArtifactDependencies(
             }
 
             val lines = Files.readAllLines(file.toPath())
+            return parseLines(lines, "file: `${file.absolutePath}`")
+        }
+
+        /**
+         * Loads artifact dependencies from a resource.
+         *
+         * @param path the path to the resource.
+         * @param classLoader the class loader to use for loading the resource.
+         * @return the loaded artifact dependencies.
+         * @throws IllegalStateException if the resource does not exist, is empty, or the first line
+         *   is not a valid Maven artifact reference.
+         */
+        public fun loadFromResource(path: String, classLoader: ClassLoader): ArtifactDependencies {
+            val resource = Resource.file(path, classLoader)
+            val content = resource.read()
+            val lines = content.lines().filter { it.isNotBlank() }
+            return parseLines(lines, "resource: `$path`")
+        }
+
+        /**
+         * Loads artifact dependencies from a resource.
+         *
+         * @param path the path to the resource.
+         * @param cls the class to use for loading the resource.
+         * @return the loaded artifact dependencies.
+         * @throws IllegalStateException if the resource does not exist, is empty, or the first line
+         *   is not a valid Maven artifact reference.
+         */
+        public fun loadFromResource(path: String, cls: Class<*>): ArtifactDependencies {
+            return loadFromResource(path, cls.classLoader)
+        }
+
+        /**
+         * Parses the given lines into an [ArtifactDependencies] instance.
+         *
+         * @param lines the lines to parse.
+         * @param source the source of the lines, used for error messages.
+         * @return the parsed artifact dependencies.
+         * @throws IllegalStateException if the lines are empty or the first line is not
+         *   a valid Maven artifact reference.
+         */
+        private fun parseLines(lines: List<String>, source: String): ArtifactDependencies {
             require(lines.isNotEmpty()) {
-                "Cannot load artifact dependencies from the empty file: `${file.absolutePath}`."
+                "Cannot load artifact dependencies from the empty $source."
             }
 
             val artifactLine = lines[0]
             require(artifactLine.startsWith(MavenArtifact.PREFIX)) {
-                "The first line of the file must be a Maven artifact. Encountered: `$artifactLine`."
+                "The first line of the $source must be a Maven artifact. Encountered: `$artifactLine`."
             }
             val artifact = MavenArtifact.parse(artifactLine)
 

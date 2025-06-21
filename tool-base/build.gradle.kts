@@ -30,12 +30,10 @@ import com.google.protobuf.gradle.id
 import io.spine.dependency.lib.Grpc
 import io.spine.dependency.lib.GrpcKotlin
 import io.spine.dependency.lib.JavaPoet
-import io.spine.dependency.lib.JavaX
 import io.spine.dependency.lib.Protobuf
 import io.spine.dependency.lib.Roaster
 import io.spine.dependency.local.Base
 import io.spine.dependency.local.Logging
-import io.spine.dependency.local.TestLib
 import io.spine.gradle.protobuf.setup
 
 plugins {
