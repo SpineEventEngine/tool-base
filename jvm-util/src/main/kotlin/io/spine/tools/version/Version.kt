@@ -63,7 +63,7 @@ public data class Version(
      * `false` otherwise.
      */
     public fun isSnapshot(): Boolean {
-        return toString().contains("snapshot", ignoreCase = true)
+        return toString().contains(SNAPSHOT, ignoreCase = true)
     }
 
     /**
@@ -114,6 +114,11 @@ public data class Version(
          * The separator between the version and build metadata.
          */
         public const val BUILD_METADATA_SEPARATOR: String = "+"
+
+        /**
+         * The identifier for snapshot versions.
+         */
+        public const val SNAPSHOT: String = "SNAPSHOT"
 
         /**
          * Obtains the version from the [IMPLEMENTATION_VERSION] attribute of
