@@ -28,16 +28,34 @@ package io.spine.tools.gradle.jvm.plugin
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.plugins.JavaPluginExtension
+import org.gradle.api.tasks.TaskContainer
+import io.spine.tools.gradle.jvm.plugin.WriteDependencies.Companion.TASK_NAME
 
 /**
  * A Gradle plugin that provides JVM utilities.
+ *
+ * The plugin adds a task to write all dependencies of a Gradle project to a file.
  */
 public class JvmUtilPlugin : Plugin<Project> {
 
     /**
      * Applies the plugin to the given project.
      */
-    override fun apply(project: Project) {
-        // Plugin implementation will be added here.
+    override fun apply(project: Project): Unit = with(project) {
+        val metaInfDir = "META-INF/io.spine"
+        val outputDir = layout.buildDirectory.dir(metaInfDir)
+
+        val task = tasks.register(TASK_NAME, WriteDependencies::class.java) { task ->
+            task.outputDirectory.convention(outputDir)
+        }
+
+        tasks.named("processResources").configure { it.dependsOn(task) }
+
+        // Add the output directory to the resources
+        extensions.getByType(JavaPluginExtension::class.java)
+            .sourceSets.getByName("main")
+            .resources
+            .srcDir(outputDir)
     }
 }
