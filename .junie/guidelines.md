@@ -115,12 +115,14 @@ Each module follows a standard structure:
      // Nested code example.
      ````
   ```
+- Descriptions of parameters, properties, and exceptions in KDoc must be terminated with a comma.
 
 ## Testing Guidelines
 
 - Use stubs instead of mocks for test doubles
 - Prefer Kotest assertions over JUnit or Google Truth
 - Ensure tests cover edge cases and typical scenarios
+- When writing tests, avoid comments that explain the code. Prefer self-explanatory code.
 
 ## Junie Assistance Tips
 
