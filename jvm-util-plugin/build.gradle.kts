@@ -89,4 +89,6 @@ dependencies {
     compileOnlyApi(Kotlin.GradlePlugin.api)
     compileOnly(gradleKotlinDsl())
     api(project(":jvm-util"))
+
+    testImplementation(project(":plugin-testlib"))
 }
