@@ -249,6 +249,11 @@ version.gradle.kts # Declares the project version.
 - Avoid generating blocking calls inside coroutines.
 
 ---
+   
+## ⚙️ Refactoring Guidelines
+- Do not replace Kotest assertions with standard Kotlin's Built-In Test Assertions.
+
+---
 
 ## 💬 Interaction tips – key to effective collaboration!
 
