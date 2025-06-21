@@ -116,6 +116,10 @@ Each module follows a standard structure:
      ````
   ```
 - Descriptions of parameters, properties, and exceptions in KDoc must be terminated with a comma.
+- When creating `.md` files wrap the text so that it is not wider than 80 characters.
+- Put periods at the end of sentences.
+- Do not put periods if a line of text is a fragment.
+- Avoid in-place comments in the code unless specifically asked.
 
 ## Testing Guidelines
 
