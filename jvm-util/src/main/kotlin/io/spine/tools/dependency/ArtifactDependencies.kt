@@ -54,7 +54,7 @@ public data class ArtifactDependencies(
      *
      * The artifact itself is always the first line, followed by its dependencies.
      *
-     * @param file the file to store the artifact dependencies in.
+     * @param file The file to store the artifact dependencies in.
      * @throws IllegalArgumentException if the file is a directory.
      * @throws java.io.IOException if an I/O error occurs.
      */
@@ -84,9 +84,19 @@ public data class ArtifactDependencies(
         public const val RESOURCE_DIRECTORY: String = "META-INF/io.spine"
 
         /**
+         * Creates an error message for when artifact dependencies cannot be loaded.
+         *
+         * @param wrongInput The description of why the input is wrong.
+         * @param source The source of the artifact dependencies.
+         * @return the error message.
+         */
+        internal fun cannotLoad(wrongInput: String, source: String): String =
+            "Cannot load artifact dependencies from $wrongInput $source."
+
+        /**
          * Loads artifact dependencies from a file.
          *
-         * @param file the file to load the artifact dependencies from.
+         * @param file The file to load the artifact dependencies from.
          * @return the loaded artifact dependencies.
          * @throws IllegalArgumentException if the file does not exist or is a directory.
          * @throws java.io.IOException if an I/O error occurs.
@@ -94,22 +104,23 @@ public data class ArtifactDependencies(
          * @see store
          */
         public fun load(file: File): ArtifactDependencies {
+            val source = "file: `${file.absolutePath}`"
             require(file.exists()) {
-                "Cannot load artifact dependencies from non-existent file: `${file.absolutePath}`."
+                cannotLoad("non-existent", source)
             }
             require(!file.isDirectory) {
-                "Cannot load artifact dependencies from a directory: `${file.absolutePath}`."
+                cannotLoad("a directory:", source)
             }
 
             val lines = Files.readAllLines(file.toPath())
-            return parseLines(lines, "file: `${file.absolutePath}`")
+            return parseLines(lines, source)
         }
 
         /**
          * Loads artifact dependencies from a resource.
          *
-         * @param path the path to the resource.
-         * @param classLoader the class loader to use for loading the resource.
+         * @param path The path to the resource.
+         * @param classLoader The class loader to use for loading the resource.
          * @return the loaded artifact dependencies.
          * @throws IllegalStateException if the resource does not exist, is empty,
          *   or is not of the expected format.
@@ -156,8 +167,8 @@ public data class ArtifactDependencies(
         /**
          * Loads artifact dependencies from a resource for the given module.
          *
-         * @param module the module to load the artifact dependencies for.
-         * @param cls the class to use for loading the resource.
+         * @param module The module to load the artifact dependencies for.
+         * @param cls The class to use for loading the resource.
          * @return the loaded artifact dependencies.
          * @throws IllegalStateException if the resource does not exist, is empty,
          *   or is not of the expected format.
@@ -178,7 +189,7 @@ public data class ArtifactDependencies(
  */
 private fun parseLines(lines: List<String>, source: String): ArtifactDependencies {
     require(lines.isNotEmpty()) {
-        "Cannot load artifact dependencies from the empty $source."
+        ArtifactDependencies.cannotLoad("the empty", source)
     }
 
     val artifactLine = lines[0]

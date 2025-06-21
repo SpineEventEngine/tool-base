@@ -26,6 +26,7 @@
 
 package io.spine.tools.gradle.jvm.plugin
 
+import io.spine.tools.dependency.ArtifactDependencies.Companion.RESOURCE_DIRECTORY
 import io.spine.tools.gradle.jvm.plugin.WriteDependencies.Companion.TASK_NAME
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -42,7 +43,7 @@ public class JvmUtilPlugin : Plugin<Project> {
      * Applies the plugin to the given project.
      */
     override fun apply(project: Project): Unit = with(project) {
-        val outputDir = layout.buildDirectory.dir(io.spine.tools.dependency.ArtifactDependencies.RESOURCE_DIRECTORY)
+        val outputDir = layout.buildDirectory.dir(RESOURCE_DIRECTORY)
 
         val task = tasks.register(TASK_NAME, WriteDependencies::class.java) { task ->
             task.outputDirectory.convention(outputDir)
