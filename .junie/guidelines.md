@@ -91,6 +91,15 @@ Each module follows a standard structure:
 - After version changes, run `./gradlew clean build` and commit updated `pom.xml` and
   `dependencies.md`
 
+## Naming Guidelines
+
+### Avoid using type names in variable names. 
+| DO                                 | DON'T                                        |
+|------------------------------------|----------------------------------------------|
+| `val user = getUser()`             | `val userObject = getUser()`                 |
+| `val items = getItems()`           | `val itemList = getItems()`                  | 
+| `val gradleWrapper: IvyDependency` | `val gradleWrapperDependency: IvyDependency` |
+
 ## Coding Best Practices
 
 - Prefer Kotlin idioms over Java-style approaches
