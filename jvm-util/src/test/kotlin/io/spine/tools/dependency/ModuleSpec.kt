@@ -92,6 +92,6 @@ class ModuleSpec {
 
         val module = Module(group, name)
 
-        module.fileSafeId() shouldBe "${group}_${name}"
+        module.fileSafeId shouldBe "${group}_${name}"
     }
 }

@@ -26,6 +26,14 @@
 
 package io.spine.tools.dependency
 
+import io.spine.tools.dependency.Dependencies.Companion.SEPARATOR
+import io.spine.tools.dependency.Dependencies.Companion.parse
+import java.io.File
+import java.nio.file.Files.write
+import java.nio.file.StandardOpenOption.CREATE
+import java.nio.file.StandardOpenOption.TRUNCATE_EXISTING
+import java.nio.file.StandardOpenOption.WRITE
+
 /**
  * Dependencies of a software component.
  *
@@ -121,6 +129,28 @@ public class Dependencies(public val list: List<Dependency>) {
 
     override fun hashCode(): Int {
         return list.hashCode()
+    }
+
+    /**
+     * Stores the dependencies in a text file, with each dependency on a separate line.
+     *
+     * @param file the file to store the dependencies in.
+     * @throws IllegalArgumentException if the file is a directory.
+     * @throws java.io.IOException if an I/O error occurs
+     */
+    public fun store(file: File) {
+        if (file.exists() && file.isDirectory) {
+           throw IllegalArgumentException(
+               "Cannot store dependencies to the directory: `${file.absolutePath}`."
+           )
+        }
+
+        // Create parent directories if they don't exist.
+        file.parentFile?.mkdirs()
+
+        // Write each dependency on a separate line.
+        val lines = list.map { it.toString() }
+        write(file.toPath(), lines, CREATE, TRUNCATE_EXISTING, WRITE)
     }
 }
 

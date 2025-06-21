@@ -34,6 +34,9 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.io.TempDir
+import java.nio.file.Files
+import java.nio.file.Path
 
 @DisplayName("`Dependencies` should")
 internal class DependenciesSpec {
@@ -151,6 +154,47 @@ internal class DependenciesSpec {
             val found = dependencies.find(nonExistingModule)
 
             found shouldBe null
+        }
+    }
+
+    @Nested
+    inner class StoreToFile {
+
+        @TempDir
+        lateinit var tempDir: Path
+
+        @Test
+        fun `store dependencies to a file`() {
+            // Create dependencies
+            val artifact = MavenArtifact("io.spine.tools", "tool-base", "2.0.0")
+            val ivyDep = IvyDependency("org.gradle", "wrapper", "7.4.2")
+            val dependencies = Dependencies(listOf(artifact, ivyDep))
+
+            // Create a file in the temp directory
+            val file = tempDir.resolve("dependencies.txt").toFile()
+
+            // Store dependencies to the file
+            dependencies.store(file)
+
+            // Read the file content
+            val lines = Files.readAllLines(file.toPath())
+
+            // Verify the content
+            lines shouldHaveSize 2
+            lines[0] shouldBe artifact.toString()
+            lines[1] shouldBe ivyDep.toString()
+        }
+
+        @Test
+        fun `throw exception when storing to a directory`() {
+            // Create dependencies
+            val artifact = MavenArtifact("io.spine.tools", "tool-base", "2.0.0")
+            val dependencies = Dependencies(listOf(artifact))
+
+            // Try to store to a directory
+            assertThrows<IllegalArgumentException> {
+                dependencies.store(tempDir.toFile())
+            }
         }
     }
 }
