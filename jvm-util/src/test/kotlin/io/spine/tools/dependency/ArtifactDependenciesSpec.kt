@@ -40,6 +40,10 @@ import java.nio.file.Path
 @DisplayName("`ArtifactDependencies` should")
 internal class ArtifactDependenciesSpec {
 
+    companion object {
+        private const val DEPS_FILE = "artifact-dependencies.txt"
+    }
+
     private lateinit var toolBase: MavenArtifact
     private lateinit var emptyDependencies: Dependencies
 
@@ -80,42 +84,48 @@ internal class ArtifactDependenciesSpec {
             val noDependencies = Dependencies(emptyList())
             val artifactWithNoDeps = ArtifactDependencies(toolBase, noDependencies)
 
-            val file = tempDir.resolve("artifact-dependencies.txt").toFile()
+            val file = tempDir.resolve(DEPS_FILE).toFile()
 
             artifactWithNoDeps.store(file)
 
             val loaded = ArtifactDependencies.load(file)
 
             loaded.artifact shouldBe toolBase
-            loaded.dependencies.list shouldHaveSize 0
+            loaded.dependencies.list.let {
+                it shouldHaveSize 0
+            }
         }
 
         @Test
         fun `store and load with dependencies`() {
-            val file = tempDir.resolve("artifact-dependencies.txt").toFile()
+            val file = tempDir.resolve(DEPS_FILE).toFile()
 
             artifactDependencies.store(file)
 
             val loaded = ArtifactDependencies.load(file)
 
             loaded.artifact shouldBe toolBase
-            loaded.dependencies.list shouldHaveSize 2
-            loaded.dependencies.list[0] shouldBe coreJava
-            loaded.dependencies.list[1] shouldBe gradleWrapper
+            loaded.dependencies.list.let {
+                it shouldHaveSize 2
+                it[0] shouldBe coreJava
+                it[1] shouldBe gradleWrapper
+            }
         }
 
         @Test
         fun `verify file content`() {
-            val file = tempDir.resolve("artifact-dependencies.txt").toFile()
+            val file = tempDir.resolve(DEPS_FILE).toFile()
 
             artifactDependencies.store(file)
 
             val lines = Files.readAllLines(file.toPath())
 
-            lines shouldHaveSize 3
-            lines[0] shouldBe toolBase.toString()
-            lines[1] shouldBe coreJava.toString()
-            lines[2] shouldBe gradleWrapper.toString()
+            lines.let {
+                it shouldHaveSize 3
+                it[0] shouldBe toolBase.toString()
+                it[1] shouldBe coreJava.toString()
+                it[2] shouldBe gradleWrapper.toString()
+            }
         }
     }
 
@@ -181,7 +191,7 @@ internal class ArtifactDependenciesSpec {
     @DisplayName("load from resource")
     inner class LoadFromResource {
 
-        private val resourcePath = "artifact-dependencies.txt"
+        private val resourcePath = DEPS_FILE
 
         private lateinit var coreJavaArtifact: MavenArtifact
         private lateinit var gradleWrapper: IvyDependency

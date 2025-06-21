@@ -105,8 +105,10 @@ internal class DependenciesSpec {
 
             val deps = Dependencies.parse(depStr)
 
-            deps.list shouldHaveSize 1
-            deps.list[0] shouldBe ma
+            deps.list.let {
+                it shouldHaveSize 1
+                it[0] shouldBe ma
+            }
         }
 
         @Test
@@ -180,9 +182,11 @@ internal class DependenciesSpec {
             val lines = Files.readAllLines(file.toPath())
 
             // Verify the content
-            lines shouldHaveSize 2
-            lines[0] shouldBe artifact.toString()
-            lines[1] shouldBe ivyDep.toString()
+            lines.let {
+                it shouldHaveSize 2
+                it[0] shouldBe artifact.toString()
+                it[1] shouldBe ivyDep.toString()
+            }
         }
 
         @Test
