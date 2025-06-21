@@ -3,16 +3,19 @@ This project follows best practices recommended by leading LLM vendors such as O
 - Adhere to the [Spine Event Engine documentation wiki](https://github.com/SpineEventEngine/documentation/wiki) for coding style and contribution procedures.
 - When modifying code, run `./gradlew build` before committing. Changes limited to documentation or comments do not require running tests.
 ## Table of Contents
-1. [The purpose of this document](#the-purpose-of-this-document)
-2. [Project overview](#project-overview)
-3. [Agent roles](#agent-roles)
-4. [Coding guidelines](#coding-guidelines)
+1. [🧠 Purpose](#purpose)
+2. [🛠️ Project overview](#project-overview)
+3. [🤖 Agent responsibilities](#agent-responsibilities)
+4. [🧾 Coding guidelines for Agents](#coding-guidelines-for-agents)
 5. [Running builds](#running-builds)
-6. [Incrementing a version](#incrementing-a-patch-version)
-7. [Documentation tasks](#documentation-tasks)
-8. [Testing responsibilities](#testing-responsibilities)
-9. [Safety rules for Agents](#-safety-rules-for-agents)
-10. [Interaction Tips](#interaction-tips)
+6. [Version policy](#version-policy)
+7. [📁 Project structure expectations](#project-structure-expectations)
+8. [📄 Documentation tasks](#documentation-tasks)
+9. [🧪 Testing](#testing)
+10. [🚨 Safety rules for Agents](#safety-rules-for-agents)
+11. [💬 Interaction tips – key to effective collaboration!](#interaction-tips-key-to-effective-collaboration)
+12. [🧭 LLM Goals](#llm-goals)
+13. [👋 Welcome, Agents!](#welcome-agents)
 
 ## 🧠 Purpose
 
@@ -111,7 +114,7 @@ Tagging PRs helps the team:
 - The conventions on the [Spine Event Engine Documentation](https://github.com/SpineEventEngine/documentation/wiki)
   page and other pages in this Wiki area **take precedence over** standard Kotlin or
   Java conventions.
- 
+
 - Write clear, incremental commits with descriptive messages.
 - Include automated tests for any code change that alters functionality.
 - Keep pull requests focused and small.
@@ -176,7 +179,7 @@ A branch conflict over the version number should be resolved as described below.
    ```bash
    ./gradlew build
    ```
-   
+
 2. If Protobuf (`.proto`) files are modified run:
    ```bash
    ./gradlew clean build
