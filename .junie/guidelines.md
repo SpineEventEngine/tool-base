@@ -1,13 +1,13 @@
 # Spine Tool-Base Project Guidelines
 
 This document provides concise guidance for developers working on the Spine Tool-Base project
-with Junie assistance.
+with Junie AI assistance.
 
 ## Project Overview
 
-Spine Tool-Base is a collection of modules that provide base code for development tools
+Spine Tool-Base is a collection of modules that provide foundational code for development tools
 in the Spine SDK ecosystem. It primarily uses Kotlin with some Java components and is
-built with Gradle using Kotlin DSL.
+built with Gradle using Kotlin DSL for build configuration.
 
 ## Tech Stack
 
@@ -23,31 +23,31 @@ built with Gradle using Kotlin DSL.
 
 ```
 .
-├── buildSrc/                  # Build configuration and dependencies
-├── config/                    # Project configuration files
-├── gradle-plugin-api/         # API for tool/library authors
-├── gradle-root-plugin/        # Gradle plugins with root extensions
-├── jvm-util/                  # Utilities for tools of a JVM project
-├── plugin-base/               # Abstractions for Gradle plugins
-├── plugin-testlib/            # Test fixtures for Gradle plugins
-├── psi/                       # Utilities for IntelliJ Platform PSI
-├── tool-base/                 # Common components for build-time tools
-├── build.gradle.kts           # Root build configuration
-├── settings.gradle.kts        # Project structure and settings
-├── version.gradle.kts         # Project version declaration
-└── README.md                  # Project overview
+├── `buildSrc`/                  # Build configuration and dependencies
+├── `config`/                    # Project configuration files
+├── `gradle-plugin-api`/         # API for tool/library authors
+├── `gradle-root-plugin`/        # Gradle plugins with root extensions
+├── `jvm-util`/                  # Utilities for JVM project tools
+├── `plugin-base`/               # Abstractions for Gradle plugins
+├── `plugin-testlib`/            # Test fixtures for Gradle plugins
+├── `psi`/                       # Utilities for IntelliJ Platform PSI
+├── `tool-base`/                 # Common components for build-time tools
+├── `build.gradle.kts`           # Root build configuration
+├── `settings.gradle.kts`        # Project structure and settings
+├── `version.gradle.kts`         # Project version declaration
+└── `README.md`                  # Project overview
 ```
 
 Each module follows a standard structure:
 ```
-module-name/
-├── src/
-│   ├── main/
-│   │   ├── kotlin/           # Kotlin source files
-│   │   └── java/             # Java source files (if any)
-│   └── test/
-│       └── kotlin/           # Test files
-└── build.gradle.kts          # Module-specific build configuration
+`module-name`/
+├── `src`/
+│   ├── `main`/
+│   │   ├── `kotlin`/           # Kotlin source files
+│   │   └── `java`/             # Java source files (if any)
+│   └── `test`/
+│       └── `kotlin`/           # Test files
+└── `build.gradle.kts`          # Module-specific build configuration
 ```
 
 ## Running Tests
@@ -59,12 +59,12 @@ module-name/
 
 - **Run tests for a specific module**:
   ```bash
-  ./gradlew :module-name:test
+  ./gradlew :`module-name`:test
   ```
 
 - **Run a specific test class**:
   ```bash
-  ./gradlew :module-name:test --tests "fully.qualified.TestClassName"
+  ./gradlew :`module-name`:test --tests "fully.qualified.TestClassName"
   ```
 
 ## Building the Project
@@ -100,10 +100,12 @@ module-name/
 - Write clear, incremental commits with descriptive messages
 - Include automated tests for functionality changes
 - Keep pull requests focused and small
+- When the Kotlin code modified or added make sure it passes the detekt check:
+  `./gradlew :<module_name>:detekt`
 
-## Use backticks for wrapping code in documentation, error, and logging messages in the code
+## Code Formatting Guidelines
 - In-line code fragments are always surrounded with back ticks. E.g., `code`.
-- File and directory names are code.
+- File and directory names are code and should be formatted as such.
 - Block code fragments in documentation and diagnostic messages must be surrounded
   with code fences (```).
 - Code fences that are part of the code come with extra backtick:
@@ -116,25 +118,25 @@ module-name/
 
 ## Testing Guidelines
 
-- Use stubs instead of mocks
+- Use stubs instead of mocks for test doubles
 - Prefer Kotest assertions over JUnit or Google Truth
 - Ensure tests cover edge cases and typical scenarios
 
 ## Junie Assistance Tips
 
-When working with Junie on this project:
+When working with Junie AI on the Spine Tool-Base project:
 
-1. **Project Navigation**: Use `search_project` to find relevant files and code
+1. **Project Navigation**: Use `search_project` to find relevant files and code segments
 2. **Code Understanding**: Request file structure with `get_file_structure` before editing
 3. **Code Editing**: Make minimal changes with `search_replace` to maintain project consistency
 4. **Testing**: Verify changes with `run_test` on relevant test files
 5. **Documentation**: Follow KDoc style for documentation
 6. **Kotlin Idioms**: Prefer Kotlin-style solutions over Java-style approaches
-7. **Version Updates**: Remember to update version.gradle.kts for PRs
+7. **Version Updates**: Remember to update `version.gradle.kts` for PRs
 
 ## Common Tasks
 
-- **Adding a new dependency**: Update relevant files in buildSrc
+- **Adding a new dependency**: Update relevant files in `buildSrc` directory
 - **Creating a new module**: Follow existing module structure patterns
-- **Documentation**: Use KDoc for public and internal APIs
+- **Documentation**: Use KDoc style for public and internal APIs
 - **Testing**: Create comprehensive tests using Kotest assertions
