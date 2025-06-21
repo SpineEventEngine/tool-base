@@ -42,8 +42,7 @@ public class JvmUtilPlugin : Plugin<Project> {
      * Applies the plugin to the given project.
      */
     override fun apply(project: Project): Unit = with(project) {
-        val metaInfDir = "META-INF/io.spine"
-        val outputDir = layout.buildDirectory.dir(metaInfDir)
+        val outputDir = layout.buildDirectory.dir(io.spine.tools.dependency.ArtifactDependencies.RESOURCE_DIRECTORY)
 
         val task = tasks.register(TASK_NAME, WriteDependencies::class.java) { task ->
             task.outputDirectory.convention(outputDir)

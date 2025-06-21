@@ -46,14 +46,9 @@ import io.spine.tools.dependency.Dependency as TDependency
 public abstract class WriteDependencies : DefaultTask() {
 
     /**
-     * The extension of the dependency file.
+     * The task that writes dependencies to a file.
      */
     public companion object {
-
-        /**
-         * The extension of the dependency file.
-         */
-        public const val FILE_EXTENSION: String = ".deps"
 
         /**
          * The name of the task added by the plugin.
@@ -85,7 +80,7 @@ public abstract class WriteDependencies : DefaultTask() {
         val outputDir = outputDirectory.get().asFile
         outputDir.mkdirs()
 
-        val fileName = "${module.fileSafeId}$FILE_EXTENSION"
+        val fileName = "${module.fileSafeId}${ArtifactDependencies.FILE_EXTENSION}"
         val file = outputDir.resolve(fileName)
 
         artifactDependencies.store(file)

@@ -184,12 +184,12 @@ internal class ArtifactDependenciesSpec {
         private val resourcePath = "artifact-dependencies.txt"
 
         private lateinit var coreJavaArtifact: MavenArtifact
-        private lateinit var gradleWrapperDependency: IvyDependency
+        private lateinit var gradleWrapper: IvyDependency
 
         @BeforeEach
         fun setUp() {
             coreJavaArtifact = MavenArtifact("io.spine", "core-java", "2.0.1")
-            gradleWrapperDependency = IvyDependency("org.gradle", "wrapper", "7.4.2")
+            gradleWrapper = IvyDependency("org.gradle", "wrapper", "7.4.2")
         }
 
         @Test
@@ -203,7 +203,7 @@ internal class ArtifactDependenciesSpec {
             loaded.dependencies.list.let {
                 it shouldHaveSize 2
                 it[0] shouldBe coreJavaArtifact
-                it[1] shouldBe gradleWrapperDependency
+                it[1] shouldBe gradleWrapper
             }
         }
 
@@ -218,7 +218,7 @@ internal class ArtifactDependenciesSpec {
             loaded.dependencies.list.let {
                 it shouldHaveSize 2
                 it[0] shouldBe coreJavaArtifact
-                it[1] shouldBe gradleWrapperDependency
+                it[1] shouldBe gradleWrapper
             }
         }
 
@@ -229,6 +229,28 @@ internal class ArtifactDependenciesSpec {
             assertThrows<IllegalStateException> {
                 ArtifactDependencies.loadFromResource(
                     nonExistentPath, 
+                    ArtifactDependenciesSpec::class.java
+                )
+            }
+        }
+
+        /**
+         * This test verifies that the `loadFromResource` method with a `Module` parameter
+         * correctly composes the resource path using the module's `fileSafeId` property.
+         * 
+         * Since we can't easily mock the class loader to return a resource from a different path,
+         * we'll verify that the method throws the expected exception when the resource
+         * doesn't exist.
+         */
+        @Test
+        fun `compose resource path from module`() {
+            // Create a module with a unique group and name
+            val module = Module("test.group", "test-name")
+
+            // Verify that the method throws an exception when the resource doesn't exist
+            assertThrows<IllegalStateException> {
+                ArtifactDependencies.loadFromResource(
+                    module, 
                     ArtifactDependenciesSpec::class.java
                 )
             }

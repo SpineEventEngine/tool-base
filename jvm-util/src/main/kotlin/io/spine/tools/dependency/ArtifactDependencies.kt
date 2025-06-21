@@ -63,10 +63,8 @@ public data class ArtifactDependencies(
             "Cannot store artifact dependencies to the directory: `${file.absolutePath}`."
         }
 
-        // Create parent directories if they don't exist.
         file.parentFile?.mkdirs()
 
-        // Write the artifact as the first line, followed by its dependencies.
         val lines = mutableListOf(artifact.toString())
         lines.addAll(dependencies.list.map { it.toString() })
 
@@ -76,16 +74,24 @@ public data class ArtifactDependencies(
     public companion object {
 
         /**
+         * The extension of the dependency file.
+         */
+        public const val FILE_EXTENSION: String = ".deps"
+
+        /**
+         * The directory where dependency files are stored.
+         */
+        public const val RESOURCE_DIRECTORY: String = "META-INF/io.spine"
+
+        /**
          * Loads artifact dependencies from a file.
-         *
-         * The file should contain the artifact as the first line, followed by its dependencies.
          *
          * @param file the file to load the artifact dependencies from.
          * @return the loaded artifact dependencies.
          * @throws IllegalArgumentException if the file does not exist or is a directory.
          * @throws java.io.IOException if an I/O error occurs.
-         * @throws IllegalStateException if the file is empty or the first line is not
-         *   a valid Maven artifact reference.
+         * @throws IllegalStateException if the file is empty or is not of the expected format.
+         * @see store
          */
         public fun load(file: File): ArtifactDependencies {
             require(file.exists()) {
@@ -105,8 +111,9 @@ public data class ArtifactDependencies(
          * @param path the path to the resource.
          * @param classLoader the class loader to use for loading the resource.
          * @return the loaded artifact dependencies.
-         * @throws IllegalStateException if the resource does not exist, is empty, or the first line
-         *   is not a valid Maven artifact reference.
+         * @throws IllegalStateException if the resource does not exist, is empty,
+         *   or is not of the expected format.
+         * @see store
          */
         public fun loadFromResource(path: String, classLoader: ClassLoader): ArtifactDependencies {
             val resource = Resource.file(path, classLoader)
@@ -121,54 +128,85 @@ public data class ArtifactDependencies(
          * @param path the path to the resource.
          * @param cls the class to use for loading the resource.
          * @return the loaded artifact dependencies.
-         * @throws IllegalStateException if the resource does not exist, is empty, or the first line
-         *   is not a valid Maven artifact reference.
+         * @throws IllegalStateException if the resource does not exist, is empty,
+         *   or is not of the expected format.
+         * @see store
          */
-        public fun loadFromResource(path: String, cls: Class<*>): ArtifactDependencies {
-            return loadFromResource(path, cls.classLoader)
+        public fun loadFromResource(path: String, cls: Class<*>): ArtifactDependencies =
+            loadFromResource(path, cls.classLoader)
+
+        /**
+         * Loads artifact dependencies from a resource for the given module.
+         *
+         * @param module the module to load the artifact dependencies for.
+         * @param classLoader the class loader to use for loading the resource.
+         * @return the loaded artifact dependencies.
+         * @throws IllegalStateException if the resource does not exist, is empty,
+         *   or is not of the expected format.
+         * @see store
+         */
+        public fun loadFromResource(
+            module: Module,
+            classLoader: ClassLoader
+        ): ArtifactDependencies {
+            val resourcePath = "$RESOURCE_DIRECTORY/${module.fileSafeId}$FILE_EXTENSION"
+            return loadFromResource(resourcePath, classLoader)
         }
 
         /**
-         * Parses the given lines into an [ArtifactDependencies] instance.
+         * Loads artifact dependencies from a resource for the given module.
          *
-         * @param lines the lines to parse.
-         * @param source the source of the lines, used for error messages.
-         * @return the parsed artifact dependencies.
-         * @throws IllegalStateException if the lines are empty or the first line is not
-         *   a valid Maven artifact reference.
+         * @param module the module to load the artifact dependencies for.
+         * @param cls the class to use for loading the resource.
+         * @return the loaded artifact dependencies.
+         * @throws IllegalStateException if the resource does not exist, is empty,
+         *   or is not of the expected format.
+         * @see store
          */
-        private fun parseLines(lines: List<String>, source: String): ArtifactDependencies {
-            require(lines.isNotEmpty()) {
-                "Cannot load artifact dependencies from the empty $source."
-            }
-
-            val artifactLine = lines[0]
-            require(artifactLine.startsWith(MavenArtifact.PREFIX)) {
-                "The first line of the $source must be a Maven artifact. Encountered: `$artifactLine`."
-            }
-            val artifact = MavenArtifact.parse(artifactLine)
-
-            val dependencyLines = lines.subList(1, lines.size)
-            val dependencies = if (dependencyLines.isEmpty()) {
-                Dependencies(emptyList())
-            } else {
-                val dependencyList = dependencyLines.map { parseDependency(it) }
-                Dependencies(dependencyList)
-            }
-
-            return ArtifactDependencies(artifact, dependencies)
-        }
-
-        /**
-         * Parses a dependency from the given string representation.
-         *
-         * @throws IllegalStateException if the given string does not start with a prefix of
-         *   a supported dependency format.
-         */
-        private fun parseDependency(value: String): Dependency = when {
-            value.startsWith(MavenArtifact.PREFIX) -> MavenArtifact.parse(value)
-            value.startsWith(IvyDependency.PREFIX) -> IvyDependency.parse(value)
-            else -> error("Unsupported dependency format: `$value`.")
-        }
+        public fun loadFromResource(module: Module, cls: Class<*>): ArtifactDependencies =
+            loadFromResource(module, cls.classLoader)
     }
+}
+
+/**
+ * Parses the given lines into an [ArtifactDependencies] instance.
+ *
+ * @param lines the lines to parse.
+ * @param source the source of the lines, used for error messages.
+ * @return the parsed artifact dependencies.
+ * @throws IllegalStateException if the lines are empty or are not of the expected format.
+ */
+private fun parseLines(lines: List<String>, source: String): ArtifactDependencies {
+    require(lines.isNotEmpty()) {
+        "Cannot load artifact dependencies from the empty $source."
+    }
+
+    val artifactLine = lines[0]
+    require(artifactLine.startsWith(MavenArtifact.PREFIX)) {
+        "The first line of the $source must be a Maven artifact." +
+                " Encountered: `$artifactLine`."
+    }
+    val artifact = MavenArtifact.parse(artifactLine)
+
+    val dependencyLines = lines.subList(1, lines.size)
+    val dependencies = if (dependencyLines.isEmpty()) {
+        Dependencies(emptyList())
+    } else {
+        val dependencyList = dependencyLines.map { parseDependency(it) }
+        Dependencies(dependencyList)
+    }
+
+    return ArtifactDependencies(artifact, dependencies)
+}
+
+/**
+ * Parses a dependency from the given string representation.
+ *
+ * @throws IllegalStateException if the given string does not start with a prefix of
+ *   a supported dependency format.
+ */
+private fun parseDependency(value: String): Dependency = when {
+    value.startsWith(MavenArtifact.PREFIX) -> MavenArtifact.parse(value)
+    value.startsWith(IvyDependency.PREFIX) -> IvyDependency.parse(value)
+    else -> error("Unsupported dependency format: `$value`.")
 }
