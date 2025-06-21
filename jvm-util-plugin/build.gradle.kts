@@ -31,6 +31,7 @@ import io.spine.gradle.isSnapshot
 plugins {
     `uber-jar-module`
     kotlin("jvm")
+    `module-testing`
     `plugin-publish`
     `write-manifest`
 }
@@ -88,6 +89,4 @@ dependencies {
     compileOnlyApi(Kotlin.GradlePlugin.api)
     compileOnly(gradleKotlinDsl())
     api(project(":jvm-util"))
-    
-    testImplementation(project(":plugin-testlib"))
 }
