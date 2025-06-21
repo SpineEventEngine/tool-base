@@ -84,4 +84,14 @@ class ModuleSpec {
             Module(group, "")
         }
     }
+
+    @Test
+    fun `have file-safe ID in the format 'group_name'`() {
+        val group = randomString()
+        val name = randomString()
+
+        val module = Module(group, name)
+
+        module.fileSafeId() shouldBe "${group}_${name}"
+    }
 }

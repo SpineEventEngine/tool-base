@@ -51,6 +51,12 @@ public data class Module(
         get() = "$group:$name"
 
     /**
+     * This module's group and name joined on an underscore symbol (`_`).
+     */
+    public val fileSafeId: String
+        get() = "${group}_$name"
+
+    /**
      * Returns the [identifier] of the module.
      */
     override fun toString(): String = identifier
