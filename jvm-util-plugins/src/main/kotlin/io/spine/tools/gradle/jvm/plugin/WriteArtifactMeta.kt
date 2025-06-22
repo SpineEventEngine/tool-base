@@ -35,7 +35,6 @@ import org.gradle.api.artifacts.Dependency
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
-import io.spine.tools.meta.Dependency as TDependency
 
 /**
  * A task that writes artifact [meta-data][ArtifactMeta] of a Gradle project to a file.
