@@ -42,18 +42,17 @@ import java.nio.file.Path
 internal class DependenciesSpec {
 
     @Test
-    fun `escapes quotes in string form`() {
+    fun `formats dependencies with new lines`() {
         val group = "io.spine.tools"
         val name = "tool-base"
         val ver = "2.0.0"
 
         val ivyDep = IvyDependency(group, name, ver)
-        val escaped = ivyDep.toString().replace("\"", "\\\"")
 
         val deps = Dependencies(listOf(ivyDep))
         val depsStr = deps.toString()
 
-        depsStr shouldBe "\"${escaped}\""
+        depsStr shouldBe ivyDep.toString()
     }
 
     /**
@@ -101,7 +100,7 @@ internal class DependenciesSpec {
             val name = randomString()
             val version = unusualVersion()
             val ma = MavenArtifact.withCoordinates("$group:$name:$version")
-            val depStr = "\"$ma\""
+            val depStr = ma.toString()
 
             val deps = Dependencies.parse(depStr)
 

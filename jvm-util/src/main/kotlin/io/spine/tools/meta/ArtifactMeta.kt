@@ -27,8 +27,10 @@
 package io.spine.tools.meta
 
 import io.spine.tools.jvm.resource.Resource
+import io.spine.tools.meta.ArtifactMeta.Companion.COMMENT_PREFIX
 import java.io.File
 import java.nio.file.Files
+import java.nio.file.Files.writeString
 import java.nio.file.StandardOpenOption.CREATE
 import java.nio.file.StandardOpenOption.TRUNCATE_EXISTING
 import java.nio.file.StandardOpenOption.WRITE
@@ -60,14 +62,39 @@ public data class ArtifactMeta(
         get() = resourcePath(module)
 
     /**
-     * Returns the identifier of the [artifact] with the [MavenArtifact.PREFIX].
+     * Returns the string form of the artifact metadata.
+     *
+     * If there are dependencies, the format is:
+     * ```text
+     * ${artifact}
+     * # Dependencies
+     * ${dependencies}
+     * ```
+     *
+     * If there are no dependencies, the format is simply:
+     * ```text
+     * ${artifact}
+     * ```
+     *
+     * @see Dependencies.toString
      */
-    override fun toString(): String = artifact.toString()
+    override fun toString(): String {
+        val result = StringBuilder()
+        result.append(artifact.toString())
+        if (dependencies.list.isNotEmpty()) {
+            result.append("\n$COMMENT_PREFIX Dependencies\n")
+            result.append(dependencies.toString())
+        }
+        return result.toString()
+    }
 
     /**
-     * Stores the artifact metadata in a text file.
+     * Stores the artifact metadata in the given file.
+     * 
+     * If the file already exits, it will be overwritten.
      *
-     * The artifact itself is always the first line, followed by its dependencies.
+     * The artifact itself is always the first line. If there are dependencies, it is followed by 
+     * a "# Dependencies" header and then the dependencies.
      *
      * @param file The file to store the artifact metadata in.
      * @throws IllegalArgumentException if the file is a directory.
@@ -80,10 +107,8 @@ public data class ArtifactMeta(
 
         file.parentFile?.mkdirs()
 
-        val lines = mutableListOf(artifact.toString())
-        lines.addAll(dependencies.list.map { it.toString() })
-
-        Files.write(file.toPath(), lines, CREATE, TRUNCATE_EXISTING, WRITE)
+        val content = toString()
+        writeString(file.toPath(), content, CREATE, TRUNCATE_EXISTING, WRITE)
     }
 
     public companion object {
@@ -98,13 +123,15 @@ public data class ArtifactMeta(
          */
         public const val RESOURCE_DIRECTORY: String = "META-INF/io.spine"
 
+        internal const val COMMENT_PREFIX = "#"
+
         /**
          * Returns the resource path for the given module.
          *
          * The path follows the convention:
          * `$RESOURCE_DIRECTORY/${fileSafeId}$FILE_EXTENSION`.
          */
-        internal fun resourcePath(module: Module): String =
+        public fun resourcePath(module: Module): String =
             "$RESOURCE_DIRECTORY/${module.fileSafeId}$FILE_EXTENSION"
 
         /**
@@ -203,42 +230,39 @@ public data class ArtifactMeta(
 /**
  * Parses the given lines into an [ArtifactMeta] instance.
  *
+ * Lines starting with `#` are treated as comments and are filtered out.
+ *
  * @param lines the lines to parse.
  * @param source the source of the lines, used for error messages.
  * @return the parsed artifact metadata.
  * @throws IllegalStateException if the lines are empty or are not of the expected format.
  */
 private fun parseLines(lines: List<String>, source: String): ArtifactMeta {
-    require(lines.isNotEmpty()) {
+    // Filter out comment lines (lines starting with #)
+    val filteredLines = lines.filter { !it.startsWith(COMMENT_PREFIX) }
+
+    require(filteredLines.isNotEmpty()) {
         ArtifactMeta.cannotLoad("the empty", source)
     }
 
-    val artifactLine = lines[0]
+    val artifactLine = filteredLines[0]
     require(artifactLine.startsWith(MavenArtifact.PREFIX)) {
         "The first line of the $source must be a Maven artifact." +
                 " Encountered: `$artifactLine`."
     }
     val artifact = MavenArtifact.parse(artifactLine)
 
-    val dependencyLines = lines.subList(1, lines.size)
-    val dependencies = if (dependencyLines.isEmpty()) {
+    val deps = filteredLines.subList(1, filteredLines.size)
+    val dependencies = if (deps.isEmpty()) {
         Dependencies(emptyList())
     } else {
-        val dependencyList = dependencyLines.map { parseDependency(it) }
-        Dependencies(dependencyList)
+        val nonEmptyDeps = deps.filter { it.isNotEmpty() && it.isNotBlank() }
+        if (nonEmptyDeps.isEmpty()) {
+            Dependencies(emptyList())
+        } else {
+            val dependencyList = nonEmptyDeps.map { parseDependency(it) }
+            Dependencies(dependencyList)
+        }
     }
-
     return ArtifactMeta(artifact, dependencies)
-}
-
-/**
- * Parses a dependency from the given string representation.
- *
- * @throws IllegalStateException if the given string does not start with a prefix of
- *   a supported dependency format.
- */
-private fun parseDependency(value: String): Dependency = when {
-    value.startsWith(MavenArtifact.PREFIX) -> MavenArtifact.parse(value)
-    value.startsWith(IvyDependency.PREFIX) -> IvyDependency.parse(value)
-    else -> error("Unsupported dependency format: `$value`.")
 }

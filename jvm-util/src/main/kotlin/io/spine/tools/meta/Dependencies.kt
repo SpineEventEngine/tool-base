@@ -37,9 +37,7 @@ import java.nio.file.StandardOpenOption.WRITE
 /**
  * Dependencies of a software component.
  *
- * The class allows parsing string representations of dependencies. The string format assumes
- * a comma-separated list of dependencies with each dependency enclosed in double quotes.
- * The quotes within dependency strings are escaped with backslashes.
+ * The class allows [parsing][parse] string representations of dependencies.
  *
  * @param list The list of dependencies.
  *   The list must not contain two dependencies that are [MavenArtifact] with
@@ -49,31 +47,15 @@ import java.nio.file.StandardOpenOption.WRITE
 public class Dependencies(public val list: List<Dependency>) {
 
     init {
-        val moduleToArtifacts = mutableMapOf<Module, MutableList<MavenArtifact>>()
-
-        list.filterIsInstance<MavenArtifact>().forEach { artifact ->
-            val module = artifact.module
-            moduleToArtifacts.computeIfAbsent(module) { mutableListOf() }.add(artifact)
-        }
-
-        val duplicatedModules = moduleToArtifacts.filter { it.value.size > 1 }
-        require(duplicatedModules.isEmpty()) {
-            val duplicates = duplicatedModules.entries
-                .joinToString("\n") { (module, duplicates) ->
-                    "Duplicated module: `$module`\n" +
-                            "Artifacts:\n" +
-                            duplicates.joinToString("\n") { "  - `$it`" }
-                }
-            "Artifacts with the same module found. Please correct the dependencies.\n" +
-            duplicates
-        }
+        validateNoDuplicateModules(list)
     }
 
     /**
      * Finds a dependency that represents the given module.
      *
      * @param module The module to find the dependency for.
-     * @return the dependency representing the given module, or `null` if no such dependency exists.
+     * @return the dependency representing the given module, or
+     *   `null` if no such dependency exists.
      */
     public fun find(module: Module): Dependency? =
         list.filterIsInstance<MavenArtifact>()
@@ -87,18 +69,21 @@ public class Dependencies(public val list: List<Dependency>) {
          * @see toString
          * @see parse
          */
-        public const val SEPARATOR: String = ","
+        public const val SEPARATOR: String = "\n"
 
         /**
-         * Parses comma-separated list of dependencies, with each of them enclosed in
-         * double quotes (").
+         * Parses a line-separated list of dependencies.
+         *
+         * Empty lines are allowed in the incoming string form for
+         * the convenience of grouping for a human reader.
+         * They will be filtered out.
          */
         internal fun parse(value: String): Dependencies {
             if (value.isEmpty()) {
                 return Dependencies(listOf())
             }
-            val list: MutableList<Dependency> = mutableListOf()
-            val deps = splitDeps(value)
+            val list = mutableListOf<Dependency>()
+            val deps = value.split(SEPARATOR).filter { it.isNotEmpty() }
             deps.forEach {
                 val dep = parseDependency(it)
                 list.add(dep)
@@ -110,16 +95,10 @@ public class Dependencies(public val list: List<Dependency>) {
     /**
      * Obtains a string form of the dependencies.
      *
-     * Each dependency is enclosed in double quotes.
-     * If a string form of a dependency has double quotes within,
-     * they are escaped with leading backslashes.
-     * Dependencies are separated with [commas][SEPARATOR].
+     * Dependencies are separated with [new lines][SEPARATOR].
      */
     override fun toString(): String {
-        val result = list.joinToString(SEPARATOR) {
-            val escaped = it.toString().escapeQuotes()
-            "\"${escaped}\""
-        }
+        val result = list.joinToString(SEPARATOR) { it.toString() }
         return result
     }
 
@@ -156,36 +135,6 @@ public class Dependencies(public val list: List<Dependency>) {
     }
 }
 
-private const val QUOTE: String = "\""
-private const val QUOTE_ESCAPED = "\\\""
-private fun String.escapeQuotes() = replace(QUOTE, QUOTE_ESCAPED)
-private fun String.unescapeQuotes() = replace(QUOTE_ESCAPED, QUOTE)
-
-/**
- * The regular expression for dependency enclosed in double quotes which may also have such
- * quotes escape. Does not accept empty strings, which are handled programmatically before this
- * regexp comes into play.
- *
- * For a detailed explanation of this regexp, please visit this
- * [blog post](https://www.metaltoad.com/blog/regex-quoted-string-escapable-quotes).
- * The only difference with the one described in the post is that this regexp handles
- * only double quotes.
- *
- * @see Dependencies.toString
- * @see Dependencies.parse
- */
-private val quotedRegex = "((?<!\\\\)\")((?:.(?!(?<!\\\\)\\1))*.?)\\1".toRegex()
-
-private fun splitDeps(value: String): List<String> {
-    require(value.isNotEmpty())
-    val deps = mutableListOf<String>()
-    val matches = quotedRegex.findAll(value)
-    matches.forEach { matchResult ->
-        val dep = matchResult.groupValues[2]
-        deps.add(dep.unescapeQuotes())
-    }
-    return deps
-}
 
 /**
  * Parses a dependency from the given string representation.
@@ -193,8 +142,35 @@ private fun splitDeps(value: String): List<String> {
  * @throws IllegalStateException if the given string does not start with a prefix of
  * a supported dependency format.
  */
-private fun parseDependency(value: String): Dependency = when {
+internal fun parseDependency(value: String): Dependency = when {
     value.startsWith(MavenArtifact.PREFIX) -> MavenArtifact.parse(value)
     value.startsWith(IvyDependency.PREFIX) -> IvyDependency.parse(value)
     else -> error("Unsupported dependency format: `$value`.")
+}
+
+/**
+ * Validates that there are no duplicate Maven modules in the given list of dependencies.
+ *
+ * @param list The list of dependencies to validate.
+ * @throws IllegalArgumentException if two [MavenArtifact]s have the same [module][Module].
+ */
+private fun validateNoDuplicateModules(list: List<Dependency>) {
+    val moduleToArtifacts = mutableMapOf<Module, MutableList<MavenArtifact>>()
+
+    list.filterIsInstance<MavenArtifact>().forEach { artifact ->
+        val module = artifact.module
+        moduleToArtifacts.computeIfAbsent(module) { mutableListOf() }.add(artifact)
+    }
+
+    val duplicatedModules = moduleToArtifacts.filter { it.value.size > 1 }
+    require(duplicatedModules.isEmpty()) {
+        val duplicates = duplicatedModules.entries
+            .joinToString("\n") { (module, duplicates) ->
+                "Duplicated module: `$module`\n" +
+                        "Artifacts:\n" +
+                        duplicates.joinToString("\n") { "  - `$it`" }
+            }
+        "Artifacts with the same module found. Please correct the dependencies.\n" +
+                duplicates
+    }
 }

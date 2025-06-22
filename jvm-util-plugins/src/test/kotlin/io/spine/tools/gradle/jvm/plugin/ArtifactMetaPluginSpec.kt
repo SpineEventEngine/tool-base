@@ -44,8 +44,8 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
-@DisplayName("`JvmUtilPlugin` should")
-class JvmUtilPluginSpec {
+@DisplayName("`ArtifactMetaPlugin` should")
+class ArtifactMetaPluginSpec {
 
     private val pluginClass = ArtifactMetaPlugin::class.java
     private lateinit var project: Project
@@ -62,17 +62,7 @@ class JvmUtilPluginSpec {
 
         val task = project.tasks.findByName(WriteArtifactMeta.TASK_NAME)
         task shouldNotBe null
-        task!! shouldBe instanceof(WriteArtifactMeta::class.java)
-    }
-
-    private fun <T> instanceof(clazz: Class<T>) = object : io.kotest.matchers.Matcher<Any> {
-        override fun test(value: Any): io.kotest.matchers.MatcherResult {
-            return io.kotest.matchers.MatcherResult(
-                clazz.isInstance(value),
-                { "Expected $value to be an instance of ${clazz.name}" },
-                { "Expected $value to not be an instance of ${clazz.name}" }
-            )
-        }
+        (task is WriteArtifactMeta) shouldBe true
     }
 
     @Test
@@ -93,7 +83,7 @@ class JvmUtilPluginSpec {
             """
             plugins {
                 id("java")
-                id("io.spine.jvm-util")
+                id("io.spine.artifact-meta")
             }
 
             group = "test.group"

@@ -60,7 +60,9 @@ internal class ArtifactMetaSpec {
     fun `return artifact identifier in toString`() {
         val artifactMeta = ArtifactMeta(toolBase, emptyDependencies)
 
-        artifactMeta.toString() shouldBe toolBase.toString()
+        val expected = toolBase.toString()
+
+        artifactMeta.toString() shouldBe expected
     }
 
     @Nested
@@ -124,10 +126,28 @@ internal class ArtifactMetaSpec {
             val lines = Files.readAllLines(file.toPath())
 
             lines.let {
-                it shouldHaveSize 3
+                it shouldHaveSize 4
                 it[0] shouldBe toolBase.toString()
-                it[1] shouldBe coreJava.toString()
-                it[2] shouldBe gradleWrapper.toString()
+                it[1] shouldBe "# Dependencies"
+                it[2] shouldBe coreJava.toString()
+                it[3] shouldBe gradleWrapper.toString()
+            }
+        }
+
+        @Test
+        fun `verify file content with no dependencies`() {
+            val noDependencies = Dependencies(emptyList())
+            val artifactWithNoDeps = ArtifactMeta(toolBase, noDependencies)
+
+            val file = tempDir.resolve(DEPS_FILE).toFile()
+
+            artifactWithNoDeps.store(file)
+
+            val lines = Files.readAllLines(file.toPath())
+
+            lines.let {
+                it shouldHaveSize 1
+                it[0] shouldBe toolBase.toString()
             }
         }
     }

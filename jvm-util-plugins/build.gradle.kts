@@ -74,11 +74,11 @@ gradlePlugin {
             "jvm"
         )
         
-        create("jvmUtilPlugin") {
-            id = "io.spine.jvm-util"
-            implementationClass = "io.spine.tools.gradle.jvm.plugin.JvmUtilPlugin"
-            displayName = "Spine JVM Utilities Plugin"
-            description = "Provides utilities for working with JVM projects under Gradle."
+        create("artifactMetaPlugin") {
+            id = "io.spine.artifact-meta"
+            implementationClass = "io.spine.tools.gradle.jvm.plugin.ArtifactMetaPlugin"
+            displayName = "Spine Artifact Metadata Plugin"
+            description = "Stores the artifact metadata in the resources."
             tags.set(pluginTags)
         }
     }

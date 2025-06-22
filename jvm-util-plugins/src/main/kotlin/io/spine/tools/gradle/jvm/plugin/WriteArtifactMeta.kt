@@ -79,7 +79,7 @@ public abstract class WriteArtifactMeta : DefaultTask() {
         val outputDir = outputDirectory.get().asFile
         outputDir.mkdirs()
 
-        val fileName = module.resourcePath
+        val fileName = ArtifactMeta.resourcePath(module)
         val file = outputDir.resolve(fileName)
 
         artifactMeta.store(file)
