@@ -26,14 +26,21 @@
 
 package io.spine.tools.gradle.jvm.plugin
 
+import io.kotest.matchers.comparables.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldStartWith
+import io.spine.tools.gradle.jvm.plugin.ArtifactMetaPlugin.Companion.WORKING_DIR
+import io.spine.tools.gradle.task.BaseTaskName
 import io.spine.tools.gradle.task.TaskName
 import io.spine.tools.gradle.testing.Gradle
 import io.spine.tools.gradle.testing.Gradle.BUILD_SUCCESSFUL
 import io.spine.tools.gradle.testing.runGradleBuild
 import io.spine.tools.gradle.testing.under
+import io.spine.tools.meta.ArtifactMeta
+import io.spine.tools.meta.ArtifactMeta.Companion.RESOURCE_DIRECTORY
+import io.spine.tools.meta.Module
 import java.io.File
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
@@ -77,8 +84,14 @@ class ArtifactMetaPluginSpec {
         hasDependency shouldBe true
     }
 
+    /**
+     * Verifies that the file with metadata is created under the `build` directory.
+     */
     @Test
     fun `be applied via its ID`(@TempDir projectDir: File) {
+        val group = "test.group"
+        val artifact = projectDir.name
+        val version = "1.0.0"
         Gradle.buildFile.under(projectDir).writeText(
             """
             plugins {
@@ -86,15 +99,83 @@ class ArtifactMetaPluginSpec {
                 id("io.spine.artifact-meta")
             }
 
-            group = "test.group"
-            version = "1.0.0"
-            """.trimIndent())
+            group = "$group"
+            version = "$version"
+            """.trimIndent()
+        )
 
         // Execute the build.
         val task = TaskName.of(WriteArtifactMeta.TASK_NAME)
         val result = runGradleBuild(projectDir, task)
 
+        result.task(task.path())?.outcome shouldBe TaskOutcome.SUCCESS         
+        result.output shouldContain BUILD_SUCCESSFUL
+
+        val resourcePath = ArtifactMeta.resourcePath(Module(group, artifact))
+        val file = File(projectDir, "build/$WORKING_DIR/$resourcePath")
+        file.exists() shouldBe true
+        val content = file.readText()
+        content shouldContain "maven:$group:$artifact:$version"
+    }
+
+    /**
+     * Verifies that the metadata file got into production resources under `META-INF/io.spine`.
+     */
+    @Test
+    fun `store project dependencies in resources`(@TempDir projectDir: File) {
+        val group = "test.group"
+        val version = "1.0.0"
+        val artifact = projectDir.name
+
+        // Create a build file with dependencies.
+        Gradle.buildFile.under(projectDir).writeText(
+            """
+            plugins {
+                id("java")
+                id("io.spine.artifact-meta")
+            }
+    
+            group = "$group"
+            version = "$version"
+            
+            repositories {
+                mavenCentral()
+            }
+            
+            dependencies {
+                implementation("com.google.guava:guava:31.1-jre")
+                implementation("org.slf4j:slf4j-api:1.7.36")
+            }
+            """.trimIndent()
+        )
+
+        // Execute the build.
+        val task = BaseTaskName.build
+        val result = runGradleBuild(projectDir, listOf(task.name), debug = true)
+
+        // Verify task execution was successful.
         result.task(task.path())?.outcome shouldBe TaskOutcome.SUCCESS
         result.output shouldContain BUILD_SUCCESSFUL
+
+        // Verify the artifact meta file was created.
+        val resourceDir = File(projectDir, "build/resources/main/$RESOURCE_DIRECTORY")
+        resourceDir.exists() shouldBe true
+
+        // Read the generated file.
+        val metaFiles = resourceDir.listFiles()
+        metaFiles shouldNotBe null
+        metaFiles!!.size shouldBe 1
+
+        val metaFile = metaFiles[0]
+        val lines = metaFile.readLines()
+
+        // Verify the content.
+        lines.size shouldBeGreaterThan 1
+        lines[0] shouldStartWith "maven:$group:$artifact:$version"
+
+        // Verify dependencies are included.
+        val content = lines.joinToString("\n")
+        content shouldContain "maven:com.google.guava:guava:31.1-jre"
+        content shouldContain "maven:org.slf4j:slf4j-api:1.7.36"
     }
 }

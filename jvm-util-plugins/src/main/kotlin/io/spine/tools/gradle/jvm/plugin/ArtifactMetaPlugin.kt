@@ -26,11 +26,13 @@
 
 package io.spine.tools.gradle.jvm.plugin
 
-import io.spine.tools.meta.ArtifactMeta.Companion.RESOURCE_DIRECTORY
 import io.spine.tools.gradle.jvm.plugin.WriteArtifactMeta.Companion.TASK_NAME
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginExtension
+import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.register
+
 
 /**
  * A Gradle plugin that writes [artifact metadata][io.spine.tools.meta.ArtifactMeta]
@@ -44,18 +46,27 @@ public class ArtifactMetaPlugin : Plugin<Project> {
      * Applies the plugin to the given project.
      */
     override fun apply(project: Project): Unit = with(project) {
-        val outputDir = layout.buildDirectory.dir(RESOURCE_DIRECTORY)
+        val outputDir = layout.buildDirectory.dir(WORKING_DIR)
 
-        val task = tasks.register(TASK_NAME, WriteArtifactMeta::class.java) { task ->
+        val task = tasks.register(TASK_NAME, WriteArtifactMeta::class) { task ->
             task.outputDirectory.convention(outputDir)
         }
 
         tasks.named("processResources").configure { it.dependsOn(task) }
 
         // Add the output directory to the resources
-        extensions.getByType(JavaPluginExtension::class.java)
+        extensions.getByType<JavaPluginExtension>()
             .sourceSets.getByName("main")
             .resources
             .srcDir(outputDir)
+    }
+
+    internal companion object {
+
+        /**
+         * The name of the directory under the project `build` where
+         * the plugin creates its working files.
+         */
+        const val WORKING_DIR = "spine"
     }
 }

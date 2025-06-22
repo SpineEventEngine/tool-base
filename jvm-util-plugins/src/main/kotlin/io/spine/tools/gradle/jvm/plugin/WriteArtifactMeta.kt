@@ -86,33 +86,29 @@ public abstract class WriteArtifactMeta : DefaultTask() {
     }
 
     /**
-     * Collects all dependencies of the project.
+     * Collects all the non-test dependencies of the project.
      */
     private fun collectDependencies(): Dependencies {
-        val list = mutableListOf<TDependency>()
-
-        project.configurations
-            .filter { it.isCanBeResolved }
-            .forEach { configuration ->
-                configuration.dependencies.forEach { dependency ->
-                    val mavenArtifact = dependency.toMavenArtifact()
-                    if (mavenArtifact != null) {
-                        list.add(mavenArtifact)
-                    }
-                }
-            }
-
+        val list =  project.configurations
+            .filter { !it.name.lowercase().contains("test") }
+            .flatMap { c -> c.dependencies }
+            .mapNotNull { d -> d.toMavenArtifact() }
         return Dependencies(list)
     }
 }
 
 /**
  * Creates a [MavenArtifact] from a Gradle [Dependency].
+ *
+ * The `null` checks performed by the function filter out dependencies that
+ * do have either `group`, `name`, or `version` attribute available,
+ * which is a safety feature for the dynamic Gradle environment.
+ *
+ * The dependencies of our interest are going to have the required attributes.
  */
 private fun Dependency.toMavenArtifact(): MavenArtifact? {
     val group = this.group ?: return null
     val name = this.name ?: return null
     val version = this.version ?: return null
-
     return MavenArtifact(group, name, version)
 }
