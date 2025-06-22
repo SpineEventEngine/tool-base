@@ -93,7 +93,7 @@ Each module follows a standard structure:
 
 ## Naming Guidelines
 
-### Avoid using type names in variable names. 
+### Avoid using type names in variable names 
 | DO                                 | DON'T                                        |
 |------------------------------------|----------------------------------------------|
 | `val user = getUser()`             | `val userObject = getUser()`                 |
@@ -113,6 +113,11 @@ Each module follows a standard structure:
 ### Avoid duplication of strings in the code
 - Use constants in companion objects instead.
 - If a string contains Kotlin interpolation, it should be a property instead.
+
+### Prefer generic parameters over explicit variable types
+| DO                                      | DON'T                                               |
+|-----------------------------------------|-----------------------------------------------------|
+| `val list = mutableList<Deppendency>()` | `val list: MutableList<Dependency> = mutableList()` |
 
 ## Code Formatting Guidelines
 - Start parameter descriptions with a capital letter.
