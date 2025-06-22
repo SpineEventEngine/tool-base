@@ -135,12 +135,11 @@ public class Dependencies(public val list: List<Dependency>) {
     }
 }
 
-
 /**
  * Parses a dependency from the given string representation.
  *
  * @throws IllegalStateException if the given string does not start with a prefix of
- * a supported dependency format.
+ *   a supported dependency format.
  */
 internal fun parseDependency(value: String): Dependency = when {
     value.startsWith(MavenArtifact.PREFIX) -> MavenArtifact.parse(value)
