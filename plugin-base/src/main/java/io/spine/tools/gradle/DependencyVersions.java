@@ -44,7 +44,8 @@ import static java.lang.String.format;
 /**
  * Versions of the dependencies that are used by Spine plugins.
  *
- * @deprecated Use {@link io.spine.tools.meta.ArtifactMeta} instead.
+ * @deprecated Use the artifact metadata functionality in
+ *   the {@code io.spine.tools.meta.ArtifactMeta} module instead.
  * @see ProtocConfigurationPlugin
  */
 @Deprecated(forRemoval = true)

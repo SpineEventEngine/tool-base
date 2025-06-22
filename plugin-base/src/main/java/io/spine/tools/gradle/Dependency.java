@@ -33,7 +33,10 @@ import static io.spine.util.Exceptions.newIllegalStateException;
  * A Maven-style dependency specification.
  *
  * <p>Consists of a group ID and a name. Does not specify a concrete artifact.
+ *
+ * @deprecated Use the {@code io.spine.tools.meta.Dependency} interface instead.
  */
+@Deprecated(forRemoval = true)
 public interface Dependency {
 
     /**
@@ -56,7 +59,10 @@ public interface Dependency {
     /**
      * Compiles an {@link Artifact} for this dependency with a version from the given
      * set of versions.
+     *
+     * @deprecated Use the artifact metadata functionality in the `jvm-util` module instead.
      */
+    @Deprecated(forRemoval = true)
     default Artifact withVersionFrom(DependencyVersions versions) {
         checkNotNull(versions);
         var version = versions.versionOf(this)
