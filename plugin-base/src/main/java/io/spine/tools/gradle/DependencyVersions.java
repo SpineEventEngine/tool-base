@@ -29,7 +29,6 @@ package io.spine.tools.gradle;
 import com.google.common.collect.ImmutableMap;
 import io.spine.annotation.Internal;
 import io.spine.io.Resource;
-import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Map;
@@ -45,8 +44,10 @@ import static java.lang.String.format;
 /**
  * Versions of the dependencies that are used by Spine plugins.
  *
+ * @deprecated Use {@link io.spine.tools.meta.ArtifactMeta} instead.
  * @see ProtocConfigurationPlugin
  */
+@Deprecated(forRemoval = true)
 @Internal
 public final class DependencyVersions {
 
