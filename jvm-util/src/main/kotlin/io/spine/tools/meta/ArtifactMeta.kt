@@ -36,7 +36,21 @@ import java.nio.file.StandardOpenOption.TRUNCATE_EXISTING
 import java.nio.file.StandardOpenOption.WRITE
 
 /**
- * A class that associates a Maven artifact with its metadata.
+ * A class that associates a Maven artifact with its metadata, providing functionality
+ * to store and load this information from both files and program resources.
+ *
+ * The metadata is stored in a `.meta` file which contains
+ * the artifact coordinates and its dependencies.
+ *
+ * During a project build, the `ArtifactMetaPlugin` places this file into
+ * the project's resources under `META-INF/io.spine` directory using
+ * the pattern `{group_id}.{artifact_id}.meta`.
+ *
+ * For example, an artifact with coordinates "io.spine:core:1.0.0" would have
+ * its metadata stored in `META-INF/io.spine/io.spine_core.meta`.
+ *
+ * Later this metadata is used for configuring a project which depends on
+ * the artifact described by the instance loaded from the resources.
  *
  * @param artifact The Maven artifact.
  * @param dependencies The dependencies of the artifact.
@@ -45,16 +59,26 @@ public data class ArtifactMeta(
     public val artifact: MavenArtifact,
     public val dependencies: Dependencies
 ) {
-
+    /**
+     * The group identifier of this artifact.
+     */
     public val group: String
         get() = artifact.group
 
+    /**
+     * The name of this artifact.
+     */
     public val name: String
         get() = artifact.name
 
+    /**
+     * The module representing this artifact.
+     *
+     * The module is constructed using the [group] and [name] of this artifact.
+     */
     public val module: Module
         get() = Module(group, name)
-
+    
     /**
      * Returns the resource path for this artifact.
      */
