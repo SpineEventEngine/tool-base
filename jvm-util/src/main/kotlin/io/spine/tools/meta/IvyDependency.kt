@@ -35,12 +35,16 @@ package io.spine.tools.meta
  * This allows having meaningful tests for the [Dependencies] class
  * handing escaping of unusual characters.
  *
- * This class belongs to the production code because the [Dependencies] class handles
- * the `ivy:` format, delegating parsing to this class.
+ * This class belongs to the production code because the [Dependencies] class
+ * handles the `ivy:` format, delegating parsing to this class.
  *
  * @see Dependencies.parse
  */
-internal data class IvyDependency(val org: String, val name: String, val rev: String): Dependency {
+internal data class IvyDependency(
+    val org: String,
+    val name: String,
+    val rev: String
+): Dependency {
 
     companion object {
 
