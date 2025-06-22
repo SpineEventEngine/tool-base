@@ -38,7 +38,10 @@ import static io.spine.tools.gradle.JavaConfigurationName.implementation;
  *
  * <p>Implementing classes are expected to manipulate with an instance of
  * a {@link org.gradle.api.artifacts.dsl.DependencyHandler DependencyHandler} of the project.
+ *
+ * @deprecated This interface is going to be removed in future releases.
  */
+@Deprecated(forRemoval = true)
 public interface Dependant {
 
     /**

@@ -39,7 +39,10 @@ import static com.google.common.collect.Sets.newHashSet;
 
 /**
  * A memoizing test-only implementation of {@link Dependant}.
+ *
+ * @deprecated This class is going to be removed in future releases.
  */
+@Deprecated(forRemoval = true)
 public final class MemoizingDependant implements Dependant {
 
     private final Set<String> dependencies = newHashSet();

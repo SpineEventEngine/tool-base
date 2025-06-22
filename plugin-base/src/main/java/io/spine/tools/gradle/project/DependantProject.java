@@ -27,7 +27,6 @@
 package io.spine.tools.gradle.project;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.errorprone.annotations.InlineMe;
 import io.spine.tools.gradle.Artifact;
 import io.spine.tools.gradle.ConfigurationName;
 import io.spine.tools.gradle.Dependency;
@@ -50,7 +49,10 @@ import static org.gradle.api.artifacts.ExcludeRule.MODULE_KEY;
 
 /**
  * A {@link Dependant} implemented on top of a {@link DependencyHandler} of a project.
+ *
+ * @deprecated This class is going to be removed in future releases.
  */
+@Deprecated
 public final class DependantProject implements Dependant {
 
     private final DependencyHandler dependencies;
@@ -65,18 +67,19 @@ public final class DependantProject implements Dependant {
     /**
      * Creates a new instance for the given project.
      *
-     * @deprecated please use {@link #newInstance(Project)} instead.
+     * @deprecated This class is going to be removed in future releases.
      */
     @Deprecated
-    @InlineMe(replacement = "DependantProject.newInstance(project)",
-            imports = "io.spine.tools.gradle.project.DependantProject")
     public static DependantProject from(Project project) {
         return newInstance(project);
     }
 
     /**
      * Creates a new instance for the given project.
+     *
+     * @deprecated This class is going to be removed in future releases.
      */
+    @Deprecated
     public static DependantProject newInstance(Project project) {
         checkNotNull(project);
         return new DependantProject(project.getDependencies(), project.getConfigurations());
