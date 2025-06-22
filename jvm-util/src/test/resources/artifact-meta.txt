@@ -1,0 +1,3 @@
+maven:io.spine.tools:tool-base:2.0.0
+maven:io.spine:core-java:2.0.1
+ivy: org="org.gradle" name="wrapper" rev="7.4.2"
