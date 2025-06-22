@@ -28,6 +28,9 @@ package io.spine.tools.dependency
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.collections.shouldHaveSize
+import io.spine.tools.dependency.ArtifactDependencies.Companion.FILE_EXTENSION
+import io.spine.tools.dependency.ArtifactDependencies.Companion.RESOURCE_DIRECTORY
+import io.spine.tools.dependency.ArtifactDependencies.Companion.resourcePathFor
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -193,12 +196,12 @@ internal class ArtifactDependenciesSpec {
 
         private val resourcePath = DEPS_FILE
 
-        private lateinit var coreJavaArtifact: MavenArtifact
+        private lateinit var coreJava: MavenArtifact
         private lateinit var gradleWrapper: IvyDependency
 
         @BeforeEach
         fun setUp() {
-            coreJavaArtifact = MavenArtifact("io.spine", "core-java", "2.0.1")
+            coreJava = MavenArtifact("io.spine", "core-java", "2.0.1")
             gradleWrapper = IvyDependency("org.gradle", "wrapper", "7.4.2")
         }
 
@@ -212,7 +215,7 @@ internal class ArtifactDependenciesSpec {
             loaded.artifact shouldBe toolBase
             loaded.dependencies.list.let {
                 it shouldHaveSize 2
-                it[0] shouldBe coreJavaArtifact
+                it[0] shouldBe coreJava
                 it[1] shouldBe gradleWrapper
             }
         }
@@ -227,7 +230,7 @@ internal class ArtifactDependenciesSpec {
             loaded.artifact shouldBe toolBase
             loaded.dependencies.list.let {
                 it shouldHaveSize 2
-                it[0] shouldBe coreJavaArtifact
+                it[0] shouldBe coreJava
                 it[1] shouldBe gradleWrapper
             }
         }
@@ -264,6 +267,23 @@ internal class ArtifactDependenciesSpec {
                     ArtifactDependenciesSpec::class.java
                 )
             }
+        }
+
+        /**
+         * This test verifies that the `resourcePathFor` function returns
+         * the expected path following the convention:
+         * `$RESOURCE_DIRECTORY/${module.fileSafeId}$FILE_EXTENSION`.
+         */
+        @Test
+        fun `check resource path convention`() {
+            val module = Module("test.group", "test-name")
+
+            val resourcePath = resourcePathFor(module)
+
+            val expectedPath = resourcePathFor(module)
+            resourcePath shouldBe expectedPath
+
+            resourcePath shouldBe "$RESOURCE_DIRECTORY/${module.fileSafeId}$FILE_EXTENSION"
         }
     }
 }

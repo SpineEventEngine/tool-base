@@ -147,6 +147,18 @@ public data class ArtifactDependencies(
             loadFromResource(path, cls.classLoader)
 
         /**
+         * Returns the resource path for the given module.
+         *
+         * The path follows the convention:
+         * `$RESOURCE_DIRECTORY/${module.fileSafeId}$FILE_EXTENSION`.
+         *
+         * @param module the module to get the resource path for.
+         * @return the resource path.
+         */
+        internal fun resourcePathFor(module: Module): String =
+            "$RESOURCE_DIRECTORY/${module.fileSafeId}$FILE_EXTENSION"
+
+        /**
          * Loads artifact dependencies from a resource for the given module.
          *
          * @param module the module to load the artifact dependencies for.
@@ -160,7 +172,7 @@ public data class ArtifactDependencies(
             module: Module,
             classLoader: ClassLoader
         ): ArtifactDependencies {
-            val resourcePath = "$RESOURCE_DIRECTORY/${module.fileSafeId}$FILE_EXTENSION"
+            val resourcePath = resourcePathFor(module)
             return loadFromResource(resourcePath, classLoader)
         }
 
