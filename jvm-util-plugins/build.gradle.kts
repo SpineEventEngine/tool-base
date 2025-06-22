@@ -78,7 +78,7 @@ gradlePlugin {
             id = "io.spine.artifact-meta"
             implementationClass = "io.spine.tools.gradle.jvm.plugin.ArtifactMetaPlugin"
             displayName = "Spine Artifact Metadata Plugin"
-            description = "Stores the artifact metadata in the resources."
+            description = "Stores the artifact metadata in the resources"
             tags.set(pluginTags)
         }
     }
