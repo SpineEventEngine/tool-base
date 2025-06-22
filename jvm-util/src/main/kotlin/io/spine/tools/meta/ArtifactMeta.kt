@@ -238,11 +238,17 @@ public data class ArtifactMeta(
  * @throws IllegalStateException if the lines are empty or are not of the expected format.
  */
 private fun parseLines(lines: List<String>, source: String): ArtifactMeta {
+    // Check if the input is completely empty.
+    require(lines.isNotEmpty()) {
+        ArtifactMeta.cannotLoad("an empty list", source)
+    }
+
     // Filter out comment lines (lines starting with #)
     val filteredLines = lines.filter { !it.startsWith(COMMENT_PREFIX) }
 
+    // Check if all lines were comments.
     require(filteredLines.isNotEmpty()) {
-        ArtifactMeta.cannotLoad("the empty", source)
+        ArtifactMeta.cannotLoad("a list with only comments", source)
     }
 
     val artifactLine = filteredLines[0]

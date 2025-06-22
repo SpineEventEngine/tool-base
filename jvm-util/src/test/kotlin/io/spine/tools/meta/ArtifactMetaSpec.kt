@@ -194,8 +194,28 @@ internal class ArtifactMetaSpec {
             val file = tempDir.resolve("empty.txt").toFile()
             file.createNewFile()
 
-            assertThrows<IllegalArgumentException> {
+            val exception = assertThrows<IllegalArgumentException> {
                 ArtifactMeta.load(file)
+            }
+
+            // Verify the error message mentions "empty list"
+            assert(exception.message?.contains("empty list") == true) {
+                "Expected error message to mention 'empty list', but got: ${exception.message}"
+            }
+        }
+
+        @Test
+        fun `loading from a file with only comments`() {
+            val file = tempDir.resolve("comments-only.txt").toFile()
+            Files.write(file.toPath(), listOf("# This is a comment", "# Another comment"))
+
+            val exception = assertThrows<IllegalArgumentException> {
+                ArtifactMeta.load(file)
+            }
+
+            // Verify the error message mentions "only comments"
+            assert(exception.message?.contains("only comments") == true) {
+                "Expected error message to mention 'only comments', but got: ${exception.message}"
             }
         }
 
