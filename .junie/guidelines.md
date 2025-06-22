@@ -110,6 +110,10 @@ Each module follows a standard structure:
 - Include automated tests for functionality changes.
 - Keep pull requests focused and small.
 
+### Avoid duplication of strings in the code
+- Use constants in companion objects instead.
+- If a string contains Kotlin interpolation, it should be a property instead.
+
 ## Code Formatting Guidelines
 - Start parameter descriptions with a capital letter.
 - In-line code fragments are always surrounded with back ticks. E.g., `code`.
