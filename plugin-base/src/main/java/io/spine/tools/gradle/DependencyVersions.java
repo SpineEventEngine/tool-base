@@ -93,7 +93,7 @@ public final class DependencyVersions {
     public Optional<String> versionOf(Dependency dependency) {
         checkNotNull(dependency);
         var key = dependency.fileSafeId();
-        @Nullable String value = versions.get(key);
+        var value = versions.get(key);
         return Optional.ofNullable(value);
     }
 }
