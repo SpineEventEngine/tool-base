@@ -1,19 +1,41 @@
+## 📝 Quick Reference Card
+
+```
+🔑 Key Information:
+- Kotlin/Java project with CQRS architecture
+- Use ChatGPT for documentation, Codex for code generation, GPT-4o for complex analysis
+- Follow coding guidelines in Spine Event Engine docs
+- Always include tests with code changes
+- Version bump required for all PRs
+```
+
 ## Table of Contents
-1. [🧠 Purpose](#-purpose)
-2. [🛠️ Project overview](#-project-overview)
-3. [🤖 Agent responsibilities](#-agent-responsibilities)
-4. [🧾 Coding guidelines for Agents](#-coding-guidelines-for-agents)
+1. [Purpose](#-purpose)
+2. [Project overview](#-project-overview)
+3. [Agent responsibilities](#-agent-responsibilities)
+    - [Agent collaboration workflow](#agent-collaboration-workflow)
+    - [Tagging pull request messages](#tagging-pull-request-messages)
+    - [Selecting the right Agent](#selecting-the-right-agent)
+4. [Coding guidelines for Agents](#-coding-guidelines-for-agents)
 5. [Running builds](#running-builds)
 6. [Version policy](#version-policy)
-7. [📁 Project structure expectations](#-project-structure-expectations)
-8. [📄 Documentation tasks](#-documentation-tasks)
-9. [🧪 Testing](#-testing)
-10. [🚨 Safety rules for Agents](#-safety-rules-for-agents)
-11. [💬 Interaction tips – key to effective collaboration!](#-interaction-tips--key-to-effective-collaboration)
-12. [🧭 LLM Goals](#-llm-goals)
-13. [👋 Welcome, Agents!](#-welcome-agents)
+7. [Project structure expectations](#-project-structure-expectations)
+8. [Documentation tasks](#-documentation-tasks)
+9. [Testing](#-testing)
+10. [Safety rules for Agents](#-safety-rules-for-agents)
+11. [Refactoring guidelines](#-refactoring-guidelines)
+12. [Interaction tips – key to effective collaboration!](#-interaction-tips--key-to-effective-collaboration)
+13. [LLM goals](#-llm-goals)
+    - [Problem-solving framework](#problem-solving-framework-for-complex-tasks)
+    - [GPT-4o advanced capabilities](#-gpt-4o-advanced-capabilities)
+14. [Common tasks](#-common-tasks)
+15. [Welcome, Agents!](#-welcome-agents)
 
 ## 🧠 Purpose
+
+> **EXECUTIVE SUMMARY**: This guide outlines how AI agents (ChatGPT, Codex, GPT-4o)
+> collaborate on our Kotlin/Java project. It defines responsibilities, coding standards,
+> and workflows to maintain high code quality and architectural integrity.
 
 This document explains how to use **ChatGPT** and **Codex** effectively in this Kotlin/Java project.
 
@@ -27,9 +49,9 @@ Whether you are a developer, tester, or contributor, this guide will help you co
 with AI to maintain a high-quality codebase.
 
 ### Terminology
-- **LLM**: Refers to the general category of language models (e.g., ChatGPT, Codex, Claude).
-- **Agents**: A broader term for LLMs collaborating on this project. 
-- Use specific names (**ChatGPT**, **Codex**) when they excel at different tasks 
+- **LLM**: Refers to the general category of language models (e.g., ChatGPT, Codex, Claude, Junie).
+- **Agents**: A broader term for LLMs collaborating on this project.
+- Use specific names (**ChatGPT**, **Codex**) when they excel at different tasks
   (e.g., scaffolding versus explanation).
 
 ---
@@ -39,137 +61,192 @@ with AI to maintain a high-quality codebase.
 - **Languages**: Kotlin (primary), Java (secondary).
 - **Build tool**: Gradle with Kotlin DSL.
 - **Architecture**: Event-driven Command Query Responsibility Segregation (CQRS).
-- **Static analysis**: detekt, ErrorProne, Checkstyle, PMD. 
+- **Static analysis**: detekt, ErrorProne, Checkstyle, PMD.
 - **Testing**: JUnit 5, Kotest Assertions, Codecov.
-- **Tools used**: Gradle plugins, IntelliJ IDEA Platform, KSP, KotlinPoet, Dokka. 
+- **Tools used**: Gradle plugins, IntelliJ IDEA Platform, KSP, KotlinPoet, Dokka.
 
 ---
 
 ## 🤖 Agent responsibilities
 
-| Task/Feature                      | Primary Agent | Supporting Agent | Notes                                      |
-|-----------------------------------|---------------|------------------|--------------------------------------------|
-| Writing documentation (like KDoc) | ChatGPT       | Codex            | Use for readable, structured docs.         |
-| Explaining APIs and architecture  | ChatGPT       | -                | Great for clarity in team workflows.       |
-| Code generation (e.g., tests)     | Codex         | ChatGPT          | Codex produces quick scaffolding.          |
-| Code refactoring suggestions      | ChatGPT       | Codex            | Use ChatGPT for design-level improvements. |
-| Completing functions or classes   | Codex         | -                | Codex is better for direct completions.    |
-| Debugging and test suggestions    | ChatGPT       | Codex            | ChatGPT suggests missing scenarios.        |
+| Task/Feature                      | Primary Agent | Supporting Agent | Notes                                       |
+|-----------------------------------|---------------|------------------|---------------------------------------------|
+| Writing documentation (like KDoc) | ChatGPT       | Codex            | Use for readable, structured docs.          |
+| Explaining APIs and architecture  | ChatGPT       | -                | Great for clarity in team workflows.        |
+| Code generation (e.g., tests)     | Codex         | ChatGPT          | Codex produces quick scaffolding.           |
+| Code refactoring suggestions      | ChatGPT       | Codex            | Use ChatGPT for design-level improvements.  |
+| Completing functions or classes   | Codex         | -                | Codex is better for direct completions.     |
+| Debugging and test suggestions    | ChatGPT       | Codex            | ChatGPT suggests missing scenarios.         |
+| Advanced architecture analysis    | GPT-4o        | -                | Best for complex CQRS pattern optimization. |
+| Kotlin idiom optimization         | GPT-4o        | Codex            | Leverages latest language features.         |
+
+### Agent collaboration workflow
+
+```mermaid
+graph TD
+    A[Human Developer] -->|Request task| B{Task Type?}
+    B -->|Documentation| C[ChatGPT]
+    B -->|Code Generation| D[Codex]
+    B -->|Architecture Analysis| E[GPT-4o]
+    C -->|Produce Documentation| F[Review & Merge]
+    D -->|Generate Code| F
+    E -->|Optimize & Refactor| F
+    F -->|Iterate if needed| A
+```
+
+*Note: The diagram shows the typical workflow and which agent to use for different task types.*
 
 
 ### Tagging pull request messages
 
-While crafting GitHub PR messages, tag agent roles as needed:
+Use PR tags for clarity:
 ```text
 feat(chatgpt): Updated README with clearer KDoc examples
 fix(codex): Completed missing `when` branches in tests
+perf(gpt-4o): Optimized event processing pipeline
 ```
 #### Why tag pull requests?
 Tagging PRs helps the team:
-  - Track which agent contributed to specific changes.
-  - Understand whether a PR needs extra human review based on the agent’s role.
-  - Make decisions about multi-agent collaboration in reviews.
+- Track which agent contributed to specific changes.
+- Understand whether a PR needs extra human review based on the agent's role.
+- Make decisions about multi-agent collaboration in reviews.
+
+### Selecting the right Agent
+
+<details>
+<summary>Click to expand the decision tree for agent selection</summary>
+
+```
+Is the task primarily documentation or explanation?
+├── Yes → Use ChatGPT
+└── No → Continue
+
+Is the task primarily generating boilerplate code or tests?
+├── Yes → Use Codex
+└── No → Continue
+
+Does the task involve complex architectural decisions or advanced Kotlin features?
+├── Yes → Use GPT-4o
+└── No → Use ChatGPT for analysis, then Codex for implementation
+```
+
+**Task examples by Agent:**
+
+- **ChatGPT**: Documentation, conceptual explanations, architectural insights
+- **Codex**: Code generation, test scaffolding, completing partially written code
+- **GPT-4o**: Advanced architectural patterns, Kotlin idiom optimization, complex refactoring
+
+</details>
 ---
 
 ## 🧾 Coding guidelines for Agents
 
-### ✅ Preferred
+### Core principles
 
-1. Kotlin idioms are **preferred** over Java-style approaches, including:
-   - Extension functions
-   - `when` expressions
-   - Smart casts
-   - Data classes
-   - Sealed classes
-
-2. Immutable data structures. 
-
-3. Apply **Java interop** only when needed (e.g., using annotations or legacy libraries).
-
-4. Use **Kotlin DSL** when modifying or generating Gradle files.
-
-5. Generate code that **compiles cleanly** and **passes static analysis**.
-
-6. Respect **existing architecture**, naming conventions, and project structure.
-
-7. Use `@file:JvmName`, `@JvmStatic`, etc., where appropriate.
-
-### ❌ Avoid
-
-- Mutable data structures
-- Java-style verbosity (e.g., builders with setters)
-- Redundant null checks (`?.let` misuse)
-- Using `!!` unless clearly justified
-- Mixing Groovy and Kotlin DSLs in build logic
-- Using reflection unless requested
-
-### General guidance
-- Adhere to the [Spine Event Engine Documentation][spine-docs]
-  for coding style and contribution procedures. 
-
-- The conventions on the [Spine Event Engine Documentation][spine-docs]
-  page and other pages in this Wiki area **take precedence over** standard Kotlin or
-  Java conventions.
-
+- Adhere to [Spine Event Engine Documentation][spine-docs] for coding style.
+- Generate code that compiles cleanly and passes static analysis.
+- Respect existing architecture, naming conventions, and project structure.
 - Write clear, incremental commits with descriptive messages.
 - Include automated tests for any code change that alters functionality.
-- Keep pull requests focused and small.
 
-### Naming convention for variables
-- Prefer simple nouns over composite nouns. E.g., `user` is better than `userAccount`.
+### Kotlin best practices
 
-### Safety Rules Checklist
-- ✅ Ensure all generated code compiles and passes static analysis.
-- ❌ Avoid unnecessary reflection or unsafe code (e.g., `!!` in Kotlin).
-- ✅ Do not auto-update external dependencies unless explicitly allowed.
+#### ✅ Prefer
+- **Kotlin idioms** over Java-style approaches:
+    - Extension functions
+    - `when` expressions
+    - Smart casts
+    - Data classes and sealed classes
+    - Immutable data structures
+- **Simple nouns** over composite nouns (`user` > `userAccount`)
+- **Generic parameters** over explicit variable types (`val list = mutableList<Dependency>()`)
+- **Java interop annotations** only when needed (`@file:JvmName`, `@JvmStatic`)
+- **Kotlin DSL** for Gradle files
+
+#### ❌ Avoid
+- Mutable data structures
+- Java-style verbosity (builders with setters)
+- Redundant null checks (`?.let` misuse)
+- Using `!!` unless clearly justified
+- Type names in variable names (`userObject`, `itemList`)
+- String duplication (use constants in companion objects)
+- Mixing Groovy and Kotlin DSLs in build logic
+- Reflection unless specifically requested
+
+### Documentation & comments
+
+#### KDoc style
+- Write concise descriptions for all public and internal APIs
+- Start parameter descriptions with capital letters
+- End parameter descriptions with commas
+- Use inline code with backticks for code references (`example`)
+- Format code blocks with fences and language identifiers:
+  ```kotlin
+  // Example code
+  fun example() {
+      // Implementation
+  }
+  ```
+
+#### Commenting guidelines
+- Avoid inline comments in production code unless necessary
+- Inline comments are helpful in tests
+- When using TODO comments, follow the format on [dedicated page][todo-comments]
+- File and directory names should be formatted as code
+
+#### Text formatting
+- Wrap `.md` text to 80 characters for readability
+- Use periods at the end of complete sentences only
+- No periods for bullet points or fragments
+
+### Safety rules
+- ✅ All code must compile and pass static analysis
+- ❌ Never use reflection or unsafe code without explicit approval
+- ✅ Do not auto-update external dependencies
+- ❌ No analytics or telemetry code
+- ❌ No blocking calls inside coroutines
 
 ---
 ## Version policy
 
+<details>
+<summary>Click to expand versioning guidelines</summary>
+
 ### We use semver
-The version number of the project is kept in the file named `version.gradle.kts` which resides
-in the root of the project.
+The version of the project is kept in the `version.gradle.kts` file in the root of the project.
 
 The version numbers in these files follow the conventions of
-[Semantic Versioning 2.0.0][semver].
+[Semantic Versioning 2.0.0](https://semver.org/).
 
-### Increment a patch version for each pull request
+IMPORTANT: ALWAYS increment the version when a new branch is created.
 
-1. Open the `version.gradle.kts` file in the root directory.
-
-2. Increment the **last number** of the version. Retain zero-padding if applicable:
+### Quick checklist for versioning
+1. Increment the patch version in `version.gradle.kts`.
+   Retain zero-padding if applicable:
     - Example: `"2.0.0-SNAPSHOT.009"` → `"2.0.0-SNAPSHOT.010"`
-
-3. Commit the `version.gradle.kts` file in a separate commit with the comment of the following
-   format:
-    ```text
-    Bump version -> `$newVersion`
-    ```
-    where `$newVersion` is the version number without quotes. For example:
-    ```text
-    Bump version -> `2.0.0-SNAPSHOT.010`
-    ```
-4. Run `./gradlew clean build`
-
-5. Commit updated files `pom.xml` and `dependencies.md` with the following comment: 
+2. Commit the version bump separately with this comment:
    ```text
-   Update dependency reports.
-   ```
+   Bump version → `$newVersion`
+   ``` 
+3. Rebuild using `./gradlew clean build`.
+4. Update `pom.xml`, `dependencies.md` and commit changes with: `Update dependency reports`
 
-### What happens if you forget to increment the version?
-
-Build failure! A GitHub workflow checks for correct version increments.
-
+Remember: PRs without version bumps will fail CI (conflict resolution detailed above).
 
 ### Resolving conflicts in `version.gradle.kts`
 A branch conflict over the version number should be resolved as described below.
- * If a merged branch has a number which is less than that of the current branch, the version of
-   the current branch stays.
- * If the merged branch has the number which is greater or equal to that of the current branch,
-   the number should be increased by one.
+* If a merged branch has a number which is less than that of the current branch, the version of
+  the current branch stays.
+* If the merged branch has the number which is greater or equal to that of the current branch,
+  the number should be increased by one.
+
+</details>
 ---
 
 ## Running builds
+
+<details>
+<summary>Click to expand build instructions</summary>
 
 1. When modifying code, run:
    ```bash
@@ -186,9 +263,14 @@ A branch conflict over the version number should be resolved as described below.
    ./gradlew dokka
    ```
    Documentation-only changes do not require running tests!
+
+</details>
 ---
 
 ## 📁 Project structure expectations
+
+<details>
+<summary>Click to expand project structure details</summary>
 
 ```yaml
 .github
@@ -209,16 +291,24 @@ README.md # Project overview
 AGENTS.md # LLM agent instructions (this file)
 version.gradle.kts # Declares the project version. 
 ```
+
+</details>
 ---
 
 ## 📄 Documentation tasks
 
-- Generate and update **KDoc** for `public` and `internal` APIs.
-  Remember to focus on structure for readability.
+<details>
+<summary>Click to expand documentation guidelines</summary>
 
 - Suggest better **names** and **abstractions**.
 
-- Help format inline comments and design rationale.
+#### Documentation checklist
+1. Ensure all public and internal APIs have KDoc examples.
+2. Add in-line code blocks for clarity.
+3. Use `TODO` comments with agent names for unresolved logic sections:
+    - Example: `// TODO(chatgpt): Refactor `EventStore` for better CQRS compliance.`
+
+</details>
 
 ---
 
@@ -249,13 +339,22 @@ version.gradle.kts # Declares the project version.
 - Avoid generating blocking calls inside coroutines.
 
 ---
-   
-## ⚙️ Refactoring Guidelines
+
+## ⚙️ Refactoring guidelines
+
+<details>
+<summary>Click to expand refactoring guidelines</summary>
+
 - Do not replace Kotest assertions with standard Kotlin's Built-In Test Assertions.
+
+</details>
 
 ---
 
 ## 💬 Interaction tips – key to effective collaboration!
+
+<details>
+<summary>Click to expand collaboration guidelines</summary>
 
 - Human programmers may use inline comments to guide agents:
   ```kotlin
@@ -274,24 +373,87 @@ version.gradle.kts # Declares the project version.
 - When agents or humans add TODO comments, they **must** follow the format described on
   the [dedicated page][todo-comments].
 
+</details>
+
 ---
 
-## 🧭 LLM Goals
+## 🧭 LLM goals
 
 These goals guide how agents (ChatGPT, Codex) are used in this project to:
 - Help developers move faster without sacrificing code quality.
 - Provide language-aware guidance on Kotlin/Java idioms.
 - Lower the barrier to onboarding new contributors.
 - Enable collaborative, explainable, and auditable development with AI.
+
+### Problem-solving framework for complex tasks
+
+When faced with complex tasks, follow this framework:
+
+1. **Decompose**: Break down the problem into smaller, manageable parts
+2. **Analyze**: Understand the architectural implications of each part
+3. **Pattern-Match**: Identify established patterns that apply
+4. **Implement**: Write code that follows project conventions
+5. **Test**: Ensure comprehensive test coverage
+6. **Document**: Provide clear explanations of your solution
+
+*This framework helps maintain consistency across contributions from different agents.*
+
+### 🚀 GPT-4o advanced capabilities
+
+GPT-4o excels at these high-value tasks in our CQRS architecture:
+
+1. **Architecture-level insights**
+    - Suggesting architectural improvements in CQRS pattern implementation
+    - Identifying cross-cutting concerns between command and query sides
+    - Optimizing event flow and state propagation
+
+2. **Advanced Kotlin refactoring**
+    - Converting imperative code to idiomatic Kotlin (sequences, extensions, etc.)
+    - Applying context receivers and other Kotlin 1.6+ features
+    - Optimizing coroutine patterns and structured concurrency
+
+3. **Testing intelligence**
+    - Identifying missing property-based test scenarios
+    - Suggesting event sequence combinations that could cause race conditions
+    - Creating comprehensive test fixtures for complex domain objects
+
+#### Example prompts for GPT-4o
+
+Leverage GPT-4o's advanced capabilities with prompts like these:
+
+```text
+# Architecture analysis
+"Analyze this CommandHandler implementation and suggest improvements to better align with CQRS principles, especially considering event sourcing implications."
+
+# Kotlin refactoring
+"Refactor this Java-style code to use more idiomatic Kotlin patterns. Pay special attention to immutability, extension functions, and DSL opportunities."
+
+# Test enhancement
+"Review this test suite for our event processing pipeline and suggest additional test scenarios focusing on concurrent event handling edge cases."
+```
+
+---
+
+## 📋 Common tasks
+
+<details>
+<summary>Click to expand common task instructions</summary>
+
+- **Adding a new dependency**: Update relevant files in `buildSrc` directory.
+- **Creating a new module**: Follow existing module structure patterns.
+- **Documentation**: Use KDoc style for public and internal APIs.
+- **Testing**: Create comprehensive tests using Kotest assertions.
+
+</details>
+
 --- 
 
 ## 👋 Welcome, Agents!
- - You are here to help.
- - Stay consistent, stay clear, and help this Kotlin/Java codebase become more robust,
-   elegant, and maintainable.
+- You are here to help.
+- Stay consistent, stay clear, and help this Kotlin/Java codebase become more robust,
+  elegant, and maintainable.
 
 <!-- External links -->
 [spine-docs]: https://github.com/SpineEventEngine/documentation/wiki
-[semver]: https://semver.org/
 [kotest-assertions]: https://kotest.io/docs/assertions/assertions.html
 [todo-comments]: https://github.com/SpineEventEngine/documentation/wiki/TODO-comments

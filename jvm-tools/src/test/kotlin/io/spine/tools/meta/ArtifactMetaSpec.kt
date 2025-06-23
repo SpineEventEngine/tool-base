@@ -65,6 +65,13 @@ internal class ArtifactMetaSpec {
         artifactMeta.toString() shouldBe expected
     }
 
+    @Test
+    fun `proxy version property to artifact version`() {
+        val artifactMeta = ArtifactMeta(toolBase, emptyDependencies)
+
+        artifactMeta.version shouldBe toolBase.version
+    }
+
     @Nested
     inner class StoreAndLoad {
 

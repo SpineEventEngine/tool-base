@@ -92,6 +92,11 @@ public abstract class WriteArtifactMeta : DefaultTask() {
             .filter { !it.name.lowercase().contains("test") }
             .flatMap { c -> c.dependencies }
             .mapNotNull { d -> d.toMavenArtifact() }
+            .toSet()
+            .toList().sortedWith(
+                compareBy<MavenArtifact> { it.group }
+                    .thenBy { it.name }
+            )
         return Dependencies(list)
     }
 }

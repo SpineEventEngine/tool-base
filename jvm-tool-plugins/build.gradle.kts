@@ -46,10 +46,13 @@ kotlin {
     explicitApi()
 }
 
-publishing.publications.withType<MavenPublication>().all {
-    groupId = "io.spine.tools"
-    artifactId = "jvm-tool-plugin"
-    version = versionToPublish
+publishing.publications.withType<MavenPublication>().configureEach {
+    when (name) {
+        "fatJar" -> {
+            // Avoid the conflict with the `pluginMaven` publication.
+            artifactId = "jvm-tool-all-plugins"
+        }
+    }
 }
 
 // Do not publish to Gradle Plugin Portal snapshot versions.
