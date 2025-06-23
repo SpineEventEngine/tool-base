@@ -86,7 +86,7 @@ object JUnit : DependencyWithBom() {
         val params = "$group:$infix-params"
         val engine = "$group:$infix-engine"
 
-        @Deprecated("Please use `Jupiter.run { artifacts[api] }` instead.")
+        @Deprecated("Please use `[Jupiter.run { artifacts[api] }` instead.")
         val apiArtifact = "$api:$version"
 
         override val modules = listOf(api, params, engine)

@@ -29,7 +29,7 @@ package io.spine.dependency.build
 /**
  * An artifact of well-specified annotations to power static analysis
  * checks and JVM language interop. Developed by consensus of the partner
- * organizations listed at [the project site](https://jspecify.dev).
+ * organizations listed at [the project site](https://jspecify.org).
  *
  * @see <a href="https://github.com/jspecify/jspecify">JSpecify at GitHub</a>
  */
