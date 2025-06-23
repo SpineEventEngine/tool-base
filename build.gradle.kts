@@ -66,7 +66,7 @@ LicenseReporter.mergeAllReports(project)
 spinePublishing {
     val customPublishing = arrayOf(
         "gradle-root-plugin",
-        "jvm-util-plugins",
+        "jvm-tool-plugins",
         "intellij-platform",
         "intellij-platform-java"
     )

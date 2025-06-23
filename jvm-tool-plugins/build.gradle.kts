@@ -48,7 +48,7 @@ kotlin {
 
 publishing.publications.withType<MavenPublication>().all {
     groupId = "io.spine.tools"
-    artifactId = "jvm-util-plugin"
+    artifactId = "jvm-tool-plugin"
     version = versionToPublish
 }
 
@@ -73,7 +73,7 @@ gradlePlugin {
             "java",
             "jvm"
         )
-        
+
         create("artifactMetaPlugin") {
             id = "io.spine.artifact-meta"
             implementationClass = "io.spine.tools.gradle.jvm.plugin.ArtifactMetaPlugin"
@@ -88,7 +88,7 @@ dependencies {
     compileOnlyApi(gradleApi())
     compileOnlyApi(Kotlin.GradlePlugin.api)
     compileOnly(gradleKotlinDsl())
-    api(project(":jvm-util"))
+    api(project(":jvm-tools"))
 
     testImplementation(project(":plugin-testlib"))
 }

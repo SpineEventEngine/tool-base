@@ -60,7 +60,7 @@ public interface Dependency {
      * Compiles an {@link Artifact} for this dependency with a version from the given
      * set of versions.
      *
-     * @deprecated Use the artifact metadata functionality in the `jvm-util` module instead.
+     * @deprecated Use the artifact metadata functionality in the `jvm-tools` module instead.
      */
     @Deprecated(forRemoval = true)
     default Artifact withVersionFrom(DependencyVersions versions) {

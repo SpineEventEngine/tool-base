@@ -54,7 +54,7 @@ class KManifestSpec {
                     + visibleManifests
         )
             .that(manifest.implementationTitle)
-            .isEqualTo("io.spine.tools:jvm-util")
+            .isEqualTo("io.spine.tools:jvm-tools")
 
         manifest.implementationVersion shouldNot beEmpty()
     }
