@@ -48,7 +48,7 @@ kotlin {
 
 publishing.publications.withType<MavenPublication>().all {
     groupId = "io.spine.tools"
-    artifactId = "jvm-tool-plugin"
+    artifactId = "jvm-tool-plugins"
     version = versionToPublish
 }
 
