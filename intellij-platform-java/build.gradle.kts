@@ -27,7 +27,7 @@
 import io.spine.dependency.lib.IntelliJ
 
 plugins {
-    `intellij-platform-jar`
+    `uber-jar-module`
     kotlin("jvm")
 }
 

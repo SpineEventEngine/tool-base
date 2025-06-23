@@ -1,17 +1,17 @@
 ## Table of Contents
-1. [Purpose](#-purpose)
-2. [Project overview](#-project-overview)
-3. [Agent responsibilities](#-agent-responsibilities)
-4. [Coding guidelines for Agents](#-coding-guidelines-for-agents)
+1. [🧠 Purpose](#-purpose)
+2. [🛠️ Project overview](#-project-overview)
+3. [🤖 Agent responsibilities](#-agent-responsibilities)
+4. [🧾 Coding guidelines for Agents](#-coding-guidelines-for-agents)
 5. [Running builds](#running-builds)
 6. [Version policy](#version-policy)
-7. [Project structure expectations](#-project-structure-expectations)
-8. [Documentation tasks](#-documentation-tasks)
-9. [Testing](#-testing)
-10. [Safety rules for Agents](#-safety-rules-for-agents)
-11. [Interaction tips – key to effective collaboration!](#-interaction-tips--key-to-effective-collaboration)
-12. [LLM Goals](#-llm-goals)
-13. [Welcome, Agents!](#-welcome-agents)
+7. [📁 Project structure expectations](#-project-structure-expectations)
+8. [📄 Documentation tasks](#-documentation-tasks)
+9. [🧪 Testing](#-testing)
+10. [🚨 Safety rules for Agents](#-safety-rules-for-agents)
+11. [💬 Interaction tips – key to effective collaboration!](#-interaction-tips--key-to-effective-collaboration)
+12. [🧭 LLM Goals](#-llm-goals)
+13. [👋 Welcome, Agents!](#-welcome-agents)
 
 ## 🧠 Purpose
 
@@ -249,6 +249,11 @@ version.gradle.kts # Declares the project version.
 - Avoid generating blocking calls inside coroutines.
 
 ---
+   
+## ⚙️ Refactoring Guidelines
+- Do not replace Kotest assertions with standard Kotlin's Built-In Test Assertions.
+
+---
 
 ## 💬 Interaction tips – key to effective collaboration!
 
@@ -274,10 +279,10 @@ version.gradle.kts # Declares the project version.
 ## 🧭 LLM Goals
 
 These goals guide how agents (ChatGPT, Codex) are used in this project to:
-- Help developers move faster without sacrificing code quality
-- Provide language-aware guidance on Kotlin/Java idioms
-- Lower the barrier to onboarding new contributors
-- Enable collaborative, explainable, and auditable development with AI
+- Help developers move faster without sacrificing code quality.
+- Provide language-aware guidance on Kotlin/Java idioms.
+- Lower the barrier to onboarding new contributors.
+- Enable collaborative, explainable, and auditable development with AI.
 --- 
 
 ## 👋 Welcome, Agents!

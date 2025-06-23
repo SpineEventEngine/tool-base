@@ -34,7 +34,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * A third-party dependency of a client project.
  *
  * <p>Such a dependency may be declared by the user or by one of our Gradle plugins.
+ *
+ * @deprecated Use the {@code io.spine.tools.meta.MavenArtifact} class instead.
  */
+@Deprecated(forRemoval = true)
 public final class ThirdPartyDependency implements Dependency {
 
     private final String groupId;

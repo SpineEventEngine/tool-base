@@ -62,16 +62,37 @@ public fun String.under(dir: File): File = File(dir, this)
 /**
  * Runs a Gradle build for the project created in the [given directory][projectDir]
  * using the given [tasks].
- *
+ * @param projectDir The directory containing the Gradle project to build.
+ * @param arguments The list of command line arguments to pass to Gradle.
+ * @param tasks The tasks to execute.
  * @return the result of the build.
  * @see GradleProject
  */
 public fun runGradleBuild(projectDir: File, vararg tasks: TaskName): BuildResult {
     val arguments = tasks.map { it.name() }
-    val result = GradleRunner.create()
+    return runGradleBuild(projectDir, arguments)
+}
+
+/**
+ * Runs a Gradle build for the project in the specified directory with given arguments.
+ *
+ * @param projectDir The directory containing the Gradle project to build.
+ * @param arguments The list of command line arguments to pass to Gradle.
+ * @param debug Whether to run Gradle in debug mode.
+ * @return the result of the build.
+ * @see GradleProject
+ */
+public fun runGradleBuild(
+    projectDir: File,
+    arguments: List<String>,
+    debug: Boolean = false,
+): BuildResult {
+    val runner = GradleRunner.create()
         .withProjectDir(projectDir)
         .withPluginClasspath()
         .withArguments(arguments)
-        .build()
-    return result
+    if (debug) {
+        runner.withDebug(true)
+    }    
+    return runner.build()
 }

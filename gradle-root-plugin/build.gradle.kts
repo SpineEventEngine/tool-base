@@ -40,7 +40,7 @@ val versionToPublish: String by extra
 publishing.publications.withType<MavenPublication>().all {
     groupId = "io.spine.tools"
     // It's plural because there are two plugins in the JAR.
-    artifactId = "spine-root-gradle-plugins"
+    artifactId = "root-gradle-plugins"
     version = versionToPublish
 }
 

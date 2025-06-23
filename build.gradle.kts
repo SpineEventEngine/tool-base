@@ -66,6 +66,7 @@ LicenseReporter.mergeAllReports(project)
 spinePublishing {
     val customPublishing = arrayOf(
         "gradle-root-plugin",
+        "jvm-tool-plugins",
         "intellij-platform",
         "intellij-platform-java"
     )
@@ -80,6 +81,7 @@ spinePublishing {
             gitHub("tool-base")
         )
     }
+    artifactPrefix = ""
 }
 
 allprojects {
