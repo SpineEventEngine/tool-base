@@ -53,6 +53,7 @@ public class ArtifactMetaPlugin : Plugin<Project> {
         }
 
         tasks.named("processResources").configure { it.dependsOn(task) }
+        tasks.named("sourcesJar").configure { it.dependsOn(task) }
 
         // Add the output directory to the resources
         extensions.getByType<JavaPluginExtension>()
