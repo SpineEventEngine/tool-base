@@ -72,13 +72,19 @@ public data class ArtifactMeta(
         get() = artifact.name
 
     /**
+     * The version of this artifact.
+     */
+    public val version: String
+        get() = artifact.version
+
+    /**
      * The module representing this artifact.
      *
      * The module is constructed using the [group] and [name] of this artifact.
      */
     public val module: Module
         get() = Module(group, name)
-    
+
     /**
      * Returns the resource path for this artifact.
      */
