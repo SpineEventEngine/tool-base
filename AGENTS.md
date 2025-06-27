@@ -319,6 +319,19 @@ version.gradle.kts # Declares the project version.
 - Prefer [Kotest assertions][kotest-assertions] over
   assertions from JUnit or Google Truth.
 
+### Code style
+
+#### Group consecutive assertions
+
+```kotlin
+val dependencies = artifactMeta.dependencies.list.map { it.toString() }
+dependencies.let {
+    it shouldContain "maven:api.group:api-artifact:1.0.0"
+    it shouldContain "maven:impl.group:impl-artifact:1.0.0"
+    it shouldNotContain "maven:custom.group:custom-artifact:1.0.0"
+}
+```
+
 ### Responsibilities
 
 #### Codex
@@ -453,7 +466,8 @@ Leverage GPT-4o's advanced capabilities with prompts like these:
 - Stay consistent, stay clear, and help this Kotlin/Java codebase become more robust,
   elegant, and maintainable.
 
-<!-- External links -->
+[//]: # (External links)
+
 [spine-docs]: https://github.com/SpineEventEngine/documentation/wiki
 [kotest-assertions]: https://kotest.io/docs/assertions/assertions.html
 [todo-comments]: https://github.com/SpineEventEngine/documentation/wiki/TODO-comments
