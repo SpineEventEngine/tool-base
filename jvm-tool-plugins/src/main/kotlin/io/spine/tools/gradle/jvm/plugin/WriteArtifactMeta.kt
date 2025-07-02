@@ -88,15 +88,22 @@ public abstract class WriteArtifactMeta : DefaultTask() {
      * Collects all the non-test dependencies of the project.
      */
     private fun collectDependencies(): Dependencies {
-        val list =  project.configurations
-            .filter { !it.name.lowercase().contains("test") }
-            .flatMap { c -> c.dependencies }
-            .mapNotNull { d -> d.toMavenArtifact() }
+        val productionConfigurations = arrayOf(
+            "api",
+            "implementation",
+            "runtimeOnly"
+        )
+        val list = project.configurations
+            .filter { config ->
+                val name = config.name.lowercase()
+                !name.contains("test")
+                        && productionConfigurations.any { name.contains(it) }
+            }
+            .flatMap { it.dependencies }
+            .mapNotNull { it.toMavenArtifact() }
             .toSet()
-            .toList().sortedWith(
-                compareBy<MavenArtifact> { it.group }
-                    .thenBy { it.name }
-            )
+            .toList()
+            .sortedWith(compareBy<MavenArtifact> { it.group }.thenBy { it.name })
         return Dependencies(list)
     }
 }

@@ -70,7 +70,7 @@ gradlePlugin {
             "kotlin",
             "java"
         )
-        
+
         create("spineRootPlugin") {
             // Make sure it matches the value of the property `SpinePlugin.Companion.ID`.
             id = "io.spine.root"

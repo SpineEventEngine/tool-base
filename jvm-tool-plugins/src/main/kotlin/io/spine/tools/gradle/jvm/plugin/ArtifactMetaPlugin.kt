@@ -29,7 +29,9 @@ package io.spine.tools.gradle.jvm.plugin
 import io.spine.tools.gradle.jvm.plugin.WriteArtifactMeta.Companion.TASK_NAME
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.file.Directory
 import org.gradle.api.plugins.JavaPluginExtension
+import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.register
 
@@ -48,20 +50,29 @@ public class ArtifactMetaPlugin : Plugin<Project> {
     override fun apply(project: Project): Unit = with(project) {
         val outputDir = layout.buildDirectory.dir(WORKING_DIR)
 
-        val task = tasks.register(TASK_NAME, WriteArtifactMeta::class) { task ->
-            task.outputDirectory.convention(outputDir)
-        }
-
-        tasks.named("processResources").configure { it.dependsOn(task) }
-        afterEvaluate {
-            tasks.findByName("sourcesJar")?.dependsOn(task)
-        }
+        createTask(outputDir)
 
         // Add the output directory to the resources
         extensions.getByType<JavaPluginExtension>()
             .sourceSets.getByName("main")
             .resources
             .srcDir(outputDir)
+    }
+
+    /**
+     * Registers [WriteArtifactMeta] in the project and makes `processResources` and
+     * `sourcesJar` tasks depend on it.
+     */
+    private fun Project.createTask(outputDir: Provider<Directory>) {
+        val task = tasks.register<WriteArtifactMeta>(TASK_NAME) {
+            outputDirectory.convention(outputDir)
+        }
+        tasks.named("processResources").configure {
+            it.dependsOn(task)
+        }
+        afterEvaluate {
+            tasks.findByName("sourcesJar")?.dependsOn(task)
+        }
     }
 
     internal companion object {

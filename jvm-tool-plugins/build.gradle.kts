@@ -88,10 +88,10 @@ gradlePlugin {
 }
 
 dependencies {
-    compileOnlyApi(gradleApi())
-    compileOnlyApi(Kotlin.GradlePlugin.api)
     compileOnly(gradleKotlinDsl())
+    compileOnlyApi(Kotlin.GradlePlugin.api)
     api(project(":jvm-tools"))
 
     testImplementation(project(":plugin-testlib"))
+    testCompileOnly(gradleKotlinDsl())
 }
