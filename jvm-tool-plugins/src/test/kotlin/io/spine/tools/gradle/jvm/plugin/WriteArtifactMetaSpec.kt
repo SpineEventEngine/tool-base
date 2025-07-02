@@ -57,10 +57,10 @@ class WriteArtifactMetaSpec {
         project.version = "1.0.0"
         project.pluginManager.apply(JavaPlugin::class.java)
 
+        outputDir = tempDir
         task = project.tasks.register<WriteArtifactMeta>(TASK_NAME) {
             outputDirectory.set(outputDir)
         }.get()
-        outputDir = tempDir
     }
 
     @Test
