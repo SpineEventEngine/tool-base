@@ -89,7 +89,6 @@ gradlePlugin {
 
 dependencies {
     compileOnly(gradleKotlinDsl())
-    //compileOnlyApi(gradleApi())
     compileOnlyApi(Kotlin.GradlePlugin.api)
     api(project(":jvm-tools"))
 
