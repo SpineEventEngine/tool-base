@@ -27,7 +27,6 @@
 @file:Suppress("UnstableApiUsage") // `configurations` block.
 
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import io.spine.dependency.lib.Kotlin
 import io.spine.gradle.publish.IncrementGuard
 import io.spine.gradle.publish.SpinePublishing
 import io.spine.gradle.publish.spinePublishing
@@ -93,6 +92,7 @@ tasks.shadowJar {
 /**
  * Exclude unwanted directories.
  */
+@Suppress("LongMethod")
 private fun ShadowJar.excludeFiles() {
     exclude(
         /*
