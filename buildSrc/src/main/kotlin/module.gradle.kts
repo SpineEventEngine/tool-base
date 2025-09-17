@@ -99,6 +99,7 @@ fun Module.forceConfigurations() {
             resolutionStrategy {
                 force(
                     Base.lib,
+                    Base.annotations,
                     Reflect.lib,
                     Logging.lib,
                     Logging.libJvm,

@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -26,6 +26,8 @@
 
 package io.spine.tools.java.javadoc;
 
+import io.spine.annotation.Internal;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 import static io.spine.tools.java.javadoc.JavadocEscaper.EscapeSequence.fromBeginningOf;
 
@@ -39,6 +41,7 @@ import static io.spine.tools.java.javadoc.JavadocEscaper.EscapeSequence.fromBegi
  * a person that writes a comment in ".proto" file does not know,
  * that {@literal "<"} and {@literal ">"} should not appear in Javadoc.
  */
+@Internal
 public final class JavadocEscaper {
 
     /** Prevents instantiation of this utility class. */
