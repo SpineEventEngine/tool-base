@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -27,6 +27,7 @@
 package io.spine.tools.js.fs;
 
 import com.google.errorprone.annotations.Immutable;
+import io.spine.annotation.Internal;
 import io.spine.code.fs.AbstractDirectory;
 import io.spine.tools.code.SourceSetName;
 import io.spine.tools.fs.DefaultPaths;
@@ -77,6 +78,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * <p>Other directories (like source code directory) may also be present in the project, but their
  * location is currently not standardized and thus is not described by this class.
  */
+@Internal
 @Immutable
 @SuppressWarnings("unused") /* Part of the public API. */
 public final class DefaultJsPaths extends DefaultPaths {

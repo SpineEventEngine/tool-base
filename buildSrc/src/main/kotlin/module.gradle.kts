@@ -34,6 +34,7 @@ import io.spine.dependency.local.Base
 import io.spine.dependency.local.Logging
 import io.spine.dependency.local.Reflect
 import io.spine.dependency.local.Validation
+import io.spine.dependency.test.JUnit
 import io.spine.gradle.VersionWriter
 import io.spine.gradle.checkstyle.CheckStyleConfig
 import io.spine.gradle.github.pages.updateGitHubPages
@@ -98,7 +99,9 @@ fun Module.forceConfigurations() {
         all {
             resolutionStrategy {
                 force(
+                    JUnit.bom,
                     Base.lib,
+                    Base.annotations,
                     Reflect.lib,
                     Logging.lib,
                     Logging.libJvm,

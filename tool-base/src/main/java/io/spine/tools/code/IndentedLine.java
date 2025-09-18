@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -27,6 +27,7 @@
 package io.spine.tools.code;
 
 import com.google.errorprone.annotations.Immutable;
+import io.spine.annotation.Internal;
 
 /**
  * The JavaScript code line as it appears in a source code file.
@@ -36,6 +37,7 @@ import com.google.errorprone.annotations.Immutable;
  * <p>For example, the code inside the {@code if} block is one unit deeper than the {@code if}
  * declaration itself.
  */
+@Internal
 @Immutable
 public final class IndentedLine extends Line {
 
