@@ -44,7 +44,6 @@ internal class EntryLookup private constructor(
     /**
      * Finds an entry with the given name in the archive.
      *
-     *
      * This method should only be called once in the lifetime of an `EntryLookup`.
      * All subsequent calls will always return an empty result.
      *
@@ -98,7 +97,7 @@ internal class EntryLookup private constructor(
         /**
          * Opens the given archive for a lookup.
          *
-         * @return a new instance of `EntryLookup`
+         * @return a new instance of `EntryLookup`.
          */
         @JvmStatic
         fun open(archiveFile: ArchiveFile): EntryLookup {
