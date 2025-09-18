@@ -63,8 +63,7 @@ internal class EntryLookup private constructor(
     private fun doFindEntry(fileExtension: String): MutableCollection<ArchiveEntry> {
         val result = ImmutableSet.builder<ArchiveEntry>()
         var entry = stream.getNextEntry()
-        while (entry != null
-        ) {
+        while (entry != null) {
             val entryName = entry.getName()
             if (entryName.endsWith(fileExtension)) {
                 atDebug.log { "Reading ZIP entry `$entryName`." }
@@ -85,13 +84,9 @@ internal class EntryLookup private constructor(
     }
 
     /**
-     * {@inheritDoc}
+     * Closes the underlying [ZipInputStream].
      *
-     *
-     * Closes the underlying file stream.
-     *
-     * @throws IOException
-     * if `InputStream.close()` throws an `IOException`
+     * @throws IOException if `InputStream.close()` throws an `IOException`.
      */
     @Throws(IOException::class)
     override fun close() {
