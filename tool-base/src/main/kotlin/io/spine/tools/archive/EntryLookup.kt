@@ -41,16 +41,27 @@ internal class EntryLookup private constructor(
     private val stream: ZipInputStream
 ) : Closeable, WithLogging {
 
+    companion object {
+
+        /**
+         * Opens the given archive for a lookup.
+         *
+         * @return a new instance of `EntryLookup`.
+         */
+        @JvmStatic
+        fun open(archiveFile: ArchiveFile): EntryLookup {
+            val stream = ZipInputStream(archiveFile.open())
+            return EntryLookup(stream)
+        }
+    }
+
     /**
-     * Finds an entry with the given name in the archive.
+     * Finds entries with the given extension.
      *
-     * This method should only be called once in the lifetime of an `EntryLookup`.
-     * All subsequent calls will always return an empty result.
-     *
-     * @param fileExtension The name of the entry in terms of `ZipEntry.getName()`.
-     * @return a snapshot of the found entry or `Optional.empty()` if there is no such an entry.
+     * @param fileExtension The extension of interest.
+     * @return entries with the given extension, or empty collection if none found.
      */
-    fun findByExtension(fileExtension: String): MutableCollection<ArchiveEntry> {
+    fun findByExtension(fileExtension: String): Collection<ArchiveEntry> {
         try {
             return doFindEntry(fileExtension)
         } catch (e: IOException) {
@@ -59,7 +70,7 @@ internal class EntryLookup private constructor(
     }
 
     @Throws(IOException::class)
-    private fun doFindEntry(fileExtension: String): MutableCollection<ArchiveEntry> {
+    private fun doFindEntry(fileExtension: String): Collection<ArchiveEntry> {
         val result = ImmutableSet.builder<ArchiveEntry>()
         var entry = stream.getNextEntry()
         while (entry != null) {
@@ -90,19 +101,5 @@ internal class EntryLookup private constructor(
     @Throws(IOException::class)
     override fun close() {
         stream.close()
-    }
-
-    companion object {
-
-        /**
-         * Opens the given archive for a lookup.
-         *
-         * @return a new instance of `EntryLookup`.
-         */
-        @JvmStatic
-        fun open(archiveFile: ArchiveFile): EntryLookup {
-            val stream = ZipInputStream(archiveFile.open())
-            return EntryLookup(stream)
-        }
     }
 }
