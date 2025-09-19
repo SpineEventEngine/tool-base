@@ -240,13 +240,6 @@ class ArtifactMetaPluginSpec {
 
     @Test
     fun `exclude selected configurations when collecting dependencies`(@TempDir projectDir: File) {
-        val dependencies = arrayOf(
-            "com.google.guava:guava:31.1-jre",
-            "org.slf4j:slf4j-api:1.7.36",
-            "org.jetbrains:annotations:24.0.1",
-            "org.junit.jupiter:junit-jupiter-api:5.12.1"
-        )
-
         // Create a build file with dependencies and exclusion.
         Gradle.buildFile.under(projectDir).writeText(
             """
