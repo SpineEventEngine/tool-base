@@ -48,7 +48,7 @@ public open class ArtifactMetaExtension(project: Project) {
     /**
      * A set of explicit Maven dependency notations to be added to the metadata.
      *
-     * Each notation must be in the form "group:artifact:version".
+     * Each notation must be in the form "$group:$artifact:$version".
      */
     public val explicitDependencies: SetProperty<String> =
         project.objects.setProperty(String::class)
