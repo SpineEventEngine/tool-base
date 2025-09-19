@@ -31,7 +31,6 @@ package io.spine.gradle.protobuf
 
 import com.google.protobuf.gradle.GenerateProtoTask
 import com.google.protobuf.gradle.ProtobufExtension
-import gradle.kotlin.dsl.accessors._964d06a5688316d2b3f601355496aa06.kotlin
 import io.spine.gradle.sourceSets
 import java.io.File
 import java.nio.file.Files
