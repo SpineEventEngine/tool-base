@@ -178,4 +178,64 @@ class ArtifactMetaPluginSpec {
         content shouldContain "maven:com.google.guava:guava:31.1-jre"
         content shouldContain "maven:org.slf4j:slf4j-api:1.7.36"
     }
+    
+    @Test
+    fun `exclude selected configurations when collecting dependencies`(@TempDir projectDir: File) {
+        val group = "test.group"
+        val version = "1.0.0"
+        val artifact = projectDir.name
+
+        // Create a build file with dependencies and exclusion.
+        Gradle.buildFile.under(projectDir).writeText(
+            """
+            plugins {
+                id("java")
+                id("io.spine.artifact-meta")
+            }
+
+            group = "$group"
+            version = "$version"
+
+            repositories {
+                mavenCentral()
+            }
+
+            artifactMeta {
+                exclude.add("implementation")
+            }
+
+            dependencies {
+                implementation("com.google.guava:guava:31.1-jre")
+                implementation("org.slf4j:slf4j-api:1.7.36")
+                compileOnly("org.jetbrains:annotations:24.0.1")
+            }
+            """.trimIndent()
+        )
+
+        // Execute the build.
+        val task = BaseTaskName.build
+        val result = runGradleBuild(projectDir, listOf(task.name))
+
+        // Verify task execution was successful.
+        result.task(task.path())?.outcome shouldBe TaskOutcome.SUCCESS
+        result.output shouldContain BUILD_SUCCESSFUL
+
+        // Verify the artifact meta file was created.
+        val resourceDir = File(projectDir, "build/resources/main/$RESOURCE_DIRECTORY")
+        resourceDir.exists() shouldBe true
+
+        // Read the generated file.
+        val metaFiles = resourceDir.listFiles()
+        metaFiles shouldNotBe null
+        metaFiles!!.size shouldBe 1
+
+        val metaFile = metaFiles[0]
+        val content = metaFile.readText()
+
+        // Verify dependencies from the excluded configuration are NOT present.
+        content.contains("maven:com.google.guava:guava:31.1-jre").shouldBe(false)
+        content.contains("maven:org.slf4j:slf4j-api:1.7.36").shouldBe(false)
+        // Dependency from a different configuration may still not be present due to default filtering; this assertion ensures the metadata itself exists.
+        content shouldStartWith "maven:$group:$artifact:$version"
+    }
 }

@@ -48,6 +48,9 @@ public class ArtifactMetaPlugin : Plugin<Project> {
     override fun apply(project: Project): Unit = with(project) {
         val outputDir = layout.buildDirectory.dir(WORKING_DIR)
 
+        // Register the extension to configure the plugin behavior.
+        extensions.create("artifactMeta", ArtifactMetaExtension::class.java, this)
+
         val task = tasks.register(TASK_NAME, WriteArtifactMeta::class) { task ->
             task.outputDirectory.convention(outputDir)
         }
