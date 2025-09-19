@@ -88,4 +88,12 @@ public open class ExcludeConfigurations(project: Project) {
     public fun containing(vararg parts: String) {
         containing.addAll(*parts)
     }
+
+    /**
+     * Clear all the exclusions; include all configurations.
+     */
+    public fun clear() {
+        named.set(emptySet())
+        containing.set(emptySet())
+    }
 }

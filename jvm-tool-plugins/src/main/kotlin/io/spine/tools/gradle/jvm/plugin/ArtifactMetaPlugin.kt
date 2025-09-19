@@ -72,16 +72,17 @@ import org.gradle.kotlin.dsl.register
  * 
  * ### Defaults
  * 
- * The plugin automatically excludes test configurations.
+ * The plugin automatically excludes all configurations having `"test"` in their names.
  * 
- * To include test configurations into the artifact meta info, please use the following DSL.
+ * To include test configurations into the artifact meta file, use the following DSL.
  * 
  * ```kotlin
  * artifactMeta {
  *    excludeConfigurations {
- *        named.get().clear()
+ *        // Reset all defaults. Include all configurations.
+ *        clear()
  *        // OR
- *        named.convention(emptySet())
+ *        containing.set(emptySet())
  *    }
  * }
  * ```
