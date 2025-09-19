@@ -33,7 +33,6 @@ import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.register
 
-
 /**
  * A Gradle plugin that writes [artifact metadata][io.spine.tools.meta.ArtifactMeta]
  * to the resources of a project.
@@ -42,8 +41,12 @@ import org.gradle.kotlin.dsl.register
  * and exposes the `artifactMeta` extension for configuration.
  *
  * ### Artifact metadata file
+ *
  * The path of the created file is:
- * `{project.buildDir}/resources/main/META-INF/spine/artifact-meta.json`
+ *  * `${project.buildDir}/resources/main/META-INF/io.spine/<artifact-name>.meta`
+ *
+ *  Where `<artifact-name>` is obtained as the [fileSafeId][io.spine.tools.meta.Module.fileSafeId]
+ *  property of the corresponding [Module][io.spine.tools.meta.Module].
  *
  * ### `excludeConfiguration` DSL
  *
