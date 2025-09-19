@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -33,6 +33,7 @@ import com.google.protobuf.DescriptorProtos.ServiceDescriptorProto;
 import com.google.protobuf.Descriptors.Descriptor;
 import com.google.protobuf.Descriptors.EnumDescriptor;
 import com.google.protobuf.Descriptors.ServiceDescriptor;
+import io.spine.annotation.Internal;
 import io.spine.code.fs.AbstractSourceFile;
 import io.spine.code.java.ClassName;
 import io.spine.code.java.PackageName;
@@ -56,6 +57,7 @@ import static io.spine.util.Preconditions2.checkNotEmptyOrBlank;
  * the path from the top level package of the corresponding Java type. For example:
  * {@code "io/spine/option/EntityOption.java"}.
  */
+@Internal
 public final class SourceFile extends AbstractSourceFile {
 
     private SourceFile(Path path) {

@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -27,7 +27,9 @@
 package io.spine.tools.code;
 
 import com.google.errorprone.annotations.Immutable;
+import io.spine.annotation.Internal;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -36,9 +38,11 @@ import static com.google.common.base.Preconditions.checkState;
 /**
  * A non-negative indentation of the generated code.
  */
+@Internal
 @Immutable
 public final class Indent implements Element, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 0L;
     private static final String SPACE = " ";
 
