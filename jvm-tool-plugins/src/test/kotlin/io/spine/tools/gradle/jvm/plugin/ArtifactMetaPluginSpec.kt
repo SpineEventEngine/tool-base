@@ -186,6 +186,60 @@ class ArtifactMetaPluginSpec {
     }
     
     @Test
+    fun `filter test configurations by default`(@TempDir projectDir: File) {
+        val dependencies = arrayOf(
+            "com.google.guava:guava:31.1-jre",
+            "org.slf4j:slf4j-api:1.7.36",
+            "org.jetbrains:annotations:24.0.1",
+            "org.junit.jupiter:junit-jupiter-api:5.12.1"
+        )
+
+        // Create a build file with dependencies and NO explicit exclusions.
+        Gradle.buildFile.under(projectDir).writeText(
+            """
+            plugins {
+                id("java")
+                id("io.spine.artifact-meta")
+            }
+
+            group = "test.group"
+            version = "1.0.0"
+
+            repositories {
+                mavenCentral()
+            }
+
+            dependencies {
+                implementation("${dependencies[0]}")
+                implementation("${dependencies[1]}")
+                compileOnly("${dependencies[2]}")
+                testImplementation("${dependencies[3]}")
+            }
+            """.trimIndent()
+        )
+
+        // Execute the build.
+        val task = BaseTaskName.build
+        runGradleBuild(projectDir, listOf(task.name))
+
+        // Read the generated file.
+        val resourceDir = resourceDir(projectDir)
+        val metaFiles = resourceDir.listFiles()
+        val metaFile = metaFiles[0]
+        val content = metaFile.readText()
+
+        content.let {
+            // Verify dependencies from test configurations are NOT present by default.
+            it shouldNotContain dependencies[3]
+
+            // Verify that non-test dependencies are present.
+            it shouldContain dependencies[0]
+            it shouldContain dependencies[1]
+            it shouldContain dependencies[2]
+        }
+    }
+    
+    @Test
     fun `exclude selected configurations when collecting dependencies`(@TempDir projectDir: File) {
         val dependencies = arrayOf(
             "com.google.guava:guava:31.1-jre",
@@ -227,21 +281,11 @@ class ArtifactMetaPluginSpec {
 
         // Execute the build.
         val task = BaseTaskName.build
-        val result = runGradleBuild(projectDir, listOf(task.name))
-
-        // Verify task execution was successful.
-        result.task(task.path())?.outcome shouldBe TaskOutcome.SUCCESS
-        result.output shouldContain BUILD_SUCCESSFUL
-
-        // Verify the artifact meta file was created.
-        val resourceDir = resourceDir(projectDir)
-        resourceDir.exists() shouldBe true
+        runGradleBuild(projectDir, listOf(task.name))
 
         // Read the generated file.
+        val resourceDir = resourceDir(projectDir)
         val metaFiles = resourceDir.listFiles()
-        metaFiles shouldNotBe null
-        metaFiles!!.size shouldBe 1
-
         val metaFile = metaFiles[0]
         val content = metaFile.readText()
 

@@ -26,6 +26,7 @@
 
 package io.spine.tools.gradle.jvm.plugin
 
+import io.spine.tools.gradle.jvm.plugin.ArtifactMetaExtension.Companion.NAME
 import io.spine.tools.gradle.jvm.plugin.WriteArtifactMeta.Companion.TASK_NAME
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -68,6 +69,22 @@ import org.gradle.kotlin.dsl.register
  *       }
  *   }
  * ```
+ * 
+ * ### Defaults
+ * 
+ * The plugin automatically excludes test configurations.
+ * 
+ * To include test configurations into the artifact meta info, please use the following DSL.
+ * 
+ * ```kotlin
+ * artifactMeta {
+ *    excludeConfigurations {
+ *        named.get().clear()
+ *        // OR
+ *        named.convention(emptySet())
+ *    }
+ * }
+ * ```
  */
 public class ArtifactMetaPlugin : Plugin<Project> {
 
@@ -78,7 +95,10 @@ public class ArtifactMetaPlugin : Plugin<Project> {
         val outputDir = layout.buildDirectory.dir(WORKING_DIR)
 
         // Register the extension to configure the plugin behavior.
-        extensions.create(ArtifactMetaExtension.NAME, ArtifactMetaExtension::class.java, this)
+        val ext = extensions.create(NAME, ArtifactMetaExtension::class.java, this)
+        
+        // Exclude all `test` configurations by default.
+        ext.excludeConfigurations.containing("test")
 
         val task = tasks.register(TASK_NAME, WriteArtifactMeta::class) { task ->
             task.outputDirectory.convention(outputDir)
