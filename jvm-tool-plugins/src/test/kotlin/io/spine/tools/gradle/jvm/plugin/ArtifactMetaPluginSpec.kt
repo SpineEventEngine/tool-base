@@ -302,7 +302,7 @@ class ArtifactMetaPluginSpec {
 
         @Test
         fun `via get-clear DSL`(@TempDir projectDir: File) {
-             runBuild(projectDir, clearStatement = "containing.set(emptySet())")
+            runBuild(projectDir, clearStatement = "containing.set(emptySet())")
         }
 
         fun runBuild(
