@@ -290,6 +290,65 @@ class ArtifactMetaPluginSpec {
     }
 
     @Nested inner class
+    `include explicit dependencies` {
+
+        @Test
+        fun `via 'addDependencies' DSL`(@TempDir projectDir: File) {
+            includeDependencies(projectDir) { (e1, e2) ->
+                "addDependencies(\"$e1\", \"$e2\")"
+            }
+        }
+
+        @Test
+        fun `via 'explicitDependencies' DLS`(@TempDir projectDir: File) {
+            includeDependencies(projectDir) { (e1, e2) ->
+                "explicitDependencies.set(setOf(\"$e1\", \"$e2\"))"
+            }
+        }
+
+        fun includeDependencies(
+            @TempDir projectDir: File,
+            dsl: (Pair<String, String>) -> String
+        ) {
+            val group = "test.group"
+            val version = "1.0.0"
+            val explicit1 = "com.google.protobuf:protobuf-java:3.25.5"
+            val explicit2 = "org.junit:junit:4.13.2"
+
+            Gradle.buildFile.under(projectDir).writeText(
+                """
+            plugins {
+                id("java")
+                id("io.spine.artifact-meta")
+            }
+
+            group = "$group"
+            version = "$version"
+
+            repositories {
+                mavenCentral()
+            }
+
+            artifactMeta {
+                ${dsl(Pair(explicit1, explicit2))}
+            }
+            """.trimIndent()
+            )
+
+            val task = BaseTaskName.build
+            runGradleBuild(projectDir, listOf(task.name))
+
+            val resourceDir = resourceDir(projectDir)
+            val metaFiles = resourceDir.listFiles()
+            val metaFile = metaFiles[0]
+            val content = metaFile.readText()
+
+            content shouldContain explicit1
+            content shouldContain explicit2
+        }
+    }
+
+    @Nested inner class
     `include test configurations when exclusions are cleared` {
 
         @Test

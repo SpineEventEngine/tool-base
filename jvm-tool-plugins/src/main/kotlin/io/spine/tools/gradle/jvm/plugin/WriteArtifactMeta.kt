@@ -93,7 +93,8 @@ public abstract class WriteArtifactMeta : DefaultTask() {
         val excludedByName = cfg.named.orNull ?: emptySet()
         val excludedBySubstring = cfg.containing.orNull ?: emptySet()
 
-        val list =  project.configurations
+        // Collect from configurations (according to exclusions).
+        val discovered = project.configurations
             .asSequence()
             .filter { cfg -> cfg.name !in excludedByName }
             .filter { cfg ->
@@ -102,11 +103,17 @@ public abstract class WriteArtifactMeta : DefaultTask() {
             }
             .flatMap { c -> c.dependencies }
             .mapNotNull { d -> d.toMavenArtifact() }
-            .toSet()
-            .toList().sortedWith(
-                compareBy<MavenArtifact> { it.group }
-                    .thenBy { it.name }
-            )
+            .toMutableSet()
+
+        // Add explicitly declared dependencies from the extension.
+        val explicitNotations = extension.explicitDependencies.orNull ?: emptySet()
+        explicitNotations.asSequence()
+            .mapNotNull { MavenArtifact.withCoordinates(it) }
+            .forEach { discovered.add(it) }
+
+        val list = discovered
+            .toList()
+            .sortedWith(compareBy<MavenArtifact> { it.group }.thenBy { it.name })
         return Dependencies(list)
     }
 }
