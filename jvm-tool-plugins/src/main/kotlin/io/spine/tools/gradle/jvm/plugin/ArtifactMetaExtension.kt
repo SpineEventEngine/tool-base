@@ -26,8 +26,10 @@
 
 package io.spine.tools.gradle.jvm.plugin
 
+import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.provider.SetProperty
+import org.gradle.api.tasks.Nested
 import org.gradle.kotlin.dsl.setProperty
 
 /**
@@ -38,18 +40,52 @@ import org.gradle.kotlin.dsl.setProperty
 public open class ArtifactMetaExtension(project: Project) {
 
     /**
-     * The names of configurations to be excluded when collecting dependencies.
-     *
-     * For example:
-     *
-     * artifactMeta {
-     *     exclude.add("implementation")
-     *     exclude.add("compileOnly")
-     * }
+     * Configuration exclusions specified via DSL.
      */
-    public val exclude: SetProperty<String> = project.objects.setProperty(String::class)
+    @Nested
+    public val excludeConfigurations: ExcludeConfigurations = ExcludeConfigurations(project)
 
-    public fun exclude(vararg names: String) {
-        exclude.addAll(*names)
+    /**
+     * Configures [excludeConfigurations] via an action/closure.
+     */
+    public fun excludeConfigurations(action: Action<ExcludeConfigurations>) {
+        action.execute(excludeConfigurations)
+    }
+
+    internal companion object {
+
+        internal const val NAME = "artifactMeta"
+    }
+}
+
+/**
+ * Holder for configuration exclusion rules.
+ */
+public open class ExcludeConfigurations(project: Project) {
+
+    /**
+     * Names of configurations to be excluded exactly as named.
+     */
+    public val named: SetProperty<String> = project.objects.setProperty(String::class)
+
+    /**
+     * Substrings; any configuration whose name contains one of these substrings will be excluded.
+     */
+    public val containing: SetProperty<String> = project.objects.setProperty(String::class)
+
+    /**
+     * Adds exact configuration names to exclude.
+     */
+    public fun named(vararg names: String) {
+        named.addAll(*names)
+    }
+
+    /**
+     * Adds parts of names of configurations to be excluded.
+     *
+     * Any configuration whose name contains one of these will be excluded.
+     */
+    public fun containing(vararg parts: String) {
+        containing.addAll(*parts)
     }
 }

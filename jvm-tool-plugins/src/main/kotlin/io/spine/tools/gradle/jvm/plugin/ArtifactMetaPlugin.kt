@@ -38,7 +38,33 @@ import org.gradle.kotlin.dsl.register
  * A Gradle plugin that writes [artifact metadata][io.spine.tools.meta.ArtifactMeta]
  * to the resources of a project.
  *
- * The plugin adds the [WriteArtifactMeta] task to the project to which it is applied.
+ * The plugin adds the [WriteArtifactMeta] task to the project to which it is applied
+ * and exposes the `artifactMeta` extension for configuration.
+ *
+ * ### Artifact metadata file
+ * The path of the created file is:
+ * `{project.buildDir}/resources/main/META-INF/spine/artifact-meta.json`
+ *
+ * ### `excludeConfiguration` DSL
+ *
+ * Use the `artifactMeta` extension to exclude configurations whose dependencies
+ * should not be written into the metadata file.
+ * This is useful to filter out test, IDE, or other auxiliary configurations.
+ *
+ * Kotlin DSL example (`build.gradle.kts`):
+ *
+ * ```kotlin
+ *   artifactMeta {
+ *       excludeConfigurations {
+ *           // Exclude configurations by their exact names (case-sensitive):
+ *           named("testCompileClasspath", "testRuntimeClasspath")
+ *
+ *           // Exclude any configuration whose name contains any of the given substrings
+ *           // (case-insensitive substring match):
+ *           containing("test", "intellij")
+ *       }
+ *   }
+ * ```
  */
 public class ArtifactMetaPlugin : Plugin<Project> {
 
@@ -49,7 +75,7 @@ public class ArtifactMetaPlugin : Plugin<Project> {
         val outputDir = layout.buildDirectory.dir(WORKING_DIR)
 
         // Register the extension to configure the plugin behavior.
-        extensions.create("artifactMeta", ArtifactMetaExtension::class.java, this)
+        extensions.create(ArtifactMetaExtension.NAME, ArtifactMetaExtension::class.java, this)
 
         val task = tasks.register(TASK_NAME, WriteArtifactMeta::class) { task ->
             task.outputDirectory.convention(outputDir)

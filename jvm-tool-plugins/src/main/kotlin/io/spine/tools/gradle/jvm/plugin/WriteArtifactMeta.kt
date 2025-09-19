@@ -89,14 +89,17 @@ public abstract class WriteArtifactMeta : DefaultTask() {
      */
     private fun collectDependencies(): Dependencies {
         val extension = project.extensions.findByType(ArtifactMetaExtension::class.java)
-        val excluded: Set<String> = if (extension == null || !extension.exclude.isPresent) {
-            emptySet()
-        } else {
-            extension.exclude.get()
-        }
+        val cfg = extension!!.excludeConfigurations
+        val excludedByName = cfg.named.orNull ?: emptySet()
+        val excludedBySubstring = cfg.containing.orNull ?: emptySet()
+
         val list =  project.configurations
-            .filter { cfg -> !cfg.name.lowercase().contains("test") }
-            .filter { cfg -> !excluded.contains(cfg.name) }
+            .asSequence()
+            .filter { cfg -> cfg.name !in excludedByName }
+            .filter { cfg ->
+                val lower = cfg.name.lowercase()
+                !excludedBySubstring.any { sub -> lower.contains(sub.lowercase()) }
+            }
             .flatMap { c -> c.dependencies }
             .mapNotNull { d -> d.toMavenArtifact() }
             .toSet()

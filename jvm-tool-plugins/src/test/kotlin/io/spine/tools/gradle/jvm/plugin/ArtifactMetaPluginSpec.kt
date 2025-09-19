@@ -30,6 +30,7 @@ import io.kotest.matchers.comparables.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotContain
 import io.kotest.matchers.string.shouldStartWith
 import io.spine.tools.gradle.jvm.plugin.ArtifactMetaPlugin.Companion.WORKING_DIR
 import io.spine.tools.gradle.task.BaseTaskName
@@ -127,6 +128,11 @@ class ArtifactMetaPluginSpec {
         val version = "1.0.0"
         val artifact = projectDir.name
 
+        val dependencies = arrayOf(
+            "com.google.guava:guava:31.1-jre",
+            "org.slf4j:slf4j-api:1.7.36"
+        )
+
         // Create a build file with dependencies.
         Gradle.buildFile.under(projectDir).writeText(
             """
@@ -143,8 +149,8 @@ class ArtifactMetaPluginSpec {
             }
             
             dependencies {
-                implementation("com.google.guava:guava:31.1-jre")
-                implementation("org.slf4j:slf4j-api:1.7.36")
+                implementation("${dependencies[0]}")
+                implementation("${dependencies[1]}")
             }
             """.trimIndent()
         )
@@ -158,7 +164,7 @@ class ArtifactMetaPluginSpec {
         result.output shouldContain BUILD_SUCCESSFUL
 
         // Verify the artifact meta file was created.
-        val resourceDir = File(projectDir, "build/resources/main/$RESOURCE_DIRECTORY")
+        val resourceDir = resourceDir(projectDir)
         resourceDir.exists() shouldBe true
 
         // Read the generated file.
@@ -175,15 +181,18 @@ class ArtifactMetaPluginSpec {
 
         // Verify dependencies are included.
         val content = lines.joinToString("\n")
-        content shouldContain "maven:com.google.guava:guava:31.1-jre"
-        content shouldContain "maven:org.slf4j:slf4j-api:1.7.36"
+        content shouldContain dependencies[0]
+        content shouldContain dependencies[1]
     }
     
     @Test
     fun `exclude selected configurations when collecting dependencies`(@TempDir projectDir: File) {
-        val group = "test.group"
-        val version = "1.0.0"
-        val artifact = projectDir.name
+        val dependencies = arrayOf(
+            "com.google.guava:guava:31.1-jre",
+            "org.slf4j:slf4j-api:1.7.36",
+            "org.jetbrains:annotations:24.0.1",
+            "org.junit.jupiter:junit-jupiter-api:5.12.1"
+        )
 
         // Create a build file with dependencies and exclusion.
         Gradle.buildFile.under(projectDir).writeText(
@@ -193,21 +202,25 @@ class ArtifactMetaPluginSpec {
                 id("io.spine.artifact-meta")
             }
 
-            group = "$group"
-            version = "$version"
+            group = "test.group"
+            version = "1.0.0"
 
             repositories {
                 mavenCentral()
             }
 
             artifactMeta {
-                exclude.add("implementation")
+                excludeConfigurations {
+                    named("implementation")
+                    containing("test")
+                }
             }
 
             dependencies {
-                implementation("com.google.guava:guava:31.1-jre")
-                implementation("org.slf4j:slf4j-api:1.7.36")
-                compileOnly("org.jetbrains:annotations:24.0.1")
+                implementation("${dependencies[0]}")
+                implementation("${dependencies[1]}")
+                compileOnly("${dependencies[2]}")
+                testImplementation("${dependencies[3]}")
             }
             """.trimIndent()
         )
@@ -221,7 +234,7 @@ class ArtifactMetaPluginSpec {
         result.output shouldContain BUILD_SUCCESSFUL
 
         // Verify the artifact meta file was created.
-        val resourceDir = File(projectDir, "build/resources/main/$RESOURCE_DIRECTORY")
+        val resourceDir = resourceDir(projectDir)
         resourceDir.exists() shouldBe true
 
         // Read the generated file.
@@ -232,10 +245,20 @@ class ArtifactMetaPluginSpec {
         val metaFile = metaFiles[0]
         val content = metaFile.readText()
 
-        // Verify dependencies from the excluded configuration are NOT present.
-        content.contains("maven:com.google.guava:guava:31.1-jre").shouldBe(false)
-        content.contains("maven:org.slf4j:slf4j-api:1.7.36").shouldBe(false)
-        // Dependency from a different configuration may still not be present due to default filtering; this assertion ensures the metadata itself exists.
-        content shouldStartWith "maven:$group:$artifact:$version"
+        content.let {
+            // Verify dependencies from the excluded configuration are NOT present.
+            it shouldNotContain dependencies[0]
+            it shouldNotContain dependencies[1]
+            it shouldNotContain dependencies[3]
+
+            // Verify that the dependency from not excluded configuration is present.
+            it shouldContain dependencies[2]
+        }
     }
+
+    /**
+     * Obtains the subdirectory under the [projectDir] which contains the artifact meta file.
+     */
+    private fun resourceDir(projectDir: File): File =
+        File(projectDir, "build/resources/main/$RESOURCE_DIRECTORY")
 }
