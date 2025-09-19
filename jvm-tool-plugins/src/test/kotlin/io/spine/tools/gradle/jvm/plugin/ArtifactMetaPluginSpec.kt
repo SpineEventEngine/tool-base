@@ -300,7 +300,7 @@ class ArtifactMetaPluginSpec {
         }
 
         @Test
-        fun `via 'explicitDependencies' DLS`(@TempDir projectDir: File) {
+        fun `via 'explicitDependencies' DSL`(@TempDir projectDir: File) {
             includeDependencies(projectDir) { (e1, e2) ->
                 "explicitDependencies.set(setOf(\"$e1\", \"$e2\"))"
             }
