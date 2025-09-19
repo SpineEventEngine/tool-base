@@ -88,8 +88,18 @@ public abstract class WriteArtifactMeta : DefaultTask() {
      * Collects all the non-test dependencies of the project.
      */
     private fun collectDependencies(): Dependencies {
+        val extension = project.extensions.findByType(ArtifactMetaExtension::class.java)
+        val cfg = extension!!.excludeConfigurations
+        val excludedByName = cfg.named.orNull ?: emptySet()
+        val excludedBySubstring = cfg.containing.orNull ?: emptySet()
+
         val list =  project.configurations
-            .filter { !it.name.lowercase().contains("test") }
+            .asSequence()
+            .filter { cfg -> cfg.name !in excludedByName }
+            .filter { cfg ->
+                val lower = cfg.name.lowercase()
+                !excludedBySubstring.any { sub -> lower.contains(sub.lowercase()) }
+            }
             .flatMap { c -> c.dependencies }
             .mapNotNull { d -> d.toMavenArtifact() }
             .toSet()

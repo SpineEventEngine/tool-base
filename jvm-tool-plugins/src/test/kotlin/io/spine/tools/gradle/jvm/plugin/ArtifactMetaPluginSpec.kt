@@ -30,6 +30,7 @@ import io.kotest.matchers.comparables.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotContain
 import io.kotest.matchers.string.shouldStartWith
 import io.spine.tools.gradle.jvm.plugin.ArtifactMetaPlugin.Companion.WORKING_DIR
 import io.spine.tools.gradle.task.BaseTaskName
@@ -48,6 +49,7 @@ import org.gradle.testfixtures.ProjectBuilder
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
@@ -56,6 +58,16 @@ class ArtifactMetaPluginSpec {
 
     private val pluginClass = ArtifactMetaPlugin::class.java
     private lateinit var project: Project
+
+    /**
+     * Stub dependencies to be used in tests.
+     */
+    private val dependencies = arrayOf(
+        "com.google.guava:guava:31.1-jre",
+        "org.slf4j:slf4j-api:1.7.36",
+        "org.jetbrains:annotations:24.0.1",
+        "org.junit.jupiter:junit-jupiter-api:5.12.1"
+    )
 
     @BeforeEach
     fun createProject() {
@@ -108,7 +120,7 @@ class ArtifactMetaPluginSpec {
         val task = TaskName.of(WriteArtifactMeta.TASK_NAME)
         val result = runGradleBuild(projectDir, task)
 
-        result.task(task.path())?.outcome shouldBe TaskOutcome.SUCCESS         
+        result.task(task.path())?.outcome shouldBe TaskOutcome.SUCCESS
         result.output shouldContain BUILD_SUCCESSFUL
 
         val resourcePath = ArtifactMeta.resourcePath(Module(group, artifact))
@@ -127,7 +139,6 @@ class ArtifactMetaPluginSpec {
         val version = "1.0.0"
         val artifact = projectDir.name
 
-        // Create a build file with dependencies.
         Gradle.buildFile.under(projectDir).writeText(
             """
             plugins {
@@ -143,8 +154,8 @@ class ArtifactMetaPluginSpec {
             }
             
             dependencies {
-                implementation("com.google.guava:guava:31.1-jre")
-                implementation("org.slf4j:slf4j-api:1.7.36")
+                implementation("${dependencies[0]}")
+                implementation("${dependencies[1]}")
             }
             """.trimIndent()
         )
@@ -158,7 +169,7 @@ class ArtifactMetaPluginSpec {
         result.output shouldContain BUILD_SUCCESSFUL
 
         // Verify the artifact meta file was created.
-        val resourceDir = File(projectDir, "build/resources/main/$RESOURCE_DIRECTORY")
+        val resourceDir = resourceDir(projectDir)
         resourceDir.exists() shouldBe true
 
         // Read the generated file.
@@ -175,7 +186,180 @@ class ArtifactMetaPluginSpec {
 
         // Verify dependencies are included.
         val content = lines.joinToString("\n")
-        content shouldContain "maven:com.google.guava:guava:31.1-jre"
-        content shouldContain "maven:org.slf4j:slf4j-api:1.7.36"
+        content shouldContain dependencies[0]
+        content shouldContain dependencies[1]
     }
+    
+    @Test
+    fun `filter test configurations by default`(@TempDir projectDir: File) {
+        Gradle.buildFile.under(projectDir).writeText(
+            """
+            plugins {
+                id("java")
+                id("io.spine.artifact-meta")
+            }
+
+            group = "test.group"
+            version = "1.0.0"
+
+            repositories {
+                mavenCentral()
+            }
+
+            dependencies {
+                implementation("${dependencies[0]}")
+                implementation("${dependencies[1]}")
+                compileOnly("${dependencies[2]}")
+                testImplementation("${dependencies[3]}")
+            }
+            """.trimIndent()
+        )
+
+        // Execute the build.
+        val task = BaseTaskName.build
+        runGradleBuild(projectDir, listOf(task.name))
+
+        // Read the generated file.
+        val resourceDir = resourceDir(projectDir)
+        val metaFiles = resourceDir.listFiles()
+        val metaFile = metaFiles[0]
+        val content = metaFile.readText()
+
+        content.let {
+            // Verify dependencies from test configurations are NOT present by default.
+            it shouldNotContain dependencies[3]
+
+            // Verify that non-test dependencies are present.
+            it shouldContain dependencies[0]
+            it shouldContain dependencies[1]
+            it shouldContain dependencies[2]
+        }
+    }
+
+    @Test
+    fun `exclude selected configurations when collecting dependencies`(@TempDir projectDir: File) {
+        Gradle.buildFile.under(projectDir).writeText(
+            """
+            plugins {
+                id("java")
+                id("io.spine.artifact-meta")
+            }
+
+            group = "test.group"
+            version = "1.0.0"
+
+            repositories {
+                mavenCentral()
+            }
+
+            artifactMeta {
+                excludeConfigurations {
+                    named("implementation")
+                    containing("test")
+                }
+            }
+
+            dependencies {
+                implementation("${dependencies[0]}")
+                implementation("${dependencies[1]}")
+                compileOnly("${dependencies[2]}")
+                testImplementation("${dependencies[3]}")
+            }
+            """.trimIndent()
+        )
+
+        // Execute the build.
+        val task = BaseTaskName.build
+        runGradleBuild(projectDir, listOf(task.name))
+
+        // Read the generated file.
+        val resourceDir = resourceDir(projectDir)
+        val metaFiles = resourceDir.listFiles()
+        val metaFile = metaFiles[0]
+        val content = metaFile.readText()
+
+        content.let {
+            // Verify dependencies from the excluded configuration are NOT present.
+            it shouldNotContain dependencies[0]
+            it shouldNotContain dependencies[1]
+            it shouldNotContain dependencies[3]
+
+            // Verify that the dependency from not excluded configuration is present.
+            it shouldContain dependencies[2]
+        }
+    }
+
+    @Nested inner class
+    `include test configurations when exclusions are cleared` {
+
+        @Test
+        fun `via the 'clear' DSL`(@TempDir projectDir: File) {
+            runBuild(projectDir, clearStatement = "clear()")
+        }
+
+        @Test
+        fun `via get-clear DSL`(@TempDir projectDir: File) {
+            runBuild(projectDir, clearStatement = "containing.set(emptySet())")
+        }
+
+        fun runBuild(
+            @TempDir projectDir: File,
+            clearStatement: String
+        ) {
+            Gradle.buildFile.under(projectDir).writeText(
+                """
+                plugins {
+                    id("java")
+                    id("io.spine.artifact-meta")
+                }
+    
+                group = "test.group"
+                version = "1.0.0"
+    
+                repositories {
+                    mavenCentral()
+                }
+    
+                artifactMeta {
+                    excludeConfigurations {
+                        $clearStatement
+                    }
+                }
+    
+                dependencies {
+                    implementation("${dependencies[0]}")
+                    implementation("${dependencies[1]}")
+                    compileOnly("${dependencies[2]}")
+                    testImplementation("${dependencies[3]}")
+                }
+                """.trimIndent()
+            )
+
+            // Execute the build.
+            val task = BaseTaskName.build
+            runGradleBuild(projectDir, listOf(task.name))
+
+            // Read the generated file.
+            val resourceDir = resourceDir(projectDir)
+            val metaFiles = resourceDir.listFiles()
+            val metaFile = metaFiles[0]
+            val content = metaFile.readText()
+
+            content.let {
+                // Verify that the test configuration dependency IS present after clearing exclusions.
+                it shouldContain dependencies[3]
+
+                // Verify that non-test dependencies are still present.
+                it shouldContain dependencies[0]
+                it shouldContain dependencies[1]
+                it shouldContain dependencies[2]
+            }
+        }
+    }
+
+    /**
+     * Obtains the subdirectory under the [projectDir] which contains the artifact meta file.
+     */
+    private fun resourceDir(projectDir: File): File =
+        File(projectDir, "build/resources/main/$RESOURCE_DIRECTORY")
 }

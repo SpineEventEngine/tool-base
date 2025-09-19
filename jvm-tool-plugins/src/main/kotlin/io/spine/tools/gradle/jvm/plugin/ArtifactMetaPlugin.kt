@@ -26,6 +26,7 @@
 
 package io.spine.tools.gradle.jvm.plugin
 
+import io.spine.tools.gradle.jvm.plugin.ArtifactMetaExtension.Companion.NAME
 import io.spine.tools.gradle.jvm.plugin.WriteArtifactMeta.Companion.TASK_NAME
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -33,12 +34,58 @@ import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.register
 
-
 /**
  * A Gradle plugin that writes [artifact metadata][io.spine.tools.meta.ArtifactMeta]
  * to the resources of a project.
  *
- * The plugin adds the [WriteArtifactMeta] task to the project to which it is applied.
+ * The plugin adds the [WriteArtifactMeta] task to the project to which it is applied
+ * and exposes the `artifactMeta` extension for configuration.
+ *
+ * ### Artifact metadata file
+ *
+ * The path of the created file is:
+ *  * `${project.buildDir}/resources/main/META-INF/io.spine/<artifact-name>.meta`
+ *
+ *  Where `<artifact-name>` is obtained as the [fileSafeId][io.spine.tools.meta.Module.fileSafeId]
+ *  property of the corresponding [Module][io.spine.tools.meta.Module].
+ *
+ * ### `excludeConfiguration` DSL
+ *
+ * Use the `artifactMeta` extension to exclude configurations whose dependencies
+ * should not be written into the metadata file.
+ * This is useful to filter out test, IDE, or other auxiliary configurations.
+ *
+ * Kotlin DSL example (`build.gradle.kts`):
+ *
+ * ```kotlin
+ *   artifactMeta {
+ *       excludeConfigurations {
+ *           // Exclude configurations by their exact names (case-sensitive):
+ *           named("testCompileClasspath", "testRuntimeClasspath")
+ *
+ *           // Exclude any configuration whose name contains any of the given substrings
+ *           // (case-insensitive substring match):
+ *           containing("test", "intellij")
+ *       }
+ *   }
+ * ```
+ * 
+ * ### Defaults
+ * 
+ * The plugin automatically excludes all configurations having `"test"` in their names.
+ * 
+ * To include test configurations into the artifact meta file, use the following DSL.
+ * 
+ * ```kotlin
+ * artifactMeta {
+ *    excludeConfigurations {
+ *        // Reset all defaults. Include all configurations.
+ *        clear()
+ *        // OR
+ *        containing.set(emptySet())
+ *    }
+ * }
+ * ```
  */
 public class ArtifactMetaPlugin : Plugin<Project> {
 
@@ -47,6 +94,12 @@ public class ArtifactMetaPlugin : Plugin<Project> {
      */
     override fun apply(project: Project): Unit = with(project) {
         val outputDir = layout.buildDirectory.dir(WORKING_DIR)
+
+        // Register the extension to configure the plugin behavior.
+        val ext = extensions.create(NAME, ArtifactMetaExtension::class.java, this)
+        
+        // Exclude all `test` configurations by default.
+        ext.excludeConfigurations.containing("test")
 
         val task = tasks.register(TASK_NAME, WriteArtifactMeta::class) { task ->
             task.outputDirectory.convention(outputDir)
