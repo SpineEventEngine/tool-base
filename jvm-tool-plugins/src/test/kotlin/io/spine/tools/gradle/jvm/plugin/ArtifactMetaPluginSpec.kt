@@ -139,7 +139,6 @@ class ArtifactMetaPluginSpec {
         val version = "1.0.0"
         val artifact = projectDir.name
 
-        // Create a build file with dependencies.
         Gradle.buildFile.under(projectDir).writeText(
             """
             plugins {
@@ -193,7 +192,6 @@ class ArtifactMetaPluginSpec {
     
     @Test
     fun `filter test configurations by default`(@TempDir projectDir: File) {
-        // Create a build file with dependencies and NO explicit exclusions.
         Gradle.buildFile.under(projectDir).writeText(
             """
             plugins {
@@ -240,7 +238,6 @@ class ArtifactMetaPluginSpec {
 
     @Test
     fun `exclude selected configurations when collecting dependencies`(@TempDir projectDir: File) {
-        // Create a build file with dependencies and exclusion.
         Gradle.buildFile.under(projectDir).writeText(
             """
             plugins {
@@ -309,35 +306,33 @@ class ArtifactMetaPluginSpec {
             @TempDir projectDir: File,
             clearStatement: String
         ) {
-            // Create a build file that explicitly clears default exclusions via the DSL from the
-            // ArtifactMetaPlugin documentation.
             Gradle.buildFile.under(projectDir).writeText(
                 """
-            plugins {
-                id("java")
-                id("io.spine.artifact-meta")
-            }
-
-            group = "test.group"
-            version = "1.0.0"
-
-            repositories {
-                mavenCentral()
-            }
-
-            artifactMeta {
-                excludeConfigurations {
-                    $clearStatement
+                plugins {
+                    id("java")
+                    id("io.spine.artifact-meta")
                 }
-            }
-
-            dependencies {
-                implementation("${dependencies[0]}")
-                implementation("${dependencies[1]}")
-                compileOnly("${dependencies[2]}")
-                testImplementation("${dependencies[3]}")
-            }
-            """.trimIndent()
+    
+                group = "test.group"
+                version = "1.0.0"
+    
+                repositories {
+                    mavenCentral()
+                }
+    
+                artifactMeta {
+                    excludeConfigurations {
+                        $clearStatement
+                    }
+                }
+    
+                dependencies {
+                    implementation("${dependencies[0]}")
+                    implementation("${dependencies[1]}")
+                    compileOnly("${dependencies[2]}")
+                    testImplementation("${dependencies[3]}")
+                }
+                """.trimIndent()
             )
 
             // Execute the build.
