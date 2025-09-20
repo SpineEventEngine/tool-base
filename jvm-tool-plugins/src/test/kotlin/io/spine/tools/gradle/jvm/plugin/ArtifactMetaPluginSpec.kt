@@ -448,7 +448,7 @@ class ArtifactMetaPluginSpec {
         val file = File(projectDir, "build/$WORKING_DIR/$resourcePath")
         file.exists() shouldBe true
 
-        // Verify the contents still refer to the actual artifact (project name), not the custom ID.
+        // Verify the contents refer to the custom artifactId, as specified.
         val content = file.readText()
         content shouldContain "maven:$group:$explicitArtifactId:$version"
     }
