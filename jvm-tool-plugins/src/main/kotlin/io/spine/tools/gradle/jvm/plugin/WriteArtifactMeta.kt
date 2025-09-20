@@ -68,9 +68,12 @@ public abstract class WriteArtifactMeta : DefaultTask() {
         outputDirectory.finalizeValue()
 
         val group = project.group.toString()
-        val name = project.name
-        val module = Module(group, name)
-        val artifact = MavenArtifact(group, name, project.version.toString())
+        val projectName = project.name
+        val extension = project.extensions.findByType(ArtifactMetaExtension::class.java)
+
+        // If the `artifactId` is not specified explicitly, use the project name.
+        val artifactId = extension?.artifactId?.orNull ?: projectName
+        val artifact = MavenArtifact(group, artifactId, project.version.toString())
 
         val dependencies = collectDependencies()
         val artifactMeta = ArtifactMeta(artifact, dependencies)
@@ -78,6 +81,7 @@ public abstract class WriteArtifactMeta : DefaultTask() {
         val outputDir = outputDirectory.get().asFile
         outputDir.mkdirs()
 
+        val module = Module(group, artifactId)
         val fileName = ArtifactMeta.resourcePath(module)
         val file = outputDir.resolve(fileName)
 

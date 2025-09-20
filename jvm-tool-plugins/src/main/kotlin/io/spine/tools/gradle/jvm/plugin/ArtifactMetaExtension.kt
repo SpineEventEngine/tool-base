@@ -28,8 +28,10 @@ package io.spine.tools.gradle.jvm.plugin
 
 import org.gradle.api.Action
 import org.gradle.api.Project
+import org.gradle.api.provider.Property
 import org.gradle.api.provider.SetProperty
 import org.gradle.api.tasks.Nested
+import org.gradle.kotlin.dsl.property
 import org.gradle.kotlin.dsl.setProperty
 
 /**
@@ -52,6 +54,15 @@ public open class ArtifactMetaExtension(project: Project) {
      */
     public val explicitDependencies: SetProperty<String> =
         project.objects.setProperty(String::class)
+
+    /**
+     * The artifact ID to use in the name of the written resource file and
+     * for the coordinates of the module written into the file.
+     *
+     * If not specified, defaults to the `project.name`.
+     */
+    public val artifactId: Property<String> =
+        project.objects.property(String::class).convention(project.name)
 
     /**
      * Configures [excludeConfigurations] via an action/closure.

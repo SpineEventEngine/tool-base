@@ -352,12 +352,12 @@ class ArtifactMetaPluginSpec {
     `include test configurations when exclusions are cleared` {
 
         @Test
-        fun `via the 'clear' DSL`(@TempDir projectDir: File) {
+        fun `via the 'clear' function`(@TempDir projectDir: File) {
             runBuild(projectDir, clearStatement = "clear()")
         }
 
         @Test
-        fun `via get-clear DSL`(@TempDir projectDir: File) {
+        fun `via setting empty set`(@TempDir projectDir: File) {
             runBuild(projectDir, clearStatement = "containing.set(emptySet())")
         }
 
@@ -414,6 +414,43 @@ class ArtifactMetaPluginSpec {
                 it shouldContain dependencies[2]
             }
         }
+    }
+
+    @Test
+    fun `use explicit artifactId in resource file name`(@TempDir projectDir: File) {
+        val group = "test.group"
+        val version = "1.0.0"
+        val explicitArtifactId = "custom-artifact"
+
+        Gradle.buildFile.under(projectDir).writeText(
+            """
+            plugins {
+                id("java")
+                id("io.spine.artifact-meta")
+            }
+
+            group = "$group"
+            version = "$version"
+
+            artifactMeta {
+                artifactId.set("$explicitArtifactId")
+            }
+            """.trimIndent()
+        )
+
+        val task = TaskName.of(WriteArtifactMeta.TASK_NAME)
+        val result = runGradleBuild(projectDir, task)
+
+        result.task(task.path())?.outcome shouldBe TaskOutcome.SUCCESS
+        result.output shouldContain BUILD_SUCCESSFUL
+
+        val resourcePath = ArtifactMeta.resourcePath(Module(group, explicitArtifactId))
+        val file = File(projectDir, "build/$WORKING_DIR/$resourcePath")
+        file.exists() shouldBe true
+
+        // Verify the contents refer to the custom artifactId, as specified.
+        val content = file.readText()
+        content shouldContain "maven:$group:$explicitArtifactId:$version"
     }
 
     /**
