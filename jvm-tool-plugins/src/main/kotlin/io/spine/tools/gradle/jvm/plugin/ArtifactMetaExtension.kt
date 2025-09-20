@@ -56,9 +56,10 @@ public open class ArtifactMetaExtension(project: Project) {
         project.objects.setProperty(String::class)
 
     /**
-     * The artifact ID to use in the name of the written resource file.
+     * The artifact ID to use in the name of the written resource file and
+     * for the coordinates of the module written into the file.
      *
-     * If not specified, defaults to the Gradle `project.name`.
+     * If not specified, defaults to the `project.name`.
      */
     public val artifactId: Property<String> =
         project.objects.property(String::class).convention(project.name)
