@@ -70,7 +70,7 @@ import org.gradle.kotlin.dsl.register
  *   }
  * ```
  * 
- * ### Defaults
+ * ### Configurations excluded by default
  * 
  * The plugin automatically excludes all configurations having `"test"` in their names.
  * 
@@ -86,6 +86,37 @@ import org.gradle.kotlin.dsl.register
  *    }
  * }
  * ```
+ *
+ * ### Adding dependencies explicitly
+ *
+ * You can explicitly add Maven dependencies to be included into the artifact metadata
+ * regardless of configurations on which the project depends.
+ * One of the use cases would be to add a transitive dependency, that is, a dependency of
+ * an artifact on which a module depends directly.
+ *
+ * Each dependency must be specified in the form `"$group:$artifact:$version"`.
+ *
+ * Kotlin DSL example (`build.gradle.kts`):
+ *
+ * ```kotlin
+ * artifactMeta {
+ *     addDependencies(
+ *         "com.google.protobuf:protobuf-java:4.13.1",
+ *         "org.junit:junit:4.13.2"
+ *     )
+ *
+ *     // OR
+ *
+ *     explicitDependencies.set(setOf(
+ *        "com.google.protobuf:protobuf-java:4.13.1",
+ *        "org.junit:junit:4.13.2"
+ *     ))
+ * }
+ * ```
+ *
+ * Notes:
+ * - Explicitly declared dependencies are merged with those discovered from configurations.
+ * - Duplicates are de-duplicated, and the list is sorted by the group and artifact ID.
  */
 public class ArtifactMetaPlugin : Plugin<Project> {
 

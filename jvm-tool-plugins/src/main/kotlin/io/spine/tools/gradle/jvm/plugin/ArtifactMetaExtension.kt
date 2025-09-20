@@ -46,10 +46,25 @@ public open class ArtifactMetaExtension(project: Project) {
     public val excludeConfigurations: ExcludeConfigurations = ExcludeConfigurations(project)
 
     /**
+     * A set of explicit Maven dependency notations to be added to the metadata.
+     *
+     * Each notation must be in the form "$group:$artifact:$version".
+     */
+    public val explicitDependencies: SetProperty<String> =
+        project.objects.setProperty(String::class)
+
+    /**
      * Configures [excludeConfigurations] via an action/closure.
      */
     public fun excludeConfigurations(action: Action<ExcludeConfigurations>) {
         action.execute(excludeConfigurations)
+    }
+
+    /**
+     * Adds explicit Maven dependencies to be included into the artifact metadata.
+     */
+    public fun addDependencies(vararg notations: String) {
+        explicitDependencies.addAll(*notations)
     }
 
     internal companion object {
