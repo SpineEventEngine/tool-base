@@ -44,17 +44,17 @@ import org.gradle.kotlin.dsl.register
  * ### Artifact metadata file
  *
  * The path of the created file is:
- *  * `${project.buildDir}/resources/main/META-INF/io.spine/<artifact-name>.meta`
+ *  * `${project.buildDir}/resources/main/META-INF/io.spine/<artifact-id>.meta`
  *
- *  Where `<artifact-name>` is obtained as the [fileSafeId][io.spine.tools.meta.Module.fileSafeId]
- *  property of the corresponding [Module][io.spine.tools.meta.Module].
+ *  Where `<artifact-id>` is obtained as the [fileSafeId][io.spine.tools.meta.Module.fileSafeId]
+ *  property of the [Module][io.spine.tools.meta.Module] representing the published project.
  *
  * #### Overriding the artifact ID
  *
  * By default, the artifact ID is taken from `project.name`.
  *
  * You can override it via the [`artifactId`][ArtifactMetaExtension.artifactId] property of the
- * `artifactMeta` extension. Overriding may be necessary when a module is published with the ID
+ * `artifactMeta` extension. Overriding may be necessary when the project is published with the ID
  * other than `project.name`.
  *
  * Changing `artifactId` affects both:
