@@ -49,6 +49,26 @@ import org.gradle.kotlin.dsl.register
  *  Where `<artifact-name>` is obtained as the [fileSafeId][io.spine.tools.meta.Module.fileSafeId]
  *  property of the corresponding [Module][io.spine.tools.meta.Module].
  *
+ * #### Overriding the artifact ID
+ *
+ * By default, the artifact ID is taken from `project.name`.
+ *
+ * You can override it via the [`artifactId`][ArtifactMetaExtension.artifactId] property of the
+ * `artifactMeta` extension. Overriding may be necessary when a module is published with the ID
+ * other than `project.name`.
+ *
+ * Changing `artifactId` affects both:
+ *  - the Maven artifact written into the metadata; and
+ *  - the resource file name (because it is derived from the module built from the
+ *    project `group` and the configured `artifactId`).
+ *
+ * Kotlin DSL (`build.gradle.kts`):
+ * ```kotlin
+ * artifactMeta {
+ *     artifactId.set("custom-artifact-id")
+ * }
+ * ```
+ *
  * ### `excludeConfiguration` DSL
  *
  * Use the `artifactMeta` extension to exclude configurations whose dependencies
