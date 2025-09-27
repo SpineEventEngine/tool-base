@@ -40,7 +40,10 @@ import org.gradle.api.plugins.ExtensionAware
 public class SettingsPlugin : AbstractPlugin<Settings, RootSettingsExtension>(
     RootSettingsExtension.dslSpec
 ) {
-    override val dslParent: ExtensionAware?
+    /**
+     * Returns [target].
+     */
+    override val dslParent: ExtensionAware
         get() = target
 
     @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
