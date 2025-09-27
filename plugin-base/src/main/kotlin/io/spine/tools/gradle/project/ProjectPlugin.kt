@@ -26,6 +26,7 @@
 
 package io.spine.tools.gradle.project
 
+import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper
 import io.spine.tools.gradle.AbstractPlugin
 import io.spine.tools.gradle.DslSpec
 import org.gradle.api.Project
@@ -53,6 +54,7 @@ public abstract class ProjectPlugin<E : Any>(
     /**
      * Overrides to rename the parameter.
      */
+    @OverridingMethodsMustInvokeSuper
     @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
     override fun apply(project: Project) {
         super.apply(project)
