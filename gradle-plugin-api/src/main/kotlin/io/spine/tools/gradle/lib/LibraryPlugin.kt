@@ -50,7 +50,7 @@ public abstract class LibraryPlugin<E : Any>(
     /**
      * Returns [Project.rootExtension].
      */
-    override val dslParent: ExtensionAware?
+    override val dslParent: ExtensionAware
         get() = project.rootExtension
 
     /**

@@ -42,7 +42,10 @@ import org.gradle.api.plugins.ExtensionAware
 public class RootPlugin :
     ProjectPlugin<RootExtension>(DslSpec(NAME, RootExtension::class)) {
 
-    override val dslParent: ExtensionAware?
+    /**
+     * Obtains the [project] to which the plugin is applied.
+     */
+    override val dslParent: ExtensionAware
         get() = project
 
     /**
@@ -60,6 +63,9 @@ public class RootPlugin :
     override fun apply(project: Project) {
         super.apply(project)
         createExtension()
+        check(extension != null) {
+            "The extension of the `${this::class.simpleName}` has not been created."
+        }
     }
 
     public companion object {
