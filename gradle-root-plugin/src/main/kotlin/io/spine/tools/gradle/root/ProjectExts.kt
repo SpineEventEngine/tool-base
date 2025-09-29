@@ -27,8 +27,9 @@
 package io.spine.tools.gradle.root
 
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.getByType
 import org.gradle.api.file.Directory
+import org.gradle.kotlin.dsl.findByType
+import org.gradle.kotlin.dsl.getByType
 
 /**
  * Tells if the project already has the [spine][RootExtension] extension.
@@ -38,7 +39,7 @@ import org.gradle.api.file.Directory
  * @see rootExtension
  */
 public val Project.hasRootExtension: Boolean
-    get() = extensions.findByName(RootExtension.NAME) != null
+    get() = extensions.findByType<RootExtension>() != null
 
 /**
  * Obtains the instance of the [spine][RootExtension] extension of the project.
@@ -50,7 +51,9 @@ public val Project.rootExtension: RootExtension
     get() = extensions.getByType<RootExtension>()
 
 /**
- * Obtains the directory which serves as the root for all the Spine plugins.
+ * Obtains the root working directory which serves all Spine project plugins.
+ *
+ * It is expected that plugins would create subdirectories under the root using their IDs.
  *
  * Conventionally, the path to this directory is `$projectDir/build/spine`.
  */
