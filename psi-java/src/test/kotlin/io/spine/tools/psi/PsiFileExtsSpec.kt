@@ -124,7 +124,7 @@ internal class PsiFileExtsSpec {
             )
 
             @Language("Java")
-            val expected = "java.util.Map<String, java.util.List<Integer>> m = new java.util.HashMap<> ();"
+            val expected = "java.util.Map<String, java.util.List<Integer>> m = new java.util.HashMap<>();"
             statement.canonicalCode() shouldBe expected
         }
 

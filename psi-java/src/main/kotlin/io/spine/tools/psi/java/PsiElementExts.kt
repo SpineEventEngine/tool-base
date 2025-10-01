@@ -33,6 +33,15 @@ import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.PsiReferenceParameterList
 import com.intellij.psi.PsiTypeParameterList
+import com.intellij.psi.PsiExpressionList
+import com.intellij.psi.PsiParameterList
+import com.intellij.psi.PsiParenthesizedExpression
+import com.intellij.psi.PsiIfStatement
+import com.intellij.psi.PsiWhileStatement
+import com.intellij.psi.PsiForStatement
+import com.intellij.psi.PsiSwitchStatement
+import com.intellij.psi.PsiCatchSection
+import com.intellij.psi.PsiSynchronizedStatement
 import io.spine.annotation.VisibleForTesting
 import io.spine.string.Separator
 import io.spine.string.ti
@@ -151,6 +160,36 @@ public fun PsiElement.canonicalCode(): String {
     // No space BEFORE these leading chars
     fun noSpaceBefore(next: String, context: PsiElement): Boolean {
         val inGenericParams = context.inGenericParams()
+
+        // Special handling for '(' — usually no space before a call/paren expression,
+        // but keep a space for control-flow statements like `if (`.
+        if (next.startsWith("(")) {
+            // Walk up parents to distinguish contexts.
+            var p: PsiElement? = context
+            while (p != null) {
+                when (p) {
+                    is PsiIfStatement,
+                    is PsiWhileStatement,
+                    is PsiForStatement,
+                    is PsiSwitchStatement,
+                    is PsiCatchSection,
+                    is PsiSynchronizedStatement -> {
+                        // Allow a space before '(' for control-flow constructs.
+                        return false
+                    }
+                    is PsiExpressionList,
+                    is PsiParameterList,
+                    is PsiParenthesizedExpression -> {
+                        // No space before '(' in calls or parenthesized expressions.
+                        return true
+                    }
+                }
+                p = p.parent
+            }
+            // Default to no space before '(' when unsure (method calls, casts, etc.).
+            return true
+        }
+
         return next == "++"
                 || next == "--"
                 || next.firstOrNull() in noBefore
