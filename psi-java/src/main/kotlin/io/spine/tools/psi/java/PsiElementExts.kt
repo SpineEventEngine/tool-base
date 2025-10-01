@@ -26,7 +26,23 @@
 
 package io.spine.tools.psi.java
 
+import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiRecursiveElementWalkingVisitor
+import com.intellij.psi.PsiWhiteSpace
+import com.intellij.psi.impl.source.tree.LeafPsiElement
+import com.intellij.psi.PsiReferenceParameterList
+import com.intellij.psi.PsiTypeParameterList
+import com.intellij.psi.PsiExpressionList
+import com.intellij.psi.PsiParameterList
+import com.intellij.psi.PsiParenthesizedExpression
+import com.intellij.psi.PsiIfStatement
+import com.intellij.psi.PsiWhileStatement
+import com.intellij.psi.PsiForStatement
+import com.intellij.psi.PsiSwitchStatement
+import com.intellij.psi.PsiCatchSection
+import com.intellij.psi.PsiSynchronizedStatement
+import io.spine.annotation.VisibleForTesting
 import io.spine.string.Separator
 import io.spine.string.ti
 
@@ -85,3 +101,201 @@ public fun PsiElement.getFirstByText(
 
             error(msg)
         }
+
+
+/**
+ * Checks if this [PsiElement] is located inside a generic parameter list.
+ *
+ * The method traverses up the PSI tree hierarchy from this element, checking if any of
+ * the parent elements is either a reference parameter list (as in `List<T>`) or
+ * a type parameter list (as in `class Foo<T>`).
+ *
+ * @return `true` if this element is inside generic parameters, `false` otherwise.
+ */
+public fun PsiElement.inGenericParams(): Boolean {
+    var p: PsiElement? = this.parent
+    while (p != null) {
+        if (p is PsiReferenceParameterList || p is PsiTypeParameterList) return true
+        p = p.parent
+    }
+    return false
+}
+
+/**
+ * Obtains the whitespace-normalized code of this [PsiElement].
+ *
+ * The function transforms the code obtained from the [text][PsiElement.getText] property
+ * in the following way:
+ *  1. drops comments,
+ *  2. collapses any whitespace run to a single space character,
+ *  3. *avoids spaces* around punctuation where code style normally has none
+ *     (before `, ) ] } . :: ?. ; >` and after `( [ {` etc.).
+ */
+@Suppress("AssignedValueIsNeverRead" /* False positive from IDEA. The `needSpace` var
+    is used when calculating `addSpace` var. */,
+    "ReturnCount",
+    "CyclomaticComplexMethod",
+)
+@VisibleForTesting
+public fun PsiElement.canonicalCode(): String {
+    val sb = StringBuilder()
+    var needSpace = false
+    var suppressNextSpace = false
+
+    fun lastChar(): Char? = if (sb.isEmpty()) null else sb[sb.length - 1]
+    fun prevNonSpace(): Char? {
+        var i = sb.length - 1
+        while (i >= 0) {
+            val ch = sb[i]
+            if (ch != ' ') return ch
+            i--
+        }
+        return null
+    }
+
+    val noBefore = charSet(",;:).]?") // includes ., ::, ?., ?:
+    val noAfter = charSet("([.")
+    val arithmeticOps = setOf("+", "-", "*", "/", "%")
+
+    // No space BEFORE these leading chars
+    fun noSpaceBefore(next: String, context: PsiElement): Boolean {
+        val inGenericParams = context.inGenericParams()
+
+        // Special handling for '(' — usually no space before a call/paren expression,
+        // but keep a space for control-flow statements like `if (`.
+        if (next.startsWith("(")) {
+            // Walk up parents to distinguish contexts.
+            var p: PsiElement? = context
+            while (p != null) {
+                when (p) {
+                    is PsiIfStatement,
+                    is PsiWhileStatement,
+                    is PsiForStatement,
+                    is PsiSwitchStatement,
+                    is PsiCatchSection,
+                    is PsiSynchronizedStatement -> {
+                        // Allow a space before '(' for control-flow constructs.
+                        return false
+                    }
+                    is PsiExpressionList,
+                    is PsiParameterList,
+                    is PsiParenthesizedExpression -> {
+                        // No space before '(' in calls or parenthesized expressions.
+                        return true
+                    }
+                }
+                p = p.parent
+            }
+            // Default to no space before '(' when unsure (method calls, casts, etc.).
+            return true
+        }
+
+        return next == "++"
+                || next == "--"
+                || next.firstOrNull() in noBefore
+                || // Avoid space before '<' only in generic parameter lists.
+                   (inGenericParams && next.startsWith("<"))
+                || // Avoid space before '>' and its multi-char forms only
+                   // in generic parameter lists.
+                   (inGenericParams && next.startsWith(">"))
+    }
+
+    // No space AFTER tokens that end with these trailing chars
+    fun noSpaceAfter(prevLast: Char?, context: PsiElement): Boolean =
+        (prevLast in noAfter) ||
+                // Avoid space after '<' only in generic parameter lists.
+                (prevLast == '<' && context.inGenericParams())
+
+    accept(object : PsiRecursiveElementWalkingVisitor() {
+        @Suppress("LongMethod")
+        override fun visitElement(e: PsiElement) {
+            when (e) {
+                is PsiWhiteSpace -> {
+                    needSpace = true
+                    return
+                }
+                is PsiComment -> {
+                    // Drop comments entirely.
+                    needSpace = true
+                    return
+                }
+            }
+
+            // Emit only leaf tokens’ text. (Composite nodes delegate to children.)
+            if (e.firstChild == null && e is LeafPsiElement) {
+                val text = e.text
+                if (text.isBlank()) {
+                    needSpace = true
+                    return
+                }
+
+                // Ensure spaces around Java/Kotlin arrow token.
+                if (text == "->") {
+                    // Ensure exactly one space before the arrow.
+                    val prev = lastChar()
+                    if (prev != null && prev != ' ') {
+                        sb.append(' ')
+                    }
+                    sb.append(text)
+                    // Ensure exactly one space after the arrow for the next token.
+                    needSpace = true
+                    suppressNextSpace = false
+                    return
+                }
+
+                // Ensure spaces around arithmetic binary operators.
+                if (text in arithmeticOps) {
+                    // Heuristic: detect unary + or - (no space after in canonical form).
+                    val isUnary = (text == "+" || text == "-") && run {
+                        when (prevNonSpace()) {
+                            null -> true
+                            '(', '[', '{', '=', ',', ':', '?', '<', '>', '!',
+                            '&', '|', '^', '%', '~', '+' , '-', '*', '/' -> true
+                            else -> false
+                        }
+                    }
+                    if (!isUnary) {
+                        val prev = lastChar()
+                        if (prev != null && prev != ' ') sb.append(' ')
+                        sb.append(text)
+                        needSpace = true // ensure exactly one space after
+                        suppressNextSpace = false
+                        return
+                    }
+                    // Unary + or -: respect spacing before (via general rules)
+                    // but suppress space after.
+                    val addSpaceUnary = needSpace && !noSpaceBefore(text, e) && !noSpaceAfter(
+                        lastChar(),
+                        e
+                    ) && !suppressNextSpace
+                    if (addSpaceUnary) sb.append(' ')
+                    sb.append(text)
+                    // No space between sign and the following literal/identifier.
+                    suppressNextSpace = true
+                    needSpace = false
+                    return
+                }
+
+                val addSpace =
+                    needSpace &&
+                            !noSpaceBefore(text, e) &&
+                            !noSpaceAfter(lastChar(), e) &&
+                            !suppressNextSpace
+
+                if (addSpace) sb.append(' ')
+                sb.append(text)
+
+                // If we just wrote a '<' in generic params, suppress the next possible space once.
+                suppressNextSpace = (text == "<" && e.inGenericParams())
+                needSpace = false
+                return
+            }
+
+            super.visitElement(e)
+        }
+    })
+
+    return sb.toString().trim()
+}
+
+private fun charSet(chars: String): Set<Char> = chars.toSet()

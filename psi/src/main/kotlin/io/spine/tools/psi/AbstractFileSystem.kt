@@ -36,15 +36,12 @@ import java.nio.file.Path
 /**
  * An abstract base for classes implementing file operations.
  *
- * @param F
- *         the type of the [PsiFile] objects implementing classed deal with.
- * @param project
- *         the project to which files belong.
- * @param suffix
- *         the extension of files managed by this file system, or
- *         an empty string if all kinds of files can be handled.
- *         The suffix should match the type `F` of `PsiFile` objects.
- *         For example, `PsiJavaFile` deals with `.java` files.
+ * @param F The type of the [PsiFile] objects implementing classed deal with.
+ * @param project The project to which files belong.
+ * @param suffix The extension of files managed by this file system, or
+ *        an empty string if all kinds of files can be handled.
+ *        The suffix should match the type `F` of `PsiFile` objects.
+ *        For example, `PsiJavaFile` deals with `.java` files.
  */
 public abstract class AbstractFileSystem<F: PsiFile>(
     protected val project: Project,

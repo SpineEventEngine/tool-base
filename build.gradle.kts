@@ -42,8 +42,8 @@ buildscript {
             resolutionStrategy {
                 @Suppress("DEPRECATION")
                 force(
-                    io.spine.dependency.local.Spine.base,
-                    io.spine.dependency.local.Spine.reflect,
+                    io.spine.dependency.local.Base.lib,
+                    io.spine.dependency.local.Reflect.lib,
                     io.spine.dependency.local.Validation.java,
                     io.spine.dependency.lib.Protobuf.GradlePlugin.lib,
                 )

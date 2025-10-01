@@ -26,12 +26,17 @@
 
 package io.spine.tools.psi
 
+import com.intellij.psi.PsiCodeBlock
 import io.kotest.matchers.shouldBe
 import io.spine.testing.TestValues.randomString
+import io.spine.tools.psi.java.Environment.elementFactory
 import io.spine.tools.psi.java.FileSystem
+import io.spine.tools.psi.java.canonicalCode
 import java.nio.file.Path
 import kotlin.io.path.writeText
+import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
@@ -58,5 +63,83 @@ internal class PsiFileExtsSpec {
 
         val psiFile = FileSystem.load(file)
         psiFile.content() shouldBe content
+    }
+
+    @Nested
+    @DisplayName("provide canonical code")
+    @Suppress(
+        "NewClassNamingConvention",
+        "InconsistentCommentForJavaParameter",
+        "UnusedAssignment",
+        "PackageVisibleField",
+        "FieldNamingConvention",
+        "QuestionableName"
+    )
+    inner class CanonicalCode {
+
+        @Test
+        fun `collapse spaces and drop comments`() {
+            @Language("Java")
+            val method = elementFactory.createMethodFromText(
+                """
+                void m() {
+                    // line comment
+                    int x   =  list . get( 0 ,  1 ) /*block*/ ;
+                    x ++ ; /* after */
+                    if ( ( x > 0 ) ) { x = x + 1 ; }
+                }
+                """.trimIndent(), /*context=*/null
+            )
+            val body = method.body as PsiCodeBlock
+
+            @Language("Java")
+            val expected = "{ int x = list.get(0, 1); x++; if ((x > 0)) { x = x + 1; } }"
+            // Body text without leading/trailing braces must be normalized.
+            body.canonicalCode() shouldBe expected
+
+        }
+
+        @Test
+        fun `avoid spaces before punctuation and after openers`() {
+            @Language("Java")
+            val statement = elementFactory.createStatementFromText(
+                """
+                foo( a , b ).bar( ( 1 + 2 ) , 3 ); // tail
+                """.trimIndent(), /*context=*/null
+            )
+
+            @Language("Java")
+            val expected = "foo(a, b).bar((1 + 2), 3);"
+            statement.canonicalCode() shouldBe expected
+        }
+
+        @Test
+        @Suppress("MaxLineLength")
+        fun `normalize spaces in generic parameters`() {
+            @Language("Java")
+            val statement = elementFactory.createStatementFromText(
+                """
+                java.util.Map < String , java.util.List < Integer > > m = new java.util.HashMap < > ();
+                """.trimIndent(), /*context=*/null
+            )
+
+            @Language("Java")
+            val expected = "java.util.Map<String, java.util.List<Integer>> m = new java.util.HashMap<>();"
+            statement.canonicalCode() shouldBe expected
+        }
+
+        @Test
+        fun `ensure single spaces around arrow`() {
+            @Language("Java")
+            val statement = elementFactory.createStatementFromText(
+                """
+                java.util.function.Function< Integer , Integer > f = x->x+1;
+                """.trimIndent(), /*context=*/null
+            )
+
+            @Language("Java")
+            val expected = "java.util.function.Function<Integer, Integer> f = x -> x + 1;"
+            statement.canonicalCode() shouldBe expected
+        }
     }
 }
