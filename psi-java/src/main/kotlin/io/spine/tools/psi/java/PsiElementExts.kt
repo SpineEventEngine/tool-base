@@ -31,6 +31,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiRecursiveElementWalkingVisitor
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.impl.source.tree.LeafPsiElement
+import io.spine.annotation.VisibleForTesting
 import io.spine.string.Separator
 import io.spine.string.ti
 
@@ -98,24 +99,29 @@ public fun PsiElement.getFirstByText(
  *  1. drops comments,
  *  2. collapses any whitespace run to a single space character,
  *  3. *avoids spaces* around punctuation where code style normally has none
- *     (before `, ) ] } . :: ?. : ; >` and after `( [ {` etc.).
+ *     (before `, ) ] } . :: ?. ; >` and after `( [ {` etc.).
  */
 @Suppress("AssignedValueIsNeverRead" /* False positive from IDEA. The `needSpace` var
-    is used when calculating `addSpace` var. */) 
+    is used when calculating `addSpace` var. */,
+    "ReturnCount"
+)
+@VisibleForTesting
 public fun PsiElement.canonicalCode(): String {
     val sb = StringBuilder()
     var needSpace = false
 
     fun lastChar(): Char? = if (sb.isEmpty()) null else sb[sb.length - 1]
 
+    val noBefore = charSet(",;:).]?>") // includes ., ::, ?., ?:
+    val noAfter = charSet("([.<>")
+
     // No space BEFORE these leading chars
     fun noSpaceBefore(next: String): Boolean =
         next == "++" || next == "--" ||
-        next.firstOrNull() in charSet(",;:).]?>") // includes ., ::, ?., ?:
+            next.firstOrNull() in noBefore
 
     // No space AFTER tokens that end with these trailing chars
-    fun noSpaceAfter(prevLast: Char?): Boolean =
-        prevLast in charSet("([.<")
+    fun noSpaceAfter(prevLast: Char?): Boolean = prevLast in noAfter
 
     accept(object : PsiRecursiveElementWalkingVisitor() {
         override fun visitElement(e: PsiElement) {

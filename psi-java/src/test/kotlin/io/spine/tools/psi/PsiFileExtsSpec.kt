@@ -34,6 +34,7 @@ import io.spine.tools.psi.java.FileSystem
 import io.spine.tools.psi.java.canonicalCode
 import java.nio.file.Path
 import kotlin.io.path.writeText
+import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -66,10 +67,19 @@ internal class PsiFileExtsSpec {
 
     @Nested
     @DisplayName("provide canonical code")
+    @Suppress(
+        "NewClassNamingConvention",
+        "InconsistentCommentForJavaParameter",
+        "UnusedAssignment",
+        "PackageVisibleField",
+        "FieldNamingConvention",
+        "QuestionableName"
+    )
     inner class CanonicalCode {
 
         @Test
         fun `collapse spaces and drop comments`() {
+            @Language("Java")
             val method = elementFactory.createMethodFromText(
                 """
                 void m() {
@@ -82,20 +92,25 @@ internal class PsiFileExtsSpec {
             )
             val body = method.body as PsiCodeBlock
 
+            @Language("Java")
+            val expected = "{ int x = list.get(0, 1); x++; if ((x>0)) { x = x + 1; } }"
             // Body text without leading/trailing braces must be normalized.
-            body.canonicalCode() shouldBe
-                    "{ int x = list.get(0, 1); x++; if ((x>0)) { x = x + 1; } }".trim()
+            body.canonicalCode() shouldBe expected
+
         }
 
         @Test
         fun `avoid spaces before punctuation and after openers`() {
+            @Language("Java")
             val statement = elementFactory.createStatementFromText(
                 """
                 foo( a , b ).bar( ( 1 + 2 ) , 3 ); // tail
                 """.trimIndent(), /*context=*/null
             )
 
-            statement.canonicalCode() shouldBe "foo(a, b).bar((1 + 2), 3);"
+            @Language("Java")
+            val expected = "foo(a, b).bar((1 + 2), 3);"
+            statement.canonicalCode() shouldBe expected
         }
     }
 }
