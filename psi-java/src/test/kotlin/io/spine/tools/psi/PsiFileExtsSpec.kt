@@ -138,7 +138,7 @@ internal class PsiFileExtsSpec {
             )
 
             @Language("Java")
-            val expected = "java.util.function.Function<Integer, Integer> f = x -> x+1;"
+            val expected = "java.util.function.Function<Integer, Integer> f = x -> x + 1;"
             statement.canonicalCode() shouldBe expected
         }
     }

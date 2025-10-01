@@ -125,7 +125,7 @@ public fun PsiElement.inGenericParams(): Boolean {
 @Suppress("AssignedValueIsNeverRead" /* False positive from IDEA. The `needSpace` var
     is used when calculating `addSpace` var. */,
     "ReturnCount",
-    "CyclomaticComplexMethod"
+    "CyclomaticComplexMethod",
 )
 @VisibleForTesting
 public fun PsiElement.canonicalCode(): String {
@@ -134,9 +134,19 @@ public fun PsiElement.canonicalCode(): String {
     var suppressNextSpace = false
 
     fun lastChar(): Char? = if (sb.isEmpty()) null else sb[sb.length - 1]
+    fun prevNonSpace(): Char? {
+        var i = sb.length - 1
+        while (i >= 0) {
+            val ch = sb[i]
+            if (ch != ' ') return ch
+            i--
+        }
+        return null
+    }
 
     val noBefore = charSet(",;:).]?") // includes ., ::, ?., ?:
     val noAfter = charSet("([.")
+    val arithmeticOps = setOf("+", "-", "*", "/", "%")
 
     // No space BEFORE these leading chars
     fun noSpaceBefore(next: String, context: PsiElement): Boolean {
@@ -146,7 +156,8 @@ public fun PsiElement.canonicalCode(): String {
                 || next.firstOrNull() in noBefore
                 || // Avoid space before '<' only in generic parameter lists.
                    (inGenericParams && next.startsWith("<"))
-                || // Avoid space before '>' and its multi-char forms only in generic parameter lists.
+                || // Avoid space before '>' and its multi-char forms only
+                   // in generic parameter lists.
                    (inGenericParams && next.startsWith(">"))
     }
 
@@ -157,6 +168,7 @@ public fun PsiElement.canonicalCode(): String {
                 (prevLast == '<' && context.inGenericParams())
 
     accept(object : PsiRecursiveElementWalkingVisitor() {
+        @Suppress("LongMethod")
         override fun visitElement(e: PsiElement) {
             when (e) {
                 is PsiWhiteSpace -> {
@@ -164,7 +176,7 @@ public fun PsiElement.canonicalCode(): String {
                     return
                 }
                 is PsiComment -> {
-                    // drop comments entirely
+                    // Drop comments entirely.
                     needSpace = true
                     return
                 }
@@ -189,6 +201,39 @@ public fun PsiElement.canonicalCode(): String {
                     // Ensure exactly one space after the arrow for the next token.
                     needSpace = true
                     suppressNextSpace = false
+                    return
+                }
+
+                // Ensure spaces around arithmetic binary operators.
+                if (text in arithmeticOps) {
+                    // Heuristic: detect unary + or - (no space after in canonical form).
+                    val isUnary = (text == "+" || text == "-") && run {
+                        when (prevNonSpace()) {
+                            null -> true
+                            '(', '[', '{', '=', ',', ':', '?', '<', '>', '!',
+                            '&', '|', '^', '%', '~', '+' , '-', '*', '/' -> true
+                            else -> false
+                        }
+                    }
+                    if (!isUnary) {
+                        val prev = lastChar()
+                        if (prev != null && prev != ' ') sb.append(' ')
+                        sb.append(text)
+                        needSpace = true // ensure exactly one space after
+                        suppressNextSpace = false
+                        return
+                    }
+                    // Unary + or -: respect spacing before (via general rules)
+                    // but suppress space after.
+                    val addSpaceUnary = needSpace && !noSpaceBefore(text, e) && !noSpaceAfter(
+                        lastChar(),
+                        e
+                    ) && !suppressNextSpace
+                    if (addSpaceUnary) sb.append(' ')
+                    sb.append(text)
+                    // No space between sign and the following literal/identifier.
+                    suppressNextSpace = true
+                    needSpace = false
                     return
                 }
 
