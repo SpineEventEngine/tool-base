@@ -66,7 +66,7 @@ internal class PsiFileExtsSpec {
 
     @Nested
     @DisplayName("provide canonical code")
-    inner class WhitespaceAndPunctuation {
+    inner class CanonicalCode {
 
         @Test
         fun `collapse spaces and drop comments`() {
