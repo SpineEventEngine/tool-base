@@ -112,8 +112,8 @@ public fun PsiElement.canonicalCode(): String {
 
     fun lastChar(): Char? = if (sb.isEmpty()) null else sb[sb.length - 1]
 
-    val noBefore = charSet(",;:).]?>") // includes ., ::, ?., ?:
-    val noAfter = charSet("([.<>")
+    val noBefore = charSet(",;:).]?") // includes ., ::, ?., ?:
+    val noAfter = charSet("([.<")
 
     // No space BEFORE these leading chars
     fun noSpaceBefore(next: String): Boolean =

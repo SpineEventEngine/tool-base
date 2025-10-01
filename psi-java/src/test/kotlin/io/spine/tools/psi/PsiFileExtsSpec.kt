@@ -93,7 +93,7 @@ internal class PsiFileExtsSpec {
             val body = method.body as PsiCodeBlock
 
             @Language("Java")
-            val expected = "{ int x = list.get(0, 1); x++; if ((x>0)) { x = x + 1; } }"
+            val expected = "{ int x = list.get(0, 1); x++; if ((x > 0)) { x = x + 1; } }"
             // Body text without leading/trailing braces must be normalized.
             body.canonicalCode() shouldBe expected
 
