@@ -112,5 +112,34 @@ internal class PsiFileExtsSpec {
             val expected = "foo(a, b).bar((1 + 2), 3);"
             statement.canonicalCode() shouldBe expected
         }
+
+        @Test
+        @Suppress("MaxLineLength")
+        fun `normalize spaces in generic parameters`() {
+            @Language("Java")
+            val statement = elementFactory.createStatementFromText(
+                """
+                java.util.Map < String , java.util.List < Integer > > m = new java.util.HashMap < > ();
+                """.trimIndent(), /*context=*/null
+            )
+
+            @Language("Java")
+            val expected = "java.util.Map<String, java.util.List<Integer>> m = new java.util.HashMap<> ();"
+            statement.canonicalCode() shouldBe expected
+        }
+
+        @Test
+        fun `ensure single spaces around arrow`() {
+            @Language("Java")
+            val statement = elementFactory.createStatementFromText(
+                """
+                java.util.function.Function< Integer , Integer > f = x->x+1;
+                """.trimIndent(), /*context=*/null
+            )
+
+            @Language("Java")
+            val expected = "java.util.function.Function<Integer, Integer> f = x -> x+1;"
+            statement.canonicalCode() shouldBe expected
+        }
     }
 }

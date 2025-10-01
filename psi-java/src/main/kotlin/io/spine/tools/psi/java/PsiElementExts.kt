@@ -31,6 +31,8 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiRecursiveElementWalkingVisitor
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.impl.source.tree.LeafPsiElement
+import com.intellij.psi.PsiReferenceParameterList
+import com.intellij.psi.PsiTypeParameterList
 import io.spine.annotation.VisibleForTesting
 import io.spine.string.Separator
 import io.spine.string.ti
@@ -103,25 +105,43 @@ public fun PsiElement.getFirstByText(
  */
 @Suppress("AssignedValueIsNeverRead" /* False positive from IDEA. The `needSpace` var
     is used when calculating `addSpace` var. */,
-    "ReturnCount"
+    "ReturnCount",
+    "CyclomaticComplexMethod"
 )
 @VisibleForTesting
 public fun PsiElement.canonicalCode(): String {
     val sb = StringBuilder()
     var needSpace = false
+    var suppressNextSpace = false
 
     fun lastChar(): Char? = if (sb.isEmpty()) null else sb[sb.length - 1]
 
     val noBefore = charSet(",;:).]?") // includes ., ::, ?., ?:
-    val noAfter = charSet("([.<")
+    val noAfter = charSet("([.")
+
+    fun inGenericParams(elem: PsiElement): Boolean {
+        var p: PsiElement? = elem.parent
+        while (p != null) {
+            if (p is PsiReferenceParameterList || p is PsiTypeParameterList) return true
+            p = p.parent
+        }
+        return false
+    }
 
     // No space BEFORE these leading chars
-    fun noSpaceBefore(next: String): Boolean =
+    fun noSpaceBefore(next: String, context: PsiElement): Boolean =
         next == "++" || next == "--" ||
-            next.firstOrNull() in noBefore
+            next.firstOrNull() in noBefore ||
+            // Avoid space before '<' only in generic parameter lists.
+            (inGenericParams(context) && next == "<") ||
+            // Avoid space before '>' and its multi-char forms only in generic parameter lists.
+            (inGenericParams(context) && (next == ">" || next == ">>" || next == ">>>"))
 
     // No space AFTER tokens that end with these trailing chars
-    fun noSpaceAfter(prevLast: Char?): Boolean = prevLast in noAfter
+    fun noSpaceAfter(prevLast: Char?, context: PsiElement): Boolean =
+        (prevLast in noAfter) ||
+            // Avoid space after '<' only in generic parameter lists.
+            (prevLast == '<' && inGenericParams(context))
 
     accept(object : PsiRecursiveElementWalkingVisitor() {
         override fun visitElement(e: PsiElement) {
@@ -145,13 +165,31 @@ public fun PsiElement.canonicalCode(): String {
                     return
                 }
 
+                // Ensure spaces around Java/Kotlin arrow token.
+                if (text == "->") {
+                    // Ensure exactly one space before the arrow.
+                    val prev = lastChar()
+                    if (prev != null && prev != ' ') {
+                        sb.append(' ')
+                    }
+                    sb.append(text)
+                    // Ensure exactly one space after the arrow for the next token.
+                    needSpace = true
+                    suppressNextSpace = false
+                    return
+                }
+
                 val addSpace =
                     needSpace &&
-                            !noSpaceBefore(text) &&
-                            !noSpaceAfter(lastChar())
+                            !noSpaceBefore(text, e) &&
+                            !noSpaceAfter(lastChar(), e) &&
+                            !suppressNextSpace
 
                 if (addSpace) sb.append(' ')
                 sb.append(text)
+
+                // If we just wrote a '<' in generic params, suppress the next possible space once.
+                suppressNextSpace = (text == "<" && inGenericParams(e))
                 needSpace = false
                 return
             }
