@@ -2,8 +2,8 @@
 
 Read the `../.agents/_TOC.md` file at the root of the project to understand:
  - the agent responsibilities,
- - project overview, 
- - coding guidelines, 
+ - project overview,
+ - coding guidelines,
  - other relevant topics.
 
 Also follow the Junie-specific rules described below.
