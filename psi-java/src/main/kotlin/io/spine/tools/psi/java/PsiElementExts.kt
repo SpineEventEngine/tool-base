@@ -93,6 +93,25 @@ public fun PsiElement.getFirstByText(
             error(msg)
         }
 
+
+/**
+ * Checks if this [PsiElement] is located inside a generic parameter list.
+ *
+ * The method traverses up the PSI tree hierarchy from this element, checking if any of
+ * the parent elements is either a reference parameter list (as in `List<T>`) or
+ * a type parameter list (as in `class Foo<T>`).
+ *
+ * @return `true` if this element is inside generic parameters, `false` otherwise.
+ */
+public fun PsiElement.inGenericParams(): Boolean {
+    var p: PsiElement? = this.parent
+    while (p != null) {
+        if (p is PsiReferenceParameterList || p is PsiTypeParameterList) return true
+        p = p.parent
+    }
+    return false
+}
+
 /**
  * Obtains the whitespace-normalized code of this [PsiElement].
  *
@@ -119,29 +138,23 @@ public fun PsiElement.canonicalCode(): String {
     val noBefore = charSet(",;:).]?") // includes ., ::, ?., ?:
     val noAfter = charSet("([.")
 
-    fun inGenericParams(elem: PsiElement): Boolean {
-        var p: PsiElement? = elem.parent
-        while (p != null) {
-            if (p is PsiReferenceParameterList || p is PsiTypeParameterList) return true
-            p = p.parent
-        }
-        return false
-    }
-
     // No space BEFORE these leading chars
-    fun noSpaceBefore(next: String, context: PsiElement): Boolean =
-        next == "++" || next == "--" ||
-            next.firstOrNull() in noBefore ||
-            // Avoid space before '<' only in generic parameter lists.
-            (inGenericParams(context) && next == "<") ||
-            // Avoid space before '>' and its multi-char forms only in generic parameter lists.
-            (inGenericParams(context) && (next == ">" || next == ">>" || next == ">>>"))
+    fun noSpaceBefore(next: String, context: PsiElement): Boolean {
+        val inGenericParams = context.inGenericParams()
+        return next == "++"
+                || next == "--"
+                || next.firstOrNull() in noBefore
+                || // Avoid space before '<' only in generic parameter lists.
+                   (inGenericParams && next.startsWith("<"))
+                || // Avoid space before '>' and its multi-char forms only in generic parameter lists.
+                   (inGenericParams && next.startsWith(">"))
+    }
 
     // No space AFTER tokens that end with these trailing chars
     fun noSpaceAfter(prevLast: Char?, context: PsiElement): Boolean =
         (prevLast in noAfter) ||
-            // Avoid space after '<' only in generic parameter lists.
-            (prevLast == '<' && inGenericParams(context))
+                // Avoid space after '<' only in generic parameter lists.
+                (prevLast == '<' && context.inGenericParams())
 
     accept(object : PsiRecursiveElementWalkingVisitor() {
         override fun visitElement(e: PsiElement) {
@@ -189,7 +202,7 @@ public fun PsiElement.canonicalCode(): String {
                 sb.append(text)
 
                 // If we just wrote a '<' in generic params, suppress the next possible space once.
-                suppressNextSpace = (text == "<" && inGenericParams(e))
+                suppressNextSpace = (text == "<" && e.inGenericParams())
                 needSpace = false
                 return
             }
