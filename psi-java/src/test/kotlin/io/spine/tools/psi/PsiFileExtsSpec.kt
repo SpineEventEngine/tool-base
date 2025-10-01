@@ -26,12 +26,16 @@
 
 package io.spine.tools.psi
 
+import com.intellij.psi.PsiCodeBlock
 import io.kotest.matchers.shouldBe
 import io.spine.testing.TestValues.randomString
+import io.spine.tools.psi.java.Environment.elementFactory
 import io.spine.tools.psi.java.FileSystem
+import io.spine.tools.psi.java.canonicalCode
 import java.nio.file.Path
 import kotlin.io.path.writeText
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
@@ -58,5 +62,40 @@ internal class PsiFileExtsSpec {
 
         val psiFile = FileSystem.load(file)
         psiFile.content() shouldBe content
+    }
+
+    @Nested
+    @DisplayName("provide canonical code")
+    inner class WhitespaceAndPunctuation {
+
+        @Test
+        fun `collapse spaces and drop comments`() {
+            val method = elementFactory.createMethodFromText(
+                """
+                void m() {
+                    // line comment
+                    int x   =  list . get( 0 ,  1 ) /*block*/ ;
+                    x ++ ; /* after */
+                    if ( ( x > 0 ) ) { x = x + 1 ; }
+                }
+                """.trimIndent(), /*context=*/null
+            )
+            val body = method.body as PsiCodeBlock
+
+            // Body text without leading/trailing braces must be normalized.
+            body.canonicalCode() shouldBe
+                    "{ int x = list.get(0, 1); x++; if ((x>0)) { x = x + 1; } }".trim()
+        }
+
+        @Test
+        fun `avoid spaces before punctuation and after openers`() {
+            val statement = elementFactory.createStatementFromText(
+                """
+                foo( a , b ).bar( ( 1 + 2 ) , 3 ); // tail
+                """.trimIndent(), /*context=*/null
+            )
+
+            statement.canonicalCode() shouldBe "foo(a, b).bar((1 + 2), 3);"
+        }
     }
 }

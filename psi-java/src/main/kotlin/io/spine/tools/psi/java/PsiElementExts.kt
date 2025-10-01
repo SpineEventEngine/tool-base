@@ -26,7 +26,11 @@
 
 package io.spine.tools.psi.java
 
+import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiRecursiveElementWalkingVisitor
+import com.intellij.psi.PsiWhiteSpace
+import com.intellij.psi.impl.source.tree.LeafPsiElement
 import io.spine.string.Separator
 import io.spine.string.ti
 
@@ -85,3 +89,72 @@ public fun PsiElement.getFirstByText(
 
             error(msg)
         }
+
+/**
+ * Obtains the whitespace-normalized code of this [PsiElement].
+ *
+ * The function transforms the code obtained from the [text][PsiElement.getText] property
+ * in the following way:
+ *  1. drops comments,
+ *  2. collapses any whitespace run to a single space character,
+ *  3. *avoids spaces* around punctuation where code style normally has none
+ *     (before `, ) ] } . :: ?. : ; >` and after `( [ {` etc.).
+ */
+@Suppress("AssignedValueIsNeverRead" /* False positive from IDEA. The `needSpace` var
+    is used when calculating `addSpace` var. */) 
+public fun PsiElement.canonicalCode(): String {
+    val sb = StringBuilder()
+    var needSpace = false
+
+    fun lastChar(): Char? = if (sb.isEmpty()) null else sb[sb.length - 1]
+
+    // No space BEFORE these leading chars
+    fun noSpaceBefore(next: String): Boolean =
+        next.firstOrNull() in charSet(",;:).]?>") // includes ., ::, ?., ?:
+
+    // No space AFTER tokens that end with these trailing chars
+    fun noSpaceAfter(prevLast: Char?): Boolean =
+        prevLast in charSet("([.<")
+
+    accept(object : PsiRecursiveElementWalkingVisitor() {
+        override fun visitElement(e: PsiElement) {
+            when (e) {
+                is PsiWhiteSpace -> {
+                    needSpace = true
+                    return
+                }
+                is PsiComment -> {
+                    // drop comments entirely
+                    needSpace = true
+                    return
+                }
+            }
+
+            // Emit only leaf tokens’ text. (Composite nodes delegate to children.)
+            if (e.firstChild == null && e is LeafPsiElement) {
+                val text = e.text
+                if (text.isBlank()) {
+                    needSpace = true
+                    return
+                }
+
+                val addSpace =
+                    needSpace &&
+                            !noSpaceBefore(text) &&
+                            !noSpaceAfter(lastChar())
+
+                if (addSpace) sb.append(' ')
+                sb.append(text)
+                needSpace = false
+                return
+            }
+
+            super.visitElement(e)
+        }
+    })
+
+    return sb.toString().trim()
+}
+
+private fun charSet(chars: String): Set<Char> = chars.toSet()
+
