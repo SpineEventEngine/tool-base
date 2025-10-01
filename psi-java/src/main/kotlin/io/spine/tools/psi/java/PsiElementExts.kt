@@ -110,6 +110,7 @@ public fun PsiElement.canonicalCode(): String {
 
     // No space BEFORE these leading chars
     fun noSpaceBefore(next: String): Boolean =
+        next == "++" || next == "--" ||
         next.firstOrNull() in charSet(",;:).]?>") // includes ., ::, ?., ?:
 
     // No space AFTER tokens that end with these trailing chars
