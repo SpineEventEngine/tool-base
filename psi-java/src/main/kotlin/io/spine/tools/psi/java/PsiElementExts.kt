@@ -299,4 +299,3 @@ public fun PsiElement.canonicalCode(): String {
 }
 
 private fun charSet(chars: String): Set<Char> = chars.toSet()
-
