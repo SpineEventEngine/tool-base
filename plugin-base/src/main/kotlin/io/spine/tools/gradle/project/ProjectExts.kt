@@ -35,7 +35,6 @@ import io.spine.tools.code.Language
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.code.SourceSetName.Companion.main
 import io.spine.tools.code.SourceSetName.Companion.test
-import io.spine.tools.gradle.Artifact
 import io.spine.tools.gradle.ConfigurationName
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
@@ -95,34 +94,37 @@ public fun Project.sourceSet(name: String): SourceSet = sourceSets.getByName(nam
 /** Obtains a source set by the given name. */
 public fun Project.sourceSet(name: SourceSetName): SourceSet = sourceSets.getByName(name.value)
 
-private fun Project.toArtifactBuilder(): Artifact.Builder =
-    Artifact.newBuilder().apply {
+private fun Project.toArtifactBuilder(): io.spine.tools.gradle.Artifact.Builder =
+    io.spine.tools.gradle.Artifact.newBuilder().apply {
         setGroup(project.group.toString())
         setName(project.name)
         setVersion(project.version.toString())
     }
 
 /**
- * Obtains the production [Artifact] of this project.
+ * Obtains the production [io.spine.tools.gradle.Artifact] of this project.
  */
-public val Project.artifact: Artifact
+@Deprecated("Use `io.spine.tools.meta.MavenArtifact` instead")
+public val Project.artifact: io.spine.tools.gradle.Artifact
     get() = toArtifactBuilder().build()
 
 /**
- * Obtains the test [Artifact] of this project.
+ * Obtains the test [io.spine.tools.gradle.Artifact] of this project.
  */
-public val Project.testArtifact: Artifact
+@Deprecated("Use `io.spine.tools.meta.MavenArtifact` instead")
+public val Project.testArtifact: io.spine.tools.gradle.Artifact
     get() = toArtifactBuilder().useTestClassifier().build()
 
 /**
- * Obtains the [Artifact] for the given source set.
+ * Obtains the [io.spine.tools.gradle.Artifact] for the given source set.
  *
  * For the `main` source set, the call is equivalent to obtaining [Project.artifact].
  * For the `test` source set, the [Project.testArtifact] will be returned.
  *
  * For other source sets, the given name would be used as a classifier of the artifact.
  */
-public fun Project.artifact(ssn: SourceSetName): Artifact {
+@Deprecated("Use `io.spine.tools.meta.MavenArtifact` instead")
+public fun Project.artifact(ssn: SourceSetName): io.spine.tools.gradle.Artifact {
     return when (ssn) {
         main -> artifact
         test -> testArtifact

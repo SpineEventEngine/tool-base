@@ -27,7 +27,6 @@
 package io.spine.tools.gradle.protobuf
 
 import io.spine.tools.gradle.PluginId
-import io.spine.tools.gradle.ThirdPartyDependency
 import io.spine.tools.proto.fs.Directory
 
 /**
@@ -47,12 +46,13 @@ public object ProtobufDependencies {
 
     /** The Protobuf Lite Java runtime library dependency. */
     @JvmField
-    @Suppress("unused")
-    public val protobufLite: ThirdPartyDependency =
-        ThirdPartyDependency(MAVEN_GROUP, "protobuf-lite")
+    @Deprecated("Use `io.spine.tools.meta.Dependency` API instead.")
+    public val protobufLite: io.spine.tools.gradle.ThirdPartyDependency =
+        io.spine.tools.gradle.ThirdPartyDependency(MAVEN_GROUP, "protobuf-lite")
 
     /** The dependency on Protobuf Compiler. */
     @JvmField
-    public val protobufCompiler: ThirdPartyDependency =
-        ThirdPartyDependency(MAVEN_GROUP, "protoc")
+    @Deprecated("Use `io.spine.tools.meta.Dependency` API instead.")
+    public val protobufCompiler: io.spine.tools.gradle.ThirdPartyDependency =
+        io.spine.tools.gradle.ThirdPartyDependency(MAVEN_GROUP, "protoc")
 }

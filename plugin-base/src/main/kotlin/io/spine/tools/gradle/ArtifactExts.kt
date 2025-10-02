@@ -29,6 +29,7 @@ package io.spine.tools.gradle
 /**
  * Provides DSL syntax for creating an [Artifact].
  */
+@Deprecated("Use `Please use {@code io.spine.tools.meta.MavenArtifact} instead.`")
 public fun artifact(action: Artifact.Builder.() -> Unit): Artifact {
     val builder = Artifact.newBuilder()
     action(builder)
