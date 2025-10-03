@@ -24,48 +24,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.js.fs;
+import io.spine.dependency.lib.JavaPoet
+import io.spine.dependency.lib.Protobuf
+import io.spine.dependency.lib.Roaster
+import io.spine.dependency.local.Base
+import io.spine.gradle.protobuf.setup
 
-import io.spine.annotation.Internal;
-import io.spine.code.fs.SourceCodeDirectory;
+plugins {
+    module
+    protobuf
+}
 
-import java.nio.file.Path;
+dependencies {
+    api(Base.lib)
+    api(JavaPoet.lib)
+    api(Roaster.api)
+    api(Roaster.jdt)
+}
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-/**
- * A folder with JavaScript source files.
- *
- * @deprecated please use {@link JsFiles}.
- */
-@Internal
-@Deprecated
-public final class Directory extends SourceCodeDirectory {
-
-    private Directory(Path path) {
-        super(path);
+protobuf {
+    protoc {
+        artifact = Protobuf.compiler
     }
 
-    /**
-     * Creates a new instance at the specified location.
-     */
-    public static Directory at(Path path) {
-        checkNotNull(path);
-        return new Directory(path);
-    }
-
-    /**
-     * Obtains the source code path for the passed file name.
-     */
-    public Path resolve(FileName fileName) {
-        return JsFiles.resolve(this, fileName);
-    }
-
-    /**
-     * Obtains the source code path for the passed library file.
-     */
-    public Path resolve(LibraryFile libraryFile) {
-        checkNotNull(libraryFile);
-        return JsFiles.resolve(this, libraryFile.fileName());
+    generateProtoTasks.all().configureEach {
+        builtins.maybeCreate("kotlin")
+        setup()
     }
 }
+
+allowDuplicationInSourcesJar()

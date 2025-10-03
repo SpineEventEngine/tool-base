@@ -73,11 +73,18 @@ project.run {
     configureJava()
     configureKotlin()
 
+    val generatedDir = "$projectDir/generated"
+
+    applyGeneratedDirectories(generatedDir)
     configureTests()
     configureDocTasks()
 
     configureGitHubPages()
     configureTaskDependencies()
+
+    tasks.clean.configure {
+        delete(generatedDir)
+    }
 }
 
 typealias Module = Project
@@ -175,4 +182,41 @@ fun Module.configureGitHubPages() {
     }
 }
 
+/**
+ * Adds directories with the generated source code to source sets of the project.
+ *
+ * @param generatedDir The name of the root directory with the generated code
+ */
+fun Module.applyGeneratedDirectories(generatedDir: String) {
+    val generatedMain = "$generatedDir/main"
+    val generatedJava = "$generatedMain/java"
+    val generatedKotlin = "$generatedMain/kotlin"
+    val generatedGrpc = "$generatedMain/grpc"
+
+    val generatedTest = "$generatedDir/test"
+    val generatedTestJava = "$generatedTest/java"
+    val generatedTestKotlin = "$generatedTest/kotlin"
+    val generatedTestGrpc = "$generatedTest/grpc"
+
+    sourceSets {
+        main {
+            java.srcDirs(
+                generatedJava,
+                generatedGrpc,
+            )
+            kotlin.srcDirs(
+                generatedKotlin,
+            )
+        }
+        test {
+            java.srcDirs(
+                generatedTestJava,
+                generatedTestGrpc,
+            )
+            kotlin.srcDirs(
+                generatedTestKotlin,
+            )
+        }
+    }
+}
 

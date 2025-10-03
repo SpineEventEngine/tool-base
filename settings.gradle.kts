@@ -27,6 +27,7 @@
 rootProject.name = "tool-base"
 
 include(
+    "classic-codegen",
     "intellij-platform",
     "intellij-platform-java",
     "tool-base",

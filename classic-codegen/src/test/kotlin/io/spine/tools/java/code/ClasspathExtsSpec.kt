@@ -1,11 +1,11 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -24,11 +24,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.java
+package io.spine.tools.java.code
 
 import io.kotest.matchers.shouldBe
 import io.spine.string.ti
-import java.io.File.pathSeparator
+import java.io.File
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
@@ -41,13 +41,13 @@ internal class ClasspathExtsSpec {
             "/some/path/fiz.jar",
             "/another/path/buz.jar"
         )
-        val cp = items.joinToString(pathSeparator)
+        val cp = items.joinToString(File.pathSeparator)
 
         val classpath = parseClasspath(cp)
 
         classpath.printItems() shouldBe
         """
-            ${items[0]}$pathSeparator
+            ${items[0]}${File.pathSeparator}
             ${items[1]}
         """.ti()
     }
@@ -59,7 +59,7 @@ internal class ClasspathExtsSpec {
             "/another/path/buz.jar",
             "/yet/another/path/baz.class"
         )
-        val cp = items.joinToString(pathSeparator)
+        val cp = items.joinToString(File.pathSeparator)
 
         val classpath = parseClasspath(cp)
 
@@ -73,7 +73,7 @@ internal class ClasspathExtsSpec {
             "/another/path/biz.jar",
             "/yet/another/path/bar.class"
         )
-        val cp = items.joinToString(pathSeparator)
+        val cp = items.joinToString(File.pathSeparator)
 
         val classpath = parseClasspath(cp)
 

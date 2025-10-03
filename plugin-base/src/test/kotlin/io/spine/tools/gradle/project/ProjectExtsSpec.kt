@@ -28,8 +28,6 @@ package io.spine.tools.gradle.project
 
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldHaveSize
-import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldContain
 import io.spine.tools.code.SourceSetName
 import java.nio.file.Path
 import org.gradle.api.Project
@@ -37,7 +35,6 @@ import org.gradle.api.plugins.JavaPlugin
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
@@ -64,28 +61,6 @@ class ProjectExtsSpec {
             pluginManager.apply(JavaPlugin::class.java)
             group = "io.spine.tests"
             version = "1.2.3"
-        }
-    }
-
-    @Nested
-    @DisplayName("obtain artifact by source set name")
-    inner class ObtainingArtifact {
-
-        @Test
-        fun main() {
-            project.artifact(SourceSetName.main) shouldBe project.artifact
-        }
-
-        @Test
-        fun test() {
-            project.artifact(SourceSetName.test) shouldBe project.testArtifact
-        }
-
-        @Test
-        fun custom() {
-            val customName = SourceSetName("slowTests")
-
-            project.artifact(customName).fileSafeId() shouldContain customName.value
         }
     }
 

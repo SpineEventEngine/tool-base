@@ -34,8 +34,6 @@ import io.spine.tools.proto.fs.Directory
  */
 public object ProtobufDependencies {
 
-    private const val MAVEN_GROUP = "com.google.protobuf"
-
     /** The ID of the Protobuf Gradle plugin. */
     @JvmField
     public val gradlePlugin: PluginId = PluginId("com.google.protobuf")
@@ -43,16 +41,4 @@ public object ProtobufDependencies {
     /** The name of the `SourceSet` extension installed by the Protobuf Gradle plugin. */
     @JvmField
     public val sourceSetExtensionName: String = Directory.rootName()
-
-    /** The Protobuf Lite Java runtime library dependency. */
-    @JvmField
-    @Deprecated("Use `io.spine.tools.meta.Dependency` API instead.")
-    public val protobufLite: io.spine.tools.gradle.ThirdPartyDependency =
-        io.spine.tools.gradle.ThirdPartyDependency(MAVEN_GROUP, "protobuf-lite")
-
-    /** The dependency on Protobuf Compiler. */
-    @JvmField
-    @Deprecated("Use `io.spine.tools.meta.Dependency` API instead.")
-    public val protobufCompiler: io.spine.tools.gradle.ThirdPartyDependency =
-        io.spine.tools.gradle.ThirdPartyDependency(MAVEN_GROUP, "protoc")
 }

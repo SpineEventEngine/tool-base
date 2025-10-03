@@ -1,11 +1,11 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -24,23 +24,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.java
+package io.spine.tools.java.code
 
-import org.jboss.forge.roaster.model.JavaDoc
+import io.kotest.matchers.shouldBe
+import io.spine.testing.UtilityClassTest
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
 
-/**
- * Obtains the full text of the Javadoc and normalizes it.
- *
- * This extension function should be used instead of [JavaDoc.getFullText] to avoid
- * issues with extra spaces that implementers of the `JavaDoc` interface may add.
- *
- * The following actions are performed:
- *  1. All double spaces are replaced with single spaces.
- *  2. All `} .` are replaced with `}.`.
- */
-public fun JavaDoc<*>.fullTextNormalized(): String {
-    val normalized = fullText
-        .replace("  ", " ")
-        .replace("} .", "}.")
-    return normalized
+@DisplayName("`Names` utility class should")
+internal class NamesTest : UtilityClassTest<Names>(Names::class.java) {
+
+    @Nested
+    @DisplayName("create `ClassName` by ")
+    internal inner class ClassNameFactory {
+
+        @Test
+        fun `a class`() {
+            val cls: Class<NamesTest> = NamesTest::class.java
+            val className = Names.className(cls)
+
+            className.getCanonical() shouldBe cls.getCanonicalName()
+        }
+
+        @Test
+        fun `given canonical class name`() {
+            val canonicalName = NamesTest::class.java.getCanonicalName()
+            val className = Names.className(canonicalName)
+
+            className.getCanonical() shouldBe canonicalName
+        }
+    }
 }

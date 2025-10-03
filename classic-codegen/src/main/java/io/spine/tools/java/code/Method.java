@@ -26,10 +26,10 @@
 
 package io.spine.tools.java.code;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.errorprone.annotations.Immutable;
 import com.squareup.javapoet.MethodSpec;
 import io.spine.annotation.Internal;
+import io.spine.annotation.VisibleForTesting;
 import io.spine.value.StringTypeValue;
 
 import java.io.Serial;

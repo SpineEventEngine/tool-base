@@ -27,7 +27,6 @@
 package io.spine.tools.gradle.protobuf
 
 import io.spine.tools.gradle.protobuf.ProtobufDependencies.sourceSetExtensionName
-import io.spine.tools.gradle.task.findKotlinDirectorySet
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.tasks.SourceSet
 
@@ -51,32 +50,6 @@ public fun SourceSet.containsProtoFiles(): Boolean {
  *         by the Protobuf Gradle Plugin.
  * @see ProtobufDependencies.sourceSetExtensionName
  */
-@Deprecated(
-    message = "Use `findProtoDirectorySet()` instead.", ReplaceWith("findProtoDirectorySet()")
-)
-public fun SourceSet.protoDirectorySet(): SourceDirectorySet? = findProtoDirectorySet()
-
-/**
- * Obtains a [SourceDirectorySet] containing `.proto` files in this [SourceSet].
- *
- * @return the directory set or `null`, if there is no `proto` extension added to this `SourceSet`
- *         by the Protobuf Gradle Plugin.
- * @see ProtobufDependencies.sourceSetExtensionName
- */
 public fun SourceSet.findProtoDirectorySet(): SourceDirectorySet? =
     extensions.getByName(sourceSetExtensionName)
         .let { ext -> ext as? SourceDirectorySet }
-
-/**
- * Obtains the Kotlin source directory of this source set.
- *
- * @return the directory set or `null` if there is no `kotlin` extension in this source set.
- */
-@Deprecated(
-    message = "Use `findKotlinDirectorySet()` instead.",
-    ReplaceWith(
-        "findKotlinDirectorySet()",
-        imports = arrayOf("io.spine.tools.gradle.task.findKotlinDirectorySet")
-    )
-)
-public fun SourceSet.kotlinDirectorySet(): SourceDirectorySet? = findKotlinDirectorySet()

@@ -29,6 +29,7 @@
 package io.spine.tools.gradle.protobuf
 
 import com.google.protobuf.gradle.ProtobufExtension
+import io.spine.code.proto.FileDescriptors.DESC_EXTENSION
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.fs.DescriptorsDir
 import io.spine.tools.fs.DirectoryName
@@ -36,6 +37,7 @@ import io.spine.tools.gradle.project.artifact
 import io.spine.tools.gradle.project.sourceSet
 import io.spine.tools.gradle.protobuf.ProtobufDependencies.sourceSetExtensionName
 import io.spine.tools.java.fs.DefaultJavaPaths
+import io.spine.tools.meta.MavenArtifact
 import io.spine.tools.resolve
 import java.io.File
 import java.nio.file.Path
@@ -103,6 +105,12 @@ public fun Project.descriptorSetFile(ssn: SourceSetName): File {
     val path = descriptorSetFile.under(dir)
     return path.toFile()
 }
+
+/**
+ * Obtains a descriptor set file of this artifact.
+ */
+private fun MavenArtifact.descriptorSetFile(): File =
+    File(fileSafeId() + DESC_EXTENSION)
 
 /**
  * Obtains the directory containing generated Java source code for the specified source set.

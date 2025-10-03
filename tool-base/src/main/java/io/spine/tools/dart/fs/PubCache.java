@@ -26,7 +26,7 @@
 
 package io.spine.tools.dart.fs;
 
-import com.google.common.annotations.VisibleForTesting;
+import io.spine.annotation.VisibleForTesting;
 import com.google.common.base.Strings;
 import io.spine.tools.OsFamily;
 
