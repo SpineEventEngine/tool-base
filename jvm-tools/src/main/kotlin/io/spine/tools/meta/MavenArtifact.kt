@@ -49,7 +49,8 @@ public data class MavenArtifact(
     init {
         ::group.requireNonEmpty()
         ::name.requireNonEmpty()
-        ::version.requireNonEmpty()    }
+        ::version.requireNonEmpty()
+    }
 
     /**
      * The module to which this artifact belongs.
@@ -61,14 +62,44 @@ public data class MavenArtifact(
      * The Maven coordinates of this artifact in the format "group:name:version[:classifier][@extension]".
      */
     public val coordinates: String
-        get() {
-            val result = StringBuilder("$group$SEPARATOR$name$SEPARATOR$version")
-            classifier?.let { result.append("$SEPARATOR$it") }
-            extension?.let { result.append("@$it") }
-            return result.toString()
+        get() = buildId(COLON, AT)
+
+    /**
+     * Prints properties of this artifact so that they are used as a file name.
+     *
+     * Unlike in [coordinates], the properties are separated with the underscore symbol.
+     */
+    public fun fileSafeId(): String =
+        buildId(FILE_SAFE_SEPARATOR, FILE_SAFE_SEPARATOR)
+
+    /**
+     * Prints properties into a string form which can be used as an ID of this artifact.
+     *
+     * @param primarySeparator The separator between [group], [name], [version], and [classifier].
+     * @param secondarySeparator The separator between [classifier] and [extension].
+     */
+    private fun buildId(primarySeparator: Char, secondarySeparator: Char): String =
+        buildString {
+            append(group)
+            append(primarySeparator)
+            append(name)
+            append(primarySeparator)
+            append(version)
+            if (classifier != null) {
+                append(primarySeparator)
+                append(classifier)
+            }
+            if (extension != null) {
+                append(secondarySeparator)
+                append(extension)
+            }
         }
 
     public companion object {
+
+        private const val COLON: Char = ':'
+        private const val AT: Char = '@'
+        private const val FILE_SAFE_SEPARATOR: Char = '_'
 
         /**
          * The prefix to be used before [coordinates] in the string representation of

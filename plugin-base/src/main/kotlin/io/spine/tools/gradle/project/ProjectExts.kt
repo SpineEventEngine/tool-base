@@ -29,13 +29,13 @@
 package io.spine.tools.gradle.project
 
 import com.google.common.collect.ImmutableList
-import io.spine.tools.code.Kotlin
 import io.spine.tools.code.Java
+import io.spine.tools.code.Kotlin
 import io.spine.tools.code.Language
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.code.SourceSetName.Companion.main
-import io.spine.tools.code.SourceSetName.Companion.test
 import io.spine.tools.gradle.ConfigurationName
+import io.spine.tools.meta.MavenArtifact
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.plugins.JavaPluginExtension
@@ -94,42 +94,17 @@ public fun Project.sourceSet(name: String): SourceSet = sourceSets.getByName(nam
 /** Obtains a source set by the given name. */
 public fun Project.sourceSet(name: SourceSetName): SourceSet = sourceSets.getByName(name.value)
 
-private fun Project.toArtifactBuilder(): io.spine.tools.gradle.Artifact.Builder =
-    io.spine.tools.gradle.Artifact.newBuilder().apply {
-        setGroup(project.group.toString())
-        setName(project.name)
-        setVersion(project.version.toString())
-    }
-
 /**
- * Obtains the production [io.spine.tools.gradle.Artifact] of this project.
- */
-@Deprecated("Use `io.spine.tools.meta.MavenArtifact` instead")
-public val Project.artifact: io.spine.tools.gradle.Artifact
-    get() = toArtifactBuilder().build()
-
-/**
- * Obtains the test [io.spine.tools.gradle.Artifact] of this project.
- */
-@Deprecated("Use `io.spine.tools.meta.MavenArtifact` instead")
-public val Project.testArtifact: io.spine.tools.gradle.Artifact
-    get() = toArtifactBuilder().useTestClassifier().build()
-
-/**
- * Obtains the [io.spine.tools.gradle.Artifact] for the given source set.
+ * Obtains an artifact for the given source set.
  *
- * For the `main` source set, the call is equivalent to obtaining [Project.artifact].
- * For the `test` source set, the [Project.testArtifact] will be returned.
+ * For the `main` source set, the call is equivalent to obtaining a [MavenArtifact] with
+ * the `group`, `name`, and `version` properties of the project.
  *
- * For other source sets, the given name would be used as a classifier of the artifact.
+ * For other source sets, the given source set name would be used as a classifier of the artifact.
  */
-@Deprecated("Use `io.spine.tools.meta.MavenArtifact` instead")
-public fun Project.artifact(ssn: SourceSetName): io.spine.tools.gradle.Artifact {
-    return when (ssn) {
-        main -> artifact
-        test -> testArtifact
-        else -> toArtifactBuilder().setClassifier(ssn.value).build()
-    }
+public fun Project.artifact(ssn: SourceSetName): MavenArtifact {
+    val classifier = if (ssn == main) null else ssn.value
+    return MavenArtifact(group.toString(), name, version.toString(), classifier)
 }
 
 /** Obtains a configuration by its name. */

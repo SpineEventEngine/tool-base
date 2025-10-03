@@ -37,6 +37,7 @@ dependencies {
     compileOnlyApi(gradleApi())
     compileOnlyApi(Protobuf.GradlePlugin.lib)
     compileOnlyApi(Kotlin.GradlePlugin.api)
+    api(project(":jvm-tools"))
     api(project(":tool-base"))
     compileOnly(gradleKotlinDsl())
     implementation(Logging.lib)
