@@ -52,3 +52,5 @@ protobuf {
         setup()
     }
 }
+
+allowDuplicationInSourcesJar()

@@ -97,12 +97,4 @@ protobuf {
     }
 }
 
-/**
- * Make the `sourcesJar` task accept duplicated input which seems to occur
- * somewhere inside either ProtoData or McJava.
- */
-tasks.withType<Jar>().configureEach {
-    if (name == "sourcesJar") {
-        duplicatesStrategy = DuplicatesStrategy.INCLUDE
-    }
-}
+allowDuplicationInSourcesJar()
