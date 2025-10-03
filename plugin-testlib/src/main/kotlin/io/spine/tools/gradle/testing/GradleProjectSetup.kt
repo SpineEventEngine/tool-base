@@ -25,7 +25,7 @@
  */
 package io.spine.tools.gradle.testing
 
-import com.google.common.annotations.VisibleForTesting
+import io.spine.annotation.VisibleForTesting
 import java.io.File
 import java.nio.file.Path
 import java.nio.file.Paths

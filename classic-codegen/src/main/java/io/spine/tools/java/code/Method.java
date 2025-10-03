@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -26,43 +26,42 @@
 
 package io.spine.tools.java.code;
 
-import io.spine.testing.UtilityClassTest;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import com.google.errorprone.annotations.Immutable;
+import com.squareup.javapoet.MethodSpec;
+import io.spine.annotation.Internal;
+import io.spine.annotation.VisibleForTesting;
+import io.spine.value.StringTypeValue;
 
-import static com.google.common.truth.Truth.assertThat;
-import static io.spine.tools.java.code.Names.className;
+import java.io.Serial;
 
-@DisplayName("`Names` utility class should")
-class NamesTest extends UtilityClassTest<Names> {
+/**
+ * A generated Java method source code.
+ *
+ * <p>SPI users are responsible for checking that the content of the method is properly formatted
+ * and contains all the required modifiers, comments, and Javadoc.
+ *
+ * <p>The actual compilation of the generated method is performed as a part of the compilation
+ * of other Protobuf-generated sources.
+ */
+@Internal
+@Immutable
+public class Method extends StringTypeValue {
 
-    NamesTest() {
-        super(Names.class);
+    @Serial
+    private static final long serialVersionUID = 0L;
+
+    /**
+     * Creates a new instance with the passed code block.
+     */
+    @VisibleForTesting
+    public Method(String code) {
+        super(code);
     }
 
-    @Nested
-    @DisplayName("create `ClassName` by ")
-    class ClassNameFactory {
-
-        @Test
-        @DisplayName("class")
-        void classRef() {
-            var cls = NamesTest.class;
-            var className = className(cls);
-
-            assertThat(className.getCanonical())
-                    .isEqualTo(cls.getCanonicalName());
-        }
-
-        @Test
-        @DisplayName("given canonical class name")
-        void canonicalName() {
-            var canonicalName = NamesTest.class.getCanonicalName();
-            var className = className(canonicalName);
-
-            assertThat(className.getCanonical())
-                    .isEqualTo(canonicalName);
-        }
+    /**
+     * Creates an instance with the code of the method obtained from the passed spec.
+     */
+    public Method(MethodSpec spec) {
+        this(spec.toString());
     }
 }

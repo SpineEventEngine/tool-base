@@ -1,11 +1,11 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -24,48 +24,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@file:JvmName("Classpaths")
+import io.spine.dependency.lib.JavaPoet
+import io.spine.dependency.lib.Protobuf
+import io.spine.dependency.lib.Roaster
+import io.spine.dependency.local.Base
+import io.spine.gradle.protobuf.setup
 
-package io.spine.tools.java
+plugins {
+    module
+    protobuf
+}
 
-import io.spine.tools.java.code.Classpath
-import io.spine.tools.java.code.classpath
-import java.io.File.pathSeparator
-import java.lang.System.lineSeparator
+dependencies {
+    api(Base.lib)
+    api(JavaPoet.lib)
+    api(Roaster.api)
+    api(Roaster.jdt)
+}
 
-/**
- * Creates a new instance of [Classpath] parsing its items
- * from the given string.
- */
-public fun parseClasspath(cp: String): Classpath {
-    val items = cp.split(pathSeparator)
-    return classpath {
-        item.addAll(items)
+protobuf {
+    protoc {
+        artifact = Protobuf.compiler
     }
-}
 
-/**
- * Prints classpath to a text block putting each item on a separate line
- * finished with [pathSeparator].
- */
-public fun Classpath.printItems(): String {
-    return itemList.joinToString(pathSeparator + lineSeparator())
-}
-
-/**
- * Obtains all items of this classpath.
- *
- * This method is a shortcut for [Classpath.getItemList].
- *
- * @see [jars]
- */
-public fun Classpath.items(): List<String> = itemList
-
-/**
- * Obtains [items] of the classpath which are JAR files.
- *
- * @see [items]
- */
-public fun Classpath.jars(): List<String> {
-    return itemList.filter { it.endsWith(".jar") }
+    generateProtoTasks.all().configureEach {
+        builtins.maybeCreate("kotlin")
+        setup()
+    }
 }

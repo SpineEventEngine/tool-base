@@ -24,4 +24,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.360")
+package io.spine.tools.java.code
+
+import io.kotest.matchers.shouldBe
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+
+@DisplayName("`JavaClassName` should")
+internal class JavaClassNameSpec {
+
+    @Test
+    fun `generated Kotlin proto DSL`() {
+        val expected = Object::class.java.canonicalName
+        val className = javaClassName {
+            canonical = expected
+        }
+
+        className.canonical shouldBe expected
+    }
+}

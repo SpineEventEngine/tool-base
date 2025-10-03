@@ -26,7 +26,7 @@
 
 package io.spine.tools.fs;
 
-import com.google.common.annotations.VisibleForTesting;
+import io.spine.annotation.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Booleans;
 import com.google.errorprone.annotations.Immutable;

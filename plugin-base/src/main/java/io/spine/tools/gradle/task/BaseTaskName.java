@@ -25,7 +25,7 @@
  */
 package io.spine.tools.gradle.task;
 
-import com.google.common.annotations.VisibleForTesting;
+import io.spine.annotation.VisibleForTesting;
 
 /**
  * Names of Gradle tasks defined by the {@code base} plugin.

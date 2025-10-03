@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -27,19 +27,32 @@
 package io.spine.tools.java.code
 
 import io.kotest.matchers.shouldBe
+import io.spine.testing.UtilityClassTest
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-@DisplayName("`JavaClassName` should")
-internal class JavaClassNameSpec {
+@DisplayName("`Names` utility class should")
+internal class NamesTest : UtilityClassTest<Names>(Names::class.java) {
 
-    @Test
-    fun `generated Kotlin proto DSL`() {
-        val expected = Object::class.java.canonicalName
-        val className = javaClassName {
-            canonical = expected
+    @Nested
+    @DisplayName("create `ClassName` by ")
+    internal inner class ClassNameFactory {
+
+        @Test
+        fun `a class`() {
+            val cls: Class<NamesTest> = NamesTest::class.java
+            val className = Names.className(cls)
+
+            className.getCanonical() shouldBe cls.getCanonicalName()
         }
 
-        className.canonical shouldBe expected
+        @Test
+        fun `given canonical class name`() {
+            val canonicalName = NamesTest::class.java.getCanonicalName()
+            val className = Names.className(canonicalName)
+
+            className.getCanonical() shouldBe canonicalName
+        }
     }
 }

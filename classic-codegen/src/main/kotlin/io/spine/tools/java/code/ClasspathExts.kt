@@ -1,11 +1,11 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -24,23 +24,46 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.java
+@file:JvmName("Classpaths")
 
-import org.jboss.forge.roaster.model.JavaDoc
+package io.spine.tools.java.code
+
+import java.io.File.pathSeparator
+import java.lang.System.lineSeparator
 
 /**
- * Obtains the full text of the Javadoc and normalizes it.
- *
- * This extension function should be used instead of [JavaDoc.getFullText] to avoid
- * issues with extra spaces that implementers of the `JavaDoc` interface may add.
- *
- * The following actions are performed:
- *  1. All double spaces are replaced with single spaces.
- *  2. All `} .` are replaced with `}.`.
+ * Creates a new instance of [Classpath] parsing its items
+ * from the given string.
  */
-public fun JavaDoc<*>.fullTextNormalized(): String {
-    val normalized = fullText
-        .replace("  ", " ")
-        .replace("} .", "}.")
-    return normalized
+public fun parseClasspath(cp: String): Classpath {
+    val items = cp.split(pathSeparator)
+    return classpath {
+        item.addAll(items)
+    }
+}
+
+/**
+ * Prints classpath to a text block putting each item on a separate line
+ * finished with [pathSeparator].
+ */
+public fun Classpath.printItems(): String {
+    return itemList.joinToString(pathSeparator + lineSeparator())
+}
+
+/**
+ * Obtains all items of this classpath.
+ *
+ * This method is a shortcut for [Classpath.getItemList].
+ *
+ * @see [jars]
+ */
+public fun Classpath.items(): List<String> = itemList
+
+/**
+ * Obtains [items] of the classpath which are JAR files.
+ *
+ * @see [items]
+ */
+public fun Classpath.jars(): List<String> {
+    return itemList.filter { it.endsWith(".jar") }
 }

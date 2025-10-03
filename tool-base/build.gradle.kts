@@ -29,9 +29,7 @@
 import com.google.protobuf.gradle.id
 import io.spine.dependency.lib.Grpc
 import io.spine.dependency.lib.GrpcKotlin
-import io.spine.dependency.lib.JavaPoet
 import io.spine.dependency.lib.Protobuf
-import io.spine.dependency.lib.Roaster
 import io.spine.dependency.local.Base
 import io.spine.dependency.local.Logging
 import io.spine.gradle.protobuf.setup
@@ -51,10 +49,6 @@ configurations {
 }
 
 dependencies {
-    api(JavaPoet.lib)
-    api(Roaster.api)
-    api(Roaster.jdt)
-
     api(Base.lib)
 
     implementation(Logging.lib)
@@ -75,8 +69,6 @@ sourceSets {
         java.srcDirs("$projectDir/generated/testFixtures/grpc")
     }
 }
-
-val generatedDir = "$projectDir/generated"
 
 /**
  * Force `generated` directory and Kotlin code generation.
@@ -102,52 +94,6 @@ protobuf {
             id(GrpcKotlin.ProtocPlugin.id)
         }
         setup()
-    }
-}
-
-tasks.clean.configure {
-    delete(generatedDir)
-}
-
-applyGeneratedDirectories(generatedDir)
-
-/**
- * Adds directories with the generated source code to source sets of the project and
- * to IntelliJ IDEA module settings.
- *
- * @param generatedDir
- *          the name of the root directory with the generated code
- */
-fun Project.applyGeneratedDirectories(generatedDir: String) {
-    val generatedMain = "$generatedDir/main"
-    val generatedJava = "$generatedMain/java"
-    val generatedKotlin = "$generatedMain/kotlin"
-    val generatedGrpc = "$generatedMain/grpc"
-
-    val generatedTest = "$generatedDir/test"
-    val generatedTestJava = "$generatedTest/java"
-    val generatedTestKotlin = "$generatedTest/kotlin"
-    val generatedTestGrpc = "$generatedTest/grpc"
-
-    sourceSets {
-        main {
-            java.srcDirs(
-                generatedJava,
-                generatedGrpc,
-            )
-            kotlin.srcDirs(
-                generatedKotlin,
-            )
-        }
-        test {
-            java.srcDirs(
-                generatedTestJava,
-                generatedTestGrpc,
-            )
-            kotlin.srcDirs(
-                generatedTestKotlin,
-            )
-        }
     }
 }
 

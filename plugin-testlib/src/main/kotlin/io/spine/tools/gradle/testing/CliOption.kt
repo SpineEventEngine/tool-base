@@ -26,7 +26,7 @@
 
 package io.spine.tools.gradle.testing
 
-import com.google.common.annotations.VisibleForTesting
+import io.spine.annotation.VisibleForTesting
 import org.gradle.api.logging.LogLevel
 
 /**
