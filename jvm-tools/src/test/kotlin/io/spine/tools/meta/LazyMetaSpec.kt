@@ -60,7 +60,7 @@ internal class LazyMetaSpec {
                 TestMeta.dependency(missing)
             }
             // Message contains the missing module and mentions meta.
-            assert(ex.message?.contains("$missing") == true)
+            ex.message shouldContain missing.toString()
         }
 
     }
