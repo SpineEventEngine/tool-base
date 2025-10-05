@@ -37,7 +37,7 @@ internal class LazyMetaSpec {
 
     /**
      * An implementation that loads meta from test resources at
-     * META-INF/io.spine/test.group_test-artifact.meta
+     * `META-INF/io.spine/test.group_test-artifact.meta`.
      */
     private object TestMeta : LazyMeta(Module("test.group", "test-artifact"))
 
@@ -59,7 +59,7 @@ internal class LazyMetaSpec {
             val ex = assertThrows<IllegalStateException> {
                 TestMeta.dependency(missing)
             }
-            // Message contains the missing module and mentions meta
+            // Message contains the missing module and mentions meta.
             assert(ex.message?.contains("$missing") == true)
         }
 
@@ -69,15 +69,14 @@ internal class LazyMetaSpec {
     inner class `load meta lazily` {
         @Test
         fun `throw if meta resource is missing`() {
-            // This module has no corresponding test resource under META-INF/io.spine
+            // This module has no corresponding test resource under `META-INF/io.spine`.
             object : LazyMeta(Module("absent.group", "absent-artifact")) {}.apply {
                 assertThrows<IllegalStateException> {
-                    // Attempting to resolve any dependency should trigger meta loading
+                    // Attempting to resolve any dependency should trigger meta loading.
                     dependency(Module(GRPC_GROUP, "grpc-kotlin-stub"))
                 }
             }
         }
-
     }
 
     @Nested
@@ -91,7 +90,6 @@ internal class LazyMetaSpec {
 
             artifact shouldBe MavenArtifact(GRPC_GROUP, "protoc-gen-grpc-java", "1.2.3")
         }
-
     }
 
     companion object {
