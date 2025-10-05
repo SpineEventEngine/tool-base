@@ -63,7 +63,6 @@ internal class LazyMetaSpec {
             // Message contains the missing module and mentions meta.
             ex.message shouldContain missing.toString()
         }
-
     }
 
     @Nested
