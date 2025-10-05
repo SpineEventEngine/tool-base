@@ -57,7 +57,8 @@ public abstract class LazyMeta(
     public fun dependency(module: Module): MavenArtifact {
         val found = meta.dependencies.find(module)
             ?: error("Unable to find the dependency `$module` in `$meta`.")
-        return found as MavenArtifact
+        return (found as? MavenArtifact)
+            ?: error("Dependency `$module` found in `$meta`, but is not a MavenArtifact: $found")
     }
 }
 
