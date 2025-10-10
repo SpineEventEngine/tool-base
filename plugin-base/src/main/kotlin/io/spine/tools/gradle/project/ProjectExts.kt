@@ -59,27 +59,10 @@ public val Project.javaPluginExtension: JavaPluginExtension
 
 /**
  * Obtains source set container of the Java project.
- *
- * Depending on Gradle version, the result is returned
- * either via [JavaPluginExtension] (available since Gradle 7.1),
- * or through [JavaPluginConvention][org.gradle.api.plugins.JavaPluginConvention]
- * (available pre-7.1, now deprecated).
- * This is required to allow ProtoData to be applied with older Gradle versions,
- * such as 6.9.x, which is actual for Spine 1.x.
  */
-@Suppress("DEPRECATION" /* Gradle API for lower Gradle versions. */)
 public val Project.sourceSets: SourceSetContainer
     get() {
-        return try {
-            // Prior to Gradle 7.1 this line will throw `NoSuchMethodError`.
-            javaPluginExtension.sourceSets
-        } catch (_: NoSuchMethodError) {
-            val convention = convention.getByType(
-                // Use the qualified class name instead of import to avoid the deprecation warning.
-                org.gradle.api.plugins.JavaPluginConvention::class.java
-            )
-            convention.sourceSets
-        }
+        return javaPluginExtension.sourceSets
     }
 
 /**
