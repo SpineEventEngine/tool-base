@@ -24,10 +24,66 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import io.spine.dependency.lib.Protobuf
+import io.spine.gradle.isSnapshot
+import io.spine.gradle.report.license.LicenseReporter
+
 plugins {
     `uber-jar-module`
     kotlin("jvm")
     `module-testing`
     `plugin-publish`
     `write-manifest`
+}
+
+LicenseReporter.generateReportIn(project)
+
+// As defined in `versions.gradle.kts`.
+val versionToPublish: String by extra
+
+description = "Utilities for working with Protobuf projects under Gradle."
+
+kotlin {
+    explicitApi()
+}
+
+gradlePlugin {
+    website.set("https://spine.io/")
+    vcsUrl.set("https://github.com/SpineEventEngine/tool-base.git")
+    plugins {
+        val pluginTags = listOf(
+            "gradle",
+            "protobuf",
+            "descriptor",
+            "resources"
+        )
+        create("descriptorSetFilePlugin") {
+            id = "io.spine.tools.protobuf.descriptor-set-file"
+            implementationClass = "io.spine.tools.protobuf.gradle.plugin.DescriptorSetFilePlugin"
+            displayName = "Spine Protobuf Descriptor Set File Plugin"
+            description = "Configures `GenerateProtoTask` to produce descriptor set files and reference them via resources."
+            tags.set(pluginTags)
+        }
+    }
+}
+
+// Do not publish to Gradle Plugin Portal snapshot versions.
+// It is prohibited by their policy: https://plugins.gradle.org/docs/publish-plugin
+val publishPlugins: Task by tasks.getting {
+    enabled = !versionToPublish.isSnapshot()
+}
+
+@Suppress("unused")
+val publish: Task by tasks.getting {
+    dependsOn(publishPlugins)
+}
+
+dependencies {
+    compileOnlyApi(gradleApi())
+    compileOnly(gradleKotlinDsl())
+
+    // Access to GenerateProtoTask and related APIs.
+    compileOnlyApi(Protobuf.GradlePlugin.lib)
+
+    testImplementation(project(":plugin-testlib"))
 }
