@@ -82,8 +82,8 @@ dependencies {
     compileOnlyApi(gradleApi())
     compileOnly(gradleKotlinDsl())
 
-    // Access to GenerateProtoTask and related APIs.
-    compileOnlyApi(Protobuf.GradlePlugin.lib)
+    // Access to GenerateProtoTask and related APIs at compile and runtime.
+    implementation(Protobuf.GradlePlugin.lib)
 
     testImplementation(project(":plugin-testlib"))
 }
