@@ -67,6 +67,7 @@ spinePublishing {
     val customPublishing = arrayOf(
         "gradle-root-plugin",
         "jvm-tool-plugins",
+        "protobuf-tool-plugins",
         "intellij-platform",
         "intellij-platform-java"
     )
