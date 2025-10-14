@@ -86,6 +86,7 @@ public fun Project.sourceSet(name: SourceSetName): SourceSet = sourceSets.getByN
  * For other source sets, the given source set name would be used as a classifier of the artifact.
  */
 public fun Project.artifact(ssn: SourceSetName): MavenArtifact {
+    //TODO:2025-10-15:alexander.yevsyukov: compose `artifact` taking into account `MavenPublication`
     val classifier = if (ssn == main) null else ssn.value
     return MavenArtifact(group.toString(), name, version.toString(), classifier)
 }

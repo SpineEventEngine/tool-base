@@ -27,13 +27,11 @@
 package io.spine.tools.protobuf.gradle.plugin
 
 import com.google.protobuf.gradle.GenerateProtoTask
+import io.spine.code.proto.DescriptorSetReferenceFile
+import io.spine.tools.code.SourceSetName
+import io.spine.tools.gradle.protobuf.descriptorSetFile
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.tasks.SourceSet
-import org.gradle.api.tasks.SourceSetContainer
-import java.io.File
-import java.nio.file.Files
-import java.nio.file.StandardOpenOption.TRUNCATE_EXISTING
 
 /**
  * A Gradle project plugin that configures Protobuf generation tasks to produce
@@ -52,46 +50,30 @@ public class DescriptorSetFilePlugin : Plugin<Project> {
     }
 
     private fun configureGenerateProtoTask(project: Project, task: GenerateProtoTask) {
+        val sourceSet = task.sourceSet
+
         // Enable descriptor set generation.
         task.generateDescriptorSet = true
 
-        val sourceSet = task.sourceSet
-        val ssName = sourceSet.name
-        val buildDir = project.layout.buildDirectory.asFile.get().path
-        val descriptorsDir = "$buildDir/descriptors/$ssName"
-        val descriptorName = project.descriptorSetName(sourceSet)
+        val ssn = SourceSetName(sourceSet.name)
+        val descriptorSetFile = project.descriptorSetFile(ssn)
+        val descriptorsDir = descriptorSetFile.parentFile
 
         // Configure descriptor set options.
         with(task.descriptorSetOptions) {
-            path = "$descriptorsDir/$descriptorName"
+            path = descriptorSetFile.absolutePath
             includeImports = true
             includeSourceInfo = true
         }
 
-        // Add the descriptors directory to the resources of the corresponding source set.
-        val sourceSets = project.extensions.getByType(SourceSetContainer::class.java)
-        val ssObj = sourceSets.getByName(ssName)
-        ssObj.resources.srcDir(descriptorsDir)
+        // Add the `descriptors` directory to the resources so that
+        // the descriptor set file and the reference file which is created in
+        // the `doLast` block below are packed together with the class files.
+        sourceSet.resources.srcDir(descriptorsDir.absolutePath)
 
         // Create a `desc.ref` file pointing to the descriptor file name once the task finishes.
         task.doLast {
-            val descRefFile = File(descriptorsDir, "desc.ref")
-            descRefFile.parentFile.mkdirs()
-            descRefFile.createNewFile()
-            try {
-                Files.write(descRefFile.toPath(), setOf(descriptorName), TRUNCATE_EXISTING)
-            } catch (e: Exception) {
-                project.logger.error("Error writing `${descRefFile.absolutePath}`.", e)
-                throw e
-            }
+            DescriptorSetReferenceFile.create(descriptorsDir, descriptorSetFile)
         }
     }
 }
-
-private fun Project.descriptorSetName(sourceSet: SourceSet): String =
-    arrayOf(
-        group.toString(),
-        name,
-        sourceSet.name,
-        version.toString()
-    ).joinToString(separator = "_", postfix = ".desc")

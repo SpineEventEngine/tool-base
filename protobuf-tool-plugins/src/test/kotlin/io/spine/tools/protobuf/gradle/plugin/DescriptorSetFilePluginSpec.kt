@@ -93,7 +93,7 @@ class DescriptorSetFilePluginSpec {
         val descRef = File(descriptorsDir, "desc.ref")
         descRef.exists() shouldBe true
 
-        val expectedName = "${group}_${projectDir.name}_main_${version}.desc"
+        val expectedName = "${group}_${projectDir.name}_${version}.desc"
         val descName = descRef.readText().trim()
         descName shouldBe expectedName
 

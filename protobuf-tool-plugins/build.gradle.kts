@@ -25,6 +25,7 @@
  */
 
 import io.spine.dependency.lib.Protobuf
+import io.spine.dependency.local.Base
 import io.spine.gradle.isSnapshot
 import io.spine.gradle.report.license.LicenseReporter
 
@@ -85,5 +86,8 @@ dependencies {
     // Access to GenerateProtoTask and related APIs at compile and runtime.
     implementation(Protobuf.GradlePlugin.lib)
 
+    implementation(Base.lib)?.because("We need `DescriptorSetReferenceFile` at compile time.")
+    implementation(project(":plugin-base"))
+    
     testImplementation(project(":plugin-testlib"))
 }
