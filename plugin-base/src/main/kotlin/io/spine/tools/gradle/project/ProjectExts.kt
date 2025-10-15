@@ -36,6 +36,7 @@ import io.spine.tools.code.SourceSetName
 import io.spine.tools.code.SourceSetName.Companion.main
 import io.spine.tools.gradle.ConfigurationName
 import io.spine.tools.meta.MavenArtifact
+import java.lang.reflect.Method
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.plugins.JavaPluginExtension
@@ -92,6 +93,12 @@ public fun Project.artifact(ssn: SourceSetName): MavenArtifact {
 }
 
 /**
+ * Obtains a parameterless method with the given name.
+ */
+private fun Any.method(name: String): Method? =
+    javaClass.methods.find { m -> m.name == name && m.parameterCount == 0 }
+
+/**
  * Attempts to obtain the `artifactId` of the first Maven publication in this project.
  *
  * Uses reflection to avoid a hard dependency on the Maven Publish plugin classes.
@@ -105,20 +112,18 @@ private fun Project.findMavenPublicationArtifactId(): String? {
         if (!pluginManager.hasPlugin("maven-publish")) {
             return null
         }
-        // Obtain the "publishing" extension reflectively to avoid direct API usage.
+        // Obtain the "publishing" extension by name to avoid direct API usage.
         val publishingExt = extensions.findByName("publishing") ?: return null
 
         // Invoke `getPublications()` reflectively.
-        val getPublications = publishingExt.javaClass.methods
-            .firstOrNull { it.name == "getPublications" && it.parameterCount == 0 }
+        val getPublications = publishingExt.method("getPublications")
             ?: return null
         val publications = getPublications.invoke(publishingExt) ?: return null
 
         // Helper to extract artifactId from a publication using reflection.
         fun artifactIdOf(pub: Any?): String? {
             if (pub == null) return null
-            val method = pub.javaClass.methods
-                .firstOrNull { it.name == "getArtifactId" && it.parameterCount == 0 }
+            val method = pub.method("getArtifactId")
                 ?: return null
             val value = method.invoke(pub) as? String
             return value?.takeIf { it.isNotBlank() }
@@ -130,16 +135,6 @@ private fun Project.findMavenPublicationArtifactId(): String? {
             return iterable.asSequence().mapNotNull { artifactIdOf(it) }.firstOrNull()
         }
 
-        // Fall back to calling iterator() reflectively.
-        val iteratorMethod = publications.javaClass.methods
-            .firstOrNull { it.name == "iterator" && it.parameterCount == 0 }
-            ?: return null
-        val iterator = iteratorMethod.invoke(publications) as? Iterator<*>
-            ?: return null
-        while (iterator.hasNext()) {
-            val id = artifactIdOf(iterator.next())
-            if (id != null) return id
-        }
         null
     } catch (_: Throwable) {
         // Be conservative: if anything goes wrong, fall back to the project name.
