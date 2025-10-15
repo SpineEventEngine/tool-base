@@ -61,8 +61,8 @@ gradlePlugin {
         create("descriptorSetFilePlugin") {
             id = "io.spine.tools.protobuf.descriptor-set-file"
             implementationClass = "io.spine.tools.protobuf.gradle.plugin.DescriptorSetFilePlugin"
-            displayName = "Spine Protobuf Descriptor Set File Plugin"
-            description = "Configures `GenerateProtoTask` to produce descriptor set files and reference them via resources."
+            displayName = "Descriptor Set File Plugin"
+            description = "Configures `GenerateProtoTask`s to produce descriptor set files and load them as resources."
             tags.set(pluginTags)
         }
     }
