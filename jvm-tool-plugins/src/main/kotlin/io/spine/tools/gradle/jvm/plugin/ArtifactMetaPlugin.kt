@@ -156,7 +156,9 @@ public class ArtifactMetaPlugin : Plugin<Project> {
             task.outputDirectory.convention(outputDir)
         }
 
-        tasks.named("processResources").configure { it.dependsOn(task) }
+        tasks.named("processResources").configure {
+            it.dependsOn(task)
+        }
         afterEvaluate {
             tasks.findByName("sourcesJar")?.dependsOn(task)
         }
