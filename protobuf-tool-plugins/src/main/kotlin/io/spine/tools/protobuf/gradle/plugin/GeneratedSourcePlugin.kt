@@ -1,0 +1,197 @@
+/*
+ * Copyright 2025, TeamDev. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Redistribution and use in source and/or binary forms, with or without
+ * modification, must retain the above copyright notice and the following
+ * disclaimer.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+package io.spine.tools.protobuf.gradle.plugin
+
+import com.google.protobuf.gradle.GenerateProtoTask
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.api.file.SourceDirectorySet
+import org.gradle.api.tasks.SourceSet
+import org.gradle.kotlin.dsl.get
+import org.gradle.plugins.ide.idea.GenerateIdeaModule
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+import java.io.File
+import java.nio.file.Path
+import kotlin.io.path.createDirectories
+import io.spine.tools.code.SourceSetName
+import io.spine.tools.gradle.protobuf.generated
+
+/**
+ * A Gradle project plugin that configures Protobuf generation tasks to:
+ *  - enable Kotlin builtin for protoc;
+ *  - copy generated sources into `$projectDir/generated/<sourceSet>/{java,kotlin}`;
+ *  - exclude Protobuf plugin output directories from Kotlin/Java source sets and
+ *    include the copied ones;
+ *  - make Kotlin compilation and `processResources` depend on the corresponding
+ *    `GenerateProtoTask` to avoid race conditions;
+ *  - ensure generated source directories exist for IDEA module configuration.
+ *
+ * This reproduces the behavior of `GenerateProtoTask.setup()` except the descriptor set
+ * configuration which is provided by `DescriptorSetFilePlugin`.
+ */
+public class GeneratedSourcePlugin : Plugin<Project> {
+
+    override fun apply(project: Project) {
+        project.tasks.withType(GenerateProtoTask::class.java).configureEach { task ->
+            configureGenerateProtoTask(project, task)
+        }
+    }
+
+    private fun configureGenerateProtoTask(project: Project, task: GenerateProtoTask) {
+        // 1. Enable Kotlin builtin so that Kotlin sources are generated too.
+        task.builtins.maybeCreate("kotlin")
+
+        // 2. Exclude protoc output dirs from source sets and include our copied locations.
+        task.excludeProtocOutput()
+
+        // 3. Copy generated files to `$projectDir/generated/...` and clean `com/google`.
+        task.doLast {
+            task.copyGeneratedFiles()
+        }
+
+        // 4. Ensure Kotlin compilation depends on this generateProto task.
+        task.setupKotlinCompile()
+
+        // 5. Make processResources depend on generateProto explicitly.
+        task.dependOnProcessResourcesTask()
+
+        // 6. Ensure generated dirs exist before IDEA module is generated.
+        task.makeDirsForIdeaModule()
+    }
+}
+
+/**
+ * Obtains `$projectDir/generated/<sourceSet>[/<language>]`.
+ */
+private fun GenerateProtoTask.generatedDir(language: String = ""): File {
+    val ssn = SourceSetName(sourceSet.name)
+    val base: Path = project.generated(ssn)
+    val dir = if (language.isBlank()) base else base.resolve(language)
+    dir.createDirectories()
+    return dir.toFile()
+}
+
+/**
+ * Copies files from the Protobuf plugin's output base directory into our `$projectDir/generated`
+ * directory and removes `com/google` packages to avoid conflicts with library classes.
+ */
+private fun GenerateProtoTask.copyGeneratedFiles() {
+    project.copy { spec ->
+        spec.from(this@copyGeneratedFiles.outputBaseDir)
+        spec.into(generatedDir())
+    }
+    deleteComGoogle("java")
+    deleteComGoogle("kotlin")
+}
+
+private fun GenerateProtoTask.deleteComGoogle(language: String) {
+    val comDirectory = generatedDir(language).resolve("com")
+    val googlePackage = File(comDirectory, "google")
+    project.delete(googlePackage)
+    if (comDirectory.exists() && comDirectory.isDirectory && comDirectory.list()
+            ?.isEmpty() == true
+    ) {
+        project.delete(comDirectory)
+    }
+}
+
+/**
+ * Exclude directories produced under `$buildDir/generated/(source|sources)/proto` from
+ * both Java and Kotlin source sets and replace them with `$projectDir/generated/...`.
+ */
+private fun GenerateProtoTask.excludeProtocOutput() {
+    val protocOutputDir = File(outputBaseDir).parentFile
+
+    fun filterFor(directorySet: SourceDirectorySet) {
+        val newSourceDirectories = directorySet.sourceDirectories
+            .filter { !it.residesIn(protocOutputDir) }
+            .toSet()
+        directorySet.setSrcDirs(listOf<String>())
+        directorySet.srcDirs(newSourceDirectories)
+    }
+
+    val java: SourceDirectorySet = sourceSet.java
+    filterFor(java)
+    java.srcDir(generatedDir("java"))
+
+    val kotlin = sourceSet.kotlinOrNull
+    if (kotlin != null) {
+        filterFor(kotlin)
+        kotlin.srcDir(generatedDir("kotlin"))
+    }
+}
+
+private val SourceSet.kotlinOrNull: SourceDirectorySet?
+    get() = try {
+        (this as org.gradle.api.plugins.ExtensionAware)
+            .extensions.findByName("kotlin") as SourceDirectorySet?
+    } catch (_: Throwable) {
+        null
+    }
+
+private fun File.residesIn(directory: File): Boolean =
+    canonicalFile.startsWith(directory.absolutePath)
+
+/** Ensure Kotlin compilation explicitly depends on this `GenerateProtoTask`. */
+private fun GenerateProtoTask.setupKotlinCompile() {
+    val taskName = sourceSet.getCompileTaskName("Kotlin")
+    try {
+        val kotlinCompile = project.tasks.named(taskName, KotlinCompilationTask::class.java).orNull
+        kotlinCompile?.dependsOn(this)
+    } catch (_: Throwable) {
+        // Kotlin plugin is likely not applied; nothing to do.
+    }
+}
+
+/** Make the `processResources` task depend on this `GenerateProtoTask`. */
+private fun GenerateProtoTask.dependOnProcessResourcesTask() {
+    val processResources = processResourceTaskName(sourceSet.name)
+    project.tasks[processResources].dependsOn(this)
+}
+
+private fun processResourceTaskName(sourceSetName: String): String {
+    val infix = if (sourceSetName == "main") "" else sourceSetName.replaceFirstChar {
+        if (it.isLowerCase()) it.titlecase() else it.toString()
+    }
+    return "process${infix}Resources"
+}
+
+/**
+ * Ensure the generated dirs exist before IDEA module is created so they can be added as sources.
+ */
+private fun GenerateProtoTask.makeDirsForIdeaModule() {
+    project.plugins.withId("idea") {
+        val javaDir = generatedDir("java")
+        val kotlinDir = generatedDir("kotlin")
+        project.tasks.withType(GenerateIdeaModule::class.java).forEach {
+            it.doFirst {
+                javaDir.mkdirs()
+                kotlinDir.mkdirs()
+            }
+        }
+    }
+}
