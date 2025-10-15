@@ -86,9 +86,65 @@ public fun Project.sourceSet(name: SourceSetName): SourceSet = sourceSets.getByN
  * For other source sets, the given source set name would be used as a classifier of the artifact.
  */
 public fun Project.artifact(ssn: SourceSetName): MavenArtifact {
-    //TODO:2025-10-15:alexander.yevsyukov: compose `artifact` taking into account `MavenPublication`
     val classifier = if (ssn == main) null else ssn.value
-    return MavenArtifact(group.toString(), name, version.toString(), classifier)
+    val artifactName = findMavenPublicationArtifactId() ?: name
+    return MavenArtifact(group.toString(), artifactName, version.toString(), classifier)
+}
+
+/**
+ * Attempts to obtain the `artifactId` of the first Maven publication in this project.
+ *
+ * Uses reflection to avoid a hard dependency on the Maven Publish plugin classes.
+ * Returns `null` if the `maven-publish` plugin is not applied, if there are no
+ * publications, or if reflection fails for any reason.
+ */
+@Suppress("SwallowedException", "ReturnCount", "CyclomaticComplexMethod")
+private fun Project.findMavenPublicationArtifactId(): String? {
+    return try {
+        // Check if the Maven Publish plugin is applied.
+        if (!pluginManager.hasPlugin("maven-publish")) {
+            return null
+        }
+        // Obtain the "publishing" extension reflectively to avoid direct API usage.
+        val publishingExt = extensions.findByName("publishing") ?: return null
+
+        // Invoke `getPublications()` reflectively.
+        val getPublications = publishingExt.javaClass.methods
+            .firstOrNull { it.name == "getPublications" && it.parameterCount == 0 }
+            ?: return null
+        val publications = getPublications.invoke(publishingExt) ?: return null
+
+        // Helper to extract artifactId from a publication using reflection.
+        fun artifactIdOf(pub: Any?): String? {
+            if (pub == null) return null
+            val method = pub.javaClass.methods
+                .firstOrNull { it.name == "getArtifactId" && it.parameterCount == 0 }
+                ?: return null
+            val value = method.invoke(pub) as? String
+            return value?.takeIf { it.isNotBlank() }
+        }
+
+        // Try to treat publications as Iterable; if not, fall back to iterator() via reflection.
+        val iterable = publications as? Iterable<*>
+        if (iterable != null) {
+            return iterable.asSequence().mapNotNull { artifactIdOf(it) }.firstOrNull()
+        }
+
+        // Fall back to calling iterator() reflectively.
+        val iteratorMethod = publications.javaClass.methods
+            .firstOrNull { it.name == "iterator" && it.parameterCount == 0 }
+            ?: return null
+        val iterator = iteratorMethod.invoke(publications) as? Iterator<*>
+            ?: return null
+        while (iterator.hasNext()) {
+            val id = artifactIdOf(iterator.next())
+            if (id != null) return id
+        }
+        null
+    } catch (_: Throwable) {
+        // Be conservative: if anything goes wrong, fall back to the project name.
+        null
+    }
 }
 
 /** Obtains a configuration by its name. */
