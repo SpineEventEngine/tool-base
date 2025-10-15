@@ -51,14 +51,17 @@ public class DescriptorSetFilePlugin : Plugin<Project> {
     }
 
     override fun apply(project: Project) {
-        //TODO:2025-10-15:alexander.yevsyukov: Move under the `generateProtoTasks` block.
-        // Configure all Protobuf generate tasks directly (no reflection).
-        project.tasks.withType(GenerateProtoTask::class.java).configureEach { task ->
-            configureGenerateProtoTask(project, task)
+        project.pluginManager.withPlugin(ProtobufGradlePlugin.id) {
+            //TODO:2025-10-15:alexander.yevsyukov: Move under the `generateProtoTasks` block.
+            // Configure all Protobuf generate tasks directly (no reflection).
+            project.tasks.withType(GenerateProtoTask::class.java).configureEach { task ->
+                configureGenerateProtoTask(task)
+            }
         }
     }
 
-    private fun configureGenerateProtoTask(project: Project, task: GenerateProtoTask) {
+    private fun configureGenerateProtoTask(task: GenerateProtoTask) {
+        val project = task.project
         val sourceSet = task.sourceSet
 
         // Enable descriptor set generation.
