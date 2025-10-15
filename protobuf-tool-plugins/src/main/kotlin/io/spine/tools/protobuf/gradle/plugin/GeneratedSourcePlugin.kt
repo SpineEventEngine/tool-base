@@ -117,19 +117,6 @@ private fun GenerateProtoTask.copyGeneratedFiles() {
         spec.from(this@copyGeneratedFiles.outputBaseDir)
         spec.into(generatedDir())
     }
-    deleteComGoogle("java")
-    deleteComGoogle("kotlin")
-}
-
-private fun GenerateProtoTask.deleteComGoogle(language: String) {
-    val comDirectory = generatedDir(language).resolve("com")
-    val googlePackage = File(comDirectory, "google")
-    project.delete(googlePackage)
-    if (comDirectory.exists() && comDirectory.isDirectory && comDirectory.list()
-            ?.isEmpty() == true
-    ) {
-        project.delete(comDirectory)
-    }
 }
 
 /**
