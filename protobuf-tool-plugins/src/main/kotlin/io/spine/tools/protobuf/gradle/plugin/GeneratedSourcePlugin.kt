@@ -30,12 +30,14 @@ import com.google.protobuf.gradle.GenerateProtoTask
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.gradle.protobuf.generated
 import io.spine.tools.gradle.protobuf.protobufExtension
+import io.spine.tools.gradle.task.JavaTaskName
 import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.createDirectories
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.file.SourceDirectorySet
+import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.tasks.SourceSet
 import org.gradle.plugins.ide.idea.GenerateIdeaModule
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
@@ -75,24 +77,13 @@ public class GeneratedSourcePlugin : Plugin<Project> {
     }
 
     private fun configureGenerateProtoTask(task: GenerateProtoTask) {
-        // 1. Enable Kotlin builtin so that Kotlin sources are generated too.
         task.builtins.maybeCreate("kotlin")
-
-        // 2. Exclude protoc output dirs from source sets and include our copied locations.
         task.excludeProtocOutput()
-
-        // 3. Copy generated files to `$projectDir/generated/...` and clean `com/google`.
         task.doLast {
             task.copyGeneratedFiles()
         }
-
-        // 4. Ensure Kotlin compilation depends on this generateProto task.
         task.setupKotlinCompile()
-
-        // 5. Make processResources depend on generateProto explicitly.
         task.dependOnProcessResourcesTask()
-
-        // 6. Ensure generated dirs exist before IDEA module is generated.
         task.makeDirsForIdeaModule()
     }
 }
@@ -147,8 +138,7 @@ private fun GenerateProtoTask.excludeProtocOutput() {
 
 private val SourceSet.kotlinOrNull: SourceDirectorySet?
     get() = try {
-        (this as org.gradle.api.plugins.ExtensionAware)
-            .extensions.findByName("kotlin") as SourceDirectorySet?
+        (this as ExtensionAware).extensions.findByName("kotlin") as SourceDirectorySet?
     } catch (_: Throwable) {
         null
     }
@@ -169,14 +159,12 @@ private fun GenerateProtoTask.setupKotlinCompile() {
 
 /** Make the `processResources` task depend on this `GenerateProtoTask`. */
 private fun GenerateProtoTask.dependOnProcessResourcesTask() {
-    val processResources = processResourceTaskName(SourceSetName(sourceSet.name))
+    val ssn = SourceSetName(sourceSet.name)
+    val processResources = JavaTaskName.processResources(ssn).value()
     project.tasks.named(processResources).configure {
         it.dependsOn(this)
     }
 }
-
-private fun processResourceTaskName(ssn: SourceSetName): String =
-    "process${ssn.toInfix()}Resources"
 
 /**
  * Ensure the generated dirs exist before IDEA module is created so they can be added as sources.
