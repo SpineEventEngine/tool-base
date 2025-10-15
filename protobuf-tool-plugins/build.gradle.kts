@@ -52,18 +52,20 @@ gradlePlugin {
     website.set("https://spine.io/")
     vcsUrl.set("https://github.com/SpineEventEngine/tool-base.git")
     plugins {
-        val pluginTags = listOf(
-            "gradle",
-            "protobuf",
-            "descriptor",
-            "resources"
-        )
+        val commonTags = listOf("protobuf", "gradle")
         create("descriptorSetFilePlugin") {
             id = "io.spine.tools.protobuf.descriptor-set-file"
             implementationClass = "io.spine.tools.protobuf.gradle.plugin.DescriptorSetFilePlugin"
             displayName = "Descriptor Set File Plugin"
             description = "Configures `GenerateProtoTask`s to produce descriptor set files and load them as resources."
-            tags.set(pluginTags)
+            tags.set(commonTags + listOf("descriptor", "resources"))
+        }
+        create("generatedSourcePlugin") {
+            id = "io.spine.tools.protobuf.generated-source"
+            implementationClass = "io.spine.tools.protobuf.gradle.plugin.GeneratedSourcePlugin"
+            displayName = "Generated Source Plugin"
+            description = "Redirects Protobuf compilation to `$projectDir/generated`."
+            tags.set(commonTags + listOf("java", "kotlin", "sources"))
         }
     }
 }
