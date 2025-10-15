@@ -55,13 +55,13 @@ public class DescriptorSetFilePlugin : Plugin<Project> {
         project.pluginManager.withPlugin(ProtobufGradlePlugin.id) {
             project.protobufExtension?.apply {
                 generateProtoTasks.all().configureEach { task ->
-                    configureGenerateProtoTask(task)
+                    setup(task)
                 }
             }
         }
     }
 
-    private fun configureGenerateProtoTask(task: GenerateProtoTask) {
+    private fun setup(task: GenerateProtoTask) {
         val project = task.project
         val sourceSet = task.sourceSet
 

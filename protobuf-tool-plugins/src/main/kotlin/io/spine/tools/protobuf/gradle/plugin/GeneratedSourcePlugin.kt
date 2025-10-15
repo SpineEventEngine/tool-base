@@ -70,21 +70,21 @@ public class GeneratedSourcePlugin : Plugin<Project> {
             project.protobufExtension?.apply {
                 val all = generateProtoTasks.all().toSet()
                 all.forEach { task ->
-                    configureGenerateProtoTask(task)
+                    setup(task)
                 }
             }
         }
     }
 
-    private fun configureGenerateProtoTask(task: GenerateProtoTask) {
-        task.builtins.maybeCreate("kotlin")
-        task.excludeProtocOutput()
-        task.doLast {
-            task.copyGeneratedFiles()
+    private fun setup(task: GenerateProtoTask) = with(task) {
+        builtins.maybeCreate("kotlin")
+        excludeProtocOutput()
+        doLast {
+            copyGeneratedFiles()
         }
-        task.setupKotlinCompile()
-        task.dependOnProcessResourcesTask()
-        task.makeDirsForIdeaModule()
+        setupKotlinCompile()
+        dependOnProcessResourcesTask()
+        makeDirsForIdeaModule()
     }
 }
 
