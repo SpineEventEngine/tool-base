@@ -29,6 +29,7 @@ package io.spine.tools.protobuf.gradle.plugin
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.spine.tools.gradle.protobuf.ProtobufTaskName
+import io.spine.tools.gradle.task.JavaTaskName
 import io.spine.tools.gradle.testing.Gradle
 import io.spine.tools.gradle.testing.runGradleBuild
 import io.spine.tools.gradle.testing.under
@@ -133,8 +134,7 @@ class GeneratedSourcePluginSpec {
         )
 
         // Run `processResources` and ensure `generateProto` was executed (dependency configured).
-        val result = runGradleBuild(projectDir,
-            /*JavaTaskName.processResources*/ ProtobufTaskName.generateProto)
+        val result = runGradleBuild(projectDir, JavaTaskName.processResources)
         result.output shouldContain Gradle.BUILD_SUCCESSFUL
 
         // Verify Java code was produced, implying `generateProto` ran before `processResources`.
