@@ -27,6 +27,7 @@
 import io.spine.dependency.lib.Protobuf
 import io.spine.dependency.local.Base
 import io.spine.gradle.isSnapshot
+import io.spine.gradle.publish.SpinePublishing
 import io.spine.gradle.report.license.LicenseReporter
 
 plugins {
@@ -35,9 +36,21 @@ plugins {
     `module-testing`
     `plugin-publish`
     `write-manifest`
+    id("io.spine.artifact-meta")
 }
-
 LicenseReporter.generateReportIn(project)
+
+val spinePublishing = the<SpinePublishing>()
+
+artifactMeta {
+    artifactId.set(spinePublishing.artifactId(project))
+    addDependencies(
+        // Add `protoc` and Gradle Plugin as explicit dependencies as we use them
+        // when configuring test projects.
+        Protobuf.compiler,
+        Protobuf.GradlePlugin.lib
+    )
+}
 
 // As defined in `versions.gradle.kts`.
 val versionToPublish: String by extra
@@ -54,14 +67,14 @@ gradlePlugin {
     plugins {
         val commonTags = listOf("protobuf", "gradle")
         create("descriptorSetFilePlugin") {
-            id = "io.spine.tools.protobuf.descriptor-set-file"
+            id = "io.spine.descriptor-set-file"
             implementationClass = "io.spine.tools.protobuf.gradle.plugin.DescriptorSetFilePlugin"
             displayName = "Descriptor Set File Plugin"
             description = "Configures `GenerateProtoTask`s to produce descriptor set files and load them as resources."
             tags.set(commonTags + listOf("descriptor", "resources"))
         }
         create("generatedSourcePlugin") {
-            id = "io.spine.tools.protobuf.generated-source"
+            id = "io.spine.generated-source"
             implementationClass = "io.spine.tools.protobuf.gradle.plugin.GeneratedSourcePlugin"
             displayName = "Generated Source Plugin"
             description = "Redirects Protobuf compilation to `$projectDir/generated`."

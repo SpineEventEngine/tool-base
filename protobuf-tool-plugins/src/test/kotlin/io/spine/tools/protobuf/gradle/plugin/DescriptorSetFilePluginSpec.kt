@@ -65,8 +65,8 @@ class DescriptorSetFilePluginSpec {
             """
             plugins {
                 id("java")
-                id("com.google.protobuf") version "0.9.5"
-                id("io.spine.tools.protobuf.descriptor-set-file")
+                id("${ProtobufGradlePlugin.id}") version "${ProtobufGradlePlugin.version}"
+                id("${DescriptorSetFilePlugin.id}")
             }
 
             group = "$group"
@@ -77,7 +77,7 @@ class DescriptorSetFilePluginSpec {
             }
 
             protobuf {
-                protoc { artifact = "com.google.protobuf:protoc:4.31.1" }
+                protoc { artifact = "${ProtobufProtoc.dependency.artifact.coordinates}" }
             }
             """.trimIndent()
         )

@@ -108,7 +108,7 @@ class ArtifactMetaPluginSpec {
             """
             plugins {
                 id("java")
-                id("io.spine.artifact-meta")
+                id("${ArtifactMetaPlugin.id}")
             }
 
             group = "$group"
@@ -143,7 +143,7 @@ class ArtifactMetaPluginSpec {
             """
             plugins {
                 id("java")
-                id("io.spine.artifact-meta")
+                id("${ArtifactMetaPlugin.id}")
             }
     
             group = "$group"
@@ -196,7 +196,7 @@ class ArtifactMetaPluginSpec {
             """
             plugins {
                 id("java")
-                id("io.spine.artifact-meta")
+                id("${ArtifactMetaPlugin.id}")
             }
 
             group = "test.group"

@@ -45,10 +45,11 @@ class GeneratedSourcePluginSpec {
     private val File.protoDir: File get() = File(this, "src/main/proto")
     private val File.generatedJava: File get() = File(this, "generated/main/java")
 
+    private val group = "test.group"
+    private val version = "1.2.3"
+
     @Test
     fun `copy generated Java sources under project generated directory`(@TempDir projectDir: File) {
-        val group = "test.group"
-        val version = "1.2.3"
 
         // Settings file (empty is fine for single-project build).
         Gradle.settingsFile.under(projectDir).writeText("")
@@ -69,8 +70,8 @@ class GeneratedSourcePluginSpec {
             """
             plugins {
                 id("java")
-                id("com.google.protobuf") version "0.9.5"
-                id("io.spine.tools.protobuf.generated-source")
+                id("${ProtobufGradlePlugin.id}") version "${ProtobufGradlePlugin.version}"
+                id("${GeneratedSourcePlugin.id}")
             }
 
             group = "$group"
@@ -81,7 +82,7 @@ class GeneratedSourcePluginSpec {
             }
 
             protobuf {
-                protoc { artifact = "com.google.protobuf:protoc:4.31.1" }
+                protoc { artifact = "${ProtobufProtoc.dependency.artifact.coordinates}" }
             }
             """.trimIndent()
         )
@@ -117,20 +118,24 @@ class GeneratedSourcePluginSpec {
             """
             plugins {
                 id("java")
-                id("com.google.protobuf") version "0.9.5"
-                id("io.spine.tools.protobuf.generated-source")
+                id("${ProtobufGradlePlugin.id}") version "${ProtobufGradlePlugin.version}"
+                id("${GeneratedSourcePlugin.id}")
             }
+
+            group = "$group"
+            version = "$version"
 
             repositories { mavenCentral() }
 
             protobuf {
-                protoc { artifact = "com.google.protobuf:protoc:4.31.1" }
+                protoc { artifact = "${ProtobufProtoc.dependency.artifact.coordinates}" }
             }
             """.trimIndent()
         )
 
         // Run `processResources` and ensure `generateProto` was executed (dependency configured).
-        val result = runGradleBuild(projectDir, JavaTaskName.processResources)
+        val result = runGradleBuild(projectDir,
+            /*JavaTaskName.processResources*/ ProtobufTaskName.generateProto)
         result.output shouldContain Gradle.BUILD_SUCCESSFUL
 
         // Verify Java code was produced, implying `generateProto` ran before `processResources`.

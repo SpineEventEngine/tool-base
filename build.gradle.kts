@@ -50,6 +50,10 @@ buildscript {
             }
         }
     }
+    dependencies {
+        classpath(io.spine.dependency.local.ToolBase.jvmToolPlugins)
+            ?.because("We need `artifactMeta` in `protobuf-tool-plugins`.")
+    }
 }
 
 plugins {

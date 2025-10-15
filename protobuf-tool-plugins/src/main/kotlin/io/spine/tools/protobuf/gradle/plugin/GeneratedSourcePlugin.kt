@@ -55,7 +55,16 @@ import io.spine.tools.gradle.protobuf.generated
  */
 public class GeneratedSourcePlugin : Plugin<Project> {
 
+    internal companion object {
+
+        /**
+         * The ID of this Gradle plugin.
+         */
+        const val id = "io.spine.generated-source"
+    }
+
     override fun apply(project: Project) {
+        //TODO:2025-10-15:alexander.yevsyukov: Move under the `generateProtoTasks` block.
         project.tasks.withType(GenerateProtoTask::class.java).configureEach { task ->
             configureGenerateProtoTask(project, task)
         }

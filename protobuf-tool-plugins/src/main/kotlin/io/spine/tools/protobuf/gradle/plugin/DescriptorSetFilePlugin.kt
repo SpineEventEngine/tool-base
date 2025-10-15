@@ -42,7 +42,16 @@ import org.gradle.api.Project
  */
 public class DescriptorSetFilePlugin : Plugin<Project> {
 
+    internal companion object {
+
+        /**
+         * The ID of this Gradle plugin.
+         */
+        const val id = "io.spine.descriptor-set-file"
+    }
+
     override fun apply(project: Project) {
+        //TODO:2025-10-15:alexander.yevsyukov: Move under the `generateProtoTasks` block.
         // Configure all Protobuf generate tasks directly (no reflection).
         project.tasks.withType(GenerateProtoTask::class.java).configureEach { task ->
             configureGenerateProtoTask(project, task)

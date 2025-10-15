@@ -171,6 +171,11 @@ public class ArtifactMetaPlugin : Plugin<Project> {
     internal companion object {
 
         /**
+         * The ID of this Gradle plugin.
+         */
+        const val id = "io.spine.artifact-meta"
+
+        /**
          * The name of the directory under the project `build` where
          * the plugin creates its working files.
          */
