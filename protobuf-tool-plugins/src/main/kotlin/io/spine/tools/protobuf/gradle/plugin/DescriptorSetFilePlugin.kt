@@ -30,6 +30,7 @@ import com.google.protobuf.gradle.GenerateProtoTask
 import io.spine.code.proto.DescriptorSetReferenceFile
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.gradle.protobuf.descriptorSetFile
+import io.spine.tools.gradle.protobuf.protobufExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -52,10 +53,10 @@ public class DescriptorSetFilePlugin : Plugin<Project> {
 
     override fun apply(project: Project) {
         project.pluginManager.withPlugin(ProtobufGradlePlugin.id) {
-            //TODO:2025-10-15:alexander.yevsyukov: Move under the `generateProtoTasks` block.
-            // Configure all Protobuf generate tasks directly (no reflection).
-            project.tasks.withType(GenerateProtoTask::class.java).configureEach { task ->
-                configureGenerateProtoTask(task)
+            project.protobufExtension?.apply {
+                generateProtoTasks.all().configureEach { task ->
+                    configureGenerateProtoTask(task)
+                }
             }
         }
     }

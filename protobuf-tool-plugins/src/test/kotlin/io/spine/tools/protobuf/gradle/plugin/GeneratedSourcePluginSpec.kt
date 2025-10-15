@@ -30,7 +30,6 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.spine.tools.gradle.protobuf.ProtobufTaskName
 import io.spine.tools.gradle.testing.Gradle
-import io.spine.tools.gradle.task.JavaTaskName
 import io.spine.tools.gradle.testing.runGradleBuild
 import io.spine.tools.gradle.testing.under
 import java.io.File

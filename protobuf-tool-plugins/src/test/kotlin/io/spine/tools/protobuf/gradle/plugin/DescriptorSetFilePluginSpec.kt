@@ -84,7 +84,7 @@ class DescriptorSetFilePluginSpec {
 
         // Run the generateProto task.
         val task = ProtobufTaskName.generateProto
-        val result = runGradleBuild(projectDir, task)
+        val result = runGradleBuild(projectDir, listOf(task.name()), debug = true)
         result.task(task.path())?.outcome shouldBe TaskOutcome.SUCCESS
         result.output shouldContain Gradle.BUILD_SUCCESSFUL
 
