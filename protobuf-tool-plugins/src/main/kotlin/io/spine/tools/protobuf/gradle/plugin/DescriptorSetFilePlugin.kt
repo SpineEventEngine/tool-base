@@ -30,10 +30,7 @@ import com.google.protobuf.gradle.GenerateProtoTask
 import io.spine.code.proto.DescriptorSetReferenceFile
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.gradle.protobuf.descriptorSetFile
-import io.spine.tools.gradle.protobuf.protobufExtension
 import io.spine.tools.gradle.task.JavaTaskName
-import org.gradle.api.Plugin
-import org.gradle.api.Project
 import org.gradle.language.jvm.tasks.ProcessResources
 
 /**
