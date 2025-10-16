@@ -143,9 +143,8 @@ class DescriptorSetFilePluginSpec : ProtobufPluginTest() {
         result.output shouldContain BUILD_SUCCESSFUL
 
         // Verify Java code was produced, implying `generateProto` ran before `processResources`.
-        val sampleOuter = File(buildGeneratedJava, "test/Msg.java")
+        val sampleOuter = File(buildGeneratedJava, "sample/Msg.java")
 
-        generatedJava.exists() shouldBe true
         sampleOuter.exists() shouldBe true
     }
 }
