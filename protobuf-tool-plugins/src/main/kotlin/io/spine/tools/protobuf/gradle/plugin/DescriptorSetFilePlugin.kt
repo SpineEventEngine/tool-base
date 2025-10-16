@@ -43,7 +43,7 @@ import org.gradle.language.jvm.tasks.ProcessResources
  * This plugin reproduces the behavior of `GenerateProtoTask.setupDescriptorSetFileCreation()`
  * defined in this repository's buildSrc utilities, but exposes it as a reusable plugin.
  */
-public class DescriptorSetFilePlugin : Plugin<Project> {
+public class DescriptorSetFilePlugin : ProtobufSetupPlugin() {
 
     internal companion object {
 
@@ -53,17 +53,7 @@ public class DescriptorSetFilePlugin : Plugin<Project> {
         const val id = "io.spine.descriptor-set-file"
     }
 
-    override fun apply(project: Project) {
-        project.pluginManager.withPlugin(ProtobufGradlePlugin.id) {
-            project.protobufExtension?.apply {
-                generateProtoTasks.all().configureEach { task ->
-                    setup(task)
-                }
-            }
-        }
-    }
-
-    private fun setup(task: GenerateProtoTask) {
+    override fun setup(task: GenerateProtoTask) {
         val project = task.project
         val sourceSet = task.sourceSet
 

@@ -29,34 +29,30 @@ package io.spine.tools.protobuf.gradle.plugin
 import com.google.protobuf.gradle.GenerateProtoTask
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.gradle.protobuf.generated
-import io.spine.tools.gradle.protobuf.protobufExtension
-import io.spine.tools.gradle.task.JavaTaskName
 import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.createDirectories
-import org.gradle.api.Plugin
-import org.gradle.api.Project
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.tasks.SourceSet
-import org.gradle.language.jvm.tasks.ProcessResources
 import org.gradle.plugins.ide.idea.GenerateIdeaModule
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 /**
- * A Gradle project plugin that configures Protobuf generation tasks to:
- *  - enable Kotlin builtin for protoc;
- *  - copy generated sources into `$projectDir/generated/<sourceSet>/{java,kotlin}`;
- *  - exclude Protobuf plugin output directories from Kotlin/Java source sets and
- *    include the copied ones;
- *  - make Kotlin compilation and `processResources` depend on the corresponding
- *    `GenerateProtoTask` to avoid race conditions;
- *  - ensure generated source directories exist for IDEA module configuration.
+ * A Gradle project plugin that configures Protobuf compilation process to
+ * put the resuling output to the `generated` directory under the project root.
  *
- * This reproduces the behavior of `GenerateProtoTask.setup()` except the descriptor set
- * configuration which is provided by `DescriptorSetFilePlugin`.
+ * The plugin does the following:
+ *  - enables Kotlin builtin for `protoc`;
+ *  - makes the `GenerateProtoTask` copy generated sources into
+ *    `$projectDir/generated/<sourceSet>/{java,kotlin}`;
+ *  - excludes Protobuf plugin output directories from Kotlin/Java source sets and
+ *    includes the copied ones;
+ *  - makes Kotlin compilation and `processResources` depend on the corresponding
+ *    `GenerateProtoTask` to avoid race conditions;
+ *  - ensures generated source directories exist for IDEA module configuration.
  */
-public class GeneratedSourcePlugin : Plugin<Project> {
+public class GeneratedSourcePlugin : ProtobufSetupPlugin() {
 
     internal companion object {
 
@@ -66,17 +62,7 @@ public class GeneratedSourcePlugin : Plugin<Project> {
         const val id = "io.spine.generated-source"
     }
 
-    override fun apply(project: Project) {
-        project.pluginManager.withPlugin(ProtobufGradlePlugin.id) {
-            project.protobufExtension?.apply {
-                generateProtoTasks.all().configureEach { task ->
-                    setup(task)
-                }
-            }
-        }
-    }
-
-    private fun setup(task: GenerateProtoTask) = with(task) {
+    override fun setup(task: GenerateProtoTask): Unit = with(task) {
         builtins.maybeCreate("kotlin")
         excludeProtocOutput()
         doLast {
