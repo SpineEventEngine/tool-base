@@ -31,6 +31,7 @@ import io.kotest.matchers.string.shouldContain
 import io.spine.tools.gradle.protobuf.ProtobufTaskName
 import io.spine.tools.gradle.task.JavaTaskName
 import io.spine.tools.gradle.testing.Gradle
+import io.spine.tools.gradle.testing.Gradle.BUILD_SUCCESSFUL
 import io.spine.tools.gradle.testing.runGradleBuild
 import io.spine.tools.gradle.testing.under
 import java.io.File
@@ -87,7 +88,7 @@ class DescriptorSetFilePluginSpec : ProtobufPluginTest() {
         )
 
         result.task(task.path())?.outcome shouldBe TaskOutcome.SUCCESS
-        result.output shouldContain Gradle.BUILD_SUCCESSFUL
+        result.output shouldContain BUILD_SUCCESSFUL
 
         val buildDir = File(projectDir, "build")
         val descriptorsDir = File(buildDir, "descriptors/main")
@@ -139,7 +140,7 @@ class DescriptorSetFilePluginSpec : ProtobufPluginTest() {
             listOf(JavaTaskName.processResources.name()),
             debug = true
         )
-        result.output shouldContain Gradle.BUILD_SUCCESSFUL
+        result.output shouldContain BUILD_SUCCESSFUL
 
         // Verify Java code was produced, implying `generateProto` ran before `processResources`.
         val sampleOuter = File(generatedJava, "test/Msg.java")

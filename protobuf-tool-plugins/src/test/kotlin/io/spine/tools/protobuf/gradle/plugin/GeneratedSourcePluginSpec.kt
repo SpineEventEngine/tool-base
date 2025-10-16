@@ -30,6 +30,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.spine.tools.gradle.protobuf.ProtobufTaskName
 import io.spine.tools.gradle.testing.Gradle
+import io.spine.tools.gradle.testing.Gradle.BUILD_SUCCESSFUL
 import io.spine.tools.gradle.testing.runGradleBuild
 import io.spine.tools.gradle.testing.under
 import java.io.File
@@ -80,7 +81,7 @@ class GeneratedSourcePluginSpec : ProtobufPluginTest() {
             """.trimIndent()
         )
 
-        // Run the generateProto task.
+        // Run the `generateProto` task.
         val task = ProtobufTaskName.generateProto
         val result = runGradleBuild(
             projectDir,
@@ -89,7 +90,7 @@ class GeneratedSourcePluginSpec : ProtobufPluginTest() {
         )
 
         result.task(task.path())?.outcome shouldBe TaskOutcome.SUCCESS
-        result.output shouldContain Gradle.BUILD_SUCCESSFUL
+        result.output shouldContain BUILD_SUCCESSFUL
 
         // Verify Java sources were copied to `$projectDir/generated/main/java`.
         val generatedJava = projectDir.generatedJava
