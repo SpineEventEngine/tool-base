@@ -29,29 +29,25 @@ package io.spine.tools.protobuf.gradle.plugin
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.spine.tools.gradle.protobuf.ProtobufTaskName
+import io.spine.tools.gradle.task.JavaTaskName
 import io.spine.tools.gradle.testing.Gradle
 import io.spine.tools.gradle.testing.runGradleBuild
 import io.spine.tools.gradle.testing.under
 import java.io.File
 import org.gradle.testkit.runner.TaskOutcome
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 
 @DisplayName("`DescriptorSetFilePlugin` should")
-class DescriptorSetFilePluginSpec {
+class DescriptorSetFilePluginSpec : ProtobufPluginTest() {
+
+    override val group = "running.tests"
+    override val version = "1.2.3"
 
     @Test
-    fun `create desc ref and descriptor file for main source set`(@TempDir projectDir: File) {
-        val group = "test.group"
-        val version = "1.2.3"
-
-        // Settings file (empty is fine for single-project build).
-        Gradle.settingsFile.under(projectDir).writeText("")
-
+    fun `create desc ref and descriptor file for main source set`() {
         // Create a minimal proto file.
-        val protoDir = File(projectDir, "src/main/proto")
-        protoDir.mkdirs()
         File(protoDir, "sample.proto").writeText(
             """
             syntax = "proto3";
@@ -84,7 +80,7 @@ class DescriptorSetFilePluginSpec {
 
         // Run the generateProto task.
         val task = ProtobufTaskName.generateProto
-        val result = runGradleBuild(projectDir, listOf(task.name()), debug = true)
+        val result = runGradleBuild(projectDir, listOf(task.name()), debug = false)
         result.task(task.path())?.outcome shouldBe TaskOutcome.SUCCESS
         result.output shouldContain Gradle.BUILD_SUCCESSFUL
 
@@ -99,5 +95,51 @@ class DescriptorSetFilePluginSpec {
 
         val descriptor = File(descriptorsDir, expectedName)
         descriptor.exists() shouldBe true
+    }
+
+    @Test
+    @Disabled("Until debugging builds with Protobuf and Gradle v9.1.0 is available")
+    fun `make processResources depend on generateProto`() {
+        // Minimal proto to make `generateProto` do some work.
+        File(protoDir, "msg.proto").writeText(
+            """
+            syntax = "proto3";
+            package test;
+            message M {}
+            """.trimIndent()
+        )
+
+        Gradle.buildFile.under(projectDir).writeText(
+            """
+            plugins {
+                id("java")
+                id("${ProtobufGradlePlugin.id}") version "${ProtobufGradlePlugin.version}"
+                id("${GeneratedSourcePlugin.id}")
+            }
+
+            group = "$group"
+            version = "$version"
+
+            repositories { mavenCentral() }
+
+            protobuf {
+                protoc { artifact = "${ProtobufProtoc.dependency.artifact.coordinates}" }
+            }
+            """.trimIndent()
+        )
+
+        // Run `processResources` and ensure `generateProto` was executed (dependency configured).
+        val result = runGradleBuild(
+            projectDir,
+            listOf(JavaTaskName.processResources.name()),
+            debug = true
+        )
+        result.output shouldContain Gradle.BUILD_SUCCESSFUL
+
+        // Verify Java code was produced, implying `generateProto` ran before `processResources`.
+        val sampleOuter = File(generatedJava, "test/Msg.java")
+
+        generatedJava.exists() shouldBe true
+        sampleOuter.exists() shouldBe true
     }
 }

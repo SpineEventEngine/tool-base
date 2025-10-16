@@ -31,8 +31,10 @@ import io.spine.code.proto.DescriptorSetReferenceFile
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.gradle.protobuf.descriptorSetFile
 import io.spine.tools.gradle.protobuf.protobufExtension
+import io.spine.tools.gradle.task.JavaTaskName
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.language.jvm.tasks.ProcessResources
 
 /**
  * A Gradle project plugin that configures Protobuf generation tasks to produce
@@ -88,5 +90,23 @@ public class DescriptorSetFilePlugin : Plugin<Project> {
         task.doLast {
             DescriptorSetReferenceFile.create(descriptorsDir, descriptorSetFile)
         }
+
+        task.dependOnProcessResourcesTask()
     }
+}
+
+/**
+ * Make the `processResources` task depend on this `GenerateProtoTask`.
+ */
+private fun GenerateProtoTask.dependOnProcessResourcesTask() {
+    val ssn = SourceSetName(sourceSet.name)
+    val processResources = JavaTaskName.processResources(ssn).value()
+    // Find the task via iteration because the call to `named()` fails at
+    // this project configuration stage.
+    project.tasks.withType(ProcessResources::class.java)
+        .filter {
+            it.name == processResources
+        }.forEach {
+            it.dependsOn(this)
+        }
 }

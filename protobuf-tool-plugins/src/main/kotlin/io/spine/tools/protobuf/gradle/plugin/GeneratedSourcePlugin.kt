@@ -39,6 +39,7 @@ import org.gradle.api.Project
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.tasks.SourceSet
+import org.gradle.language.jvm.tasks.ProcessResources
 import org.gradle.plugins.ide.idea.GenerateIdeaModule
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
@@ -68,8 +69,7 @@ public class GeneratedSourcePlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.pluginManager.withPlugin(ProtobufGradlePlugin.id) {
             project.protobufExtension?.apply {
-                val all = generateProtoTasks.all().toSet()
-                all.forEach { task ->
+                generateProtoTasks.all().configureEach { task ->
                     setup(task)
                 }
             }
@@ -83,7 +83,6 @@ public class GeneratedSourcePlugin : Plugin<Project> {
             copyGeneratedFiles()
         }
         setupKotlinCompile()
-        dependOnProcessResourcesTask()
         makeDirsForIdeaModule()
     }
 }
@@ -146,7 +145,9 @@ private val SourceSet.kotlinOrNull: SourceDirectorySet?
 private fun File.residesIn(directory: File): Boolean =
     canonicalFile.startsWith(directory.absolutePath)
 
-/** Ensure Kotlin compilation explicitly depends on this `GenerateProtoTask`. */
+/**
+ * Ensure Kotlin compilation explicitly depends on this `GenerateProtoTask`.
+ */
 private fun GenerateProtoTask.setupKotlinCompile() {
     val taskName = sourceSet.getCompileTaskName("Kotlin")
     try {
@@ -154,15 +155,6 @@ private fun GenerateProtoTask.setupKotlinCompile() {
         kotlinCompile?.dependsOn(this)
     } catch (_: Throwable) {
         // Kotlin plugin is likely not applied; nothing to do.
-    }
-}
-
-/** Make the `processResources` task depend on this `GenerateProtoTask`. */
-private fun GenerateProtoTask.dependOnProcessResourcesTask() {
-    val ssn = SourceSetName(sourceSet.name)
-    val processResources = JavaTaskName.processResources(ssn).value()
-    project.tasks.named(processResources).configure {
-        it.dependsOn(this)
     }
 }
 

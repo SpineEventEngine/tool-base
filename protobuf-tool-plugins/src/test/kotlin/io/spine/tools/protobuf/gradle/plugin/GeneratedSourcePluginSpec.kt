@@ -29,7 +29,6 @@ package io.spine.tools.protobuf.gradle.plugin
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.spine.tools.gradle.protobuf.ProtobufTaskName
-import io.spine.tools.gradle.task.JavaTaskName
 import io.spine.tools.gradle.testing.Gradle
 import io.spine.tools.gradle.testing.runGradleBuild
 import io.spine.tools.gradle.testing.under
@@ -37,26 +36,20 @@ import java.io.File
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 
 @DisplayName("`GeneratedSourcePlugin` should")
-class GeneratedSourcePluginSpec {
+class GeneratedSourcePluginSpec : ProtobufPluginTest() {
 
-    private val File.protoDir: File get() = File(this, "src/main/proto")
-    private val File.generatedJava: File get() = File(this, "generated/main/java")
-
-    private val group = "test.group"
-    private val version = "1.2.3"
+    override val group = "test.group"
+    override val version = "3.4.5"
 
     @Test
-    fun `copy generated Java sources under project generated directory`(@TempDir projectDir: File) {
+    fun `copy generated Java sources under project generated directory`() {
 
         // Settings file (empty is fine for single-project build).
         Gradle.settingsFile.under(projectDir).writeText("")
 
         // Create a minimal proto file.
-        val protoDir = projectDir.protoDir
-        protoDir.mkdirs()
         File(protoDir, "sample.proto").writeText(
             """
             syntax = "proto3";
@@ -89,59 +82,13 @@ class GeneratedSourcePluginSpec {
 
         // Run the generateProto task.
         val task = ProtobufTaskName.generateProto
-        val result = runGradleBuild(projectDir, task)
+        val result = runGradleBuild(projectDir, listOf(task.name()), debug = true)
         result.task(task.path())?.outcome shouldBe TaskOutcome.SUCCESS
         result.output shouldContain Gradle.BUILD_SUCCESSFUL
 
         // Verify Java sources were copied to `$projectDir/generated/main/java`.
         val generatedJava = projectDir.generatedJava
         val sampleOuter = File(generatedJava, "sample/Sample.java")
-        sampleOuter.exists() shouldBe true
-    }
-
-    @Test
-    fun `make processResources depend on generateProto`(@TempDir projectDir: File) {
-        Gradle.settingsFile.under(projectDir).writeText("")
-
-        // Minimal proto to make `generateProto` do some work.
-        val protoDir = File(projectDir, "src/main/proto")
-        protoDir.mkdirs()
-        File(protoDir, "msg.proto").writeText(
-            """
-            syntax = "proto3";
-            package test;
-            message M {}
-            """.trimIndent()
-        )
-
-        Gradle.buildFile.under(projectDir).writeText(
-            """
-            plugins {
-                id("java")
-                id("${ProtobufGradlePlugin.id}") version "${ProtobufGradlePlugin.version}"
-                id("${GeneratedSourcePlugin.id}")
-            }
-
-            group = "$group"
-            version = "$version"
-
-            repositories { mavenCentral() }
-
-            protobuf {
-                protoc { artifact = "${ProtobufProtoc.dependency.artifact.coordinates}" }
-            }
-            """.trimIndent()
-        )
-
-        // Run `processResources` and ensure `generateProto` was executed (dependency configured).
-        val result = runGradleBuild(projectDir, JavaTaskName.processResources)
-        result.output shouldContain Gradle.BUILD_SUCCESSFUL
-
-        // Verify Java code was produced, implying `generateProto` ran before `processResources`.
-        val generatedJava = projectDir.generatedJava
-        val sampleOuter = File(generatedJava, "test/Msg.java")
-        
-        generatedJava.exists() shouldBe true
         sampleOuter.exists() shouldBe true
     }
 }
