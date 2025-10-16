@@ -89,7 +89,12 @@ public fun Project.sourceSet(name: SourceSetName): SourceSet = sourceSets.getByN
 public fun Project.artifact(ssn: SourceSetName): MavenArtifact {
     val classifier = if (ssn == main) null else ssn.value
     val artifactName = findMavenPublicationArtifactId() ?: name
-    return MavenArtifact(group.toString(), artifactName, version.toString(), classifier)
+    return MavenArtifact(
+        group.toString().ifEmpty { "group_unknown" },
+        artifactName,
+        version.toString(),
+        classifier
+    )
 }
 
 /**

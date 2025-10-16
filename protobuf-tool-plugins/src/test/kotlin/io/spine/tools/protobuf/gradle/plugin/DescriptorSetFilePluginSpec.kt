@@ -104,7 +104,7 @@ class DescriptorSetFilePluginSpec : ProtobufPluginTest() {
     }
 
     @Test
-    @Disabled("Until debugging builds with Protobuf and Gradle v9.1.0 is available")
+    //@Disabled("Until debugging builds with Protobuf and Gradle v9.1.0 is available")
     fun `make processResources depend on generateProto`() {
         // Minimal proto to make `generateProto` do some work.
         File(protoDir, "msg.proto").writeText(
@@ -120,7 +120,7 @@ class DescriptorSetFilePluginSpec : ProtobufPluginTest() {
             plugins {
                 id("java")
                 id("${ProtobufGradlePlugin.id}") version "${ProtobufGradlePlugin.version}"
-                id("${GeneratedSourcePlugin.id}")
+                id("${DescriptorSetFilePlugin.id}")
             }
 
             group = "$group"
@@ -138,12 +138,12 @@ class DescriptorSetFilePluginSpec : ProtobufPluginTest() {
         val result = runGradleBuild(
             projectDir,
             listOf(JavaTaskName.processResources.name()),
-            debug = true
+            debug = false
         )
         result.output shouldContain BUILD_SUCCESSFUL
 
         // Verify Java code was produced, implying `generateProto` ran before `processResources`.
-        val sampleOuter = File(generatedJava, "test/Msg.java")
+        val sampleOuter = File(buildGeneratedJava, "test/Msg.java")
 
         generatedJava.exists() shouldBe true
         sampleOuter.exists() shouldBe true

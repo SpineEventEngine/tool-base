@@ -91,6 +91,8 @@ public fun runGradleBuild(
         .withProjectDir(projectDir)
         .withPluginClasspath()
         .withArguments(arguments)
+        .forwardStdOutput(System.out.bufferedWriter())
+        .forwardStdError(System.err.bufferedWriter())
     if (debug) {
         runner.withDebug(true)
     }    

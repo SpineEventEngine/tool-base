@@ -47,6 +47,8 @@ abstract class ProtobufPluginTest {
 
     protected val protoDir: File get() = projectDir.protoDir
     protected val generatedJava: File get() = projectDir.generatedJava
+    protected val buildGeneratedJava: File get() =
+        projectDir.resolve("build/generated/source/proto/main/java")
 
     @BeforeEach
     fun setupProjectDirectory(@TempDir projectDir: File) {

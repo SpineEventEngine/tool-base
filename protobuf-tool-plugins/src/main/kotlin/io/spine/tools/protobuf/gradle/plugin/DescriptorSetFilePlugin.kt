@@ -52,6 +52,7 @@ public class DescriptorSetFilePlugin : ProtobufSetupPlugin() {
 
     override fun setup(task: GenerateProtoTask) {
         val project = task.project
+        println(" --- Project's group: ${project.group}, the version is: ${project.version}.")
         val sourceSet = task.sourceSet
 
         // Enable descriptor set generation.
@@ -69,12 +70,14 @@ public class DescriptorSetFilePlugin : ProtobufSetupPlugin() {
         }
 
         // Add the `descriptors` directory to the resources so that
-        // the descriptor set file and the reference file which is created in
+        // the descriptor set file, and the reference file which is created in
         // the `doLast` block below are packed together with the class files.
         sourceSet.resources.srcDir(descriptorsDir.absolutePath)
 
         // Create a `desc.ref` file pointing to the descriptor file name once the task finishes.
         task.doLast {
+            System.err.println("Creating a reference file for the descriptor set in ${descriptorsDir.path}.")
+            System.err.println("The descriptor set file is: `${descriptorSetFile.absolutePath}`.")
             DescriptorSetReferenceFile.create(descriptorsDir, descriptorSetFile)
         }
 
@@ -94,6 +97,7 @@ private fun GenerateProtoTask.dependOnProcessResourcesTask() {
         .filter {
             it.name == processResources
         }.forEach {
+            System.err.println(" * The `${it.name}` task now depends on `${this.name}`.")
             it.dependsOn(this)
         }
 }
