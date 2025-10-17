@@ -89,9 +89,7 @@ private fun GenerateProtoTask.generatedDir(language: String = ""): File {
  * directory and removes `com/google` packages to avoid conflicts with library classes.
  */
 private fun GenerateProtoTask.copyGeneratedFiles() {
-    System.err.println(" --- Preparing to copy generated files...")
     project.copy { spec ->
-        System.err.println(" .... Copying generated files from `${this@copyGeneratedFiles.outputBaseDir}` to `${generatedDir()}`.")
         spec.from(this@copyGeneratedFiles.outputBaseDir)
         spec.into(generatedDir())
     }

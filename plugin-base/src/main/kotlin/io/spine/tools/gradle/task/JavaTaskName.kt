@@ -87,5 +87,11 @@ public class JavaTaskName(value: String, ssn: SourceSetName) : TaskWithSourceSet
         /** The name of the resource processing task from the [test] source set. */
         @JvmField
         public val processTestResources: TaskName = processResources(test)
+
+        /**
+         * The name of the `sourcesJar` task.
+         */
+        @JvmField
+        public val sourcesJar: TaskName = TaskName.of("sourcesJar")
     }
 }

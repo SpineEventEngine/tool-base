@@ -26,16 +26,14 @@
 
 import io.spine.dependency.lib.Protobuf
 import io.spine.dependency.local.Base
+import io.spine.dependency.local.Logging
 import io.spine.gradle.isSnapshot
 import io.spine.gradle.publish.SpinePublishing
 import io.spine.gradle.report.license.LicenseReporter
 
 plugins {
     `uber-jar-module`
-    kotlin("jvm")
-    `module-testing`
     `plugin-publish`
-    `write-manifest`
     id("io.spine.artifact-meta")
 }
 LicenseReporter.generateReportIn(project)
@@ -98,11 +96,12 @@ dependencies {
     compileOnlyApi(gradleApi())
     compileOnly(gradleKotlinDsl())
 
-    // Access to GenerateProtoTask and related APIs at compile and runtime.
+    // Access to `GenerateProtoTask` and related APIs at compile and runtime.
     implementation(Protobuf.GradlePlugin.lib)
 
     implementation(Base.lib)?.because("We need `DescriptorSetReferenceFile` at compile time.")
     implementation(project(":plugin-base"))
+    implementation(Logging.lib)
     
     testImplementation(project(":plugin-testlib"))
 }

@@ -92,6 +92,7 @@ dependencies {
     compileOnlyApi(Kotlin.GradlePlugin.api)
     compileOnly(gradleKotlinDsl())
     api(project(":jvm-tools"))
+    implementation(project(":plugin-base"))?.because("We need `JavaTaskName` API.")
 
     testImplementation(project(":plugin-testlib"))
 }

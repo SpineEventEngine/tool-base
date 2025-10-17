@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -24,20 +24,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@file:JvmName("Tasks")
+package io.spine.tools.protobuf.gradle.plugin
 
-package io.spine.tools.gradle.task
+import io.kotest.matchers.shouldBe
+import kotlin.jvm.kotlin
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 
-import com.google.protobuf.gradle.GenerateProtoTask
-import io.spine.tools.code.SourceSetName
-import io.spine.tools.gradle.named
-import io.spine.tools.gradle.protobuf.descriptorSetFile
-import java.io.File
+/**
+ * This test suite guards against accidental refactoring enum names coming
+ * in the [io.spine.tools.protobuf.gradle.plugin.ProtocPluginName] enum in small caps to uppercase (as it's customary for enums).
+ */
+@DisplayName("`ProtocPluginName` should")
+internal class ProtocPluginNameSpec {
 
-/** Obtains the descriptor set file associated with this task. */
-public val GenerateProtoTask.descriptorSetFile: File
-    get() = project.descriptorSetFile(sourceSet.named)
-
-/** Obtains the name of the source set to which this task belongs. */
-public val GenerateProtoTask.sourceSetName: SourceSetName
-    get() = sourceSet.named
+    @Test
+    fun `have 'kotlin' name`() {
+        ProtocPluginName.kotlin.name shouldBe "kotlin"
+    }
+}

@@ -86,7 +86,7 @@ class GeneratedSourcePluginSpec : ProtobufPluginTest() {
         val result = runGradleBuild(
             projectDir,
             listOf(task.name()),
-            debug = true
+            debug = false
         )
 
         result.task(task.path())?.outcome shouldBe TaskOutcome.SUCCESS

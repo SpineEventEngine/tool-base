@@ -131,6 +131,7 @@ public abstract class WriteArtifactMeta : DefaultTask() {
  *
  * The dependencies of our interest are going to have the required attributes.
  */
+@Suppress("ReturnCount")
 private fun Dependency.toMavenArtifact(): MavenArtifact? {
     val group = this.group ?: return null
     val name = this.name ?: return null
