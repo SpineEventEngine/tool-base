@@ -72,7 +72,7 @@ gradlePlugin {
             tags.set(commonTags + listOf("descriptor", "resources"))
         }
         create("generatedSourcePlugin") {
-            id = "io.spine.generated-source"
+            id = "io.spine.generated-sources"
             implementationClass = "io.spine.tools.protobuf.gradle.plugin.GeneratedSourcePlugin"
             displayName = "Generated Source Plugin"
             description = "Redirects Protobuf compilation to `$projectDir/generated`."

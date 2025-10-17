@@ -59,7 +59,7 @@ public class GeneratedSourcePlugin : ProtobufSetupPlugin() {
         /**
          * The ID of this Gradle plugin.
          */
-        const val id = "io.spine.generated-source"
+        const val id = "io.spine.generated-sources"
     }
 
     override fun setup(task: GenerateProtoTask): Unit = with(task) {
