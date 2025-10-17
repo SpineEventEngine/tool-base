@@ -30,7 +30,12 @@ import io.spine.tools.meta.LazyDependency
 import io.spine.tools.meta.LazyMeta
 import io.spine.tools.meta.Module
 
-internal object Meta : LazyMeta(Module("io.spine.tools", "protobuf-tool-plugins"))
+/**
+ * A reference to the `artifactMeta` resource of this module.
+ *
+ * See `build.gradle.kts` for details.
+ */
+internal object Meta : LazyMeta(Module("io.spine.tools", "protobuf-setup-plugins"))
 
 /**
  * The dependency on Protobuf Gradle Plugin.

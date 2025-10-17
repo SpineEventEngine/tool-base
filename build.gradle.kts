@@ -70,10 +70,10 @@ LicenseReporter.mergeAllReports(project)
 spinePublishing {
     val customPublishing = arrayOf(
         "gradle-root-plugin",
-        "jvm-tool-plugins",
-        "protobuf-tool-plugins",
         "intellij-platform",
-        "intellij-platform-java"
+        "intellij-platform-java",
+        "jvm-tool-plugins",
+        "protobuf-setup-plugins",
     )
     modules = productionModuleNames.toSet()
         .minus(customPublishing)
