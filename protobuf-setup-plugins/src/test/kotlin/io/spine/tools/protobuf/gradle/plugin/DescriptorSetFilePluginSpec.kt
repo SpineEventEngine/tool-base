@@ -103,7 +103,6 @@ class DescriptorSetFilePluginSpec : ProtobufPluginTest() {
     }
 
     @Test
-    //@Disabled("Until debugging builds with Protobuf and Gradle v9.1.0 is available")
     fun `make processResources depend on generateProto`() {
         // Minimal proto to make `generateProto` do some work.
         File(protoDir, "msg.proto").writeText(
