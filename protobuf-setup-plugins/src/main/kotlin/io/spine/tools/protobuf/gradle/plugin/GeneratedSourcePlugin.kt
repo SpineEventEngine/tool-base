@@ -40,7 +40,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 /**
  * A Gradle project plugin that configures Protobuf compilation process to
- * put the resuling output to the `generated` directory under the project root.
+ * put the resulting output to the `generated` directory under the project root.
  *
  * The plugin does the following:
  *  - enables Kotlin builtin for `protoc`;
