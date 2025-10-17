@@ -41,11 +41,17 @@ public abstract class ProtobufSetupPlugin : Plugin<Project> {
      * Configures all `GenerateProtoTask`s to with the [setup] function.
      */
     @OverridingMethodsMustInvokeSuper
-    override fun apply(project: Project) {
-        project.pluginManager.withPlugin(ProtobufGradlePlugin.id) {
-            project.protobufExtension?.apply {
+    override fun apply(project: Project): Unit = with(project) {
+        pluginManager.withPlugin(ProtobufGradlePlugin.id) {
+            protobufExtension?.apply {
                 generateProtoTasks.all().configureEach { task ->
                     setup(task)
+                }
+                afterEvaluate {
+                    // "Actualize" the collection of `GenerateProtoTask`s that
+                    // may not be brought to life yet because of lazy `configureEach()`
+                    // behaviour of new (9.1.0) Gradle.
+                    generateProtoTasks.all().size
                 }
             }
         }

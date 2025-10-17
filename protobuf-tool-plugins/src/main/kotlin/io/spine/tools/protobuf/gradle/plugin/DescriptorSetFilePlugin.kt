@@ -31,6 +31,7 @@ import io.spine.code.proto.DescriptorSetReferenceFile
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.gradle.protobuf.descriptorSetFile
 import io.spine.tools.gradle.task.JavaTaskName
+import org.gradle.kotlin.dsl.withType
 import org.gradle.language.jvm.tasks.ProcessResources
 
 /**
@@ -52,7 +53,6 @@ public class DescriptorSetFilePlugin : ProtobufSetupPlugin() {
 
     override fun setup(task: GenerateProtoTask) {
         val project = task.project
-        println(" --- Project's group: ${project.group}, the version is: ${project.version}.")
         val sourceSet = task.sourceSet
 
         // Enable descriptor set generation.
@@ -76,8 +76,6 @@ public class DescriptorSetFilePlugin : ProtobufSetupPlugin() {
 
         // Create a `desc.ref` file pointing to the descriptor file name once the task finishes.
         task.doLast {
-            System.err.println("Creating a reference file for the descriptor set in ${descriptorsDir.path}.")
-            System.err.println("The descriptor set file is: `${descriptorSetFile.absolutePath}`.")
             DescriptorSetReferenceFile.create(descriptorsDir, descriptorSetFile)
         }
 
@@ -93,11 +91,7 @@ private fun GenerateProtoTask.dependOnProcessResourcesTask() {
     val processResources = JavaTaskName.processResources(ssn).value()
     // Find the task via iteration because the call to `named()` fails at
     // this project configuration stage.
-    project.tasks.withType(ProcessResources::class.java)
-        .filter {
-            it.name == processResources
-        }.forEach {
-            System.err.println(" * The `${it.name}` task now depends on `${this.name}`.")
-            it.dependsOn(this)
-        }
+    project.tasks.withType<ProcessResources>()
+        .filter { it.name == processResources }
+        .forEach { it.dependsOn(this) }
 }
