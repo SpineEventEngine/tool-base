@@ -28,7 +28,7 @@ package io.spine.tools.protobuf.gradle.plugin
 
 import com.google.protobuf.gradle.GenerateProtoTask
 import io.spine.tools.code.SourceSetName
-import io.spine.tools.gradle.protobuf.generated
+import io.spine.tools.protobuf.gradle.generated
 import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.createDirectories

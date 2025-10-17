@@ -24,7 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.protobuf.gradle.plugin;
+package io.spine.tools.protobuf.gradle;
 
 /**
  * Names of known Protobuf compiler plugins.

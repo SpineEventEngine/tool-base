@@ -24,22 +24,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.protobuf.gradle.plugin
+@file:JvmName("Tasks")
 
-import io.kotest.matchers.shouldBe
-import io.spine.tools.protobuf.gradle.ProtocPluginName
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Test
+package io.spine.tools.protobuf.gradle
+
+import com.google.protobuf.gradle.GenerateProtoTask
+import io.spine.tools.code.SourceSetName
+import io.spine.tools.gradle.named
+import java.io.File
 
 /**
- * This test suite guards against accidental refactoring enum names coming
- * in the [io.spine.tools.protobuf.gradle.ProtocPluginName] enum in small caps to uppercase (as it's customary for enums).
+ * Obtains the descriptor set file associated with this task.
  */
-@DisplayName("`ProtocPluginName` should")
-internal class ProtocPluginNameSpec {
+public val GenerateProtoTask.descriptorSetFile: File
+    get() = project.descriptorSetFile(sourceSet.named)
 
-    @Test
-    fun `have 'kotlin' name`() {
-        ProtocPluginName.kotlin.name shouldBe "kotlin"
-    }
-}
+/**
+ * Obtains the name of the source set to which this task belongs.
+ */
+public val GenerateProtoTask.sourceSetName: SourceSetName
+    get() = sourceSet.named

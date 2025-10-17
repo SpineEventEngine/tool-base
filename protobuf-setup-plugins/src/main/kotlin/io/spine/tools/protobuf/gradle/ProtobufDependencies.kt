@@ -24,7 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.protobuf
+package io.spine.tools.protobuf.gradle
 
 import io.spine.tools.gradle.PluginId
 import io.spine.tools.proto.fs.Directory

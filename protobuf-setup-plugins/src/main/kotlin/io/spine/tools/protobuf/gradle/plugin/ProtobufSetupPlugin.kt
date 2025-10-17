@@ -28,7 +28,7 @@ package io.spine.tools.protobuf.gradle.plugin
 
 import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper
 import com.google.protobuf.gradle.GenerateProtoTask
-import io.spine.tools.gradle.protobuf.protobufExtension
+import io.spine.tools.protobuf.gradle.protobufExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 

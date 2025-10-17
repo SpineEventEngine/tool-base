@@ -24,7 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.protobuf.gradle.plugin;
+package io.spine.tools.protobuf.gradle;
 
 import io.spine.code.proto.FileSet;
 import io.spine.tools.code.SourceSetName;
@@ -39,7 +39,7 @@ import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static io.spine.tools.gradle.project.Projects.configuration;
-import static io.spine.tools.gradle.protobuf.Projects.descriptorSetFile;
+import static io.spine.tools.protobuf.gradle.Projects.descriptorSetFile;
 
 /**
  * Utilities for Gradle plugins performing code-generation based on {@code .proto} files.

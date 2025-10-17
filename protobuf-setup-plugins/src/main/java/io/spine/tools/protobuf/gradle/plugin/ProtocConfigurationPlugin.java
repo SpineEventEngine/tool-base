@@ -35,9 +35,9 @@ import org.gradle.api.NamedDomainObjectContainer;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 
-import static io.spine.tools.gradle.protobuf.Projects.getProtobufExtension;
-import static io.spine.tools.gradle.protobuf.ProtobufDependencies.gradlePlugin;
-import static io.spine.tools.gradle.protobuf.Tasks.getDescriptorSetFile;
+import static io.spine.tools.protobuf.gradle.Projects.getProtobufExtension;
+import static io.spine.tools.protobuf.gradle.ProtobufDependencies.gradlePlugin;
+import static io.spine.tools.protobuf.gradle.Tasks.getDescriptorSetFile;
 import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
 

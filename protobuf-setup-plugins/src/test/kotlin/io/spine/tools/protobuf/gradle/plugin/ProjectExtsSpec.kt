@@ -33,13 +33,12 @@ import io.kotest.matchers.string.shouldNotContain
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.code.SourceSetName.Companion.main
 import io.spine.tools.code.SourceSetName.Companion.test
-import io.spine.tools.gradle.protobuf.ProtobufDependencies
-import io.spine.tools.gradle.protobuf.descriptorSetFile
-import io.spine.tools.gradle.protobuf.protoDirectorySet
+import io.spine.tools.protobuf.gradle.ProtobufDependencies
+import io.spine.tools.protobuf.gradle.descriptorSetFile
+import io.spine.tools.protobuf.gradle.protoDirectorySet
 import java.nio.file.Path
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
-import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSet.MAIN_SOURCE_SET_NAME
 import org.gradle.api.tasks.SourceSet.TEST_SOURCE_SET_NAME
 import org.gradle.testfixtures.ProjectBuilder

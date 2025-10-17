@@ -24,11 +24,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.protobuf
+package io.spine.tools.protobuf.gradle
 
 import io.spine.tools.code.SourceSetName
-import io.spine.tools.code.SourceSetName.Companion.main
-import io.spine.tools.code.SourceSetName.Companion.test
 import io.spine.tools.gradle.task.TaskName
 import io.spine.tools.gradle.task.TaskWithSourceSetName
 
@@ -62,7 +60,7 @@ public open class ProtobufTaskName(value: String, ssn: SourceSetName) :
          * Users should be conscious and cautious when depending on it.
          */
         @JvmField
-        public val generateProto: TaskName = generateProto(main)
+        public val generateProto: TaskName = generateProto(SourceSetName.Companion.main)
 
         /**
          * Generates test code from Protobuf.
@@ -71,6 +69,6 @@ public open class ProtobufTaskName(value: String, ssn: SourceSetName) :
          * Users should be conscious and cautious when depending on it.
          */
         @JvmField
-        public val generateTestProto: TaskName = generateProto(test)
+        public val generateTestProto: TaskName = generateProto(SourceSetName.Companion.test)
     }
 }

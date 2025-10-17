@@ -24,19 +24,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@file:JvmName("Tasks")
+package io.spine.tools.protobuf.gradle
 
-package io.spine.tools.gradle.protobuf
+import io.spine.tools.protobuf.gradle.ProtobufDependencies.sourceSetExtensionName
+import org.gradle.api.file.SourceDirectorySet
+import org.gradle.api.tasks.SourceSet
 
-import com.google.protobuf.gradle.GenerateProtoTask
-import io.spine.tools.code.SourceSetName
-import io.spine.tools.gradle.named
-import java.io.File
+/**
+ * Tells if this [SourceSet] contains `.proto` files.
+ *
+ * @return true if there is [protoDirectorySet] available in this source set, _and_ the set has
+ *         at least one file. Otherwise, false.
+ */
+public fun SourceSet.containsProtoFiles(): Boolean {
+    val protoDirectorySet = findProtoDirectorySet()
+        ?: return false // no `proto` extension at all.
+    val isEmpty = protoDirectorySet.files.isEmpty()
+    return !isEmpty
+}
 
-/** Obtains the descriptor set file associated with this task. */
-public val GenerateProtoTask.descriptorSetFile: File
-    get() = project.descriptorSetFile(sourceSet.named)
-
-/** Obtains the name of the source set to which this task belongs. */
-public val GenerateProtoTask.sourceSetName: SourceSetName
-    get() = sourceSet.named
+/**
+ * Obtains a [SourceDirectorySet] containing `.proto` files in this [SourceSet].
+ *
+ * @return the directory set or `null`, if there is no `proto` extension added to this `SourceSet`
+ *         by the Protobuf Gradle Plugin.
+ * @see ProtobufDependencies.sourceSetExtensionName
+ */
+public fun SourceSet.findProtoDirectorySet(): SourceDirectorySet? =
+    extensions.getByName(sourceSetExtensionName)
+        .let { ext -> ext as? SourceDirectorySet }

@@ -29,8 +29,8 @@ package io.spine.tools.protobuf.gradle.plugin
 import com.google.protobuf.gradle.GenerateProtoTask
 import io.spine.code.proto.DescriptorSetReferenceFile
 import io.spine.tools.code.SourceSetName
-import io.spine.tools.gradle.protobuf.descriptorSetFile
 import io.spine.tools.gradle.task.JavaTaskName
+import io.spine.tools.protobuf.gradle.descriptorSetFile
 import org.gradle.kotlin.dsl.withType
 import org.gradle.language.jvm.tasks.ProcessResources
 
