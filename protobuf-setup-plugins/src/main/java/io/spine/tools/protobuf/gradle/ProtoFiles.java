@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -24,10 +24,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle;
+package io.spine.tools.protobuf.gradle;
 
 import io.spine.code.proto.FileSet;
 import io.spine.tools.code.SourceSetName;
+import io.spine.tools.gradle.JavaConfigurationName;
 import io.spine.tools.type.FileDescriptorSuperset;
 import io.spine.tools.type.MoreKnownTypes;
 import org.gradle.api.Project;
@@ -38,7 +39,7 @@ import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static io.spine.tools.gradle.project.Projects.configuration;
-import static io.spine.tools.gradle.protobuf.Projects.descriptorSetFile;
+import static io.spine.tools.protobuf.gradle.Projects.descriptorSetFile;
 
 /**
  * Utilities for Gradle plugins performing code-generation based on {@code .proto} files.

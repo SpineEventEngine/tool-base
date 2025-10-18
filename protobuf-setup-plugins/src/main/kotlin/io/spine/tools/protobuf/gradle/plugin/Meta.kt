@@ -1,11 +1,11 @@
 /*
- * Copyright 2024, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -24,21 +24,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "tool-base"
+package io.spine.tools.protobuf.gradle.plugin
 
-include(
-    "classic-codegen",
-    "gradle-plugin-api",
-    "gradle-plugin-api-test-fixtures",
-    "gradle-root-plugin",
-    "intellij-platform",
-    "intellij-platform-java",
-    "jvm-tool-plugins",
-    "jvm-tools",
-    "plugin-base",
-    "plugin-testlib",
-    "protobuf-setup-plugins",
-    "psi",
-    "psi-java",
-    "tool-base",
-)
+import io.spine.tools.meta.LazyDependency
+import io.spine.tools.meta.LazyMeta
+import io.spine.tools.meta.Module
+
+/**
+ * A reference to the `artifactMeta` resource of this module.
+ *
+ * See `build.gradle.kts` for details.
+ */
+internal object Meta : LazyMeta(Module("io.spine.tools", "protobuf-setup-plugins"))
+
+/**
+ * The dependency on Protobuf Gradle Plugin.
+ */
+internal object ProtobufGradlePlugin {
+
+    /**
+     * The ID of the plugin.
+     */
+    const val id: String = "com.google.protobuf"
+
+    /**
+     * This module is used when setting the version of the plugin in tests.
+     */
+    private val module = Module("com.google.protobuf", "protobuf-gradle-plugin")
+    val dependency: LazyDependency = LazyDependency(Meta, module)
+
+    /**
+     * The version of the plugin.
+     */
+    val version: String = dependency.artifact.version
+}
+
+internal object ProtobufProtoc {
+
+    val module = Module("com.google.protobuf", "protoc")
+    val dependency: LazyDependency = LazyDependency(Meta, module)
+}

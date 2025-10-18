@@ -32,8 +32,6 @@ import org.gradle.testfixtures.ProjectBuilder;
 
 import java.io.File;
 
-import static io.spine.tools.gradle.protobuf.ProtobufTaskName.generateProto;
-import static io.spine.tools.gradle.protobuf.ProtobufTaskName.generateTestProto;
 import static org.gradle.internal.impldep.com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -78,8 +76,8 @@ public final class StubProject {
                 .build();
         project.getPluginManager()
                .apply("java");
-        project.getTasks().register(generateProto.name());
-        project.getTasks().register(generateTestProto.name());
+        project.getTasks().register("generateProto");
+        project.getTasks().register("generateTestProto");
         return project;
     }
 

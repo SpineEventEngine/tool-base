@@ -1,0 +1,100 @@
+/*
+ * Copyright 2025, TeamDev. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Redistribution and use in source and/or binary forms, with or without
+ * modification, must retain the above copyright notice and the following
+ * disclaimer.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+package io.spine.tools.protobuf.gradle.plugin
+
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
+import io.spine.tools.gradle.testing.Gradle
+import io.spine.tools.gradle.testing.Gradle.BUILD_SUCCESSFUL
+import io.spine.tools.gradle.testing.runGradleBuild
+import io.spine.tools.gradle.testing.under
+import io.spine.tools.protobuf.gradle.ProtobufTaskName
+import java.io.File
+import org.gradle.testkit.runner.TaskOutcome
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+
+@DisplayName("`GeneratedSourcePlugin` should")
+class GeneratedSourcePluginSpec : ProtobufPluginTest() {
+
+    override val group = "test.group"
+    override val version = "3.4.5"
+
+    @Test
+    fun `copy generated Java sources under project generated directory`() {
+
+        // Settings file (empty is fine for single-project build).
+        Gradle.settingsFile.under(projectDir).writeText("")
+
+        // Create a minimal proto file.
+        File(protoDir, "sample.proto").writeText(
+            """
+            syntax = "proto3";
+            package sample;
+            message Msg {}
+            """.trimIndent()
+        )
+
+        // Build file applying Protobuf plugin and our plugin.
+        Gradle.buildFile.under(projectDir).writeText(
+            """
+            plugins {
+                id("java")
+                id("${ProtobufGradlePlugin.id}") version "${ProtobufGradlePlugin.version}"
+                id("${GeneratedSourcePlugin.id}")
+            }
+
+            group = "$group"
+            version = "$version"
+
+            repositories {
+                mavenCentral()
+            }
+
+            protobuf {
+                protoc { artifact = "${ProtobufProtoc.dependency.artifact.coordinates}" }
+            }
+            """.trimIndent()
+        )
+
+        // Run the `generateProto` task.
+        val task = ProtobufTaskName.generateProto
+        val result = runGradleBuild(
+            projectDir,
+            listOf(task.name()),
+            debug = false
+        )
+
+        result.task(task.path())?.outcome shouldBe TaskOutcome.SUCCESS
+        result.output shouldContain BUILD_SUCCESSFUL
+
+        // Verify Java sources were copied to `$projectDir/generated/main/java`.
+        val generatedJava = projectDir.generatedJava
+        val sampleOuter = File(generatedJava, "sample/Sample.java")
+        sampleOuter.exists() shouldBe true
+    }
+}

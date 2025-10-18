@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -24,15 +24,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle;
+package io.spine.tools.protobuf.gradle.plugin
 
-import io.spine.testing.UtilityClassTest;
-import org.junit.jupiter.api.DisplayName;
+import io.kotest.matchers.shouldBe
+import io.spine.tools.protobuf.gradle.ProtocPluginName
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 
-@DisplayName("`ProtoFiles` utility class should")
-class ProtoFilesTest extends UtilityClassTest<ProtoFiles> {
+/**
+ * This test suite guards against accidental refactoring enum names coming
+ * in the [io.spine.tools.protobuf.gradle.ProtocPluginName] enum in small caps to uppercase (as it's customary for enums).
+ */
+@DisplayName("`ProtocPluginName` should")
+internal class ProtocPluginNameSpec {
 
-    ProtoFilesTest() {
-        super(ProtoFiles.class);
+    @Test
+    fun `have 'kotlin' name`() {
+        ProtocPluginName.kotlin.name shouldBe "kotlin"
     }
 }

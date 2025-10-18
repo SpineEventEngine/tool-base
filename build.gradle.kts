@@ -50,6 +50,10 @@ buildscript {
             }
         }
     }
+    dependencies {
+        classpath(io.spine.dependency.local.ToolBase.jvmToolPlugins)
+            ?.because("We need `artifactMeta` in `protobuf-tool-plugins`.")
+    }
 }
 
 plugins {
@@ -66,9 +70,10 @@ LicenseReporter.mergeAllReports(project)
 spinePublishing {
     val customPublishing = arrayOf(
         "gradle-root-plugin",
-        "jvm-tool-plugins",
         "intellij-platform",
-        "intellij-platform-java"
+        "intellij-platform-java",
+        "jvm-tool-plugins",
+        "protobuf-setup-plugins",
     )
     modules = productionModuleNames.toSet()
         .minus(customPublishing)

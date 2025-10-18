@@ -24,9 +24,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.protobuf
+package io.spine.tools.protobuf.gradle
 
-import io.spine.tools.gradle.protobuf.ProtobufDependencies.sourceSetExtensionName
+import io.spine.tools.protobuf.gradle.ProtobufDependencies.sourceSetExtensionName
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.tasks.SourceSet
 

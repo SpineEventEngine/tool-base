@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -24,7 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.protobuf
+package io.spine.tools.protobuf.gradle.plugin
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -33,6 +33,9 @@ import io.kotest.matchers.string.shouldNotContain
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.code.SourceSetName.Companion.main
 import io.spine.tools.code.SourceSetName.Companion.test
+import io.spine.tools.protobuf.gradle.ProtobufDependencies
+import io.spine.tools.protobuf.gradle.descriptorSetFile
+import io.spine.tools.protobuf.gradle.protoDirectorySet
 import java.nio.file.Path
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
@@ -46,7 +49,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
 /**
- * Tests for extensions of [Project] related to Protobuf.
+ * Tests for extensions of [org.gradle.api.Project] related to Protobuf.
  */
 @DisplayName("`Project` extensions for Protobuf should")
 class ProjectExtsSpec {

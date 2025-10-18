@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -23,21 +23,22 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package io.spine.tools.gradle
 
-import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Test
+package io.spine.tools.protobuf.gradle
+
+import io.spine.tools.gradle.PluginId
+import io.spine.tools.proto.fs.Directory
 
 /**
- * This test suite guards against accidental refactoring enum names coming
- * in the [ProtocPluginName] enum in small caps to uppercase (as it's customary for enums).
+ * A factory of Protobuf-related artifact specs.
  */
-@DisplayName("`ProtocPluginName` should")
-internal class ProtocPluginNameSpec {
+public object ProtobufDependencies {
 
-    @Test
-    fun `have 'kotlin' name`() {
-        ProtocPluginName.kotlin.name shouldBe "kotlin"
-    }
+    /** The ID of the Protobuf Gradle plugin. */
+    @JvmField
+    public val gradlePlugin: PluginId = PluginId("com.google.protobuf")
+
+    /** The name of the `SourceSet` extension installed by the Protobuf Gradle plugin. */
+    @JvmField
+    public val sourceSetExtensionName: String = Directory.rootName()
 }

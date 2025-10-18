@@ -38,8 +38,6 @@ import io.spine.tools.gradle.task.GivenTaskName.preClean
 import io.spine.tools.gradle.task.GivenTaskName.verifyModel
 import io.spine.tools.gradle.task.JavaTaskName.Companion.classes
 import io.spine.tools.gradle.task.JavaTaskName.Companion.compileJava
-import io.spine.tools.gradle.protobuf.ProtobufTaskName.Companion.generateProto
-import io.spine.tools.gradle.protobuf.ProtobufTaskName.Companion.generateTestProto
 import io.spine.tools.gradle.testing.GradleProject
 import io.spine.tools.gradle.testing.NoOp
 import java.io.File
@@ -112,6 +110,8 @@ internal class GradleTaskBuilderSpec {
 
     @Test
     fun `ignore task dependency if no such task found`() {
+        val generateTestProto = TaskName.of("generateTestProto")
+        val generateProto = TaskName.of("generateProto")
         GradleTask.newBuilder(generateTestProto, NoOp.action())
             .insertAfterAllTasks(generateProto)
             .applyNowTo(project)

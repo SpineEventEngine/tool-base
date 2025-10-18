@@ -24,21 +24,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.protobuf
+package io.spine.tools.protobuf.gradle.plugin
 
-import io.spine.tools.gradle.PluginId
-import io.spine.tools.proto.fs.Directory
+import io.spine.tools.gradle.testing.Gradle
+import io.spine.tools.gradle.testing.under
+import java.io.File
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.io.TempDir
 
 /**
- * A factory of Protobuf-related artifact specs.
+ * The abstract base for test suites of the plugins configuring Protobuf.
  */
-public object ProtobufDependencies {
+abstract class ProtobufPluginTest {
 
-    /** The ID of the Protobuf Gradle plugin. */
-    @JvmField
-    public val gradlePlugin: PluginId = PluginId("com.google.protobuf")
+    protected val File.protoDir: File get() = File(this, "src/main/proto")
+    protected val File.generatedJava: File get() = File(this, "generated/main/java")
 
-    /** The name of the `SourceSet` extension installed by the Protobuf Gradle plugin. */
-    @JvmField
-    public val sourceSetExtensionName: String = Directory.rootName()
+    protected abstract val group: String
+    protected abstract val version: String
+
+    protected lateinit var projectDir: File
+
+    protected val protoDir: File get() = projectDir.protoDir
+    protected val generatedJava: File get() = projectDir.generatedJava
+    protected val buildGeneratedJava: File get() =
+        projectDir.resolve("build/generated/sources/proto/main/java")
+
+    @BeforeEach
+    fun setupProjectDirectory(@TempDir projectDir: File) {
+        this.projectDir = projectDir
+        Gradle.settingsFile.under(projectDir).writeText("")
+        protoDir.mkdirs()
+    }
 }

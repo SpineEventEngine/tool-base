@@ -26,8 +26,11 @@
 
 package io.spine.tools.gradle.jvm.plugin
 
+import io.spine.tools.code.SourceSetName.Companion.main
 import io.spine.tools.gradle.jvm.plugin.ArtifactMetaExtension.Companion.NAME
 import io.spine.tools.gradle.jvm.plugin.WriteArtifactMeta.Companion.TASK_NAME
+import io.spine.tools.gradle.task.JavaTaskName.Companion.processResources
+import io.spine.tools.gradle.task.JavaTaskName.Companion.sourcesJar
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginExtension
@@ -156,19 +159,26 @@ public class ArtifactMetaPlugin : Plugin<Project> {
             task.outputDirectory.convention(outputDir)
         }
 
-        tasks.named("processResources").configure { it.dependsOn(task) }
+        tasks.named(processResources.value()).configure {
+            it.dependsOn(task)
+        }
         afterEvaluate {
-            tasks.findByName("sourcesJar")?.dependsOn(task)
+            tasks.findByName(sourcesJar.value())?.dependsOn(task)
         }
 
         // Add the output directory to the resources
         extensions.getByType<JavaPluginExtension>()
-            .sourceSets.getByName("main")
+            .sourceSets.getByName(main.value)
             .resources
             .srcDir(outputDir)
     }
 
     internal companion object {
+
+        /**
+         * The ID of this Gradle plugin.
+         */
+        const val id = "io.spine.artifact-meta"
 
         /**
          * The name of the directory under the project `build` where

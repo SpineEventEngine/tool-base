@@ -1,11 +1,11 @@
 /*
- * Copyright 2024, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -24,21 +24,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "tool-base"
+@file:JvmName("Tasks")
 
-include(
-    "classic-codegen",
-    "gradle-plugin-api",
-    "gradle-plugin-api-test-fixtures",
-    "gradle-root-plugin",
-    "intellij-platform",
-    "intellij-platform-java",
-    "jvm-tool-plugins",
-    "jvm-tools",
-    "plugin-base",
-    "plugin-testlib",
-    "protobuf-setup-plugins",
-    "psi",
-    "psi-java",
-    "tool-base",
-)
+package io.spine.tools.protobuf.gradle
+
+import com.google.protobuf.gradle.GenerateProtoTask
+import io.spine.tools.code.SourceSetName
+import io.spine.tools.gradle.named
+import java.io.File
+
+/**
+ * Obtains the descriptor set file associated with this task.
+ */
+public val GenerateProtoTask.descriptorSetFile: File
+    get() = project.descriptorSetFile(sourceSet.named)
+
+/**
+ * Obtains the name of the source set to which this task belongs.
+ */
+public val GenerateProtoTask.sourceSetName: SourceSetName
+    get() = sourceSet.named

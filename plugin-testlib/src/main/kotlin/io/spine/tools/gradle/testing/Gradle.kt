@@ -28,6 +28,7 @@ package io.spine.tools.gradle.testing
 
 import io.spine.tools.gradle.task.TaskName
 import java.io.File
+import java.io.Writer
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 
@@ -63,7 +64,6 @@ public fun String.under(dir: File): File = File(dir, this)
  * Runs a Gradle build for the project created in the [given directory][projectDir]
  * using the given [tasks].
  * @param projectDir The directory containing the Gradle project to build.
- * @param arguments The list of command line arguments to pass to Gradle.
  * @param tasks The tasks to execute.
  * @return the result of the build.
  * @see GradleProject
@@ -79,6 +79,8 @@ public fun runGradleBuild(projectDir: File, vararg tasks: TaskName): BuildResult
  * @param projectDir The directory containing the Gradle project to build.
  * @param arguments The list of command line arguments to pass to Gradle.
  * @param debug Whether to run Gradle in debug mode.
+ * @param stdOutput The writer to [redirect][GradleRunner.forwardStdOutput] the standard output.
+ * @param stdError The writer to [redirect][GradleRunner.forwardStdError] the standard error output.
  * @return the result of the build.
  * @see GradleProject
  */
@@ -86,11 +88,19 @@ public fun runGradleBuild(
     projectDir: File,
     arguments: List<String>,
     debug: Boolean = false,
+    stdOutput: Writer? = null,
+    stdError: Writer? = null
 ): BuildResult {
     val runner = GradleRunner.create()
         .withProjectDir(projectDir)
         .withPluginClasspath()
         .withArguments(arguments)
+    stdOutput?.let {
+        runner.forwardStdOutput(it)
+    }
+    stdError?.let {
+        runner.forwardStdError(it)
+    }
     if (debug) {
         runner.withDebug(true)
     }    

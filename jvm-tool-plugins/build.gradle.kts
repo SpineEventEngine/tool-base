@@ -50,7 +50,7 @@ publishing.publications.withType<MavenPublication>().configureEach {
     when (name) {
         "fatJar" -> {
             // Avoid the conflict with the `pluginMaven` publication.
-            artifactId = "jvm-tool-all-plugins"
+            artifactId = "jvm-tool-plugins-all"
         }
     }
 }
@@ -92,6 +92,7 @@ dependencies {
     compileOnlyApi(Kotlin.GradlePlugin.api)
     compileOnly(gradleKotlinDsl())
     api(project(":jvm-tools"))
+    implementation(project(":plugin-base"))?.because("We need `JavaTaskName` API.")
 
     testImplementation(project(":plugin-testlib"))
 }
