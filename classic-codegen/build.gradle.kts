@@ -28,11 +28,12 @@ import io.spine.dependency.lib.JavaPoet
 import io.spine.dependency.lib.Protobuf
 import io.spine.dependency.lib.Roaster
 import io.spine.dependency.local.Base
-import io.spine.gradle.protobuf.setup
 
 plugins {
     module
     protobuf
+    id("io.spine.descriptor-set-file")
+    id("io.spine.generated-sources")
 }
 
 dependencies {
@@ -45,11 +46,6 @@ dependencies {
 protobuf {
     protoc {
         artifact = Protobuf.compiler
-    }
-
-    generateProtoTasks.all().configureEach {
-        builtins.maybeCreate("kotlin")
-        setup()
     }
 }
 

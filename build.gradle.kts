@@ -53,6 +53,8 @@ buildscript {
     dependencies {
         classpath(io.spine.dependency.local.ToolBase.jvmToolPlugins)
             ?.because("We need `artifactMeta` in `protobuf-tool-plugins`.")
+        classpath(io.spine.dependency.local.ToolBase.protobufSetupPlugins)
+            ?.because("We compile Protobuf code in the `tool-base` and `classic-codegen` modules.")
     }
 }
 
