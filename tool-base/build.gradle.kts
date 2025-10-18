@@ -32,12 +32,13 @@ import io.spine.dependency.lib.GrpcKotlin
 import io.spine.dependency.lib.Protobuf
 import io.spine.dependency.local.Base
 import io.spine.dependency.local.Logging
-import io.spine.gradle.protobuf.setup
 
 plugins {
     module
     `java-test-fixtures`
     protobuf
+    id("io.spine.descriptor-set-file")
+    id("io.spine.generated-sources")
 }
 
 configurations {
@@ -93,7 +94,6 @@ protobuf {
             id(Grpc.ProtocPlugin.id)
             id(GrpcKotlin.ProtocPlugin.id)
         }
-        setup()
     }
 }
 
