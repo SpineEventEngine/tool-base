@@ -139,7 +139,7 @@ private fun Project.findMavenPublicationArtifactId(): String? {
 
         null
     } catch (_: Throwable) {
-        // Be conservative: if anything goes wrong, fall back to the project name.
+        // If anything goes wrong, we could not find a Maven publication.
         null
     }
 }
