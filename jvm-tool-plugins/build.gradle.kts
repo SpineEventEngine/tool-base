@@ -50,7 +50,7 @@ publishing.publications.withType<MavenPublication>().configureEach {
     when (name) {
         "fatJar" -> {
             // Avoid the conflict with the `pluginMaven` publication.
-            artifactId = "jvm-tool-all-plugins"
+            artifactId = "jvm-tool-plugins-all"
         }
     }
 }

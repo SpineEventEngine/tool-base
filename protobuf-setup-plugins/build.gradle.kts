@@ -110,7 +110,7 @@ publishing.publications.withType<MavenPublication>().configureEach {
     when (name) {
         "fatJar" -> {
             // Avoid the conflict with the `pluginMaven` publication.
-            artifactId = "protobuf-setup-all-plugins"
+            artifactId = "protobuf-setup-plugins-all"
         }
     }
 }
