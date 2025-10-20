@@ -32,16 +32,13 @@ import com.google.protobuf.gradle.ProtobufExtension
 import io.spine.code.proto.FileDescriptors.DESC_EXTENSION
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.fs.DescriptorsDir
-import io.spine.tools.fs.DirectoryName
 import io.spine.tools.gradle.project.artifact
 import io.spine.tools.gradle.project.sourceSet
 import io.spine.tools.java.fs.DefaultJavaPaths
 import io.spine.tools.meta.MavenArtifact
 import io.spine.tools.protobuf.gradle.ProtobufDependencies.sourceSetExtensionName
-import io.spine.tools.resolve
 import java.io.File
 import java.nio.file.Path
-import kotlin.io.path.Path
 import org.gradle.api.Project
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.tasks.SourceSet
@@ -51,31 +48,6 @@ import org.gradle.api.tasks.SourceSet
  */
 public val Project.protobufExtension: ProtobufExtension?
     get() = extensions.findByType(ProtobufExtension::class.java)
-
-/**
- * Obtains the directory where the Protobuf Gradle Plugin should place the generated code.
- */
-public val Project.generatedSourceProtoDir: Path
-    get() {
-        val legacyPath = layout.buildDirectory.dir("generated/source/proto").get().asFile.toPath()
-        protobufExtension?.let {
-            return try {
-                it.generatedFilesBaseDir.let { Path(it) }
-            } catch (_: Throwable) {
-                // Probably we're running on an older version of the Protobuf Gradle Plugin
-                // which has `package-access` for the `getGeneratedFilesDir()` method.
-                legacyPath
-            }
-        }
-        return legacyPath
-    }
-
-/**
- * Obtains the path to the directory which will be used for placing files generated
- * from proto definitions.
- */
-public val Project.generatedDir: Path
-    get() = projectDir.resolve(DirectoryName.generated).toPath()
 
 /**
  * Attempts to find a source directory set named `proto` in the given source set.
@@ -111,25 +83,6 @@ public fun Project.descriptorSetFile(ssn: SourceSetName): File {
  */
 private fun MavenArtifact.descriptorSetFile(): File =
     File(fileSafeId() + DESC_EXTENSION)
-
-/**
- * Obtains the directory containing generated Java source code for the specified source set.
- */
-public fun Project.generatedJavaDir(ssn: SourceSetName): Path =
-    generated(ssn).resolve(DirectoryName.java)
-
-/**
- * Obtains the directory with the generated gRPC code for the specified source set.
- */
-public fun Project.generatedGrpcDir(ssn: SourceSetName): Path =
-    generated(ssn).resolve(DirectoryName.grpc)
-
-/**
- * Obtains the path to the source set under `$projectDir/generated`.
- */
-public fun Project.generated(ssn: SourceSetName): Path {
-    return generatedDir.resolve(ssn.value)
-}
 
 /**
  * Obtains the path to this file resolved under the passed directory.

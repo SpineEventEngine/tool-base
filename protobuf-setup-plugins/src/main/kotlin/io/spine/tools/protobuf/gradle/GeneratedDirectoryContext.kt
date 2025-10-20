@@ -24,4 +24,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.365")
+package io.spine.tools.protobuf.gradle
+
+import java.nio.file.Path
+import org.gradle.api.Project
+import org.gradle.api.tasks.SourceSet
+
+public interface GeneratedDirectoryContext {
+
+    public fun generatedDir(project: Project, sourceSet: SourceSet, language: String = ""): Path
+}
