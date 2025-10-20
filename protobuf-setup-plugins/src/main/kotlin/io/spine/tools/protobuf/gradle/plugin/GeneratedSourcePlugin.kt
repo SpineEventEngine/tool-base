@@ -89,10 +89,7 @@ public class GeneratedSourcePlugin : ProtobufSetupPlugin(), GeneratedDirectoryCo
         language: String
     ): Path {
         val generatedDir = project.projectDir.resolve(DirectoryName.generated).toPath()
-        return if (language.isBlank())
-            generatedDir.resolve("${sourceSet.name}")
-        else
-            generatedDir.resolve("${sourceSet.name}/$language")
+        return generatedDir.resolve("${sourceSet.name}/$language")
     }
 }
 
