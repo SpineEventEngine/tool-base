@@ -39,7 +39,6 @@ import io.spine.tools.meta.MavenArtifact
 import io.spine.tools.protobuf.gradle.ProtobufDependencies.sourceSetExtensionName
 import java.io.File
 import java.nio.file.Path
-import kotlin.io.path.Path
 import org.gradle.api.Project
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.tasks.SourceSet
@@ -49,27 +48,6 @@ import org.gradle.api.tasks.SourceSet
  */
 public val Project.protobufExtension: ProtobufExtension?
     get() = extensions.findByType(ProtobufExtension::class.java)
-
-/**
- * Obtains the directory where the Protobuf Gradle Plugin should place the generated code.
- */
-public val Project.generatedSourceProtoDir: Path
-    get() {
-        val legacyPath = layout.buildDirectory.dir(
-            // See `com/google/protobuf/gradle/ProtobufExtension.groovy` for this constant.
-            "generated/sources/proto"
-        ).get().asFile.toPath()
-        protobufExtension?.let {
-            return try {
-                it.generatedFilesBaseDir.let { Path(it) }
-            } catch (_: Throwable) {
-                // Probably we're running on an older version of the Protobuf Gradle Plugin
-                // which has `package-access` for the `getGeneratedFilesDir()` method.
-                legacyPath
-            }
-        }
-        return legacyPath
-    }
 
 /**
  * Attempts to find a source directory set named `proto` in the given source set.
