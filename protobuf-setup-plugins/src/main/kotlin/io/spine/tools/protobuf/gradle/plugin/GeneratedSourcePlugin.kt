@@ -28,13 +28,17 @@ package io.spine.tools.protobuf.gradle.plugin
 
 import com.google.protobuf.gradle.GenerateProtoTask
 import io.spine.tools.code.SourceSetName
+import io.spine.tools.gradle.project.hasJava
+import io.spine.tools.gradle.project.hasKotlin
+import io.spine.tools.gradle.task.findKotlinDirectorySet
 import io.spine.tools.protobuf.gradle.generated
+import io.spine.tools.protobuf.gradle.plugin.GeneratedSubdir.GRPC
+import io.spine.tools.protobuf.gradle.plugin.GeneratedSubdir.JAVA
+import io.spine.tools.protobuf.gradle.plugin.GeneratedSubdir.KOTLIN
 import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.createDirectories
 import org.gradle.api.file.SourceDirectorySet
-import org.gradle.api.plugins.ExtensionAware
-import org.gradle.api.tasks.SourceSet
 import org.gradle.plugins.ide.idea.GenerateIdeaModule
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
@@ -64,7 +68,7 @@ public class GeneratedSourcePlugin : ProtobufSetupPlugin() {
 
     override fun setup(task: GenerateProtoTask): Unit = with(task) {
         builtins.maybeCreate("kotlin")
-        excludeProtocOutput()
+        configureSourceSetDirs()
         doLast {
             copyGeneratedFiles()
         }
@@ -96,37 +100,66 @@ private fun GenerateProtoTask.copyGeneratedFiles() {
 }
 
 /**
+ * The names of the subdirectories where the Compiler places generated files.
+ */
+private object GeneratedSubdir {
+    const val JAVA = "java"
+    const val KOTLIN = "kotlin"
+    const val GRPC = "grpc"
+}
+
+/**
  * Exclude directories produced under `$buildDir/generated/(source|sources)/proto` from
  * both Java and Kotlin source sets and replace them with `$projectDir/generated/...`.
  */
-private fun GenerateProtoTask.excludeProtocOutput() {
+private fun GenerateProtoTask.configureSourceSetDirs() {
+    val project = project
     val protocOutputDir = File(outputBaseDir).parentFile
 
-    fun filterFor(directorySet: SourceDirectorySet) {
-        val newSourceDirectories = directorySet.sourceDirectories
+    /** Filters out directories belonging to `build/generated/source/proto`. */
+    fun excludeFor(lang: SourceDirectorySet) {
+        val newSourceDirectories = lang.sourceDirectories
             .filter { !it.residesIn(protocOutputDir) }
             .toSet()
-        directorySet.setSrcDirs(listOf<String>())
-        directorySet.srcDirs(newSourceDirectories)
+
+        // Clear the source directories of the Java source set.
+        // This trick was needed when building the `base` module of Spine.
+        // Otherwise, the `java` plugin would complain about duplicate source files.
+        lang.setSrcDirs(listOf<String>())
+
+        // Add the filtered directories back to the Java source set.
+        lang.srcDirs(newSourceDirectories)
     }
 
-    val java: SourceDirectorySet = sourceSet.java
-    filterFor(java)
-    java.srcDir(generatedDir("java"))
+    val sourceSet = sourceSet
 
-    val kotlin = sourceSet.kotlinOrNull
-    if (kotlin != null) {
-        filterFor(kotlin)
-        kotlin.srcDir(generatedDir("kotlin"))
+    if (project.hasJava()) {
+        val java = sourceSet.java
+        excludeFor(java)
+
+        java.srcDir(generatedDir(JAVA))
+
+        // Add the `grpc` directory unconditionally.
+        // We may not have all the `protoc` plugins configured for the task at this time.
+        // So, we cannot check if the `grpc` plugin is enabled.
+        // It is safe to add the directory anyway, because `srcDir()` does not require
+        // the directory to exist.
+        java.srcDir(generatedDir(GRPC))
+    }
+
+    fun SourceDirectorySet.setup() {
+        excludeFor(this@setup)
+        srcDirs(generatedDir(KOTLIN))
+    }
+
+    if (project.hasKotlin()) {
+        val kotlinDirectorySet = sourceSet.findKotlinDirectorySet()
+        kotlinDirectorySet?.setup()
+            ?: project.afterEvaluate {
+                sourceSet.findKotlinDirectorySet()?.setup()
+            }
     }
 }
-
-private val SourceSet.kotlinOrNull: SourceDirectorySet?
-    get() = try {
-        (this as ExtensionAware).extensions.findByName("kotlin") as SourceDirectorySet?
-    } catch (_: Throwable) {
-        null
-    }
 
 private fun File.residesIn(directory: File): Boolean =
     canonicalFile.startsWith(directory.absolutePath)
