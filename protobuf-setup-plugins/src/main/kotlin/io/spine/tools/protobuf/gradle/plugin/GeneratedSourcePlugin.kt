@@ -94,13 +94,11 @@ public class GeneratedSourcePlugin : ProtobufSetupPlugin(), GeneratedDirectoryCo
 }
 
 /**
- * Obtains `$projectDir/generated/<sourceSet>[/<language>]` and creates it, if
- * the directory does not exist yet.
+ * Obtains `$projectDir/generated/<sourceSet>[/<language>].
  */
 context(context: GeneratedDirectoryContext)
 private fun GenerateProtoTask.generatedDir(language: String = ""): File {
     val dir = context.generatedDir(project, sourceSet, language)
-    dir.createDirectories()
     return dir.toFile()
 }
 
