@@ -44,7 +44,7 @@ public data class MavenArtifact(
     public val version: String,
     public val classifier: String? = null,
     public val extension: String? = null
-) : Dependency {
+) : Dependency, Comparable<MavenArtifact> {
 
     init {
         ::group.requireNonEmpty()
@@ -59,7 +59,8 @@ public data class MavenArtifact(
         get() = Module(group, name)
 
     /**
-     * The Maven coordinates of this artifact in the format "group:name:version[:classifier][@extension]".
+     * The Maven coordinates of this artifact in the format
+     * "group:name:version[:classifier][@extension]".
      */
     public val coordinates: String
         get() = buildId(COLON, AT)
@@ -171,4 +172,6 @@ public data class MavenArtifact(
      * `maven:<group>:<artifact>:<version>`.
      */
     override fun toString(): String = "$PREFIX$coordinates"
+
+    override fun compareTo(other: MavenArtifact): Int = coordinates.compareTo(other.coordinates)
 }
