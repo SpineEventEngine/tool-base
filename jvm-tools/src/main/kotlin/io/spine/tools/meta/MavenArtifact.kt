@@ -173,5 +173,8 @@ public data class MavenArtifact(
      */
     override fun toString(): String = "$PREFIX$coordinates"
 
+    /**
+     * Compares two artifacts by their [coordinates].
+     */
     override fun compareTo(other: MavenArtifact): Int = coordinates.compareTo(other.coordinates)
 }
