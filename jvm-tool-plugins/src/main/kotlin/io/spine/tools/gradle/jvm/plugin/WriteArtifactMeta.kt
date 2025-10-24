@@ -112,13 +112,16 @@ public abstract class WriteArtifactMeta : DefaultTask() {
         // Add explicitly declared dependencies from the extension.
         val explicitNotations = extension.explicitDependencies.orNull ?: emptySet()
         explicitNotations.asSequence()
-            .mapNotNull { MavenArtifact.withCoordinates(it) }
+            .map { MavenArtifact.withCoordinates(it) }
             .forEach { discovered.add(it) }
 
-        val list = discovered
-            .toList()
-            .sortedWith(compareBy<MavenArtifact> { it.group }.thenBy { it.name })
-        return Dependencies(list)
+        // Deduplicate by module, keeping the artifact with the highest sorting order.
+        val deduplicated = discovered
+            .groupBy { it.module }
+            .values
+            .mapNotNull { artifacts -> artifacts.maxOrNull() }
+            .sorted()
+        return Dependencies(deduplicated)
     }
 }
 
@@ -134,7 +137,6 @@ public abstract class WriteArtifactMeta : DefaultTask() {
 @Suppress("ReturnCount")
 private fun Dependency.toMavenArtifact(): MavenArtifact? {
     val group = this.group ?: return null
-    val name = this.name ?: return null
     val version = this.version ?: return null
-    return MavenArtifact(group, name, version)
+    return MavenArtifact(group, this.name, version)
 }
