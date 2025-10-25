@@ -120,7 +120,7 @@ public abstract class WriteArtifactMeta : DefaultTask() {
             .groupBy { it.module }
             .values
             .mapNotNull { artifacts -> artifacts.maxWithOrNull(mavenArtifactComparator) }
-            .sorted()
+            .sortedWith(mavenArtifactComparator)
         return Dependencies(deduplicated)
     }
 }
