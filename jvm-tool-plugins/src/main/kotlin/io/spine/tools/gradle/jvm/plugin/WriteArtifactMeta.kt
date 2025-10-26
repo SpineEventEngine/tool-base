@@ -115,15 +115,32 @@ public abstract class WriteArtifactMeta : DefaultTask() {
             .map { MavenArtifact.withCoordinates(it) }
             .forEach { discovered.add(it) }
 
-        // Deduplicate by module, keeping the artifact with the highest sorting order.
+        // Deduplicate by module keeping the artifact with the highest sorting order.
         val deduplicated = discovered
             .groupBy { it.module }
             .values
-            .mapNotNull { artifacts -> artifacts.maxOrNull() }
-            .sorted()
+            .mapNotNull { artifacts -> artifacts.maxWithOrNull(mavenArtifactComparator) }
+            .sortedWith(mavenArtifactComparator)
         return Dependencies(deduplicated)
     }
 }
+
+/**
+ * Compares [MavenArtifact] by its attributes.
+ *
+ * Even though [MavenArtifact] is [Comparable] in the latest versions,
+ * the transition to the newer code faces the older, non-`Comparable` class
+ * in a build classpath.
+ *
+ * This comparator needs to be removed once CoreJvm Compiler migrates to
+ * the build which uses CoreJvm Compiler based on the `Comparable` `MavenArtifact.
+ */
+private val mavenArtifactComparator: Comparator<MavenArtifact> =
+    compareBy<MavenArtifact> { it.group }
+        .thenBy { it.name }
+        .thenBy { it.version }
+        .thenBy { it.classifier }
+        .thenBy { it.extension }
 
 /**
  * Creates a [MavenArtifact] from a Gradle [Dependency].
