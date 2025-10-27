@@ -125,7 +125,7 @@ public data class Version(
          * the manifest [loaded][KManifest.Companion.load] for the given class.
          */
         public fun fromManifestOf(cls: Class<*>): Version {
-            val manifest = KManifest.Companion.load(cls)
+            val manifest = KManifest.load(cls)
             val implVersion = manifest.implementationVersion
             check(implVersion != null) {
                 "Unable to obtain the version:" +
