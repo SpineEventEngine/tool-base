@@ -27,6 +27,7 @@
 package io.spine.tools.version
 
 import io.spine.tools.jvm.jar.KManifest
+import io.spine.tools.meta.ArtifactMeta
 import io.spine.tools.version.Version.Companion.SEPARATOR
 import io.spine.tools.version.Version.Companion.SNAPSHOT
 import java.util.jar.Attributes.Name.IMPLEMENTATION_VERSION
@@ -125,7 +126,7 @@ public data class Version(
          * the manifest [loaded][KManifest.Companion.load] for the given class.
          */
         public fun fromManifestOf(cls: Class<*>): Version {
-            val manifest = KManifest.Companion.load(cls)
+            val manifest = KManifest.load(cls)
             val implVersion = manifest.implementationVersion
             check(implVersion != null) {
                 "Unable to obtain the version:" +
@@ -133,6 +134,14 @@ public data class Version(
             }
             val version = parse(implVersion)
             return version
+        }
+
+        /**
+         * Parses a version from the given artifact metadata.
+         */
+        public fun fromArtifactMeta(meta: ArtifactMeta): Version {
+            val version = meta.version
+            return parse(version)
         }
 
         /**
