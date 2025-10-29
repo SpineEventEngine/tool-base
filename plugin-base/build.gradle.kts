@@ -27,7 +27,6 @@
 import io.spine.dependency.lib.Kotlin
 import io.spine.dependency.lib.Protobuf
 import io.spine.dependency.local.Logging
-import io.spine.gradle.WriteVersions
 
 plugins {
     module
@@ -48,10 +47,4 @@ dependencies {
 
 kotlin {
     explicitApi()
-}
-
-tasks {
-    withType<WriteVersions>().configureEach {
-        version(Protobuf.compiler)
-    }
 }
