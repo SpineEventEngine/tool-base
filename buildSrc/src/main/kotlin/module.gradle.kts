@@ -30,13 +30,12 @@ import io.spine.dependency.build.ErrorProne
 import io.spine.dependency.build.FindBugs
 import io.spine.dependency.lib.GrpcKotlin
 import io.spine.dependency.lib.Kotlin
-import io.spine.dependency.local.ArtifactVersion
 import io.spine.dependency.local.Base
 import io.spine.dependency.local.Logging
 import io.spine.dependency.local.Reflect
+import io.spine.dependency.local.ToolBase
 import io.spine.dependency.local.Validation
 import io.spine.dependency.test.JUnit
-import io.spine.gradle.VersionWriter
 import io.spine.gradle.checkstyle.CheckStyleConfig
 import io.spine.gradle.github.pages.updateGitHubPages
 import io.spine.gradle.javac.configureErrorProne
@@ -61,7 +60,6 @@ plugins {
 }
 apply<BomsPlugin>()
 apply<IncrementGuard>()
-apply<VersionWriter>()
 
 CheckStyleConfig.applyTo(project)
 JavadocConfig.applyTo(project)
@@ -178,7 +176,7 @@ fun Module.configureDocTasks() {
 }
 
 fun Module.configureGitHubPages() {
-    updateGitHubPages(ArtifactVersion.javadocTools) {
+    updateGitHubPages(ToolBase.JavadocFilter.version) {
         allowInternalJavadoc.set(true)
         rootFolder.set(rootDir)
     }
