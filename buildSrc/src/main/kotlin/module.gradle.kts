@@ -43,7 +43,6 @@ import io.spine.gradle.javadoc.JavadocConfig
 import io.spine.gradle.kotlin.setFreeCompilerArgs
 import io.spine.gradle.publish.IncrementGuard
 import io.spine.gradle.report.license.LicenseReporter
-import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
     `java-library`
