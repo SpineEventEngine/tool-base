@@ -33,7 +33,6 @@ import io.spine.dependency.lib.Kotlin
 import io.spine.dependency.local.Base
 import io.spine.dependency.local.Logging
 import io.spine.dependency.local.Reflect
-import io.spine.dependency.local.ToolBase
 import io.spine.dependency.local.Validation
 import io.spine.dependency.test.JUnit
 import io.spine.gradle.checkstyle.CheckStyleConfig
@@ -44,7 +43,6 @@ import io.spine.gradle.javadoc.JavadocConfig
 import io.spine.gradle.kotlin.setFreeCompilerArgs
 import io.spine.gradle.publish.IncrementGuard
 import io.spine.gradle.report.license.LicenseReporter
-import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
     `java-library`
@@ -54,7 +52,7 @@ plugins {
     id("pmd-settings")
     id("detekt-code-analysis")
     id("write-manifest")
-    id("dokka-for-kotlin")
+    id("dokka-setup")
     `project-report`
     jacoco
 }
@@ -76,7 +74,6 @@ project.run {
 
     applyGeneratedDirectories(generatedDir)
     configureTests()
-    configureDocTasks()
 
     configureGitHubPages()
     configureTaskDependencies()
@@ -154,30 +151,8 @@ fun Module.configureTests() {
     }
 }
 
-fun Module.configureDocTasks() {
-    val dokkaJavadoc by tasks.getting { this as DokkaTask
-        outputDirectory.set(layout.buildDirectory.dir("dokka/javadoc"))
-    }
-
-    tasks.register("javadocJar", Jar::class) {
-        from(dokkaJavadoc)
-        archiveClassifier.set("javadoc")
-        dependsOn(dokkaJavadoc)
-    }
-
-    afterEvaluate {
-        dokka {
-            configureForKotlin(
-                project,
-                DocumentationSettings.SourceLink.url
-            )
-        }
-    }
-}
-
 fun Module.configureGitHubPages() {
-    updateGitHubPages(ToolBase.JavadocFilter.version) {
-        allowInternalJavadoc.set(true)
+    updateGitHubPages {
         rootFolder.set(rootDir)
     }
 }

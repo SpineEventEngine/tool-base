@@ -26,30 +26,9 @@
 
 import io.spine.dependency.build.ErrorProne
 import io.spine.dependency.build.JSpecify
-import io.spine.gradle.javadoc.JavadocConfig
-import io.spine.gradle.kotlin.setFreeCompilerArgs
-import io.spine.gradle.report.license.LicenseReporter
-
-/*
- * This module does not apply the `module` script plugin to minimize the dependencies.
- */
 
 plugins {
-    java
-    kotlin("jvm")
-    id("module-testing")
-    id("detekt-code-analysis")
-    id("write-manifest")
-}
-JavadocConfig.applyTo(project)
-LicenseReporter.generateReportIn(project)
-
-kotlin {
-    explicitApi()
-    compilerOptions {
-        jvmTarget.set(BuildSettings.jvmTarget)
-        setFreeCompilerArgs()
-    }
+    module
 }
 
 dependencies {
