@@ -26,6 +26,7 @@
 
 package io.spine.tools.gradle.root
 
+import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
@@ -36,6 +37,7 @@ import io.spine.tools.gradle.testing.runGradleBuild
 import io.spine.tools.gradle.testing.under
 import java.io.File
 import org.gradle.api.Project
+import org.gradle.api.artifacts.repositories.MavenArtifactRepository
 import org.gradle.testfixtures.ProjectBuilder
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.BeforeEach
@@ -74,6 +76,21 @@ internal class RootPluginSpec {
                 apply(pluginClass)
             }
         }
+    }
+
+    @Test
+    fun `apply standard repositories`() {
+        project.pluginManager.apply(pluginClass)
+
+        val repositories = project.repositories.map { it.name }
+        repositories shouldContain "MavenLocal"
+        repositories shouldContain "MavenRepo"
+
+        val mavenRepositories = project.repositories.withType(MavenArtifactRepository::class.java)
+        val urls = mavenRepositories.map { it.url.toString() }
+
+        urls shouldContain "https://europe-maven.pkg.dev/spine-event-engine/releases"
+        urls shouldContain "https://europe-maven.pkg.dev/spine-event-engine/snapshots"
     }
 
     @Test
