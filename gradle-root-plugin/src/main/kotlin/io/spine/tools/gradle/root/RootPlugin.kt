@@ -27,6 +27,7 @@
 package io.spine.tools.gradle.root
 
 import io.spine.tools.gradle.DslSpec
+import io.spine.tools.gradle.applyStandard
 import io.spine.tools.gradle.project.ProjectPlugin
 import io.spine.tools.gradle.root.RootExtension.Companion.NAME
 import org.gradle.api.Project
@@ -58,11 +59,14 @@ public class RootPlugin :
     }
 
     /**
-     * Applies the plugin to the given project by forcing creation of the [extension].
+     * Applies the plugin to the given [project] by forcing creation of the [extension].
+     *
+     * Also applies repositories [standard for Spine SDK][applyStandard].
      */
     override fun apply(project: Project) {
         super.apply(project)
         createExtension()
+        project.repositories.applyStandard()
         check(extension != null) {
             "The extension of the `${this::class.simpleName}` has not been created."
         }
