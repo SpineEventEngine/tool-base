@@ -39,6 +39,8 @@ import org.gradle.api.plugins.ExtensionAware
  *
  * The extension is used by Gradle plugins of libraries that extend
  * the [root extension][RootExtension] with custom configuration DSL.
+ *
+ * The plugin also applies repositories [standard for Spine SDK][applyStandard] to the project.
  */
 public class RootPlugin :
     ProjectPlugin<RootExtension>(DslSpec(NAME, RootExtension::class)) {
