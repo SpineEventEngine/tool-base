@@ -108,6 +108,12 @@ private fun Project.tryApplyStandardRepositories() {
     }
 }
 
+/**
+ * Obtains the `settings` instance of the project.
+ *
+ * This is a hackaround from [this GitHub issue](https://github.com/gradle/gradle/issues/27260)
+ * which requests the `settings` to be available via public Gradle API.
+ */
 private val Project.settings: SettingsInternal?
     get() = try {
         (project.gradle as GradleInternal).settings
