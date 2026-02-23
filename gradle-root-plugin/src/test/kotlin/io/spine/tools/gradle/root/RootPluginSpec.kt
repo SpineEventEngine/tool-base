@@ -26,9 +26,11 @@
 
 package io.spine.tools.gradle.root
 
+import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotContain
 import io.spine.tools.gradle.task.BaseTaskName
 import io.spine.tools.gradle.testing.Gradle
 import io.spine.tools.gradle.testing.Gradle.BUILD_SUCCESSFUL
@@ -36,6 +38,7 @@ import io.spine.tools.gradle.testing.runGradleBuild
 import io.spine.tools.gradle.testing.under
 import java.io.File
 import org.gradle.api.Project
+import org.gradle.api.artifacts.repositories.MavenArtifactRepository
 import org.gradle.testfixtures.ProjectBuilder
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.BeforeEach
@@ -74,6 +77,92 @@ internal class RootPluginSpec {
                 apply(pluginClass)
             }
         }
+    }
+
+    @Test
+    fun `apply standard repositories`() {
+        project.pluginManager.apply(pluginClass)
+
+        val repositories = project.repositories.map { it.name }
+        repositories shouldContain "MavenLocal"
+        repositories shouldContain "MavenRepo"
+
+        val mavenRepositories = project.repositories.withType(MavenArtifactRepository::class.java)
+        val urls = mavenRepositories.map { it.url.toString() }
+
+        urls shouldContain "https://europe-maven.pkg.dev/spine-event-engine/releases"
+        urls shouldContain "https://europe-maven.pkg.dev/spine-event-engine/snapshots"
+    }
+
+    @Test
+    fun `apply repositories if 'repositoriesMode' is 'PREFER_PROJECT'`(
+        @TempDir projectDir: File
+    ) {
+        Gradle.settingsFile.under(projectDir).writeText(
+            """
+            dependencyResolutionManagement {
+                repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
+            }
+            """.trimIndent()
+        )
+        Gradle.buildFile.under(projectDir).writeText(
+            """
+            plugins {
+                id("io.spine.root")
+            }
+            
+            tasks.register("checkRepos") {
+                doLast {
+                    if (project.repositories.isEmpty()) {
+                        println("NO_REPOS")
+                    } else {
+                        project.repositories.forEach { 
+                            println("REPO: " + it.name) 
+                        }
+                    }
+                }
+            }
+            """.trimIndent()
+        )
+
+        val result = runGradleBuild(projectDir, listOf("checkRepos"))
+        result.output shouldContain "REPO: MavenLocal"
+    }
+
+    @Test
+    fun `not apply repositories if 'repositoriesMode' is other than 'PREFER_PROJECT'`(
+        @TempDir projectDir: File
+    ) {
+        Gradle.settingsFile.under(projectDir).writeText(
+            """
+            dependencyResolutionManagement {
+                repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+            }
+            """.trimIndent()
+        )
+        Gradle.buildFile.under(projectDir).writeText(
+            """
+            plugins {
+                id("io.spine.root")
+            }
+            
+            tasks.register("checkRepos") {
+                doLast {
+                    if (project.repositories.isEmpty()) {
+                        println("NO_REPOS")
+                    } else {
+                        project.repositories.forEach { 
+                            println("REPO: " + it.name) 
+                        }
+                    }
+                }
+            }
+            """.trimIndent()
+        )
+
+        val result = runGradleBuild(projectDir, listOf("checkRepos"))
+        result.output shouldContain "NO_REPOS"
+        result.output shouldNotContain "REPO: MavenLocal"
     }
 
     @Test

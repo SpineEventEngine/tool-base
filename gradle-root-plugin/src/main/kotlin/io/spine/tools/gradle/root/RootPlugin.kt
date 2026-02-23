@@ -24,13 +24,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+@file:Suppress("UnstableApiUsage") // We need to use unstable settings API.
+
 package io.spine.tools.gradle.root
 
 import io.spine.tools.gradle.DslSpec
+import io.spine.tools.gradle.applyStandard
 import io.spine.tools.gradle.project.ProjectPlugin
 import io.spine.tools.gradle.root.RootExtension.Companion.NAME
 import org.gradle.api.Project
 import org.gradle.api.file.Directory
+import org.gradle.api.initialization.resolve.RepositoriesMode
+import org.gradle.api.internal.GradleInternal
+import org.gradle.api.internal.SettingsInternal
 import org.gradle.api.plugins.ExtensionAware
 
 /**
@@ -38,6 +44,10 @@ import org.gradle.api.plugins.ExtensionAware
  *
  * The extension is used by Gradle plugins of libraries that extend
  * the [root extension][RootExtension] with custom configuration DSL.
+ *
+ * The plugin also applies repositories [standard for Spine SDK][applyStandard]
+ * to the project IFF `dependencyResolutionManagement.repositoriesMode` property set
+ * in `settings.gradle.kts` to [RepositoriesMode.PREFER_PROJECT] or assumed such.
  */
 public class RootPlugin :
     ProjectPlugin<RootExtension>(DslSpec(NAME, RootExtension::class)) {
@@ -58,11 +68,12 @@ public class RootPlugin :
     }
 
     /**
-     * Applies the plugin to the given project by forcing creation of the [extension].
+     * Applies the plugin to the given [project].
      */
     override fun apply(project: Project) {
         super.apply(project)
         createExtension()
+        project.tryApplyStandardRepositories()
         check(extension != null) {
             "The extension of the `${this::class.simpleName}` has not been created."
         }
@@ -76,3 +87,30 @@ public class RootPlugin :
         public const val ID: String = "io.spine.root"
     }
 }
+
+/**
+ * Attempts to apply repositories [standard for Spine SDK][applyStandard] to the project
+ * by inspecting the `dependencyResolutionManagement.repositoriesMode` value set
+ * in `settings.gradle.kts`.
+ *
+ * If the value set explicitly or assumed as [RepositoriesMode.PREFER_PROJECT],
+ * the repositories are applied.
+ */
+private fun Project.tryApplyStandardRepositories() {
+    val settings = project.settings
+    if (settings == null) {
+        repositories.applyStandard()
+        return
+    }
+    val mode = settings.dependencyResolutionManagement.repositoriesMode.get()
+    if (mode == RepositoriesMode.PREFER_PROJECT) {
+        repositories.applyStandard()
+    }
+}
+
+private val Project.settings: SettingsInternal?
+    get() = try {
+        (project.gradle as GradleInternal).settings
+    } catch (_: IllegalStateException) {
+        null
+    }
