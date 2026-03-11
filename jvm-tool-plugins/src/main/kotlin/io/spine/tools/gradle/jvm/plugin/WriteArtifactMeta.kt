@@ -33,6 +33,7 @@ import io.spine.tools.meta.Module
 import org.gradle.api.DefaultTask
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 
@@ -41,6 +42,7 @@ import org.gradle.api.tasks.TaskAction
  *
  * The file is created as a resource file.
  */
+@CacheableTask
 public abstract class WriteArtifactMeta : DefaultTask() {
 
     /**
