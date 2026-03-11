@@ -99,8 +99,8 @@ val RepositoryHandler.intellijReleases: MavenArtifactRepository
 val RepositoryHandler.intellijDependencies: MavenArtifactRepository
     get() = maven("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies") {
         content {
-            includeGroupByRegex("com\\.jetbrains\\.intellij.*")
-            includeGroupByRegex("org\\.jetbrains\\.intellij.*")
+            includeGroupByRegex("com\\.jetbrains.*")
+            includeGroupByRegex("org\\.jetbrains.*")
             includeGroupByRegex("com\\.intellij.*")
         }
     }
