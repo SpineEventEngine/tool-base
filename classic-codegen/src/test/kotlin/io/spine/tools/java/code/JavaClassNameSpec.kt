@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Test
 internal class JavaClassNameSpec {
 
     @Test
+    @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN") // We do need `java.lang.Object` in this test.
     fun `generated Kotlin proto DSL`() {
         val expected = Object::class.java.canonicalName
         val className = javaClassName {

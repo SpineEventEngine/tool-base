@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Test
 internal class KotlinReflectExtsSpec {
 
     @Test
+    @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN") // We do need `java.lang.String` in this test.
     fun `obtain class reference for Kotlin codegen`() {
         String::class.reference shouldBe "String"
         java.lang.String::class.reference shouldBe "String"
