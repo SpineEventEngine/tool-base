@@ -63,6 +63,6 @@ public fun execute(errorHandler: (Throwable) -> Unit = { throw it }, runnable: R
     }
     commandProcessor.executeCommand(project, withHandledErrors, null, null)
     if (caught != null) {
-        errorHandler(caught!!)
+        errorHandler(caught)
     }
 }

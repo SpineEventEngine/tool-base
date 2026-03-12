@@ -144,7 +144,7 @@ import org.jetbrains.annotations.VisibleForTesting
  */
 public object Environment : Closeable {
 
-    private val lock = Object()
+    private val lock = Any()
 
     private var _application: MockApplication? = null
     private var _project: MockProject? = null

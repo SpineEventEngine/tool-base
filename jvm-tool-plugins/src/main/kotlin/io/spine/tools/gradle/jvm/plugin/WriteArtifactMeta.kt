@@ -35,12 +35,14 @@ import org.gradle.api.artifacts.Dependency
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
+import org.gradle.work.DisableCachingByDefault
 
 /**
  * A task that writes artifact [meta-data][ArtifactMeta] of a Gradle project to a file.
  *
  * The file is created as a resource file.
  */
+@DisableCachingByDefault(because = "Dependencies or the artifact coordinates may change.")
 public abstract class WriteArtifactMeta : DefaultTask() {
 
     /**
