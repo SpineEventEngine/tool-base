@@ -139,7 +139,7 @@ import org.gradle.kotlin.dsl.register
  *
  * Notes:
  * - Explicitly declared dependencies are merged with those discovered from configurations.
- * - Duplicates are de-duplicated, and the list is sorted by the group and artifact ID.
+ * - Duplicates are deduplicated, and the list is sorted by the group and artifact ID.
  */
 public class ArtifactMetaPlugin : Plugin<Project> {
 
@@ -163,7 +163,8 @@ public class ArtifactMetaPlugin : Plugin<Project> {
             it.dependsOn(task)
         }
         afterEvaluate {
-            tasks.findByName(sourcesJar.value())?.dependsOn(task)
+            val sourcesJarTask = tasks.findByName(sourcesJar.value())
+            sourcesJarTask?.dependsOn(task)
         }
 
         // Add the output directory to the resources

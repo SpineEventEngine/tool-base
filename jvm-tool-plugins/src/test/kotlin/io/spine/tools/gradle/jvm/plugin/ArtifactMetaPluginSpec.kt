@@ -34,6 +34,8 @@ import io.kotest.matchers.string.shouldNotContain
 import io.kotest.matchers.string.shouldStartWith
 import io.spine.tools.gradle.jvm.plugin.ArtifactMetaPlugin.Companion.WORKING_DIR
 import io.spine.tools.gradle.task.BaseTaskName
+import io.spine.tools.gradle.task.JavaTaskName.Companion.processResources
+import io.spine.tools.gradle.task.JavaTaskName.Companion.sourcesJar
 import io.spine.tools.gradle.task.TaskName
 import io.spine.tools.gradle.testing.Gradle
 import io.spine.tools.gradle.testing.Gradle.BUILD_SUCCESSFUL
@@ -44,7 +46,9 @@ import io.spine.tools.meta.ArtifactMeta.Companion.RESOURCE_DIRECTORY
 import io.spine.tools.meta.Module
 import java.io.File
 import org.gradle.api.Project
+import org.gradle.api.internal.project.DefaultProject
 import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.testfixtures.ProjectBuilder
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.BeforeEach
@@ -76,7 +80,7 @@ class ArtifactMetaPluginSpec {
     }
 
     @Test
-    fun `register WriteDependencies task when applied`() {
+    fun `register 'WriteArtifactMeta' task when applied`() {
         project.pluginManager.apply(pluginClass)
 
         val task = project.tasks.findByName(WriteArtifactMeta.TASK_NAME)
@@ -85,12 +89,26 @@ class ArtifactMetaPluginSpec {
     }
 
     @Test
-    fun `make 'processResources' depend on the 'writeDependencies' task`() {
+    fun `make 'processResources' depend on the 'ariteArtifactMeta' task`() {
         project.pluginManager.apply(pluginClass)
 
-        val processResources = project.tasks.getByName("processResources")
+        val processResources = project.tasks.getByName(processResources.value())
         val hasDependency = processResources.dependsOn.any {
             dep -> dep.toString().contains(WriteArtifactMeta.TASK_NAME)
+        }
+
+        hasDependency shouldBe true
+    }
+
+    @Test
+    fun `make 'sourcesJar' depend on the 'ariteArtifactMeta' task`() {
+        project.pluginManager.apply(pluginClass)
+        project.extensions.findByType(JavaPluginExtension::class.java)?.withSourcesJar()
+        (project as DefaultProject).evaluate()
+
+        val sourcesJar = project.tasks.getByName(sourcesJar.value())
+        val hasDependency = sourcesJar.dependsOn.any {
+                dep -> dep.toString().contains(WriteArtifactMeta.TASK_NAME)
         }
 
         hasDependency shouldBe true
