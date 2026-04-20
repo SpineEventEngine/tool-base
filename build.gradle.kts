@@ -88,7 +88,10 @@ spinePublishing {
             gitHub("tool-base")
         )
     }
+    // This prefix does not apply to the modules of this project because they all belong
+    // to the `io.spine.tools` group, and therefore `toolArtifactPrefix` applies instead.
     artifactPrefix = ""
+    toolArtifactPrefix = "NONE"
 }
 
 allprojects {
