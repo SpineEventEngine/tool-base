@@ -119,20 +119,19 @@ public final class GradleTask {
      * {@code build(..)}. This is done to add some additional semantics to
      * such an irreversible action like this.
      */
-    @SuppressWarnings("unused")
     public static final class Builder {
         private final TaskName name;
         private final Action<Task> action;
 
-        private TaskName previousTask;
-        private TaskName previousTaskOfAllProjects;
-        private TaskName followingTask;
+        private @Nullable TaskName previousTask;
+        private @Nullable TaskName previousTaskOfAllProjects;
+        private @Nullable TaskName followingTask;
 
         private boolean allowNoDependencies;
 
         private boolean hasInputFiles = false;
         private final Set<File> inputs = new HashSet<>();
-        private Map<String, @Nullable Object> inputProperties;
+        private @Nullable Map<String, @Nullable Object> inputProperties;
         private boolean hasOutputFiles = false;
         private final Set<File> outputs = new HashSet<>();
 
@@ -193,12 +192,12 @@ public final class GradleTask {
          * <p>If a certain project does not have a task with the specified name, no action is
          * performed for that project.
          *
-         * <p>This method does not guarantee that the task will be included into a standard
+         * <p>This method does not guarantee that the task will be included in a standard
          * Gradle build.
          *
          * <p>Invocation of this method may substitute the invocation of
          * {@link #insertAfterTask} or {@link #insertBeforeTask} if it's guaranteed that at least
-         * one task with such name exists. Though the fallback is never handled and there is
+         * one task with such a name exists. Though the fallback is never handled, and there is
          * no guarantee that the task will get into the Gradle task graph.
          *
          * @param target
@@ -251,8 +250,8 @@ public final class GradleTask {
          * <p>An input property is treated in a similar way as
          * an {@linkplain #withInputFiles input file}.
          *
-         * <p>Multiple invocations of this method append new properties. If there already is
-         * a property with is such a name, the value is overridden.
+         * <p>Multiple invocations of this method append new properties.
+         * If there already is a property with such a name, the value is overridden.
          *
          * @param propertyName
          *         the name of the property
@@ -309,9 +308,8 @@ public final class GradleTask {
             log.debug("Creating task `{}` in the project `{}`.", taskName, projectName);
             TaskProvider<Task> newTask;
             try {
-                newTask = project.getTasks().register(taskName, Task.class, task -> {
-                    task.doLast(action);
-                });
+                newTask = project.getTasks()
+                                 .register(taskName, Task.class, task -> task.doLast(action));
             } catch (@SuppressWarnings("OverlyBroadCatchBlock") Exception e) {
                 log.error("Failed to create task `{}` in the project `{}`.", taskName, projectName);
                 throw new IllegalStateException(e);
@@ -356,6 +354,7 @@ public final class GradleTask {
         }
 
         private void dependTaskOnAllProjects(Task task, Project rootProject) {
+            checkNotNull(previousTaskOfAllProjects, "Previous task of all projects is not set.");
             var prevTaskName = previousTaskOfAllProjects.name();
             ProjectHierarchy.applyToAll(rootProject, project -> {
                 var existingTask = project.getTasks()
@@ -399,7 +398,7 @@ public final class GradleTask {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (this == obj) {
             return true;
         }
