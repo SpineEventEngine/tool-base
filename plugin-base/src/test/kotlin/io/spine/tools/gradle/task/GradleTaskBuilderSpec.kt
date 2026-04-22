@@ -31,6 +31,7 @@ import com.google.common.truth.Truth.assertThat
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.maps.shouldContainKey
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.spine.testing.Assertions.assertIllegalState
@@ -47,6 +48,7 @@ import org.gradle.api.Task
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 /**
@@ -160,6 +162,62 @@ internal class GradleTaskBuilderSpec {
         inputFiles.let {
             it shouldHaveSize 1
             it[0].canonicalFile shouldBe input.canonicalFile
+        }
+    }
+
+    @Nested
+    inner class `'withInputProperty'` {
+
+        @Test
+        fun `register input property on task`() {
+            GradleTask.newBuilder(preClean, NoOp.action())
+                .insertBeforeTask(BaseTaskName.clean)
+                .withInputProperty("propName", "propValue")
+                .applyNowTo(project)
+
+            val task = project.tasks.findByPath(preClean.name)
+            task shouldNotBe null
+            task!!.inputs.properties["propName"] shouldBe "propValue"
+        }
+
+        @Test
+        fun `append multiple input properties on separate calls`() {
+            GradleTask.newBuilder(preClean, NoOp.action())
+                .insertBeforeTask(BaseTaskName.clean)
+                .withInputProperty("first", "alpha")
+                .withInputProperty("second", "beta")
+                .applyNowTo(project)
+
+            val task = project.tasks.findByPath(preClean.name)
+            task shouldNotBe null
+            val properties = task!!.inputs.properties
+            properties["first"] shouldBe "alpha"
+            properties["second"] shouldBe "beta"
+        }
+
+        @Test
+        fun `override input property value when called with same name`() {
+            GradleTask.newBuilder(preClean, NoOp.action())
+                .insertBeforeTask(BaseTaskName.clean)
+                .withInputProperty("key", "original")
+                .withInputProperty("key", "overridden")
+                .applyNowTo(project)
+
+            val task = project.tasks.findByPath(preClean.name)
+            task shouldNotBe null
+            task!!.inputs.properties["key"] shouldBe "overridden"
+        }
+
+        @Test
+        fun `accept null as input property value`() {
+            GradleTask.newBuilder(preClean, NoOp.action())
+                .insertBeforeTask(BaseTaskName.clean)
+                .withInputProperty("nullProp", null)
+                .applyNowTo(project)
+
+            val task = project.tasks.findByPath(preClean.name)
+            task shouldNotBe null
+            task!!.inputs.properties shouldContainKey "nullProp"
         }
     }
 
