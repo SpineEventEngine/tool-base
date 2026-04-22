@@ -46,7 +46,7 @@ public class JavaTaskName(value: String, ssn: SourceSetName) : TaskWithSourceSet
          */
         @JvmStatic
         public fun compileJava(ssn: SourceSetName): TaskName =
-            JavaTaskName("compile${ssn.toInfix()}Java", ssn)
+            JavaTaskName("${TaskName.COMPILE_PREFIX}${ssn.toInfix()}Java", ssn)
 
         /**
          * Obtains a name of the task which marks processing of all the classes and resources

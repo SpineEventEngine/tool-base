@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package io.spine.tools.gradle.task;
 
 import io.spine.annotation.VisibleForTesting;
@@ -33,7 +34,6 @@ import io.spine.annotation.VisibleForTesting;
  * @see <a href="https://docs.gradle.org/current/userguide/base_plugin.html#sec:base_tasks">
  *         the plugin doc</a>
  */
-@SuppressWarnings("unused")
 public enum BaseTaskName implements TaskName {
 
     /**
@@ -47,14 +47,14 @@ public enum BaseTaskName implements TaskName {
     assemble,
 
     /**
-     * A lifecycle task which marks the project verification routines, such as static code analysis,
-     * executing tests, etc.
+     * A lifecycle task that marks the project verification routines,
+     * such as static code analysis, executing tests, etc.
      */
     check,
 
     /**
-     * A lifecycle task which builds everything in the project, including running tests, producing
-     * production artifacts, and generating documentation.
+     * A lifecycle task that builds everything in the project, including running tests,
+     * producing production artifacts, and generating documentation.
      */
     build,
 

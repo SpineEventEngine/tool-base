@@ -33,15 +33,9 @@ import io.spine.tools.gradle.task.TaskWithSourceSetName
 /**
  * Names of Gradle tasks defined by the Protobuf Gradle plugin.
  *
- * ### API Note
- *
- * The class is made open only to support package migration of
- * [io.spine.tools.gradle.task.ProtobufTaskName], which is deprecated in favor of
- * this one. Once the deprecated class is removed, this class should become final.
- *
  * @see <a href="https://github.com/google/protobuf-gradle-plugin">Protobuf Gradle plugin</a>
  */
-public open class ProtobufTaskName(value: String, ssn: SourceSetName) :
+public class ProtobufTaskName(value: String, ssn: SourceSetName) :
     TaskWithSourceSetName(value, ssn) {
 
     public companion object {
@@ -60,7 +54,7 @@ public open class ProtobufTaskName(value: String, ssn: SourceSetName) :
          * Users should be conscious and cautious when depending on it.
          */
         @JvmField
-        public val generateProto: TaskName = generateProto(SourceSetName.Companion.main)
+        public val generateProto: TaskName = generateProto(SourceSetName.main)
 
         /**
          * Generates test code from Protobuf.
@@ -69,6 +63,6 @@ public open class ProtobufTaskName(value: String, ssn: SourceSetName) :
          * Users should be conscious and cautious when depending on it.
          */
         @JvmField
-        public val generateTestProto: TaskName = generateProto(SourceSetName.Companion.test)
+        public val generateTestProto: TaskName = generateProto(SourceSetName.test)
     }
 }

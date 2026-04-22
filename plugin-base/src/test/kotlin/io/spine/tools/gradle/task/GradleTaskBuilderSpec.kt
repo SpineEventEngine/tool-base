@@ -26,10 +26,10 @@
 
 package io.spine.tools.gradle.task
 
-import com.google.common.collect.ImmutableList
-import com.google.common.truth.Truth.assertThat
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.maps.shouldContainKey
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.spine.testing.Assertions.assertIllegalState
@@ -42,9 +42,11 @@ import io.spine.tools.gradle.testing.GradleProject
 import io.spine.tools.gradle.testing.NoOp
 import java.io.File
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 /**
@@ -76,11 +78,8 @@ internal class GradleTaskBuilderSpec {
         val newTask = subProjectTasks.findByName(task.name.name())
         newTask shouldNotBe null
         val dependencies: Collection<*> = newTask!!.dependsOn
-        assertThat(dependencies)
-            .containsAtLeast(
-                subProjectTasks.findByName(compileJava.name()),
-                project.tasks.findByName(compileJava.name())
-            )
+        dependencies shouldContain subProjectTasks.findByName(compileJava.name())
+        dependencies shouldContain project.tasks.findByName(compileJava.name())
     }
 
     @Test
@@ -130,8 +129,7 @@ internal class GradleTaskBuilderSpec {
     }
 
     @Test
-    @DisplayName("return build task description")
-    fun returnBuildTaskDescription() {
+    fun `return build task description`() {
         val desc = GradleTask.newBuilder(preClean, NoOp.action())
             .insertBeforeTask(BaseTaskName.clean)
             .applyNowTo(project)
@@ -151,14 +149,121 @@ internal class GradleTaskBuilderSpec {
 
         val task = project.tasks.findByPath(preClean.name)
         task shouldNotBe null
-        val inputs = task!!.inputs
-        inputs shouldNotBe null
-        val inputFiles = ImmutableList.copyOf(
-            inputs.files.files
-        )
-        inputFiles.let {
-            it shouldHaveSize 1
-            it[0].canonicalFile shouldBe input.canonicalFile
+        val inputFiles = task!!.inputs.files.files.toList()
+        inputFiles shouldHaveSize 1
+        inputFiles[0].canonicalFile shouldBe input.canonicalFile
+    }
+
+    @Nested
+    inner class `'withInputProperty'` {
+
+        @Test
+        fun `register input property on task`() {
+            GradleTask.newBuilder(preClean, NoOp.action())
+                .insertBeforeTask(BaseTaskName.clean)
+                .withInputProperty("propName", "propValue")
+                .applyNowTo(project)
+
+            val task = project.tasks.findByPath(preClean.name)
+            task shouldNotBe null
+            task!!.inputs.properties["propName"] shouldBe "propValue"
         }
+
+        @Test
+        fun `append multiple input properties on separate calls`() {
+            GradleTask.newBuilder(preClean, NoOp.action())
+                .insertBeforeTask(BaseTaskName.clean)
+                .withInputProperty("first", "alpha")
+                .withInputProperty("second", "beta")
+                .applyNowTo(project)
+
+            val task = project.tasks.findByPath(preClean.name)
+            task shouldNotBe null
+            val properties = task!!.inputs.properties
+            properties["first"] shouldBe "alpha"
+            properties["second"] shouldBe "beta"
+        }
+
+        @Test
+        fun `override input property value when called with same name`() {
+            GradleTask.newBuilder(preClean, NoOp.action())
+                .insertBeforeTask(BaseTaskName.clean)
+                .withInputProperty("key", "original")
+                .withInputProperty("key", "overridden")
+                .applyNowTo(project)
+
+            val task = project.tasks.findByPath(preClean.name)
+            task shouldNotBe null
+            task!!.inputs.properties["key"] shouldBe "overridden"
+        }
+
+        @Test
+        fun `accept null as input property value`() {
+            GradleTask.newBuilder(preClean, NoOp.action())
+                .insertBeforeTask(BaseTaskName.clean)
+                .withInputProperty("nullProp", null)
+                .applyNowTo(project)
+
+            val task = project.tasks.findByPath(preClean.name)
+            task shouldNotBe null
+            task!!.inputs.properties shouldContainKey "nullProp"
+        }
+    }
+
+    @Nested
+    inner class `'withOutputFiles'` {
+
+        @Test
+        fun `register output files on task`() {
+            val output = File(".").absoluteFile
+            val files = project.layout.files(output)
+            GradleTask.newBuilder(preClean, NoOp.action())
+                .insertBeforeTask(BaseTaskName.clean)
+                .withOutputFiles(files)
+                .applyNowTo(project)
+
+            val task = project.tasks.findByPath(preClean.name)
+            task shouldNotBe null
+            val outputFiles = task!!.outputs.files.files.toList()
+            outputFiles shouldHaveSize 1
+            outputFiles[0].canonicalFile shouldBe output.canonicalFile
+        }
+
+        @Test
+        fun `append output files on multiple calls`() {
+            val firstOutput = File(".").absoluteFile
+            val secondOutput = File("..").absoluteFile
+            GradleTask.newBuilder(preClean, NoOp.action())
+                .insertBeforeTask(BaseTaskName.clean)
+                .withOutputFiles(project.layout.files(firstOutput))
+                .withOutputFiles(project.layout.files(secondOutput))
+                .applyNowTo(project)
+
+            val task = project.tasks.findByPath(preClean.name)
+            task shouldNotBe null
+            val outputFiles = task!!.outputs.files.files
+            val canonicalPaths = outputFiles.map { it.canonicalFile }
+            canonicalPaths shouldContain firstOutput.canonicalFile
+            canonicalPaths shouldContain secondOutput.canonicalFile
+        }
+    }
+
+    @Test
+    fun `allow creating task with no dependencies if explicitly permitted`() {
+        val standaloneProject = ProjectBuilder.builder().build()
+        val taskName = TaskName.of("taskWithNoDependencies")
+
+        shouldThrow<IllegalStateException> {
+            GradleTask
+                .newBuilder(taskName) { _: Task -> }
+                .applyNowTo(standaloneProject)
+        }
+
+        val task = GradleTask
+            .newBuilder(taskName) { _: Task -> }
+            .allowNoDependencies()
+            .applyNowTo(standaloneProject)
+
+        task.name shouldBe taskName
     }
 }
