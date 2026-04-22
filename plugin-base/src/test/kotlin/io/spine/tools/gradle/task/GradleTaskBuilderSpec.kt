@@ -26,8 +26,6 @@
 
 package io.spine.tools.gradle.task
 
-import com.google.common.collect.ImmutableList
-import com.google.common.truth.Truth.assertThat
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldHaveSize
@@ -80,11 +78,8 @@ internal class GradleTaskBuilderSpec {
         val newTask = subProjectTasks.findByName(task.name.name())
         newTask shouldNotBe null
         val dependencies: Collection<*> = newTask!!.dependsOn
-        assertThat(dependencies)
-            .containsAtLeast(
-                subProjectTasks.findByName(compileJava.name()),
-                project.tasks.findByName(compileJava.name())
-            )
+        dependencies shouldContain subProjectTasks.findByName(compileJava.name())
+        dependencies shouldContain project.tasks.findByName(compileJava.name())
     }
 
     @Test
@@ -154,15 +149,9 @@ internal class GradleTaskBuilderSpec {
 
         val task = project.tasks.findByPath(preClean.name)
         task shouldNotBe null
-        val inputs = task!!.inputs
-        inputs shouldNotBe null
-        val inputFiles = ImmutableList.copyOf(
-            inputs.files.files
-        )
-        inputFiles.let {
-            it shouldHaveSize 1
-            it[0].canonicalFile shouldBe input.canonicalFile
-        }
+        val inputFiles = task!!.inputs.files.files.toList()
+        inputFiles shouldHaveSize 1
+        inputFiles[0].canonicalFile shouldBe input.canonicalFile
     }
 
     @Nested
@@ -221,21 +210,59 @@ internal class GradleTaskBuilderSpec {
         }
     }
 
+    @Nested
+    inner class `'withOutputFiles'` {
+
+        @Test
+        fun `register output files on task`() {
+            val output = File(".").absoluteFile
+            val files = project.layout.files(output)
+            GradleTask.newBuilder(preClean, NoOp.action())
+                .insertBeforeTask(BaseTaskName.clean)
+                .withOutputFiles(files)
+                .applyNowTo(project)
+
+            val task = project.tasks.findByPath(preClean.name)
+            task shouldNotBe null
+            val outputFiles = task!!.outputs.files.files.toList()
+            outputFiles shouldHaveSize 1
+            outputFiles[0].canonicalFile shouldBe output.canonicalFile
+        }
+
+        @Test
+        fun `append output files on multiple calls`() {
+            val firstOutput = File(".").absoluteFile
+            val secondOutput = File("..").absoluteFile
+            GradleTask.newBuilder(preClean, NoOp.action())
+                .insertBeforeTask(BaseTaskName.clean)
+                .withOutputFiles(project.layout.files(firstOutput))
+                .withOutputFiles(project.layout.files(secondOutput))
+                .applyNowTo(project)
+
+            val task = project.tasks.findByPath(preClean.name)
+            task shouldNotBe null
+            val outputFiles = task!!.outputs.files.files
+            val canonicalPaths = outputFiles.map { it.canonicalFile }
+            canonicalPaths shouldContain firstOutput.canonicalFile
+            canonicalPaths shouldContain secondOutput.canonicalFile
+        }
+    }
+
     @Test
     fun `allow creating task with no dependencies if explicitly permitted`() {
-        val project = ProjectBuilder.builder().build()
+        val standaloneProject = ProjectBuilder.builder().build()
         val taskName = TaskName.of("taskWithNoDependencies")
 
         shouldThrow<IllegalStateException> {
             GradleTask
                 .newBuilder(taskName) { _: Task -> }
-                .applyNowTo(project)
+                .applyNowTo(standaloneProject)
         }
 
         val task = GradleTask
             .newBuilder(taskName) { _: Task -> }
             .allowNoDependencies()
-            .applyNowTo(project)
+            .applyNowTo(standaloneProject)
 
         task.name shouldBe taskName
     }
