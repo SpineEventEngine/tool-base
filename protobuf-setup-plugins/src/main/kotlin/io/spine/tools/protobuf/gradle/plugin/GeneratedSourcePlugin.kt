@@ -39,7 +39,6 @@ import io.spine.tools.protobuf.gradle.plugin.GeneratedSubdir.KOTLIN
 import io.spine.tools.resolve
 import java.io.File
 import java.nio.file.Path
-import kotlin.io.path.createDirectories
 import org.gradle.api.Project
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.tasks.SourceSet
@@ -47,7 +46,7 @@ import org.gradle.plugins.ide.idea.GenerateIdeaModule
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 /**
- * A Gradle project plugin that configures Protobuf compilation process to
+ * A Gradle project plugin that configures the Protobuf compilation process to
  * put the resulting output to the `generated` directory under the project root.
  *
  * The plugin does the following:
@@ -196,7 +195,8 @@ public fun GenerateProtoTask.setupKotlinCompile() {
 }
 
 /**
- * Ensures the generated dirs exist before IDEA module is created, so they can be added as sources.
+ * Ensures the generated dirs exist before an IDEA module is created,
+ * so they can be added as sources.
  */
 @Internal
 context(_: GeneratedDirectoryContext)
