@@ -34,6 +34,11 @@ import static io.spine.util.Preconditions2.checkNotEmptyOrBlank;
 public interface TaskName {
 
     /**
+     * The prefix for a compilation task name.
+     */
+    String COMPILE_PREFIX = "compile";
+
+    /**
      * The value of the name.
      *
      * <p>If an enum implements this interface, it is expected to name its constants so that

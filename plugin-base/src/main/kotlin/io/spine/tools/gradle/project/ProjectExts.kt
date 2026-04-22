@@ -35,6 +35,7 @@ import io.spine.tools.code.Language
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.code.SourceSetName.Companion.main
 import io.spine.tools.gradle.ConfigurationName
+import io.spine.tools.gradle.task.TaskName
 import io.spine.tools.meta.MavenArtifact
 import java.lang.reflect.Method
 import org.gradle.api.Project
@@ -164,7 +165,7 @@ public fun Project.hasKotlin(): Boolean = hasCompileTask(Kotlin)
 public fun Project.hasCompileTask(language: Language): Boolean {
     val currentTasks = ImmutableList.copyOf(tasks)
     val compileTask = currentTasks.find {
-        it.name.startsWith("compile") && it.name.endsWith(language.name)
+        it.name.startsWith(TaskName.COMPILE_PREFIX) && it.name.endsWith(language.name)
     }
     return compileTask != null
 }

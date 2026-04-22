@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import io.spine.tools.code.SourceSetBasedName
 import io.spine.tools.code.SourceSetName
 
 /**
- * A base for a task name type the value of which depend on a name of a source set
+ * A base for a task name type the value of which depends on a name of a source set
  * to which this task belongs.
  */
 public open class TaskWithSourceSetName protected constructor(
