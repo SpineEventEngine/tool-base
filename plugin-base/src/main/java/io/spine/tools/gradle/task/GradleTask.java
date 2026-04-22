@@ -231,7 +231,7 @@ public final class GradleTask {
          * <p>If none of the specified file system elements are present before the task
          * execution, the task will be marked as {@code NO-SOURCE} and skipped.
          *
-         * <p>Multiple invocations appends the new files to the existing ones.
+         * <p>Multiple invocations append the new files to the existing ones.
          *
          * @param inputs
          *         the task input files
