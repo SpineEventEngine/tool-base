@@ -28,6 +28,7 @@ package io.spine.tools.gradle.task
 
 import com.google.common.collect.ImmutableList
 import com.google.common.truth.Truth.assertThat
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
@@ -42,6 +43,7 @@ import io.spine.tools.gradle.testing.GradleProject
 import io.spine.tools.gradle.testing.NoOp
 import java.io.File
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -130,8 +132,7 @@ internal class GradleTaskBuilderSpec {
     }
 
     @Test
-    @DisplayName("return build task description")
-    fun returnBuildTaskDescription() {
+    fun `return build task description`() {
         val desc = GradleTask.newBuilder(preClean, NoOp.action())
             .insertBeforeTask(BaseTaskName.clean)
             .applyNowTo(project)
@@ -160,5 +161,24 @@ internal class GradleTaskBuilderSpec {
             it shouldHaveSize 1
             it[0].canonicalFile shouldBe input.canonicalFile
         }
+    }
+
+    @Test
+    fun `allow creating task with no dependencies if explicitly permitted`() {
+        val project = ProjectBuilder.builder().build()
+        val taskName = TaskName.of("taskWithNoDependencies")
+
+        shouldThrow<IllegalStateException> {
+            GradleTask
+                .newBuilder(taskName) { _: Task -> }
+                .applyNowTo(project)
+        }
+
+        val task = GradleTask
+            .newBuilder(taskName) { _: Task -> }
+            .allowNoDependencies()
+            .applyNowTo(project)
+
+        task.name shouldBe taskName
     }
 }
