@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import io.spine.tools.gradle.jvm.plugin.ArtifactMetaExtension.Companion.NAME
 import io.spine.tools.gradle.jvm.plugin.WriteArtifactMeta.Companion.TASK_NAME
 import io.spine.tools.gradle.task.JavaTaskName.Companion.processResources
 import io.spine.tools.gradle.task.JavaTaskName.Companion.sourcesJar
+import io.spine.tools.gradle.task.SpineTaskGroup
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginExtension
@@ -92,13 +93,13 @@ import org.gradle.kotlin.dsl.register
  *       }
  *   }
  * ```
- * 
+ *
  * ### Configurations excluded by default
- * 
+ *
  * The plugin automatically excludes all configurations having `"test"` in their names.
- * 
+ *
  * To include test configurations into the artifact meta file, use the following DSL.
- * 
+ *
  * ```kotlin
  * artifactMeta {
  *    excludeConfigurations {
@@ -151,11 +152,14 @@ public class ArtifactMetaPlugin : Plugin<Project> {
 
         // Register the extension to configure the plugin behavior.
         val ext = extensions.create(NAME, ArtifactMetaExtension::class.java, this)
-        
+
         // Exclude all `test` configurations by default.
         ext.excludeConfigurations.containing("test")
 
         val task = tasks.register(TASK_NAME, WriteArtifactMeta::class) { task ->
+            task.group = SpineTaskGroup.name
+            task.description =
+                "Writes artifact metadata under `META-INF/io.spine` of the resources"
             task.outputDirectory.convention(outputDir)
         }
 
