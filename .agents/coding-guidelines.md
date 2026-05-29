@@ -21,10 +21,12 @@
 - **Generic parameters** over explicit variable types (`val list = mutableList<Dependency>()`)  
 - **Java interop annotations** only when needed (`@file:JvmName`, `@JvmStatic`)
 - **Kotlin DSL** for Gradle files
+- **Kotlin Protobuf DSL** (`myMessage { field = value }`) over Java builder chains
 
 ### ❌ Avoid
 - Mutable data structures
 - Java-style verbosity (builders with setters)
+- Java Protobuf builders in Kotlin code (`newBuilder()`, `toBuilder()`) unless interop requires them
 - Redundant null checks (`?.let` misuse)
 - Using `!!` unless clearly justified
 - Type names in variable names (`userObject`, `itemList`)
@@ -33,7 +35,7 @@
 - Reflection unless specifically requested
 
 ## Text formatting
- - ✅ Remove double empty lines in the code.
+ - ✅ Replace double empty lines with a single empty line in the code.
  - ✅ Remove trailing space characters in the code.
 
 [spine-docs]: https://github.com/SpineEventEngine/documentation/wiki
