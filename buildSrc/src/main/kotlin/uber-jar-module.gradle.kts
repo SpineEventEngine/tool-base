@@ -45,6 +45,7 @@ LicenseReporter.generateReportIn(project)
 
 spinePublishing {
     artifactPrefix = ""
+    toolArtifactPrefix = "NONE"
     destinations = rootProject.the<SpinePublishing>().destinations
     customPublishing = true
 }
