@@ -38,7 +38,7 @@ description = "Core IntelliJ Platform services and language-neutral utils"
 
 tasks.shadowJar {
     excludeFiles()
-    setZip64(true)  /* The archive has way too many items. So using the Zip64 mode. */
+    isZip64 = true  /* The archive has way too many items. So using the Zip64 mode. */
 }
 
 /**
