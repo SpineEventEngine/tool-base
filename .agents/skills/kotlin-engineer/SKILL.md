@@ -1,3 +1,11 @@
+---
+name: kotlin-engineer
+description: >
+  Kotlin 2.x policy and pitfalls. Use when writing, reviewing, or refactoring
+  Kotlin code — enforces coroutine-safety, Flow correctness, null-safety, and
+  API-design rules that LLMs frequently get wrong.
+---
+
 # Kotlin — policy & pitfalls
 
 Baseline Kotlin knowledge (data/sealed/value classes, scope functions, null-safety operators, extension functions, `suspend`, `Flow`, `when` exhaustiveness) is assumed. This skill does not teach the language — it encodes the project policy and the traps that keep appearing in code review.
