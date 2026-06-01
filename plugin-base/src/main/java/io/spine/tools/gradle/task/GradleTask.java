@@ -112,6 +112,20 @@ public final class GradleTask {
     }
 
     /**
+     * Obtains the group of the task, or {@code null} if the group is not set.
+     */
+    public @Nullable String getGroup() {
+        return task.getGroup();
+    }
+
+    /**
+     * Obtains the description of the task, or {@code null} if the description is not set.
+     */
+    public @Nullable String getDescription() {
+        return task.getDescription();
+    }
+
+    /**
      * A builder for {@link GradleTask}.
      *
      * <p>NOTE: unlike most classes following the {@code Builder} pattern,
@@ -126,6 +140,9 @@ public final class GradleTask {
         private @Nullable TaskName previousTask;
         private @Nullable TaskName previousTaskOfAllProjects;
         private @Nullable TaskName followingTask;
+
+        private @Nullable String group;
+        private @Nullable String description;
 
         private boolean allowNoDependencies;
 
@@ -226,6 +243,32 @@ public final class GradleTask {
         }
 
         /**
+         * Sets the group for the task being built.
+         *
+         * @param group
+         *         the task group
+         * @return the current instance of {@code Builder}
+         */
+        public Builder withGroup(String group) {
+            checkNotNull(group);
+            this.group = group;
+            return this;
+        }
+
+        /**
+         * Sets the description for the task being built.
+         *
+         * @param description
+         *         the task description
+         * @return the current instance of {@code Builder}
+         */
+        public Builder withDescription(String description) {
+            checkNotNull(description);
+            this.description = description;
+            return this;
+        }
+
+        /**
          * Adds the files and/or directories to the input file set for the task being built.
          *
          * <p>If none of the specified file system elements are present before the task
@@ -309,7 +352,15 @@ public final class GradleTask {
             TaskProvider<Task> newTask;
             try {
                 newTask = project.getTasks()
-                                 .register(taskName, Task.class, task -> task.doLast(action));
+                                 .register(taskName, Task.class, task -> {
+                                     if (group != null) {
+                                         task.setGroup(group);
+                                     }
+                                     if (description != null) {
+                                         task.setDescription(description);
+                                     }
+                                     task.doLast(action);
+                                 });
             } catch (@SuppressWarnings("OverlyBroadCatchBlock") Exception e) {
                 log.error("Failed to create task `{}` in the project `{}`.", taskName, projectName);
                 throw new IllegalStateException(e);
