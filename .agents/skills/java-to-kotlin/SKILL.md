@@ -1,3 +1,11 @@
+---
+name: java-to-kotlin
+description: >
+  Convert Java code to Kotlin, including Java API comments from Javadoc to KDoc.
+  Use when asked to migrate Java files, classes, methods, nullability semantics,
+  or common Java patterns into idiomatic Kotlin while preserving behavior.
+---
+
 # 🪄 Converting Java code to Kotlin
 
 * Java code API comments are Javadoc format.
@@ -41,3 +49,11 @@
 * Convert `@throws` to `@throws` with the same description.
 * Convert `{@link}` to `[name][fully.qualified.Name]` format.
 * Convert `{@code}` to inline code with backticks (`).
+
+## Final step: ensure the version is bumped
+
+After the conversion is verified, invoke `/version-bumped` so the branch
+carries a strictly greater `version.gradle.kts` than the base ref before
+any `./gradlew build` (which may transitively `publishToMavenLocal` and
+overwrite the previously published snapshot consumer repos depend on).
+The skill is a no-op when a bump already happened earlier on the branch.
