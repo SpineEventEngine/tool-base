@@ -1,18 +1,21 @@
-<!-- Template — copy to a sibling repo's .agents/project.md and fill in the
-     sections below. In the config repo itself this file is a template only. -->
-
-# Project: <name>
+# Project: tool-base
 
 ## Overview
 
-*One paragraph: what this repo is, what problem it solves, and its role in the
-Spine SDK organisation.*
+`tool-base` provides the foundational infrastructure and shared components for development tools and Gradle plugins within the Spine SDK. It simplifies the creation of build-time tools by offering common utilities for file manipulation, Protobuf reflection, code generation, and IntelliJ PSI integration.
 
 ## Architecture
 
-*Role in the org: library / tool / Gradle plugin / application.
-Key patterns, public API boundaries, and constraints specific to this repo.*
+This repository serves as a library and a set of Gradle plugins. It defines the core API for other Spine tools, such as the root `spine` and `spineSettings` extensions for Gradle.
 
-<!-- JVM projects: uncomment the line below after seeding this file.
+Key patterns and components:
+- **Multi-module Gradle project**: Orchestrates various tool-related functionalities.
+- **Gradle API extensions**: Modules like `gradle-root-plugin` and `plugin-base` provide abstractions and root extensions for Spine-specific Gradle DSL.
+- **PSI Utilities**: `psi` and `psi-java` provide Kotlin-friendly wrappers for IntelliJ Platform PSI.
+- **Fat JARs**: `intellij-platform` modules produce shadowed fat JARs for IntelliJ components.
+- **Public API boundaries**: Defined primarily in `gradle-plugin-api` and `tool-base`.
+
+Constraints:
+- Maintain compatibility with JVM 17 and Kotlin 2.3.20.
+
 Read [`.agents/jvm-project.md`](jvm-project.md) for build stack, coding style, tests, and versioning.
--->
