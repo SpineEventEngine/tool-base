@@ -92,9 +92,9 @@ private const val KOTLIN_FILE_CLASS_SUFFIX: String = "Kt"
  *  - Configures the root `koverXmlReport` task with `onCheck = true` and
  *    excludes the union of generated-class FQNs across all subprojects.
  *
- * This is the Kover-based successor to the deprecated
- * [io.spine.gradle.report.coverage.JacocoConfig]. The behaviour mirrors what
- * `JacocoConfig.applyTo(rootProject)` provided, but is wired through Kover
+ * This is the Kover-based successor to the deprecated JaCoCo-based
+ * coverage aggregation pipeline. The behaviour mirrors what
+ * the former JaCoCo-based pipeline provided, but is wired through Kover
  * (`koverXmlReport`) instead of vanilla `jacocoRootReport`.
  */
 @Suppress("unused")
