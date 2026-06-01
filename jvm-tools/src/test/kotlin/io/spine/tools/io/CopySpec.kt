@@ -27,7 +27,6 @@
 package io.spine.tools.io
 
 import io.kotest.matchers.shouldBe
-import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.createDirectories
 import kotlin.io.path.createFile
