@@ -54,7 +54,7 @@ plugins {
     id("write-manifest")
     id("dokka-setup")
     `project-report`
-    jacoco
+    id("org.jetbrains.kotlinx.kover")
 }
 apply<BomsPlugin>()
 apply<IncrementGuard>()
