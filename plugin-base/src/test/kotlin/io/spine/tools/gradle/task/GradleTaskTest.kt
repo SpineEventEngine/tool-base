@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,12 +27,36 @@
 package io.spine.tools.gradle.task
 
 import com.google.common.testing.NullPointerTester
+import io.kotest.matchers.shouldBe
+import org.gradle.testfixtures.ProjectBuilder
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-class `'GradleTask' should` {
+@DisplayName("`GradleTask` should")
+class GradleTaskTest {
 
     @Test
     fun `handle 'null' arguments in static methods`() {
         NullPointerTester().testAllPublicStaticMethods(GradleTask::class.java)
+    }
+
+    @Test
+    fun `allow setting 'group' and 'description'`() {
+        val project = ProjectBuilder.builder().build()
+        val taskName = TaskName.of("testTask")
+        val group = SpineTaskGroup.name
+        val description = "Test description"
+
+        val gradleTask = GradleTask.newBuilder(taskName) { }
+            .withGroup(group)
+            .withDescription(description)
+            .allowNoDependencies()
+            .applyNowTo(project)
+
+        gradleTask.task.group shouldBe group
+        gradleTask.task.description shouldBe description
+
+        gradleTask.group shouldBe group
+        gradleTask.description shouldBe description
     }
 }

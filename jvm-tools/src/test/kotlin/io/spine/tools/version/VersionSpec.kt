@@ -205,6 +205,14 @@ class VersionSpec {
                 Version.parse("1.a.3")
             }
         }
+
+        @Test
+        fun `ignore extra segments beyond major, minor, and patch`() {
+            val version = Version.parse("1.2.3.4")
+            version.major shouldBe 1
+            version.minor shouldBe 2
+            version.patch shouldBe 3
+        }
     }
 
     @Nested

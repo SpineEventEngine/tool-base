@@ -1,6 +1,6 @@
 
 
-# Dependencies of `io.spine.tools:classic-codegen:2.0.0-SNAPSHOT.380`
+# Dependencies of `io.spine.tools:classic-codegen:2.0.0-SNAPSHOT.381`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -477,9 +477,6 @@
 1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.14.
      * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.14.
-     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
-
 1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.14.
      * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
@@ -839,14 +836,14 @@
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Fri May 29 19:04:31 WEST 2026** using 
+This report was generated on **Mon Jun 01 17:54:55 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:gradle-plugin-api:2.0.0-SNAPSHOT.380`
+# Dependencies of `io.spine.tools:gradle-plugin-api:2.0.0-SNAPSHOT.381`
 
 ## Runtime
 1.  **Group** : com.fasterxml.jackson. **Name** : jackson-bom. **Version** : 2.21.3.
@@ -1374,9 +1371,6 @@ This report was generated on **Fri May 29 19:04:31 WEST 2026** using
 1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.14.
      * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.14.
-     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
-
 1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.14.
      * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
@@ -1752,14 +1746,14 @@ This report was generated on **Fri May 29 19:04:31 WEST 2026** using
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Fri May 29 19:04:31 WEST 2026** using 
+This report was generated on **Mon Jun 01 17:54:55 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:gradle-plugin-api-test-fixtures:2.0.0-SNAPSHOT.380`
+# Dependencies of `io.spine.tools:gradle-plugin-api-test-fixtures:2.0.0-SNAPSHOT.381`
 
 ## Runtime
 1.  **Group** : com.fasterxml.jackson. **Name** : jackson-bom. **Version** : 2.21.3.
@@ -2222,14 +2216,14 @@ This report was generated on **Fri May 29 19:04:31 WEST 2026** using
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Fri May 29 19:04:34 WEST 2026** using 
+This report was generated on **Mon Jun 01 17:54:55 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:gradle-root-plugin:2.0.0-SNAPSHOT.380`
+# Dependencies of `io.spine.tools:gradle-root-plugin:2.0.0-SNAPSHOT.381`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -2703,9 +2697,6 @@ This report was generated on **Fri May 29 19:04:34 WEST 2026** using
      * **License:** [BSD-3-Clause](https://raw.githubusercontent.com/hamcrest/JavaHamcrest/master/LICENSE)
 
 1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.14.
-     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
-
-1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.14.
      * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
 1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.14.
@@ -3087,14 +3078,14 @@ This report was generated on **Fri May 29 19:04:34 WEST 2026** using
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Fri May 29 19:04:31 WEST 2026** using 
+This report was generated on **Mon Jun 01 17:54:55 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:intellij-platform:2.0.0-SNAPSHOT.380`
+# Dependencies of `io.spine.tools:intellij-platform:2.0.0-SNAPSHOT.381`
 
 ## Runtime
 1.  **Group** : be.cyberelf.nanoxml. **Name** : nanoxml. **Version** : 2.2.3.
@@ -3746,9 +3737,6 @@ This report was generated on **Fri May 29 19:04:31 WEST 2026** using
 1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.14.
      * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.14.
-     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
-
 1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.14.
      * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
@@ -4175,14 +4163,14 @@ This report was generated on **Fri May 29 19:04:31 WEST 2026** using
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Fri May 29 19:04:46 WEST 2026** using 
+This report was generated on **Mon Jun 01 17:54:55 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:intellij-platform-java:2.0.0-SNAPSHOT.380`
+# Dependencies of `io.spine.tools:intellij-platform-java:2.0.0-SNAPSHOT.381`
 
 ## Runtime
 1.  **Group** : be.cyberelf.nanoxml. **Name** : nanoxml. **Version** : 2.2.3.
@@ -5454,9 +5442,6 @@ This report was generated on **Fri May 29 19:04:46 WEST 2026** using
 1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.14.
      * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.14.
-     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
-
 1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.14.
      * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
@@ -5961,14 +5946,14 @@ This report was generated on **Fri May 29 19:04:46 WEST 2026** using
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Fri May 29 19:04:58 WEST 2026** using 
+This report was generated on **Mon Jun 01 17:54:56 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:jvm-tool-plugins:2.0.0-SNAPSHOT.380`
+# Dependencies of `io.spine.tools:jvm-tool-plugins:2.0.0-SNAPSHOT.381`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -6444,9 +6429,6 @@ This report was generated on **Fri May 29 19:04:58 WEST 2026** using
 1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.14.
      * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.14.
-     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
-
 1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.14.
      * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
@@ -6818,14 +6800,14 @@ This report was generated on **Fri May 29 19:04:58 WEST 2026** using
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Fri May 29 19:04:31 WEST 2026** using 
+This report was generated on **Mon Jun 01 17:54:55 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:jvm-tools:2.0.0-SNAPSHOT.380`
+# Dependencies of `io.spine.tools:jvm-tools:2.0.0-SNAPSHOT.381`
 
 ## Runtime
 1.  **Group** : org.jetbrains. **Name** : annotations. **Version** : 26.0.2.
@@ -7238,9 +7220,6 @@ This report was generated on **Fri May 29 19:04:31 WEST 2026** using
 1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.14.
      * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.14.
-     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
-
 1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.14.
      * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
@@ -7592,14 +7571,14 @@ This report was generated on **Fri May 29 19:04:31 WEST 2026** using
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Fri May 29 19:04:31 WEST 2026** using 
+This report was generated on **Mon Jun 01 17:54:55 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:plugin-base:2.0.0-SNAPSHOT.380`
+# Dependencies of `io.spine.tools:plugin-base:2.0.0-SNAPSHOT.381`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -8083,9 +8062,6 @@ This report was generated on **Fri May 29 19:04:31 WEST 2026** using
 1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.14.
      * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.14.
-     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
-
 1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.14.
      * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
@@ -8457,14 +8433,14 @@ This report was generated on **Fri May 29 19:04:31 WEST 2026** using
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Fri May 29 19:04:31 WEST 2026** using 
+This report was generated on **Mon Jun 01 17:54:55 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:plugin-testlib:2.0.0-SNAPSHOT.380`
+# Dependencies of `io.spine.tools:plugin-testlib:2.0.0-SNAPSHOT.381`
 
 ## Runtime
 1.  **Group** : com.google.auto.value. **Name** : auto-value-annotations. **Version** : 1.10.2.
@@ -9052,9 +9028,6 @@ This report was generated on **Fri May 29 19:04:31 WEST 2026** using
 1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.14.
      * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.14.
-     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
-
 1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.14.
      * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
@@ -9426,14 +9399,14 @@ This report was generated on **Fri May 29 19:04:31 WEST 2026** using
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Fri May 29 19:04:31 WEST 2026** using 
+This report was generated on **Mon Jun 01 17:54:55 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:protobuf-setup-plugins:2.0.0-SNAPSHOT.380`
+# Dependencies of `io.spine.tools:protobuf-setup-plugins:2.0.0-SNAPSHOT.381`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -9929,9 +9902,6 @@ This report was generated on **Fri May 29 19:04:31 WEST 2026** using
 1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.14.
      * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.14.
-     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
-
 1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.14.
      * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
@@ -10303,14 +10273,14 @@ This report was generated on **Fri May 29 19:04:31 WEST 2026** using
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Fri May 29 19:04:31 WEST 2026** using 
+This report was generated on **Mon Jun 01 17:54:55 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:psi:2.0.0-SNAPSHOT.380`
+# Dependencies of `io.spine.tools:psi:2.0.0-SNAPSHOT.381`
 
 ## Runtime
 1.  **Group** : be.cyberelf.nanoxml. **Name** : nanoxml. **Version** : 2.2.3.
@@ -10989,9 +10959,6 @@ This report was generated on **Fri May 29 19:04:31 WEST 2026** using
 1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.14.
      * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.14.
-     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
-
 1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.14.
      * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
@@ -11418,14 +11385,14 @@ This report was generated on **Fri May 29 19:04:31 WEST 2026** using
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Fri May 29 19:04:46 WEST 2026** using 
+This report was generated on **Mon Jun 01 17:54:55 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:psi-java:2.0.0-SNAPSHOT.380`
+# Dependencies of `io.spine.tools:psi-java:2.0.0-SNAPSHOT.381`
 
 ## Runtime
 1.  **Group** : be.cyberelf.nanoxml. **Name** : nanoxml. **Version** : 2.2.3.
@@ -12720,9 +12687,6 @@ This report was generated on **Fri May 29 19:04:46 WEST 2026** using
 1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.14.
      * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.14.
-     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
-
 1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.14.
      * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
@@ -13247,14 +13211,14 @@ This report was generated on **Fri May 29 19:04:46 WEST 2026** using
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Fri May 29 19:04:58 WEST 2026** using 
+This report was generated on **Mon Jun 01 17:54:56 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
 
 
 
-# Dependencies of `io.spine.tools:tool-base:2.0.0-SNAPSHOT.380`
+# Dependencies of `io.spine.tools:tool-base:2.0.0-SNAPSHOT.381`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -13787,9 +13751,6 @@ This report was generated on **Fri May 29 19:04:58 WEST 2026** using
 1.  **Group** : org.jacoco. **Name** : org.jacoco.agent. **Version** : 0.8.14.
      * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
-1.  **Group** : org.jacoco. **Name** : org.jacoco.ant. **Version** : 0.8.14.
-     * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
-
 1.  **Group** : org.jacoco. **Name** : org.jacoco.core. **Version** : 0.8.14.
      * **License:** [EPL-2.0](https://www.eclipse.org/legal/epl-2.0/)
 
@@ -14141,6 +14102,6 @@ This report was generated on **Fri May 29 19:04:58 WEST 2026** using
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Fri May 29 19:04:31 WEST 2026** using 
+This report was generated on **Mon Jun 01 17:54:55 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).

@@ -157,6 +157,16 @@ internal class ArtifactMetaSpec {
                 it[0] shouldBe toolBase.toString()
             }
         }
+
+        @Test
+        fun `overwrite an existing file`() {
+            val file = tempDir.resolve("overwrite.meta").toFile()
+            file.writeText("old content")
+
+            artifactMeta.store(file)
+
+            file.readText() shouldBe artifactMeta.toString()
+        }
     }
 
     @Nested
@@ -234,6 +244,16 @@ internal class ArtifactMetaSpec {
             assertThrows<IllegalArgumentException> {
                 ArtifactMeta.load(file)
             }
+        }
+
+        @Test
+        fun `handle blank lines after artifact`() {
+            val file = tempDir.resolve("blank-deps.txt").toFile()
+            Files.write(file.toPath(), listOf(toolBase.toString(), "", "  "))
+
+            val loaded = ArtifactMeta.load(file)
+
+            loaded.dependencies.list shouldBe emptyList()
         }
     }
 

@@ -30,7 +30,7 @@ import io.spine.dependency.build.Dokka
 import io.spine.gradle.publish.PublishingRepos
 import io.spine.gradle.publish.spinePublishing
 import io.spine.gradle.repo.standardToSpineSdk
-import io.spine.gradle.report.coverage.JacocoConfig
+import io.spine.gradle.report.coverage.KoverConfig
 import io.spine.gradle.report.license.LicenseReporter
 import io.spine.gradle.report.pom.PomGenerator
 
@@ -61,11 +61,10 @@ buildscript {
 plugins {
     id("org.jetbrains.dokka")
     idea
-    jacoco
     `project-report`
     `gradle-doctor`
 }
-JacocoConfig.applyTo(project)
+KoverConfig.applyTo(rootProject)
 PomGenerator.applyTo(project)
 LicenseReporter.mergeAllReports(project)
 
