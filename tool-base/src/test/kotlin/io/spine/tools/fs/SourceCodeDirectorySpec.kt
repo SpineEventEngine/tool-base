@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -23,33 +23,33 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package io.spine.tools.js.fs
 
-import io.kotest.matchers.string.shouldEndWith
-import io.spine.tools.code.SourceSetName.Companion.main
-import io.spine.tools.fs.SourceCodeDirectory
+package io.spine.tools.fs
+
+import io.kotest.matchers.shouldBe
+import io.spine.code.fs.AbstractSourceFile
 import java.nio.file.Path
-import org.junit.jupiter.api.BeforeEach
+import java.nio.file.Paths
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 
-@DisplayName("`FsTypesExtensions` should")
-class FsTypesExtensionsSpec {
+@DisplayName("`SourceCodeDirectory` should")
+class SourceCodeDirectorySpec {
 
-    private lateinit var directory: SourceCodeDirectory
+    private class StubSourceCodeDir(path: Path) : SourceCodeDirectory(path)
+    private class StubSourceFile(path: Path) : AbstractSourceFile(path)
 
-    @BeforeEach
-    fun setUp(@TempDir projectDir: Path) {
-        directory = DefaultJsPaths.at(projectDir).generated().dir(main)
+    @Test
+    fun `resolve child directory`() {
+        val root = StubSourceCodeDir(Paths.get("root"))
+        val child = StubSourceCodeDir(Paths.get("child"))
+        root.resolve(child) shouldBe Paths.get("root", "child")
     }
 
     @Test
-    fun `resolve JS files`() {
-        val rawName = "tasks_pb.js"
-        val fileName = FileName.of(rawName)
-        val resolved = directory.resolve(fileName)
-
-        resolved.toString() shouldEndWith rawName
+    fun `resolve source file`() {
+        val root = StubSourceCodeDir(Paths.get("root"))
+        val file = StubSourceFile(Paths.get("File.java"))
+        root.resolve(file) shouldBe Paths.get("root", "File.java")
     }
 }

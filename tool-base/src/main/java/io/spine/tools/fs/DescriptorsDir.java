@@ -27,7 +27,6 @@
 package io.spine.tools.fs;
 
 import com.google.errorprone.annotations.Immutable;
-import io.spine.code.fs.AbstractDirectory;
 
 import java.nio.file.Path;
 

@@ -28,9 +28,9 @@
 
 package io.spine.tools.java.fs
 
-import io.spine.code.fs.SourceCodeDirectory
 import io.spine.code.java.PackageName
 import io.spine.code.java.PackageName.delimiterChar
+import io.spine.tools.fs.SourceCodeDirectory
 import java.io.File
 import java.nio.file.Path
 import java.nio.file.Paths
