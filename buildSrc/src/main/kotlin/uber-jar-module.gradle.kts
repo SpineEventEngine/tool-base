@@ -28,8 +28,8 @@
 
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import io.spine.gradle.publish.IncrementGuard
-import io.spine.gradle.publish.setup
 import io.spine.gradle.publish.SpinePublishing
+import io.spine.gradle.publish.setup
 import io.spine.gradle.publish.spinePublishing
 import io.spine.gradle.report.license.LicenseReporter
 

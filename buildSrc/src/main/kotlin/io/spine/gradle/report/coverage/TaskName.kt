@@ -24,23 +24,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.dependency.local
+package io.spine.gradle.report.coverage
 
 /**
- * Spine Base module.
- *
- * @see <a href="https://github.com/SpineEventEngine/base-libraries">spine-base-libraries</a>
+ * The names of Gradle tasks involved in the JaCoCo reporting.
  */
-@Suppress("ConstPropertyName", "unused")
-object Base {
-    const val version = "2.0.0-SNAPSHOT.390"
-    const val versionForBuildScript = "2.0.0-SNAPSHOT.390"
-    const val group = Spine.group
-    private const val prefix = "spine"
-    const val libModule = "$prefix-base"
-    const val lib = "$group:$libModule:$version"
-    const val libForBuildScript = "$group:$libModule:$versionForBuildScript"
-    const val annotations = "$group:$prefix-annotations:$version"
-    const val environment = "$group:$prefix-environment:$version"
-    const val format = "$group:$prefix-format:$version"
+@Deprecated(
+    message = "Internal task-name catalog for the deprecated `JacocoConfig` pipeline. " +
+            "Kover uses its built-in task names (`koverXmlReport`, etc.). " +
+            "Removed when `JacocoConfig` is. " +
+            "See `KoverConfig` for the Kover-based successor and " +
+            "`.agents/skills/raise-coverage/references/migrate-to-kover.md` " +
+            "for the migration recipe.",
+    level = DeprecationLevel.WARNING
+)
+@Suppress("EnumEntryName", "EnumNaming") /* Dubbing the actual values in Gradle. */
+internal enum class TaskName {
+    jacocoRootReport,
+    copyReports,
+
+    check,
+    jacocoTestReport
 }

@@ -24,23 +24,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.dependency.local
+package io.spine.gradle.report.coverage
 
 /**
- * Spine Base module.
- *
- * @see <a href="https://github.com/SpineEventEngine/base-libraries">spine-base-libraries</a>
+ * File extensions.
  */
-@Suppress("ConstPropertyName", "unused")
-object Base {
-    const val version = "2.0.0-SNAPSHOT.390"
-    const val versionForBuildScript = "2.0.0-SNAPSHOT.390"
-    const val group = Spine.group
-    private const val prefix = "spine"
-    const val libModule = "$prefix-base"
-    const val lib = "$group:$libModule:$version"
-    const val libForBuildScript = "$group:$libModule:$versionForBuildScript"
-    const val annotations = "$group:$prefix-annotations:$version"
-    const val environment = "$group:$prefix-environment:$version"
-    const val format = "$group:$prefix-format:$version"
+@Deprecated(
+    message = "Used only by the deprecated `JacocoConfig` pipeline. " +
+            "Removed when `JacocoConfig` is. " +
+            "See `KoverConfig` for the Kover-based successor and " +
+            "`.agents/skills/raise-coverage/references/migrate-to-kover.md` " +
+            "for the migration recipe.",
+    level = DeprecationLevel.WARNING
+)
+internal enum class FileExtension(val value: String) {
+
+    /**
+     * Extension of a Java source file.
+     */
+    JAVA_SOURCE(".java"),
+
+    /**
+     * Extension of a Kotlin source file.
+     */
+    KOTLIN_SOURCE(".kt"),
+
+    /**
+     * Extension of a Java compiled file.
+     */
+    COMPILED_CLASS(".class");
+
+    /**
+     * The number of symbols in the extension.
+     */
+    val length: Int
+        get() = this.value.length
 }
