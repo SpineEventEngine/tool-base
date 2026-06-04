@@ -24,37 +24,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.js.fs
+package io.spine.tools.code
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldContain
-import io.spine.tools.code.SourceSetName
-import java.nio.file.Path
-import kotlin.io.path.invariantSeparatorsPathString
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 
-@DisplayName("`DefaultJsPaths` should")
-class DefaultJsPathsSpec {
+@DisplayName("`SourceSetName` should")
+internal class SourceSetNameSpec {
 
-    private lateinit var defaultPaths: DefaultJsPaths
-
-    @BeforeEach
-    fun createDefaults(@TempDir projectDir: Path) {
-        defaultPaths = DefaultJsPaths.at(projectDir)
+    @Test
+    fun `reject a blank value`() {
+        shouldThrow<IllegalArgumentException> { SourceSetName(" ") }
     }
 
     @Test
-    fun `obtain 'js' directory for a source set`() {
-        val subDir = defaultPaths.generated().dir(SourceSetName.main)
-
-        subDir.path().invariantSeparatorsPathString shouldContain "/main/js"
+    fun `expose its value via 'toString()'`() {
+        SourceSetName("test").toString() shouldBe "test"
     }
 
     @Test
-    fun `be created from a 'File'`(@TempDir projectDir: Path) {
-        DefaultJsPaths.at(projectDir.toFile()).path() shouldBe projectDir
+    fun `provide the infix form`() {
+        SourceSetName.main.toInfix() shouldBe ""
+        SourceSetName("test").toInfix() shouldBe "Test"
+    }
+
+    @Test
+    fun `provide the prefix form`() {
+        SourceSetName.main.toPrefix() shouldBe ""
+        SourceSetName("test").toPrefix() shouldBe "test"
     }
 }

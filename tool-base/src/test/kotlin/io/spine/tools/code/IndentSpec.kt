@@ -24,59 +24,68 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.js.fs
+package io.spine.tools.code
 
-import com.google.common.testing.NullPointerTester
-import com.google.protobuf.Any
-import io.kotest.matchers.collections.shouldContainExactly
+import com.google.common.testing.EqualsTester
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldStartWith
-import io.spine.testing.Assertions.assertIllegalArgument
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-@DisplayName("`FileName` should")
-class FileNameSpec {
-
-    private val file = Any.getDescriptor().file
-    private val fileName = FileName.from(file)
+@DisplayName("`Indent` should")
+internal class IndentSpec {
 
     @Test
-    fun `handle 'null's`() {
-        NullPointerTester().testAllPublicStaticMethods(FileName::class.java)
+    fun `obtain an instance at the given level`() {
+        val indent = Indent.of(2).at(3)
+
+        indent.size() shouldBe 2
+        indent.level() shouldBe 3
+        indent.text() shouldBe " ".repeat(6)
     }
 
     @Test
-    fun `not accept names without extension`() {
-        assertIllegalArgument { FileName.of("no-extension") }
+    fun `reject a negative level`() {
+        shouldThrow<IllegalArgumentException> { Indent.of(2).at(-1) }
     }
 
     @Test
-    fun `replace 'proto' extension with predefined suffix`() {
-        fileName.value() shouldBe "google/protobuf/any_pb.js"
+    fun `shift to the right by one level`() {
+        Indent.of(2).at(1).shiftedRight().level() shouldBe 2
     }
 
     @Test
-    fun `return path elements`() {
-        val pathElements = fileName.pathElements()
-
-        pathElements shouldContainExactly listOf(
-            "google", "protobuf", "any_pb.js"
-        )
+    fun `shift to the left by one level`() {
+        Indent.of(2).at(2).shiftedLeft().level() shouldBe 1
     }
 
     @Test
-    fun `obtain relative path to source root dir`() {
-        fileName.pathToRoot() shouldStartWith "../../"
+    fun `fail to shift to the left below zero`() {
+        shouldThrow<IllegalStateException> { Indent.of(2).at(0).shiftedLeft() }
     }
 
     @Test
-    fun `obtain path from source root dir`() {
-        fileName.pathFromRoot() shouldBe "./google/protobuf/any_pb.js"
+    fun `return itself when shifted by zero`() {
+        val indent = Indent.of(2).at(1)
+        indent.shifted(0) shouldBe indent
     }
 
     @Test
-    fun `obtain the current directory as the path to root for a top-level file`() {
-        FileName.of("options_pb.js").pathToRoot() shouldBe "./"
+    fun `shift by a positive delta`() {
+        Indent.of(2).at(1).shifted(2).level() shouldBe 3
+    }
+
+    @Test
+    fun `fail to shift below zero`() {
+        shouldThrow<IllegalArgumentException> { Indent.of(2).at(1).shifted(-2) }
+    }
+
+    @Test
+    fun `support equality`() {
+        EqualsTester()
+            .addEqualityGroup(Indent.of(2).at(1), Indent.of(2).at(1))
+            .addEqualityGroup(Indent.of(2).at(2))
+            .addEqualityGroup(Indent.of(4).at(1))
+            .testEquals()
     }
 }

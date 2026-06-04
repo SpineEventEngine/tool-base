@@ -24,37 +24,61 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.js.fs
+package io.spine.tools.fs
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldContain
-import io.spine.tools.code.SourceSetName
+import io.kotest.matchers.string.shouldEndWith
+import io.spine.tools.java.fs.DefaultJavaPaths
 import java.nio.file.Path
-import kotlin.io.path.invariantSeparatorsPathString
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
-@DisplayName("`DefaultJsPaths` should")
-class DefaultJsPathsSpec {
+@DisplayName("Default project paths should")
+internal class ProjectPathsSpec {
 
-    private lateinit var defaultPaths: DefaultJsPaths
+    private lateinit var paths: DefaultJavaPaths
 
     @BeforeEach
-    fun createDefaults(@TempDir projectDir: Path) {
-        defaultPaths = DefaultJsPaths.at(projectDir)
+    fun setUp(@TempDir projectDir: Path) {
+        paths = DefaultJavaPaths.at(projectDir)
     }
 
     @Test
-    fun `obtain 'js' directory for a source set`() {
-        val subDir = defaultPaths.generated().dir(SourceSetName.main)
-
-        subDir.path().invariantSeparatorsPathString shouldContain "/main/js"
+    fun `point to the 'build' root`() {
+        paths.buildRoot().path().fileName.toString() shouldBe "build"
     }
 
     @Test
-    fun `be created from a 'File'`(@TempDir projectDir: Path) {
-        DefaultJsPaths.at(projectDir.toFile()).path() shouldBe projectDir
+    fun `point to the 'descriptors' directory of a source set`() {
+        val descriptors = paths.buildRoot().descriptors()
+
+        descriptors.path().fileName.toString() shouldBe "descriptors"
+        descriptors.forSourceSet("main").fileName.toString() shouldBe "main"
+    }
+
+    @Test
+    fun `reject a blank source set name for descriptors`() {
+        val descriptors = paths.buildRoot().descriptors()
+        shouldThrow<IllegalArgumentException> {
+            descriptors.forSourceSet(" ")
+        }
+    }
+
+    @Test
+    fun `point to the temporary artifacts directory`() {
+        paths.tempArtifacts().toString() shouldEndWith ".spine"
+    }
+
+    @Test
+    fun `point to the 'src' directory`() {
+        paths.src().path().fileName.toString() shouldBe "src"
+    }
+
+    @Test
+    fun `return itself as the project directory`() {
+        paths.projectDir() shouldBe paths
     }
 }

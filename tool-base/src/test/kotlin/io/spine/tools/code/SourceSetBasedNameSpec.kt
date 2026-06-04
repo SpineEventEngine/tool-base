@@ -24,37 +24,42 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.js.fs
+package io.spine.tools.code
 
+import com.google.common.testing.EqualsTester
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldContain
-import io.spine.tools.code.SourceSetName
-import java.nio.file.Path
-import kotlin.io.path.invariantSeparatorsPathString
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 
-@DisplayName("`DefaultJsPaths` should")
-class DefaultJsPathsSpec {
+@DisplayName("`SourceSetBasedName` should")
+internal class SourceSetBasedNameSpec {
 
-    private lateinit var defaultPaths: DefaultJsPaths
+    private class TaskName(value: String, ssn: SourceSetName) : SourceSetBasedName(value, ssn)
 
-    @BeforeEach
-    fun createDefaults(@TempDir projectDir: Path) {
-        defaultPaths = DefaultJsPaths.at(projectDir)
+    @Test
+    fun `expose its value via 'name()' and 'toString()'`() {
+        val name = TaskName("generateMain", SourceSetName.main)
+
+        name.name() shouldBe "generateMain"
+        name.toString() shouldBe "generateMain"
+        name.sourceSetName shouldBe SourceSetName.main
     }
 
     @Test
-    fun `obtain 'js' directory for a source set`() {
-        val subDir = defaultPaths.generated().dir(SourceSetName.main)
-
-        subDir.path().invariantSeparatorsPathString shouldContain "/main/js"
+    fun `support equality`() {
+        EqualsTester()
+            .addEqualityGroup(
+                TaskName("generate", SourceSetName.main),
+                TaskName("generate", SourceSetName.main)
+            )
+            .addEqualityGroup(TaskName("generate", SourceSetName.test))
+            .addEqualityGroup(TaskName("compile", SourceSetName.main))
+            .testEquals()
     }
 
     @Test
-    fun `be created from a 'File'`(@TempDir projectDir: Path) {
-        DefaultJsPaths.at(projectDir.toFile()).path() shouldBe projectDir
+    fun `compute a suffix taking the source set prefix form into account`() {
+        SourceSetBasedName.suffix(SourceSetName.main, "value") shouldBe "value"
+        SourceSetBasedName.suffix(SourceSetName.test, "value") shouldBe "Value"
     }
 }

@@ -1,0 +1,135 @@
+/*
+ * Copyright 2026, TeamDev. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Redistribution and use in source and/or binary forms, with or without
+ * modification, must retain the above copyright notice and the following
+ * disclaimer.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+package io.spine.tools.dart.fs
+
+import com.google.common.testing.EqualsTester
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
+import io.spine.tools.fs.DirectoryPattern
+import io.spine.tools.fs.ExternalModule
+import io.spine.tools.fs.ExternalModules
+import java.nio.file.Path
+import kotlin.io.path.createDirectories
+import kotlin.io.path.writeText
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
+
+@DisplayName("`ImportStatement` should")
+internal class ImportStatementSpec {
+
+    @Test
+    fun `tell if a line is an import statement`() {
+        ImportStatement.isDeclaredIn("import 'a/b.dart' as x;") shouldBe true
+        ImportStatement.isDeclaredIn("void main() {}") shouldBe false
+    }
+
+    @Test
+    fun `reject blank text`(@TempDir libPath: Path) {
+        val file = dartFileWith(libPath, "void main() {}")
+        shouldThrow<IllegalArgumentException> {
+            ImportStatement.`in`(file, "   ")
+        }
+    }
+
+    @Test
+    fun `reject a line which is not an import statement`(@TempDir libPath: Path) {
+        val file = dartFileWith(libPath, "void main() {}")
+        shouldThrow<IllegalArgumentException> {
+            ImportStatement.`in`(file, "not an import")
+        }
+    }
+
+    @Test
+    fun `expose its text`(@TempDir libPath: Path) {
+        val file = dartFileWith(libPath, "void main() {}")
+        val text = "import 'a/b.dart' as x;"
+        val statement = ImportStatement.`in`(file, text)
+
+        statement.text() shouldBe text
+        statement.toString() shouldBe text
+    }
+
+    @Test
+    fun `leave the import as is when no module provides the file`(@TempDir libPath: Path) {
+        val file = dartFileInSubDir(libPath)
+        val text = "import '../foo/bar.dart' as b;"
+        val statement = ImportStatement.`in`(file, text)
+        val modules = ExternalModules(
+            ExternalModule("other", DirectoryPattern.listOf("unrelated"))
+        )
+
+        val resolved = statement.resolve(libPath, modules)
+
+        resolved.text() shouldBe text
+    }
+
+    @Test
+    fun `rewrite the import to the 'package' form when a module provides the file`(
+        @TempDir libPath: Path
+    ) {
+        val file = dartFileInSubDir(libPath)
+        val text = "import '../foo/bar.dart' as b;"
+        val statement = ImportStatement.`in`(file, text)
+        val modules = ExternalModules(
+            ExternalModule("mymod", DirectoryPattern.listOf("foo"))
+        )
+
+        val resolved = statement.resolve(libPath, modules)
+
+        resolved.text() shouldBe "import 'package:mymod/foo/bar.dart' as b;"
+    }
+
+    @Test
+    fun `support equality`(@TempDir libPath: Path) {
+        val file = dartFileWith(libPath, "void main() {}")
+        val text = "import 'a/b.dart' as x;"
+        val anotherText = "import 'a/c.dart' as y;"
+
+        EqualsTester()
+            .addEqualityGroup(
+                ImportStatement.`in`(file, text),
+                ImportStatement.`in`(file, text)
+            )
+            .addEqualityGroup(ImportStatement.`in`(file, anotherText))
+            .testEquals()
+    }
+
+    private fun dartFileInSubDir(libPath: Path): DartFile {
+        val sub = libPath.resolve("sub")
+        sub.createDirectories()
+        val path = sub.resolve("file.dart")
+        path.writeText("void main() {}")
+        return DartFile.read(path)
+    }
+
+    private fun dartFileWith(libPath: Path, content: String): DartFile {
+        val path = libPath.resolve("file.dart")
+        path.writeText(content)
+        return DartFile.read(path)
+    }
+}

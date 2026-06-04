@@ -24,37 +24,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.js.fs
+package io.spine.tools.dart.fs
 
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldContain
-import io.spine.tools.code.SourceSetName
-import java.nio.file.Path
-import kotlin.io.path.invariantSeparatorsPathString
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 
-@DisplayName("`DefaultJsPaths` should")
-class DefaultJsPathsSpec {
-
-    private lateinit var defaultPaths: DefaultJsPaths
-
-    @BeforeEach
-    fun createDefaults(@TempDir projectDir: Path) {
-        defaultPaths = DefaultJsPaths.at(projectDir)
-    }
+@DisplayName("`GeneratedFileSuffix` should")
+internal class GeneratedFileSuffixSpec {
 
     @Test
-    fun `obtain 'js' directory for a source set`() {
-        val subDir = defaultPaths.generated().dir(SourceSetName.main)
-
-        subDir.path().invariantSeparatorsPathString shouldContain "/main/js"
-    }
-
-    @Test
-    fun `be created from a 'File'`(@TempDir projectDir: Path) {
-        DefaultJsPaths.at(projectDir.toFile()).path() shouldBe projectDir
+    fun `expose its value via 'value()' and 'toString()'`() {
+        GeneratedFileSuffix.OF_MESSAGE.value() shouldBe ".pb.dart"
+        GeneratedFileSuffix.OF_MESSAGE.toString() shouldBe ".pb.dart"
+        GeneratedFileSuffix.OF_ENUM.toString() shouldBe ".pbenum.dart"
+        GeneratedFileSuffix.OF_SERVER.toString() shouldBe ".pbserver.dart"
+        GeneratedFileSuffix.OF_JSON.toString() shouldBe ".pbjson.dart"
     }
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright 2023, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -23,9 +23,11 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package io.spine.tools.java.fs
 
 import io.kotest.matchers.shouldBe
+import io.spine.tools.code.SourceSetName
 import io.spine.tools.div
 import io.spine.tools.fs.DirectoryName
 import io.spine.tools.fs.DirectoryName.build
@@ -51,6 +53,22 @@ internal class DefaultJavaPathsSpec {
         paths.generated().path() shouldBe
 
                 projectPath / GENERATED_DIR
+    }
+
+    @Test
+    fun `be created from a 'File'`() {
+        DefaultJavaPaths.at(projectPath.toFile()).path() shouldBe projectPath
+    }
+
+    @Test
+    fun `obtain the 'src' directory`() {
+        DefaultJavaPaths.at(projectPath).src().path().fileName.toString() shouldBe "src"
+    }
+
+    @Test
+    fun `obtain the generated Java directory for a source set`() {
+        val dir = DefaultJavaPaths.at(projectPath).generated().dir(SourceSetName.main)
+        dir.path().fileName.toString() shouldBe "java"
     }
 
     companion object {

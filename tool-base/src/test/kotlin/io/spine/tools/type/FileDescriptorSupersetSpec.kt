@@ -24,37 +24,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.js.fs
+package io.spine.tools.type
 
-import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldContain
-import io.spine.tools.code.SourceSetName
+import io.kotest.matchers.collections.shouldBeEmpty
 import java.nio.file.Path
-import kotlin.io.path.invariantSeparatorsPathString
-import org.junit.jupiter.api.BeforeEach
+import kotlin.io.path.createDirectory
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
-@DisplayName("`DefaultJsPaths` should")
-class DefaultJsPathsSpec {
-
-    private lateinit var defaultPaths: DefaultJsPaths
-
-    @BeforeEach
-    fun createDefaults(@TempDir projectDir: Path) {
-        defaultPaths = DefaultJsPaths.at(projectDir)
-    }
+@DisplayName("`FileDescriptorSuperset` should")
+internal class FileDescriptorSupersetSpec {
 
     @Test
-    fun `obtain 'js' directory for a source set`() {
-        val subDir = defaultPaths.generated().dir(SourceSetName.main)
+    fun `ignore a directory which has no descriptor files`(@TempDir sandbox: Path) {
+        val emptyDir = sandbox.resolve("empty")
+        emptyDir.createDirectory()
 
-        subDir.path().invariantSeparatorsPathString shouldContain "/main/js"
-    }
+        val superset = FileDescriptorSuperset()
+        superset.addFromDependency(emptyDir.toFile())
 
-    @Test
-    fun `be created from a 'File'`(@TempDir projectDir: Path) {
-        DefaultJsPaths.at(projectDir.toFile()).path() shouldBe projectDir
+        superset.merge().descriptors().shouldBeEmpty()
     }
 }

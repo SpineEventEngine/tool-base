@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -23,6 +23,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package io.spine.tools.java.fs
 
 import com.google.common.testing.NullPointerTester
@@ -36,6 +37,7 @@ import com.google.protobuf.Descriptors.FileDescriptor
 import com.google.protobuf.Descriptors.ServiceDescriptor
 import com.google.protobuf.Empty
 import io.grpc.protobuf.ProtoServiceDescriptorSupplier
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import io.spine.option.EntityOption
@@ -163,5 +165,57 @@ internal class SourceFileSpec {
             InheritAllMessage.getDescriptor(),
             "spine/test/code/InheritAllSourceFileTest.java"
         )
+    }
+
+    @Test
+    fun `is resolved from a package and a type name`() {
+        val sourceFile = SourceFile.forType("io.spine.test", "Foo")
+        sourceFile.path() shouldBe Paths.get("io/spine/test/Foo.java")
+    }
+
+    @Test
+    fun `is resolved from a Java class`() {
+        val sourceFile = SourceFile.of(SourceFileSpec::class.java)
+        sourceFile.path() shouldContain Paths.get("SourceFileSpec.java")
+    }
+
+    @Nested
+    @DisplayName("does not exist, reporting a missing definition for a")
+    inner class MissingDefinition {
+
+        private val unrelatedFile = Empty.getDescriptor().file.toProto()
+
+        @Test
+        fun message() {
+            shouldThrow<IllegalStateException> {
+                SourceFile.forMessage(StandaloneMessage.getDescriptor().toProto(), unrelatedFile)
+            }
+        }
+
+        @Test
+        fun `'MessageOrBuilder' interface`() {
+            shouldThrow<IllegalStateException> {
+                SourceFile.forMessageOrBuilder(
+                    StandaloneMessage.getDescriptor().toProto(),
+                    unrelatedFile
+                )
+            }
+        }
+
+        @Test
+        fun `enum type`() {
+            shouldThrow<IllegalStateException> {
+                SourceFile.forEnum(EntityOption.Kind.getDescriptor().toProto(), unrelatedFile)
+            }
+        }
+
+        @Test
+        fun `service type`() {
+            val serviceDescriptor = (ProjectServiceGrpc.getServiceDescriptor().schemaDescriptor as
+                    ProtoServiceDescriptorSupplier).serviceDescriptor
+            shouldThrow<IllegalStateException> {
+                SourceFile.forService(serviceDescriptor.toProto(), unrelatedFile)
+            }
+        }
     }
 }

@@ -24,37 +24,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.js.fs
+package io.spine.tools.fs
 
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldContain
-import io.spine.tools.code.SourceSetName
-import java.nio.file.Path
-import kotlin.io.path.invariantSeparatorsPathString
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 
-@DisplayName("`DefaultJsPaths` should")
-class DefaultJsPathsSpec {
+@DisplayName("`DirectoryName` should")
+internal class DirectoryNameSpec {
 
-    private lateinit var defaultPaths: DefaultJsPaths
-
-    @BeforeEach
-    fun createDefaults(@TempDir projectDir: Path) {
-        defaultPaths = DefaultJsPaths.at(projectDir)
+    @Test
+    fun `use the enum item name as the value by default`() {
+        DirectoryName.java.value() shouldBe "java"
+        DirectoryName.java.toString() shouldBe "java"
     }
 
     @Test
-    fun `obtain 'js' directory for a source set`() {
-        val subDir = defaultPaths.generated().dir(SourceSetName.main)
-
-        subDir.path().invariantSeparatorsPathString shouldContain "/main/js"
-    }
-
-    @Test
-    fun `be created from a 'File'`(@TempDir projectDir: Path) {
-        DefaultJsPaths.at(projectDir.toFile()).path() shouldBe projectDir
+    fun `use a custom value when provided`() {
+        DirectoryName.dotSpine.value() shouldBe ".spine"
+        DirectoryName.dotSpine.toString() shouldBe ".spine"
     }
 }

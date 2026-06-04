@@ -24,37 +24,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.js.fs
+package io.spine.tools.fs
 
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldContain
-import io.spine.tools.code.SourceSetName
-import java.nio.file.Path
-import kotlin.io.path.invariantSeparatorsPathString
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 
-@DisplayName("`DefaultJsPaths` should")
-class DefaultJsPathsSpec {
+@DisplayName("`ExternalModule` should")
+internal class ExternalModuleSpec {
 
-    private lateinit var defaultPaths: DefaultJsPaths
-
-    @BeforeEach
-    fun createDefaults(@TempDir projectDir: Path) {
-        defaultPaths = DefaultJsPaths.at(projectDir)
+    @Test
+    fun `expose its name`() {
+        ExternalModule("foo", DirectoryPattern.listOf("foo/*")).name() shouldBe "foo"
     }
 
     @Test
-    fun `obtain 'js' directory for a source set`() {
-        val subDir = defaultPaths.generated().dir(SourceSetName.main)
+    fun `tell whether it provides a file`() {
+        val module = ExternalModule("m", DirectoryPattern.listOf("d"))
 
-        subDir.path().invariantSeparatorsPathString shouldContain "/main/js"
+        module.provides(FileReference.of("./../../d/f.js")) shouldBe true
+        module.provides(FileReference.of("./../../other/f.js")) shouldBe false
     }
 
     @Test
-    fun `be created from a 'File'`(@TempDir projectDir: Path) {
-        DefaultJsPaths.at(projectDir.toFile()).path() shouldBe projectDir
+    fun `provide the Spine Users module`() {
+        ExternalModule.spineUsers().name() shouldBe "spine-users"
+    }
+
+    @Test
+    fun `provide the Spine Web module`() {
+        ExternalModule.spineWeb().name() shouldBe "spine-web"
+    }
+
+    @Test
+    fun `list the predefined modules`() {
+        ExternalModule.predefinedModules() shouldHaveSize 2
+    }
+
+    @Test
+    fun `not be equal to an object of a different type`() {
+        @Suppress("EqualsBetweenInconvertibleTypes")
+        ExternalModule.spineWeb().equals("spine-web") shouldBe false
     }
 }

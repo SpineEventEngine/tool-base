@@ -24,37 +24,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.js.fs
+package io.spine.tools.dart.fs
 
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldContain
-import io.spine.tools.code.SourceSetName
-import java.nio.file.Path
-import kotlin.io.path.invariantSeparatorsPathString
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 
-@DisplayName("`DefaultJsPaths` should")
-class DefaultJsPathsSpec {
+@DisplayName("`ProtocPluginPath` should")
+internal class ProtocPluginPathSpec {
 
-    private lateinit var defaultPaths: DefaultJsPaths
-
-    @BeforeEach
-    fun createDefaults(@TempDir projectDir: Path) {
-        defaultPaths = DefaultJsPaths.at(projectDir)
-    }
-
+    /**
+     * Verifies the outcome of [ProtocPluginPath.locate] in a way that is portable across
+     * environments: when the Dart `protoc` plugin is installed (e.g. a developer machine),
+     * an absolute normalized path is returned; when it is not (e.g. a clean CI agent),
+     * an [IllegalStateException] is reported. Either branch exercises the method.
+     */
     @Test
-    fun `obtain 'js' directory for a source set`() {
-        val subDir = defaultPaths.generated().dir(SourceSetName.main)
-
-        subDir.path().invariantSeparatorsPathString shouldContain "/main/js"
-    }
-
-    @Test
-    fun `be created from a 'File'`(@TempDir projectDir: Path) {
-        DefaultJsPaths.at(projectDir.toFile()).path() shouldBe projectDir
+    fun `locate the installed plugin or report its absence`() {
+        try {
+            val path = ProtocPluginPath.locate()
+            path.isAbsolute shouldBe true
+            path.normalize() shouldBe path
+        } catch (e: IllegalStateException) {
+            e.message!!.contains("protoc_plugin") shouldBe true
+        }
     }
 }

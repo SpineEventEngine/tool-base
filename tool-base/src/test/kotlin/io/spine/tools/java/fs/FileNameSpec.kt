@@ -24,37 +24,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.js.fs
+package io.spine.tools.java.fs
 
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldContain
-import io.spine.tools.code.SourceSetName
-import java.nio.file.Path
-import kotlin.io.path.invariantSeparatorsPathString
-import org.junit.jupiter.api.BeforeEach
+import io.spine.option.EntityOption
+import java.nio.file.Paths
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 
-@DisplayName("`DefaultJsPaths` should")
-class DefaultJsPathsSpec {
+@DisplayName("Java `FileName` should")
+internal class FileNameSpec {
 
-    private lateinit var defaultPaths: DefaultJsPaths
-
-    @BeforeEach
-    fun createDefaults(@TempDir projectDir: Path) {
-        defaultPaths = DefaultJsPaths.at(projectDir)
+    @Test
+    fun `obtain the name for a type`() {
+        FileName.forType("MyType").value() shouldBe "MyType.java"
     }
 
     @Test
-    fun `obtain 'js' directory for a source set`() {
-        val subDir = defaultPaths.generated().dir(SourceSetName.main)
-
-        subDir.path().invariantSeparatorsPathString shouldContain "/main/js"
+    fun `obtain the name for an enum`() {
+        val enumProto = EntityOption.Kind.getDescriptor().toProto()
+        FileName.forEnum(enumProto).value() shouldBe "${enumProto.name}.java"
     }
 
     @Test
-    fun `be created from a 'File'`(@TempDir projectDir: Path) {
-        DefaultJsPaths.at(projectDir.toFile()).path() shouldBe projectDir
+    fun `tell whether a path points to a Java file`() {
+        FileName.isJava(Paths.get("Foo.java")) shouldBe true
+        FileName.isJava(Paths.get("Foo.kt")) shouldBe false
     }
 }

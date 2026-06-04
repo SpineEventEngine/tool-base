@@ -24,37 +24,49 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.js.fs
+package io.spine.tools.java.javadoc
 
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldContain
-import io.spine.tools.code.SourceSetName
-import java.nio.file.Path
-import kotlin.io.path.invariantSeparatorsPathString
-import org.junit.jupiter.api.BeforeEach
+import io.kotest.matchers.string.shouldEndWith
+import io.kotest.matchers.string.shouldStartWith
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 
-@DisplayName("`DefaultJsPaths` should")
-class DefaultJsPathsSpec {
+@DisplayName("`JavadocText` should")
+internal class JavadocTextSpec {
 
-    private lateinit var defaultPaths: DefaultJsPaths
+    private val separator = System.lineSeparator()
 
-    @BeforeEach
-    fun createDefaults(@TempDir projectDir: Path) {
-        defaultPaths = DefaultJsPaths.at(projectDir)
+    @Test
+    fun `keep an already escaped text`() {
+        JavadocText.fromEscaped("Some text.").value() shouldBe "Some text."
     }
 
     @Test
-    fun `obtain 'js' directory for a source set`() {
-        val subDir = defaultPaths.generated().dir(SourceSetName.main)
-
-        subDir.path().invariantSeparatorsPathString shouldContain "/main/js"
+    fun `escape an unescaped text`() {
+        JavadocText.fromUnescaped("Some text.").value() shouldBe "Some text."
     }
 
     @Test
-    fun `be created from a 'File'`(@TempDir projectDir: Path) {
-        DefaultJsPaths.at(projectDir.toFile()).path() shouldBe projectDir
+    fun `wrap the text in 'pre' tags`() {
+        val text = JavadocText.fromEscaped("code").inPreTags().value()
+
+        text shouldStartWith "<pre>$separator"
+        text shouldEndWith "</pre>$separator"
+    }
+
+    @Test
+    fun `append a new line`() {
+        JavadocText.fromEscaped("line").withNewLine().value() shouldBe "line$separator"
+    }
+
+    @Test
+    fun `prepend a 'p' tag`() {
+        JavadocText.fromEscaped("paragraph").withPTag().value() shouldBe "<p>paragraph"
+    }
+
+    @Test
+    fun `expose the line separator`() {
+        JavadocText.lineSeparator() shouldBe separator
     }
 }

@@ -24,37 +24,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.js.fs
+package io.spine.tools.code
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldContain
-import io.spine.tools.code.SourceSetName
+import java.io.File
 import java.nio.file.Path
-import kotlin.io.path.invariantSeparatorsPathString
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
-@DisplayName("`DefaultJsPaths` should")
-class DefaultJsPathsSpec {
+@DisplayName("`Language` should")
+internal class LanguageSpec {
 
-    private lateinit var defaultPaths: DefaultJsPaths
-
-    @BeforeEach
-    fun createDefaults(@TempDir projectDir: Path) {
-        defaultPaths = DefaultJsPaths.at(projectDir)
+    @Test
+    fun `detect a language by a 'File' extension`() {
+        Language.of(File("model.proto")) shouldBe Protobuf
     }
 
     @Test
-    fun `obtain 'js' directory for a source set`() {
-        val subDir = defaultPaths.generated().dir(SourceSetName.main)
-
-        subDir.path().invariantSeparatorsPathString shouldContain "/main/js"
+    fun `reject a directory`(@TempDir dir: Path) {
+        shouldThrow<IllegalArgumentException> {
+            Language.of(dir)
+        }
     }
 
     @Test
-    fun `be created from a 'File'`(@TempDir projectDir: Path) {
-        DefaultJsPaths.at(projectDir.toFile()).path() shouldBe projectDir
+    fun `expose typed instances for Java interoperability`() {
+        Protobuf.lang() shouldBe Protobuf
+        Java.lang() shouldBe Java
+        Kotlin.lang() shouldBe Kotlin
+        JavaScript.lang() shouldBe JavaScript
+        TypeScript.lang() shouldBe TypeScript
+        Dart.lang() shouldBe Dart
     }
 }

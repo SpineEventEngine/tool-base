@@ -24,37 +24,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.js.fs
+package io.spine.tools.proto.fs
 
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldContain
-import io.spine.tools.code.SourceSetName
+import io.spine.tools.java.fs.DefaultJavaPaths
 import java.nio.file.Path
-import kotlin.io.path.invariantSeparatorsPathString
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
-@DisplayName("`DefaultJsPaths` should")
-class DefaultJsPathsSpec {
+@DisplayName("Proto `Directory` should")
+internal class DirectorySpec {
 
-    private lateinit var defaultPaths: DefaultJsPaths
-
-    @BeforeEach
-    fun createDefaults(@TempDir projectDir: Path) {
-        defaultPaths = DefaultJsPaths.at(projectDir)
+    @Test
+    fun `expose the root directory name`() {
+        Directory.rootName() shouldBe "proto"
     }
 
     @Test
-    fun `obtain 'js' directory for a source set`() {
-        val subDir = defaultPaths.generated().dir(SourceSetName.main)
+    fun `create a 'proto' root under a parent directory`(@TempDir projectDir: Path) {
+        val parent = DefaultJavaPaths.at(projectDir)
 
-        subDir.path().invariantSeparatorsPathString shouldContain "/main/js"
-    }
+        val directory = Directory.rootIn(parent)
 
-    @Test
-    fun `be created from a 'File'`(@TempDir projectDir: Path) {
-        DefaultJsPaths.at(projectDir.toFile()).path() shouldBe projectDir
+        directory.path().fileName.toString() shouldBe "proto"
+        directory.path().parent shouldBe parent.path()
     }
 }

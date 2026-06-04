@@ -24,37 +24,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.js.fs
+package io.spine.tools.type
 
+import com.google.protobuf.DescriptorProtos.FileDescriptorSet
+import com.google.protobuf.Empty
+import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldContain
-import io.spine.tools.code.SourceSetName
-import java.nio.file.Path
-import kotlin.io.path.invariantSeparatorsPathString
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 
-@DisplayName("`DefaultJsPaths` should")
-class DefaultJsPathsSpec {
+@DisplayName("`MergedDescriptorSet` should")
+internal class MergedDescriptorSetSpec {
 
-    private lateinit var defaultPaths: DefaultJsPaths
+    private val descriptorSet: FileDescriptorSet = FileDescriptorSet.newBuilder()
+        .addFile(Empty.getDescriptor().file.toProto())
+        .build()
 
-    @BeforeEach
-    fun createDefaults(@TempDir projectDir: Path) {
-        defaultPaths = DefaultJsPaths.at(projectDir)
+    @Test
+    fun `expose the file set built from the descriptors`() {
+        val merged = MergedDescriptorSet(descriptorSet)
+
+        merged.fileSet().isEmpty shouldBe false
     }
 
     @Test
-    fun `obtain 'js' directory for a source set`() {
-        val subDir = defaultPaths.generated().dir(SourceSetName.main)
+    fun `extend the known types`() {
+        val merged = MergedDescriptorSet(descriptorSet)
 
-        subDir.path().invariantSeparatorsPathString shouldContain "/main/js"
-    }
+        // Should not throw: `Empty` is a well-known type already present in the registry.
+        merged.loadIntoKnownTypes()
 
-    @Test
-    fun `be created from a 'File'`(@TempDir projectDir: Path) {
-        DefaultJsPaths.at(projectDir.toFile()).path() shouldBe projectDir
+        merged.descriptors() shouldContain Empty.getDescriptor().file.toProto()
     }
 }

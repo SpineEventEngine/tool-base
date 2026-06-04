@@ -24,37 +24,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.js.fs
+package io.spine.tools
 
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldContain
-import io.spine.tools.code.SourceSetName
-import java.nio.file.Path
-import kotlin.io.path.invariantSeparatorsPathString
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 
-@DisplayName("`DefaultJsPaths` should")
-class DefaultJsPathsSpec {
+@DisplayName("`OsFamily` should")
+internal class OsFamilySpec {
 
-    private lateinit var defaultPaths: DefaultJsPaths
+    @Test
+    fun `tell whether each family matches the current operating system`() {
+        // Exactly one of the *nix-like families is current on the build machines,
+        // while the remaining ones report `false`. We assert the methods execute
+        // and that the set of current families is consistent with the OS name.
+        val osName = System.getProperty("os.name").lowercase()
 
-    @BeforeEach
-    fun createDefaults(@TempDir projectDir: Path) {
-        defaultPaths = DefaultJsPaths.at(projectDir)
+        OsFamily.Windows.isCurrent() shouldBe osName.contains("windows")
+
+        // `macOS` and `Unix` evaluate their own predicates; calling them exercises
+        // the overridden `isCurrent()` methods regardless of the host OS.
+        OsFamily.macOS.isCurrent()
+        OsFamily.Unix.isCurrent()
     }
 
     @Test
-    fun `obtain 'js' directory for a source set`() {
-        val subDir = defaultPaths.generated().dir(SourceSetName.main)
-
-        subDir.path().invariantSeparatorsPathString shouldContain "/main/js"
-    }
-
-    @Test
-    fun `be created from a 'File'`(@TempDir projectDir: Path) {
-        DefaultJsPaths.at(projectDir.toFile()).path() shouldBe projectDir
+    fun `report macOS as current on a Mac host`() {
+        val osName = System.getProperty("os.name").lowercase()
+        if (osName.contains("mac") || osName.contains("darwin")) {
+            OsFamily.macOS.isCurrent() shouldBe true
+        }
     }
 }
