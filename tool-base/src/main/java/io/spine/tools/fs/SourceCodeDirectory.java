@@ -37,8 +37,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * A directory with source code files.
  */
 @Immutable
-@SuppressWarnings({"unused", /* Part of the public API. */
-        "AbstractClassNeverImplemented"})
 public abstract class SourceCodeDirectory extends AbstractDirectory {
 
     protected SourceCodeDirectory(Path path) {
