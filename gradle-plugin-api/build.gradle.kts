@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,10 +26,15 @@
 
 import io.spine.dependency.lib.Jackson
 import io.spine.dependency.lib.Protobuf
+import io.spine.gradle.testing.enableTestKitCoverage
 
 plugins {
     module
 }
+
+// Credit coverage of the settings plugin executed in TestKit worker JVMs by
+// `LibrarySettingsPluginSpec`. See `io.spine.gradle.testing.enableTestKitCoverage`.
+enableTestKitCoverage()
 
 /**
  * The project containing two stub plugins used by the tests of this module.
