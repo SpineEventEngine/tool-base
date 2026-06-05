@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import io.spine.dependency.local.Logging
 import io.spine.gradle.isSnapshot
 import io.spine.gradle.publish.SpinePublishing
 import io.spine.gradle.report.license.LicenseReporter
+import io.spine.gradle.testing.enableTestKitCoverage
 
 plugins {
     `uber-jar-module`
@@ -37,6 +38,10 @@ plugins {
     id("io.spine.artifact-meta")
 }
 LicenseReporter.generateReportIn(project)
+
+// Credit coverage of the plugins executed in TestKit worker JVMs by the
+// `*PluginSpec` tests. See `io.spine.gradle.testing.enableTestKitCoverage`.
+enableTestKitCoverage()
 
 val spinePublishing = the<SpinePublishing>()
 
@@ -102,7 +107,7 @@ dependencies {
     implementation(Base.lib)?.because("We need `DescriptorSetReferenceFile` at compile time.")
     implementation(project(":plugin-base"))
     implementation(Logging.lib)
-    
+
     testImplementation(project(":plugin-testlib"))
 }
 
