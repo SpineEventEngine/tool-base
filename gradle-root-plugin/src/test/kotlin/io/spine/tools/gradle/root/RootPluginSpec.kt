@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldEndWith
 import io.kotest.matchers.string.shouldNotContain
 import io.spine.tools.gradle.task.BaseTaskName
 import io.spine.tools.gradle.testing.Gradle
@@ -67,6 +68,15 @@ internal class RootPluginSpec {
             ext shouldNotBe null
             findByType(RootExtension::class.java) shouldBe ext
         }
+    }
+
+    @Test
+    fun `expose the root working directory`() {
+        val plugin = RootPlugin()
+        plugin.apply(project)
+
+        plugin.workingDirectory
+            .asFile.invariantSeparatorsPath shouldEndWith "build/spine"
     }
 
     @Test
@@ -110,14 +120,14 @@ internal class RootPluginSpec {
             plugins {
                 id("io.spine.root")
             }
-            
+
             tasks.register("checkRepos") {
                 doLast {
                     if (project.repositories.isEmpty()) {
                         println("NO_REPOS")
                     } else {
-                        project.repositories.forEach { 
-                            println("REPO: " + it.name) 
+                        project.repositories.forEach {
+                            println("REPO: " + it.name)
                         }
                     }
                 }
@@ -145,14 +155,14 @@ internal class RootPluginSpec {
             plugins {
                 id("io.spine.root")
             }
-            
+
             tasks.register("checkRepos") {
                 doLast {
                     if (project.repositories.isEmpty()) {
                         println("NO_REPOS")
                     } else {
-                        project.repositories.forEach { 
-                            println("REPO: " + it.name) 
+                        project.repositories.forEach {
+                            println("REPO: " + it.name)
                         }
                     }
                 }
@@ -172,7 +182,7 @@ internal class RootPluginSpec {
             plugins {
                 id("io.spine.root")
             }
-            
+
             spine {
                 // Nothing here so far.
             }
