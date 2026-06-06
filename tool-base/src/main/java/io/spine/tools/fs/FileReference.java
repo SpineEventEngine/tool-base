@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -63,10 +63,22 @@ public final class FileReference extends StringTypeValue implements Comparable<F
 
     /**
      * Creates a new instance using the passed file path.
+     *
+     * <p>The path elements are joined with the platform-independent
+     * {@linkplain #IMPORT_PATH_SEPARATOR import separator} rather than via
+     * {@link Path#toString()}, which would emit the platform separator
+     * (backslashes on Windows) and break reference matching.
      */
     public static FileReference of(Path path) {
         checkNotNull(path);
-        return of(path.toString());
+        var reference = new StringBuilder();
+        for (var i = 0; i < path.getNameCount(); i++) {
+            if (i > 0) {
+                reference.append(IMPORT_PATH_SEPARATOR);
+            }
+            reference.append(path.getName(i));
+        }
+        return of(reference.toString());
     }
 
     /**
