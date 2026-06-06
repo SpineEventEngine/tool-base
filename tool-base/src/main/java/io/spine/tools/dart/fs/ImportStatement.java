@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -73,15 +73,29 @@ final class ImportStatement implements Element, WithLogging {
     }
 
     private ImportStatement(Path sourceDirectory, String text) {
+        this(sourceDirectory, text, parse(text));
+    }
+
+    private ImportStatement(Path sourceDirectory, String text, String[] parts) {
         this.sourceDirectory = sourceDirectory;
         this.text = text;
+        this.importPathAsDeclared = parts[0];
+        this.importAlias = parts[1];
+    }
+
+    /**
+     * Parses the given import statement text into the import path and the alias.
+     *
+     * @throws IllegalArgumentException
+     *         if the text is not a recognized relative import statement
+     */
+    private static String[] parse(String text) {
         var matcher = PATTERN.matcher(text);
         checkArgument(
                 matcher.matches(),
                 "The passed text is not recognized as an import statement (`%s`).", text
         );
-        this.importPathAsDeclared = matcher.group(1);
-        this.importAlias = matcher.group(2);
+        return new String[]{matcher.group(1), matcher.group(2)};
     }
 
     /**
@@ -116,7 +130,7 @@ final class ImportStatement implements Element, WithLogging {
         var reference = FileReference.of(relativePath);
         for (var module : modules.asList()) {
             if (module.provides(reference)) {
-                return resolve(module, relativePath);
+                return resolve(module, reference);
             }
         }
         return this;
@@ -136,13 +150,16 @@ final class ImportStatement implements Element, WithLogging {
         return relativePath;
     }
 
-    private ImportStatement resolve(ExternalModule module, Path relativePath) {
-        var resolved = format(
-                "import 'package:%s/%s' as %s;",
-                module.name(), relativePath, importAlias
-        );
+    private ImportStatement resolve(ExternalModule module, FileReference reference) {
+        // `reference` uses the platform-independent import separator, so the
+        // resulting `package:` path has forward slashes on every OS.
+        var packagePath = format("package:%s/%s", module.name(), reference.value());
+        var resolved = format("import '%s' as %s;", packagePath, importAlias);
         logger().atDebug().log(() -> format("Replacing with `%s`.", resolved));
-        return new ImportStatement(sourceDirectory, resolved);
+        // Construct directly from the already-resolved parts. The `package:` form contains
+        // a colon, so it would not match `PATTERN`, which only recognizes relative imports.
+        return new ImportStatement(sourceDirectory, resolved,
+                                   new String[]{packagePath, importAlias});
     }
 
     @Override

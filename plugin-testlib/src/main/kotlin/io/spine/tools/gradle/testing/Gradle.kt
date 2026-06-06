@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -95,6 +95,7 @@ public fun runGradleBuild(
         .withProjectDir(projectDir)
         .withPluginClasspath()
         .withArguments(arguments)
+    runner.enableTestKitCoverage()
     stdOutput?.let {
         runner.forwardStdOutput(it)
     }
@@ -103,6 +104,6 @@ public fun runGradleBuild(
     }
     if (debug) {
         runner.withDebug(true)
-    }    
+    }
     return runner.build()
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,11 +71,15 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
         val runner = GradleRunner.create()
             .withProjectDir(setup.projectDir)
             .withDebug(setup.debug)
-        if (setup.useSharedTestKit) {
-            val sharedDir = RootProject.testKitTempDir().toFile()
-            sharedDir.mkdirs()
-            runner.withTestKitDir(sharedDir)
+        val sharedTestKitDir = if (setup.useSharedTestKit) {
+            RootProject.testKitTempDir().toFile().apply { mkdirs() }
+        } else {
+            null
         }
+        if (sharedTestKitDir != null) {
+            runner.withTestKitDir(sharedTestKitDir)
+        }
+        runner.enableTestKitCoverage(sharedTestKitDir)
         runner
     }
 
@@ -163,14 +167,14 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
         } catch (e: UnexpectedBuildFailure) {
             val output = e.buildResult.output
             val message = "Unexpected build failure." + """
-                
+
                 Project: `${projectDir.path}`
-                Task: `${task.name()}`    
+                Task: `${task.name()}`
                 Build result output =====>
                 """.trimIndent() +
                 output +
                 """
-                <===== Build result output end.                
+                <===== Build result output end.
                 """.trimIndent()
             throw IllegalStateException(message, e)
         }

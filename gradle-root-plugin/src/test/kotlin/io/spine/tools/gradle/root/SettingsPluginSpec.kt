@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,11 +58,11 @@ internal class SettingsPluginSpec {
             plugins {
                 id("io.spine.settings")
             }
-            
+
             spineSettings {
                 versions {
                     base.set("2.0.0")
-                }            
+                }
             }
             """.trimIndent()
         )
@@ -71,6 +71,39 @@ internal class SettingsPluginSpec {
         Gradle.buildFile.under(projectDir).writeText("")
 
         // Execute the build.
+        val taskName = BaseTaskName.help
+        val result = runGradleBuild(projectDir, taskName)
+
+        result[taskName] shouldBe TaskOutcome.SUCCESS
+        result.output shouldContain BUILD_SUCCESSFUL
+    }
+
+    /**
+     * Exercises the [Settings.hasRootExtension][hasRootExtension] and
+     * [Settings.rootExtension][rootExtension] accessors from a settings script,
+     * once the [SettingsPlugin] has created the extension.
+     *
+     * The settings plugin runs in a Gradle TestKit worker JVM, whose coverage
+     * is credited back to this module (see `enableTestKitCoverage`).
+     */
+    @Test
+    fun `expose the root settings extension via 'Settings' accessors`() {
+        val settingsFile = Gradle.settingsFile.under(projectDir)
+        settingsFile.writeText(
+            """
+            import io.spine.tools.gradle.root.hasRootExtension
+            import io.spine.tools.gradle.root.rootExtension
+
+            plugins {
+                id("io.spine.settings")
+            }
+
+            check(settings.hasRootExtension) { "The root settings extension must be present." }
+            logger.lifecycle("Root settings extension: " + settings.rootExtension)
+            """.trimIndent()
+        )
+        Gradle.buildFile.under(projectDir).writeText("")
+
         val taskName = BaseTaskName.help
         val result = runGradleBuild(projectDir, taskName)
 

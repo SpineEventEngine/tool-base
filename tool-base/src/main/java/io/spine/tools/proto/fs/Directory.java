@@ -27,8 +27,8 @@
 package io.spine.tools.proto.fs;
 
 import io.spine.annotation.Internal;
-import io.spine.code.fs.AbstractDirectory;
-import io.spine.code.fs.SourceCodeDirectory;
+import io.spine.tools.fs.AbstractDirectory;
+import io.spine.tools.fs.SourceCodeDirectory;
 
 import java.nio.file.Path;
 

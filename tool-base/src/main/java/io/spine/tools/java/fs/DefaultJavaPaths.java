@@ -28,8 +28,8 @@ package io.spine.tools.java.fs;
 
 import com.google.errorprone.annotations.Immutable;
 import io.spine.annotation.Internal;
-import io.spine.code.fs.AbstractDirectory;
 import io.spine.tools.code.SourceSetName;
+import io.spine.tools.fs.AbstractDirectory;
 import io.spine.tools.fs.DefaultPaths;
 import io.spine.tools.fs.DirectoryName;
 import io.spine.tools.fs.Generated;

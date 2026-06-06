@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@
  */
 
 import io.spine.gradle.isSnapshot
+import io.spine.gradle.testing.enableTestKitCoverage
 
 plugins {
     module
@@ -33,6 +34,10 @@ plugins {
     `plugin-publish`
     `write-manifest`
 }
+
+// Credit coverage of the settings plugin executed in TestKit worker JVMs by
+// `SettingsPluginSpec`. See `io.spine.gradle.testing.enableTestKitCoverage`.
+enableTestKitCoverage()
 
 // As defined in `versions.gradle.kts`.
 val versionToPublish: String by extra
@@ -70,7 +75,7 @@ gradlePlugin {
             "kotlin",
             "java"
         )
-        
+
         create("spineRootPlugin") {
             // Make sure it matches the value of the property `SpinePlugin.Companion.ID`.
             id = "io.spine.root"

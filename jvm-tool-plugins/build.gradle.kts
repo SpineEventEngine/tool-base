@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@
 import io.spine.dependency.lib.Kotlin
 import io.spine.gradle.report.license.LicenseReporter
 import io.spine.gradle.isSnapshot
+import io.spine.gradle.testing.enableTestKitCoverage
 
 plugins {
     `uber-jar-module`
@@ -36,6 +37,10 @@ plugins {
     `write-manifest`
 }
 LicenseReporter.generateReportIn(project)
+
+// Credit coverage of the plugins executed in TestKit worker JVMs by the
+// `*PluginSpec` tests. See `io.spine.gradle.testing.enableTestKitCoverage`.
+enableTestKitCoverage()
 
 // As defined in `versions.gradle.kts`.
 val versionToPublish: String by extra

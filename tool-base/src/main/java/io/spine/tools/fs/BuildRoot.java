@@ -27,7 +27,6 @@
 package io.spine.tools.fs;
 
 import com.google.errorprone.annotations.Immutable;
-import io.spine.code.fs.AbstractDirectory;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static io.spine.tools.fs.DirectoryName.build;

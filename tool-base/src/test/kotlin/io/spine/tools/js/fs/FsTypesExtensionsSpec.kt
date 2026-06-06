@@ -26,8 +26,8 @@
 package io.spine.tools.js.fs
 
 import io.kotest.matchers.string.shouldEndWith
-import io.spine.code.fs.SourceCodeDirectory
 import io.spine.tools.code.SourceSetName.Companion.main
+import io.spine.tools.fs.SourceCodeDirectory
 import java.nio.file.Path
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
