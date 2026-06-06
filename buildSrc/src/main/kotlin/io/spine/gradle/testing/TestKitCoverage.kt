@@ -52,7 +52,10 @@ import org.gradle.kotlin.dsl.withType
  *     a previous run does not accumulate.
  *
  * The produced `.exec` files are merged into the Kover reports by
- * [io.spine.gradle.report.coverage.KoverConfig].
+ * [io.spine.gradle.report.coverage.KoverConfig]. The agent emits binary
+ * execution data rather than an XML report because that is its only file output,
+ * and because Kover merges binary data at the probe level — see `KoverConfig`
+ * for why binary, not XML.
  *
  * The method is idempotent and may be called once per module that runs
  * TestKit-based tests.

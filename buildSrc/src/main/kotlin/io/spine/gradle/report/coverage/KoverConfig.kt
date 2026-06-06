@@ -98,6 +98,13 @@ private const val KOTLIN_FILE_CLASS_SUFFIX: String = "Kt"
  *    — most notably `Plugin<Settings>` implementations, which cannot be
  *    unit-tested in-process — is not credited to coverage.
  *
+ *    The worker data is merged as binary `.exec` rather than as a generated
+ *    XML report on purpose. `additionalBinaryReports` is the only merge hook
+ *    Kover offers (there is no XML-merge equivalent), and binary data merges at
+ *    the probe level against each module's actual bytecode: a line hit both
+ *    in-process and out-of-process is counted once. Summing pre-aggregated XML
+ *    reports instead would double-count such lines.
+ *
  * This is the Kover-based successor to the deprecated JaCoCo-based
  * coverage aggregation pipeline. The behaviour mirrors what
  * the former JaCoCo-based pipeline provided, but is wired through Kover
