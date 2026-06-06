@@ -151,13 +151,32 @@ final class ImportStatement implements Element, WithLogging {
     }
 
     private ImportStatement resolve(ExternalModule module, Path relativePath) {
-        var packagePath = format("package:%s/%s", module.name(), relativePath);
+        var packagePath = format("package:%s/%s", module.name(), forwardSlashes(relativePath));
         var resolved = format("import '%s' as %s;", packagePath, importAlias);
         logger().atDebug().log(() -> format("Replacing with `%s`.", resolved));
         // Construct directly from the already-resolved parts. The `package:` form contains
         // a colon, so it would not match `PATTERN`, which only recognizes relative imports.
         return new ImportStatement(sourceDirectory, resolved,
                                    new String[]{packagePath, importAlias});
+    }
+
+    /**
+     * Joins the name elements of the path with the forward slash.
+     *
+     * <p>Dart {@code package:} imports always use forward slashes. Formatting a
+     * {@link Path} directly would emit the platform separator (backslashes on
+     * Windows), producing an invalid import. Building the path from its name
+     * elements yields the same result on every OS.
+     */
+    private static String forwardSlashes(Path path) {
+        var result = new StringBuilder();
+        for (var i = 0; i < path.getNameCount(); i++) {
+            if (i > 0) {
+                result.append('/');
+            }
+            result.append(path.getName(i));
+        }
+        return result.toString();
     }
 
     @Override
