@@ -61,6 +61,8 @@ import org.gradle.testkit.runner.GradleRunner
  * to the same JaCoCo version your coverage tooling uses.
  *
  * ```kotlin
+ * import java.util.concurrent.atomic.AtomicBoolean
+ *
  * // A resolvable, non-consumable configuration holding the standalone agent JAR.
  * val testKitJacocoAgent: Configuration by configurations.creating {
  *     isCanBeConsumed = false
@@ -73,11 +75,24 @@ import org.gradle.testkit.runner.GradleRunner
  * val agentJar = testKitJacocoAgent.elements.map { it.single().asFile.absolutePath }
  * val execDir = layout.buildDirectory.dir("jacoco-testkit")
  *
+ * // Wipe the exec directory at most once per build, from the first Test task
+ * // that actually executes. The workers append to a single per-module exec
+ * // file, so several TestKit tasks accumulate into it instead of erasing one
+ * // another. (A `dependsOn` clean task would also delete the file on up-to-date
+ * // or cached runs that never regenerate it.)
+ * val cleaned = AtomicBoolean(false)
+ *
  * tasks.withType<Test>().configureEach {
  *     inputs.files(testKitJacocoAgent)
+ *     // Worker `.exec` data is flushed out-of-process on daemon shutdown, after
+ *     // the task action, so it cannot be a declared output: a cache hit would
+ *     // skip execution and drop the coverage.
+ *     outputs.cacheIf("TestKit worker coverage cannot be a declared output") { false }
  *     doFirst {
  *         val dir = execDir.get().asFile
- *         dir.deleteRecursively() // Drop stale worker coverage from a previous run.
+ *         if (cleaned.compareAndSet(false, true)) {
+ *             dir.deleteRecursively() // Drop stale worker coverage from a previous run.
+ *         }
  *         dir.mkdirs()
  *         systemProperty("io.spine.tools.gradle.testkit.coverage.agent", agentJar.get())
  *         systemProperty("io.spine.tools.gradle.testkit.coverage.execDir", dir.absolutePath)
