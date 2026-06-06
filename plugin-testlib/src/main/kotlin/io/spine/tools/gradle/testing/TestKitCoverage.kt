@@ -37,77 +37,17 @@ import org.gradle.testkit.runner.GradleRunner
  * [EXEC_DIR_PROPERTY] system properties. This keeps the harness a no-op for
  * ordinary runs and for consumers that do not opt in.
  *
+ * Supplying those two properties on the test JVM is the responsibility of the
+ * consuming build. Consumer-facing setup instructions, including a copy-paste
+ * Gradle recipe, live in the [GradleProject] KDoc (this function is `internal`,
+ * so its own KDoc is not part of the published API documentation).
+ *
  * When enabled, the method writes a `gradle.properties` carrying a `-javaagent:…`
  * argument into the TestKit directory (the Gradle user home of the worker build),
  * and points the runner at that directory. The JaCoCo agent appends to a single
  * per-module [execution-data file][EXEC_FILE]; on worker daemon shutdown — which
  * happens after the tests complete and before the coverage report task runs — the
  * data is flushed to disk.
- *
- * ## Enabling TestKit coverage from your build
- *
- * The harness reads two system properties; supplying them on the test JVM is the
- * responsibility of the build that uses `plugin-testlib`:
- *
- *  - [AGENT_PROPERTY] (`io.spine.tools.gradle.testkit.coverage.agent`) — the
- *    absolute path to the standalone JaCoCo agent JAR, that is, the artifact
- *    `org.jacoco:org.jacoco.agent:<version>:runtime`.
- *  - [EXEC_DIR_PROPERTY] (`io.spine.tools.gradle.testkit.coverage.execDir`) — the
- *    directory into which the worker should write its execution data. The harness
- *    creates the per-module [EXEC_FILE] inside it.
- *
- * The snippet below is a self-contained Gradle (Kotlin DSL) setup that a module
- * running TestKit-based tests can copy into its `build.gradle.kts`. Pin the agent
- * to the same JaCoCo version your coverage tooling uses.
- *
- * ```kotlin
- * import java.util.concurrent.atomic.AtomicBoolean
- *
- * // A resolvable, non-consumable configuration holding the standalone agent JAR.
- * val testKitJacocoAgent: Configuration by configurations.creating {
- *     isCanBeConsumed = false
- *     isCanBeResolved = true
- * }
- * dependencies {
- *     testKitJacocoAgent("org.jacoco:org.jacoco.agent:0.8.15:runtime")
- * }
- *
- * val agentJar = testKitJacocoAgent.elements.map { it.single().asFile.absolutePath }
- * val execDir = layout.buildDirectory.dir("jacoco-testkit")
- *
- * // Wipe the exec directory at most once per build, from the first Test task
- * // that actually executes. The workers append to a single per-module exec
- * // file, so several TestKit tasks accumulate into it instead of erasing one
- * // another. (A `dependsOn` clean task would also delete the file on up-to-date
- * // or cached runs that never regenerate it.)
- * val cleaned = AtomicBoolean(false)
- *
- * tasks.withType<Test>().configureEach {
- *     inputs.files(testKitJacocoAgent)
- *     // Worker `.exec` data is flushed out-of-process on daemon shutdown, after
- *     // the task action, so it cannot be a declared output: a cache hit would
- *     // skip execution and drop the coverage.
- *     outputs.cacheIf("TestKit worker coverage cannot be a declared output") { false }
- *     doFirst {
- *         val dir = execDir.get().asFile
- *         if (cleaned.compareAndSet(false, true)) {
- *             dir.deleteRecursively() // Drop stale worker coverage from a previous run.
- *         }
- *         dir.mkdirs()
- *         systemProperty("io.spine.tools.gradle.testkit.coverage.agent", agentJar.get())
- *         systemProperty("io.spine.tools.gradle.testkit.coverage.execDir", dir.absolutePath)
- *     }
- * }
- * ```
- *
- * The agent writes binary JaCoCo execution data (an [EXEC_FILE]); feed that file
- * into your coverage report (JaCoCo or Kover) as an additional binary report, so
- * the out-of-process worker coverage is merged with the in-process test coverage.
- *
- * Within the SpineEventEngine organisation this wiring is already provided by the
- * `io.spine.gradle.testing.enableTestKitCoverage` Gradle extension that ships in
- * `config`'s `buildSrc`, and the produced files are merged into Kover reports by
- * `KoverConfig`. Consumers outside that setup can use the snippet above instead.
  *
  * @param preferredTestKitDir The TestKit directory the caller already intends to
  *   use (e.g. a [shared one][GradleProjectSetup.withSharedTestKitDirectory]), or
