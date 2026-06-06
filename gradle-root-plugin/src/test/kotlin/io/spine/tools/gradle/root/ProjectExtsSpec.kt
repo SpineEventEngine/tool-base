@@ -29,7 +29,7 @@ package io.spine.tools.gradle.root
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldEndWith
-import io.spine.io.toUnix
+import io.spine.io.toUnixPath
 import org.gradle.api.Project
 import org.gradle.api.UnknownDomainObjectException
 import org.gradle.testfixtures.ProjectBuilder
@@ -50,7 +50,7 @@ class ProjectExtsSpec {
 
     @Test
     fun `provide a working directory under the 'build'`() {
-        project.rootWorkingDir.toString().toUnix() shouldEndWith "build/spine"
+        project.rootWorkingDir.asFile.toUnixPath() shouldEndWith "build/spine"
     }
 
     @Test
