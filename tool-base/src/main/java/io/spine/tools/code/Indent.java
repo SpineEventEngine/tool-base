@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -130,7 +130,6 @@ public final class Indent implements Element, Serializable {
     /**
      * Obtains an instance shifted to the right by one level.
      */
-    @SuppressWarnings("unused") /* Part of the public API. */
     public Indent shiftedRight() {
         return new Indent(size, level + 1);
     }
@@ -141,7 +140,6 @@ public final class Indent implements Element, Serializable {
      * @throws IllegalStateException
      *          if this indentation is already at the zero column
      */
-    @SuppressWarnings("unused") /* Part of the public API. */
     public Indent shiftedLeft() {
         checkState(level > 0, "Already at zero. Cannot shift to the left more.");
         return new Indent(size, level - 1);

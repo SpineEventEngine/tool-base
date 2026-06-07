@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,6 @@ public class JavadocText extends StringTypeValue {
         return new JavadocText(escapedText);
     }
 
-    @SuppressWarnings("unused") /* Part of the public API. */
     public static JavadocText fromUnescaped(String unescapedText) {
         return new JavadocText(JavadocEscaper.escape(unescapedText));
     }
@@ -64,7 +63,6 @@ public class JavadocText extends StringTypeValue {
      *
      * @return the text wrapped in the tags
      */
-    @SuppressWarnings("unused") /* Part of the public API. */
     public JavadocText inPreTags() {
         var inTags = OPENING_PRE +
                 LINE_SEPARATOR +
