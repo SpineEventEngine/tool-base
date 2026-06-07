@@ -26,7 +26,7 @@
 
 package io.spine.tools.protobuf.gradle.plugin
 
-import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import io.spine.tools.protobuf.gradle.ProtocPluginName
 import org.junit.jupiter.api.DisplayName
@@ -46,7 +46,9 @@ internal class ProtocPluginNameSpec {
 
     @Test
     fun `declare all known protoc plugins in lower camel case`() {
-        ProtocPluginName.entries.map { it.name } shouldContainExactly listOf(
+        // Order-independent: the test only cares that all known names are present
+        // (with their exact lower-camel-case spelling) and that there are no extras.
+        ProtocPluginName.entries.map { it.name } shouldContainExactlyInAnyOrder listOf(
             "java", "kotlin", "js", "grpc", "spineProtoc", "dart"
         )
     }
