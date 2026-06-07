@@ -26,6 +26,7 @@
 
 package io.spine.tools.protobuf.gradle
 
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import java.nio.file.Path
@@ -58,15 +59,26 @@ internal class SourceSetExtsSpec {
     }
 
     @Test
-    fun `return 'null' from 'findProtoDirectorySet' when no 'proto' extension`() {
+    fun `obtain the proto directory set when the Protobuf plugin is applied`() {
         // Applying the protobuf plugin adds the `proto` extension.
         project.plugins.apply(ProtobufDependencies.gradlePlugin.id)
 
         mainSourceSet.findProtoDirectorySet().shouldNotBeNull()
     }
 
+    @Test
+    fun `return 'null' from 'findProtoDirectorySet' when the Protobuf plugin is not applied`() {
+        // No `proto` extension is present without the Protobuf Gradle plugin.
+        mainSourceSet.findProtoDirectorySet().shouldBeNull()
+    }
+
     @Nested
     inner class `tell whether a source set contains proto files` {
+
+        @Test
+        fun `returning 'false' when the Protobuf plugin is not applied`() {
+            mainSourceSet.containsProtoFiles() shouldBe false
+        }
 
         @Test
         fun `returning 'false' when the 'proto' set is empty`() {
