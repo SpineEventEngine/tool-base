@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Test;
 
 import static io.spine.tools.gradle.given.ProjectConfigurations.assertCompileTasksContain;
 import static io.spine.tools.gradle.given.ProjectConfigurations.assertCompileTasksEmpty;
+import static com.google.common.truth.Truth.assertThat;
 
 @DisplayName("`JavaCompileTasks` should")
 class JavaCompileTasksTest {
@@ -59,5 +60,16 @@ class JavaCompileTasksTest {
     void noArgs() {
         JavaCompileTasks.of(project).addArgs();
         assertCompileTasksEmpty(project);
+    }
+
+    @Test
+    @DisplayName("iterate over Java compile tasks")
+    void iterable() {
+        var tasks = JavaCompileTasks.of(project);
+        var count = 0;
+        for (var task : tasks) {
+            count++;
+        }
+        assertThat(count).isGreaterThan(0);
     }
 }

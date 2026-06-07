@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,6 +70,18 @@ internal class ArtifactMetaSpec {
         val artifactMeta = ArtifactMeta(toolBase, emptyDependencies)
 
         artifactMeta.version shouldBe toolBase.version
+    }
+
+    @Test
+    fun `proxy 'group', 'name', 'module', and 'resourcePath' to the artifact`() {
+        val artifactMeta = ArtifactMeta(toolBase, emptyDependencies)
+
+        artifactMeta.let {
+            it.group shouldBe toolBase.group
+            it.name shouldBe toolBase.name
+            it.module shouldBe Module(toolBase.group, toolBase.name)
+            it.resourcePath shouldBe resourcePath(it.module)
+        }
     }
 
     @Nested
@@ -290,7 +302,7 @@ internal class ArtifactMetaSpec {
         @Test
         fun `using class`() {
             val loaded = ArtifactMeta.loadFromResource(
-                resourcePath, 
+                resourcePath,
                 ArtifactMetaSpec::class.java
             )
 
@@ -308,7 +320,7 @@ internal class ArtifactMetaSpec {
 
             assertThrows<IllegalStateException> {
                 ArtifactMeta.loadFromResource(
-                    nonExistentPath, 
+                    nonExistentPath,
                     ArtifactMetaSpec::class.java
                 )
             }
@@ -317,7 +329,7 @@ internal class ArtifactMetaSpec {
         /**
          * This test verifies that the `loadFromResource` method with a `Module` parameter
          * correctly composes the resource path using the module's `fileSafeId` property.
-         * 
+         *
          * Since we can't easily mock the class loader to return a resource from a different path,
          * we'll verify that the method throws the expected exception when the resource
          * doesn't exist.
@@ -330,7 +342,7 @@ internal class ArtifactMetaSpec {
             // Verify that the method throws an exception when the resource doesn't exist
             assertThrows<IllegalStateException> {
                 ArtifactMeta.loadFromResource(
-                    module, 
+                    module,
                     ArtifactMetaSpec::class.java
                 )
             }

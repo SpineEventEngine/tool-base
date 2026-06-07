@@ -1,11 +1,11 @@
 /*
- * Copyright 2024, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -28,6 +28,7 @@ package io.spine.tools.psi.java
 
 import com.intellij.psi.javadoc.PsiDocComment
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import io.spine.testing.TestValues.randomString
 import io.spine.tools.psi.java.Environment.elementFactory
 import org.junit.jupiter.api.DisplayName
@@ -107,6 +108,55 @@ internal class PsiElementFactoryExtsSpec {
             assertThrows<IllegalArgumentException> {
                 elementFactory.createPrivateConstructor(cls, "line1.\nline2.")
             }
+        }
+    }
+
+    @Nested inner class
+    `create a class reference` {
+
+        @Test
+        fun `without generic parameters`() {
+            val ref = elementFactory.createClassReference("java.util.List")
+            ref.text shouldBe "java.util.List"
+        }
+
+        @Test
+        fun `with generic parameters passed as 'vararg'`() {
+            val ref = elementFactory.createClassReference(
+                "java.util.Map", "String", "Integer"
+            )
+            ref.text shouldContain "Map"
+            ref.text shouldContain "String"
+            ref.text shouldContain "Integer"
+        }
+
+        @Test
+        fun `with generic parameters passed as an iterable`() {
+            val ref = elementFactory.createClassReference(
+                "java.util.List", listOf("String")
+            )
+            ref.text shouldContain "List"
+            ref.text shouldContain "String"
+        }
+    }
+
+    @Nested inner class
+    `create an interface reference` {
+
+        @Test
+        fun `without generic parameters`() {
+            val ref = elementFactory.createInterfaceReference("java.lang.Runnable")
+            ref.text shouldBe "java.lang.Runnable"
+        }
+
+        @Test
+        fun `with generic parameters passed as 'vararg'`() {
+            val ref = elementFactory.createInterfaceReference(
+                "java.util.function.Function", "String", "Integer"
+            )
+            ref.text shouldContain "Function"
+            ref.text shouldContain "String"
+            ref.text shouldContain "Integer"
         }
     }
 }

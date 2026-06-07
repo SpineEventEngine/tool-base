@@ -33,16 +33,20 @@ import org.gradle.testkit.runner.GradleRunner
  * Attaches the JaCoCo coverage agent to the worker JVM spawned by this runner,
  * so that plugin code executed out-of-process via TestKit is credited to coverage.
  *
- * Does nothing unless the build enabled TestKit coverage for the module (see
- * `io.spine.gradle.testing.enableTestKitCoverage`), which is signalled through
- * the [AGENT_PROPERTY] and [EXEC_DIR_PROPERTY] system properties. This keeps the
- * harness a no-op for ordinary runs and for consumers that do not opt in.
+ * Does nothing unless the test JVM was started with the [AGENT_PROPERTY] and
+ * [EXEC_DIR_PROPERTY] system properties. This keeps the harness a no-op for
+ * ordinary runs and for consumers that do not opt in.
+ *
+ * Supplying those two properties on the test JVM is the responsibility of the
+ * consuming build. Consumer-facing setup instructions, including a copy-paste
+ * Gradle recipe, live in the [GradleProject] KDoc (this function is `internal`,
+ * so its own KDoc is not part of the published API documentation).
  *
  * When enabled, the method writes a `gradle.properties` carrying a `-javaagent:…`
  * argument into the TestKit directory (the Gradle user home of the worker build),
  * and points the runner at that directory. The JaCoCo agent appends to a single
  * per-module [execution-data file][EXEC_FILE]; on worker daemon shutdown — which
- * happens after the tests complete and before the Kover report task runs — the
+ * happens after the tests complete and before the coverage report task runs — the
  * data is flushed to disk.
  *
  * @param preferredTestKitDir The TestKit directory the caller already intends to
@@ -77,9 +81,11 @@ private fun String.forProperties(): String = File(this).invariantSeparatorsPath
  * The name of the system property carrying the absolute path to the JaCoCo
  * agent JAR to attach to a Gradle TestKit worker JVM.
  *
- * The property is set by the build via `io.spine.gradle.testing.enableTestKitCoverage`.
- * The constant is duplicated there (the `buildSrc` and the production source sets
- * cannot share code). Keep the two values in sync.
+ * The consuming build is expected to set this property on the test JVM. Within
+ * the SpineEventEngine organisation it is set by the
+ * `io.spine.gradle.testing.enableTestKitCoverage` extension in `config`'s
+ * `buildSrc`, where the constant is duplicated (the `buildSrc` and the production
+ * source sets cannot share code). Keep the two values in sync.
  */
 private const val AGENT_PROPERTY: String =
     "io.spine.tools.gradle.testkit.coverage.agent"
@@ -88,7 +94,9 @@ private const val AGENT_PROPERTY: String =
  * The name of the system property carrying the absolute path to the directory
  * where the TestKit worker should write its JaCoCo execution data.
  *
- * Kept in sync with `io.spine.gradle.testing.enableTestKitCoverage`.
+ * Set by the consuming build on the test JVM. Within the SpineEventEngine
+ * organisation this is done by the `io.spine.gradle.testing.enableTestKitCoverage`
+ * extension in `config`'s `buildSrc`; keep the two values in sync.
  */
 private const val EXEC_DIR_PROPERTY: String =
     "io.spine.tools.gradle.testkit.coverage.execDir"
@@ -98,7 +106,7 @@ private const val EXEC_DIR_PROPERTY: String =
  *
  * A single file per module is reused across all the test cases of the module:
  * the JaCoCo agent appends to it, so the worker coverage of all the cases is
- * accumulated. [io.spine.gradle.report.coverage.KoverConfig] feeds the file
+ * accumulated. `KoverConfig` (in `buildSrc`) feeds the file
  * into the Kover reports.
  */
 private const val EXEC_FILE: String = "testkit.exec"

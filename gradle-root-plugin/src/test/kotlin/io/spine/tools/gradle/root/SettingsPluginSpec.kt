@@ -35,16 +35,33 @@ import io.spine.tools.gradle.testing.Gradle.BUILD_SUCCESSFUL
 import io.spine.tools.gradle.testing.get
 import io.spine.tools.gradle.testing.runGradleBuild
 import java.io.File
+import java.nio.file.Files
 import org.gradle.testkit.runner.TaskOutcome
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 
 @DisplayName("`SettingsPlugin` should")
 internal class SettingsPluginSpec {
 
-    @TempDir
-    lateinit var projectDir: File
+    private lateinit var projectDir: File
+
+    @BeforeEach
+    fun createProjectDir() {
+        projectDir = Files.createTempDirectory("settings-plugin-spec").toFile()
+    }
+
+    @AfterEach
+    fun deleteProjectDir() {
+        // Best-effort cleanup instead of JUnit's `@TempDir`. On Windows, the Gradle
+        // TestKit worker keeps a `.gradle/.../kotlin-dsl-plugin-entries.lock` file
+        // locked after the build, which makes `@TempDir`'s strict deletion throw a
+        // `DeletionException` and fail the otherwise-passing test (confirmed on the
+        // "Build on Windows" check for both the field and parameter `@TempDir` forms).
+        // Kotlin's `deleteRecursively()` silently skips files it cannot delete.
+        projectDir.deleteRecursively()
+    }
 
     /**
      * Creates a settings file applying the [SettingsPlugin] and using

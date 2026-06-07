@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,5 +51,4 @@ public fun SourceSet.containsProtoFiles(): Boolean {
  * @see ProtobufDependencies.sourceSetExtensionName
  */
 public fun SourceSet.findProtoDirectorySet(): SourceDirectorySet? =
-    extensions.getByName(sourceSetExtensionName)
-        .let { ext -> ext as? SourceDirectorySet }
+    extensions.findByName(sourceSetExtensionName) as? SourceDirectorySet

@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -23,6 +23,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package io.spine.tools.gradle.task
 
 import io.kotest.matchers.shouldBe
@@ -48,5 +49,10 @@ internal class TaskNameSpec {
     fun `create dynamic task name`() {
         val expected = "dynamo"
         TaskName.of(expected).name() shouldBe expected
+    }
+
+    @Test
+    fun `provide 'value' as an alias of 'name'`() {
+        StubName.fiz.value() shouldBe "fiz"
     }
 }

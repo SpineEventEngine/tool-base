@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -172,5 +172,22 @@ class MavenArtifactSpec {
         val expectedModule = Module(group, name)
 
         ma.module shouldBe expectedModule
+    }
+
+    @Test
+    fun `print a file-safe identifier separating parts with underscores`() {
+        val ma = MavenArtifact("io.spine", "tool-base", "2.0.0", "tests", "jar")
+
+        ma.fileSafeId() shouldBe "io.spine_tool-base_2.0.0_tests_jar"
+    }
+
+    @Test
+    fun `compare artifacts by coordinates`() {
+        val a = MavenArtifact("io.spine", "aaa", "1.0.0")
+        val b = MavenArtifact("io.spine", "bbb", "1.0.0")
+
+        (a.compareTo(b) < 0) shouldBe true
+        (b.compareTo(a) > 0) shouldBe true
+        a.compareTo(MavenArtifact("io.spine", "aaa", "1.0.0")) shouldBe 0
     }
 }

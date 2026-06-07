@@ -27,6 +27,7 @@
 package io.spine.gradle.testing
 
 import io.spine.dependency.test.Jacoco
+import java.util.concurrent.atomic.AtomicBoolean
 import org.gradle.api.Project
 import org.gradle.api.tasks.testing.Test
 import org.gradle.kotlin.dsl.withType
@@ -48,8 +49,26 @@ import org.gradle.kotlin.dsl.withType
  *     (`build/`[TESTKIT_COVERAGE_DIR]) to the test JVM as system properties.
  *     The `plugin-testlib` harness reads these and writes a `gradle.properties`
  *     into the worker's Gradle user home that adds `-javaagent:…` to the worker JVM.
- *  3. Wipes the exec directory before each run so stale worker coverage from
- *     a previous run does not accumulate.
+ *  3. Wipes the exec directory at most once per build invocation, from the
+ *     `doFirst` of the first `Test` task that actually executes, so stale worker
+ *     coverage from a previous run does not accumulate. Two failure modes are
+ *     avoided deliberately:
+ *      - Cleaning is **not** wired through a `dependsOn` clean task. Such a task
+ *        would run even when the `Test` task is up-to-date or restored from
+ *        cache, deleting the `.exec` files without regenerating them — a later
+ *        `koverXmlReport`/`check` run would then drop all TestKit coverage. A
+ *        `doFirst` action runs only when the task truly executes.
+ *      - The wipe is guarded by a one-shot flag so that, when a module declares
+ *        several TestKit `Test` tasks, only the first to run clears the
+ *        directory. The workers append to a single per-module exec file, so the
+ *        remaining tasks accumulate into it instead of erasing one another.
+ *  4. Marks the `Test` tasks non-cacheable. The worker `.exec` data is flushed
+ *     out-of-process on worker-daemon shutdown, *after* the task action
+ *     completes, so it cannot be declared as a task output and captured by the
+ *     build cache. Were the task left cacheable, a cache hit would skip
+ *     execution and restore no exec files, leaving Kover with no TestKit
+ *     coverage. An up-to-date (non-cache) run is unaffected: the previous run's
+ *     files remain on disk and the guarded `doFirst` never deletes them.
  *
  * The produced `.exec` files are merged into the Kover reports by
  * [io.spine.gradle.report.coverage.KoverConfig]. The agent emits binary
@@ -70,11 +89,22 @@ fun Project.enableTestKitCoverage() {
     val agentPath = agent.elements.map { it.single().asFile.absolutePath }
     val execDir = layout.buildDirectory.dir(TESTKIT_COVERAGE_DIR)
 
+    // Wiped at most once per build invocation, by the first `Test` task that
+    // actually executes — see the KDoc above for why this is a guarded `doFirst`
+    // wipe rather than a `dependsOn` clean task.
+    val cleaned = AtomicBoolean(false)
+
     tasks.withType<Test>().configureEach {
         inputs.files(agent).withPropertyName(AGENT_CONFIGURATION)
+        outputs.cacheIf(
+            "TestKit worker coverage is produced out-of-process and cannot be a " +
+                    "declared task output; a cache hit would drop it."
+        ) { false }
         doFirst {
             val dir = execDir.get().asFile
-            dir.deleteRecursively()
+            if (cleaned.compareAndSet(false, true)) {
+                dir.deleteRecursively()
+            }
             dir.mkdirs()
             systemProperty(AGENT_PROPERTY, agentPath.get())
             systemProperty(EXEC_DIR_PROPERTY, dir.absolutePath)

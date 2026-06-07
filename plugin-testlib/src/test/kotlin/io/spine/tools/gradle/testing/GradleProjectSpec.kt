@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -23,6 +23,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package io.spine.tools.gradle.testing
 
 import io.kotest.matchers.shouldBe
@@ -63,6 +64,60 @@ class GradleProjectSpec {
     fun `be created with only project directory specified`() {
         val project = setup.create()
         project.projectDir shouldBe projectDir
+    }
+
+    @Test
+    fun `execute a successful build`() {
+        setup.fromResources(origin) { path ->
+            val name = path.toString()
+            name.contains("Foo.java") || name.contains("Bar.java") ||
+                    name.contains("build.gradle")
+        }
+        val project = setup.create()
+
+        val result = project.executeTask(compileJava)
+        result[compileJava] shouldBe TaskOutcome.SUCCESS
+    }
+
+    @Test
+    fun `report a missing task in the build result`() {
+        setup.fromResources(origin) { path ->
+            val name = path.toString()
+            name.contains("Foo.java") || name.contains("Bar.java") ||
+                    name.contains("build.gradle")
+        }
+        val project = setup.create()
+        val result = project.executeTask(compileJava)
+
+        assertThrows<IllegalStateException> {
+            result[BaseTaskName.assemble]
+        }
+    }
+
+    @Test
+    fun `run with custom environment variables`() {
+        setup.fromResources(origin) { path ->
+            val name = path.toString()
+            name.contains("Foo.java") || name.contains("Bar.java") ||
+                    name.contains("build.gradle")
+        }
+        setup.withEnvironment(mapOf("SPINE_TEST_VAR" to "value"))
+        val project = setup.create()
+
+        project.executeTask(compileJava)[compileJava] shouldBe TaskOutcome.SUCCESS
+    }
+
+    @Test
+    fun `run using a shared TestKit directory`() {
+        setup.fromResources(origin) { path ->
+            val name = path.toString()
+            name.contains("Foo.java") || name.contains("Bar.java") ||
+                    name.contains("build.gradle")
+        }
+        setup.withSharedTestKitDirectory()
+        val project = setup.create()
+
+        project.executeTask(compileJava)[compileJava] shouldBe TaskOutcome.SUCCESS
     }
 
     @Test

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,9 @@
 
 package io.spine.tools.jvm.resource
 
-import io.spine.tools.jvm.resource.ResourceDirectory
+import com.google.common.testing.EqualsTester
+import io.kotest.matchers.shouldBe
+import io.spine.testing.Assertions.assertIllegalArgument
 import java.io.File
 import java.nio.file.Files.exists
 import java.nio.file.Path
@@ -35,10 +37,12 @@ import java.util.function.Predicate
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
-class `'ResourceDirectory' should` {
+@DisplayName("`ResourceDirectory` should")
+class ResourceDirectorySpec {
 
     private lateinit var directory: ResourceDirectory
     private lateinit var target: Path
@@ -113,6 +117,41 @@ class `'ResourceDirectory' should` {
         allFiles
             .filter { name -> reverse.test(name) }
             .forEach { p -> assertNotExists(nestedPath(p)) }
+    }
+
+    @Test
+    fun `reject a blank path`() {
+        assertIllegalArgument {
+            ResourceDirectory.get("   ", javaClass.classLoader)
+        }
+    }
+
+    @Test
+    fun `reject a non-existing target directory`() {
+        val missing = target.resolve("absent")
+        assertIllegalArgument {
+            directory.copyContentTo(missing)
+        }
+        assertIllegalArgument {
+            directory.copyTo(missing)
+        }
+    }
+
+    @Test
+    fun `provide its path`() {
+        directory.path() shouldBe resourceName
+    }
+
+    @Test
+    fun `support equality`() {
+        val loader = javaClass.classLoader
+        EqualsTester()
+            .addEqualityGroup(
+                ResourceDirectory.get(resourceName, loader),
+                ResourceDirectory.get(resourceName, loader)
+            )
+            .addEqualityGroup(ResourceDirectory.get("subdir", loader))
+            .testEquals()
     }
 
     private fun nestedPath(p: String) = Paths.get(resourceName, p).toString()

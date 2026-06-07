@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,6 +57,17 @@ class KManifestSpec {
             .isEqualTo("io.spine.tools:jvm-tools")
 
         manifest.implementationVersion shouldNot beEmpty()
+    }
+
+    @Test
+    fun `load from a JAR for a class packaged in it`() {
+        // Guava is a binary dependency on the test classpath, so its classes
+        // are loaded via a `JarURLConnection`.
+        val cls = com.google.common.base.Preconditions::class.java
+
+        val manifest = KManifest.load(cls)
+
+        manifest.toString() shouldNot beEmpty()
     }
 
     @Test

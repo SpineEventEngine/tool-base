@@ -1,5 +1,5 @@
 /*
- * Copyright 2024, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,10 +30,13 @@ import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiJavaCodeReferenceElement
 import com.intellij.psi.PsiMethod
+import com.intellij.psi.PsiModifierList
 import io.kotest.matchers.ints.shouldBeGreaterThan
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import io.spine.testing.TestValues
 import io.spine.tools.java.reference
 import io.spine.tools.psi.MERGE_FROM_SIGNATURE
@@ -84,6 +87,90 @@ internal class PsiClassExtsSpec: PsiTest() {
         val psiFile = parse("FieldPath.java")
         val psiClass = psiFile.topLevelClass.nested("Builder")
         psiClass.findMethodBySignature(MERGE_FROM_SIGNATURE).shouldNotBeNull()
+    }
+
+    @Test
+    fun `throw when a method with the given name is not found`() {
+        assertThrows<IllegalStateException> {
+            cls.method("noSuchMethod")
+        }
+    }
+
+    @Test
+    fun `obtain the list of modifiers`() {
+        val modifiers: PsiModifierList = cls.modifiers
+        modifiers.shouldBeInstanceOf<PsiModifierList>()
+    }
+
+    @Test
+    fun `return a method by its signature`() {
+        val psiFile = parse("FieldPath.java")
+        val psiClass = psiFile.topLevelClass.nested("Builder")
+        psiClass.methodWithSignature(MERGE_FROM_SIGNATURE).shouldNotBeNull()
+    }
+
+    @Test
+    fun `throw when a method with the given signature is not found`() {
+        assertThrows<IllegalStateException> {
+            cls.methodWithSignature("public void noSuchMethod()")
+        }
+    }
+
+    @Test
+    fun `return a nested class via 'nested'`() {
+        val psiFile = parse("FieldPath.java")
+        psiFile.topLevelClass.nested("Builder").shouldNotBeNull()
+    }
+
+    @Test
+    fun `return 'null' from 'findNested' when there is no such class`() {
+        val psiFile = parse("FieldPath.java")
+        psiFile.topLevelClass.findNested("NoSuchNested").shouldBeNull()
+    }
+
+    @Test
+    fun `throw from 'nested' when there is no such class`() {
+        val psiFile = parse("FieldPath.java")
+        assertThrows<IllegalStateException> {
+            psiFile.topLevelClass.nested("NoSuchNested")
+        }
+    }
+
+    @Nested inner class
+    `handle an interface without an 'implements' list` {
+
+        private val iface = elementFactory.createInterface("StubInterface")
+        private val runnable =
+            elementFactory.createInterfaceReference(Runnable::class.java.reference)
+
+        @Test
+        fun `reporting it does not implement interfaces`() {
+            iface.implementsInterfaces() shouldBe false
+            iface.implements(runnable) shouldBe false
+        }
+
+        @Test
+        fun `creating an 'implements' list on 'implement'`() {
+            execute {
+                iface.implement(runnable)
+            }
+            iface.implementsList.shouldNotBeNull()
+        }
+    }
+
+    @Test
+    @Suppress("DEPRECATION")
+    fun `add a superclass via the deprecated 'addSuperclass'`() {
+        val arrayList = elementFactory.createClassReference(
+            className = java.util.ArrayList::class.java.reference
+        )
+        cls.run {
+            hasSuperclass() shouldBe false
+            execute {
+                addSuperclass(arrayList)
+            }
+            explicitSuperclass shouldNotBe null
+        }
     }
 
     @Test
