@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,11 +30,13 @@ import com.intellij.psi.PsiStatement
 import com.intellij.psi.PsiTypeElement
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.spine.tools.psi.MERGE_FROM_SIGNATURE
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 @DisplayName("`PsiElementExts` should")
 internal class PsiElementExtsSpec : PsiTest() {
@@ -74,6 +76,88 @@ internal class PsiElementExtsSpec : PsiTest() {
                 done = true; // was an endgroup tag
               }
             """.trim()
+        }
+    }
+
+    @Nested inner class
+    `get an element by text` {
+
+        private val psiFile = parse("FieldPath.java")
+        private val psiClass = psiFile.topLevelClass.nested("Builder")
+
+        @Test
+        fun `returning an element when found`() {
+            val buildPartial = psiClass.method("buildPartial")
+            val returnedType = buildPartial.getFirstByText("io.spine.base.FieldPath")
+            returnedType.shouldBeInstanceOf<PsiTypeElement>()
+        }
+
+        @Test
+        fun `throwing when not found`() {
+            val exception = assertThrows<IllegalStateException> {
+                psiClass.getFirstByText("noSuchChildElement")
+            }
+            exception.message!!.shouldContain("could not be found")
+        }
+    }
+
+    @Nested inner class
+    `produce canonical code` {
+
+        private val cls = parse("FieldPath.java").topLevelClass
+
+        @Test
+        fun `collapsing whitespace and dropping comments`() {
+            val mergeFrom = cls.nested("Builder").methodWithSignature(MERGE_FROM_SIGNATURE)
+            val code = mergeFrom.canonicalCode()
+
+            code shouldContain "parseUnknownField"
+            // No double spaces remain.
+            code.contains("  ") shouldBe false
+        }
+
+        @Test
+        fun `for the whole top-level class`() {
+            val code = cls.canonicalCode()
+            code.contains("  ") shouldBe false
+            // No space before a comma.
+            code.contains(" ,") shouldBe false
+        }
+
+        @Test
+        fun `normalizing arithmetic and unary operators`() {
+            val block = Environment.elementFactory.createCodeBlockFromText(
+                """
+                {
+                    int a = 1 + 2 * 3;
+                    int b = -a;
+                    int c = a - -b;
+                }
+                """.trimIndent(),
+                null
+            )
+            val code = block.canonicalCode()
+
+            // Binary operators are surrounded by single spaces.
+            code shouldContain "1 + 2 * 3"
+            // The unary minus sticks to its operand.
+            code shouldContain "= -a"
+            code shouldContain "- -b"
+        }
+
+        @Test
+        fun `normalizing the arrow token in lambdas`() {
+            val block = Environment.elementFactory.createCodeBlockFromText(
+                """
+                {
+                    Runnable r = () -> doSomething();
+                }
+                """.trimIndent(),
+                null
+            )
+            val code = block.canonicalCode()
+
+            code shouldContain "() -> doSomething()"
         }
     }
 }

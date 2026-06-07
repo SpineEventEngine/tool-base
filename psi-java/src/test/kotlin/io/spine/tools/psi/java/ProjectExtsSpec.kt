@@ -24,35 +24,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.task
+package io.spine.tools.psi.java
 
-import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldStartWith
+import io.kotest.matchers.nulls.shouldNotBeNull
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-@DisplayName("`TaskName` should")
-internal class TaskNameSpec {
+@DisplayName("`Project` extensions should")
+internal class ProjectExtsSpec : PsiTest() {
 
     @Test
-    fun `obtain a name from an enum member`() {
-        StubName.fiz.toString() shouldBe "fiz"
-        StubName.buz.toString() shouldBe "buz"
+    fun `obtain 'JavaCodeStyleManager'`() {
+        project.javaCodeStyleManager.shouldNotBeNull()
     }
 
     @Test
-    fun `obtain task path`() {
-        StubName.fiz.path() shouldStartWith ":"
-    }
-
-    @Test
-    fun `create dynamic task name`() {
-        val expected = "dynamo"
-        TaskName.of(expected).name() shouldBe expected
-    }
-
-    @Test
-    fun `provide 'value' as an alias of 'name'`() {
-        StubName.fiz.value() shouldBe "fiz"
+    fun `obtain 'JavaCodeStyleSettings'`() {
+        project.javaCodeStyleSettings.shouldNotBeNull()
     }
 }

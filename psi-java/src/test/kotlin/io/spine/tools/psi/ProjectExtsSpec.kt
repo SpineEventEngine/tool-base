@@ -24,35 +24,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.task
+package io.spine.tools.psi
 
-import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldStartWith
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.spine.tools.psi.java.PsiTest
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 
-@DisplayName("`TaskName` should")
-internal class TaskNameSpec {
+/**
+ * Tests language-neutral [com.intellij.openapi.project.Project] extensions
+ * declared in the `psi` module.
+ */
+@DisplayName("`Project` PSI extensions should")
+internal class ProjectExtsSpec : PsiTest() {
 
     @Test
-    fun `obtain a name from an enum member`() {
-        StubName.fiz.toString() shouldBe "fiz"
-        StubName.buz.toString() shouldBe "buz"
+    fun `provide the code style manager`() {
+        project.codeStyleManager.shouldNotBeNull()
     }
 
     @Test
-    fun `obtain task path`() {
-        StubName.fiz.path() shouldStartWith ":"
+    fun `provide code style settings`() {
+        project.codeStyleSettings.shouldNotBeNull()
     }
 
     @Test
-    fun `create dynamic task name`() {
-        val expected = "dynamo"
-        TaskName.of(expected).name() shouldBe expected
+    fun `force main project code style settings`() {
+        val settings = project.codeStyleSettings
+        assertDoesNotThrow {
+            project.force(settings)
+        }
     }
 
     @Test
-    fun `provide 'value' as an alias of 'name'`() {
-        StubName.fiz.value() shouldBe "fiz"
+    fun `provide the document manager`() {
+        project.documentManager.shouldNotBeNull()
     }
 }

@@ -27,32 +27,42 @@
 package io.spine.tools.gradle.task
 
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldStartWith
+import io.spine.tools.gradle.task.TaskDependencies.dependsOn
+import org.gradle.api.Task
+import org.gradle.testfixtures.ProjectBuilder
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-@DisplayName("`TaskName` should")
-internal class TaskNameSpec {
+@DisplayName("`TaskDependencies` should")
+internal class TaskDependenciesSpec {
 
-    @Test
-    fun `obtain a name from an enum member`() {
-        StubName.fiz.toString() shouldBe "fiz"
-        StubName.buz.toString() shouldBe "buz"
+    private lateinit var task: Task
+    private lateinit var ontoTask: Task
+
+    @BeforeEach
+    fun setUp() {
+        val project = ProjectBuilder.builder().build()
+        ontoTask = project.tasks.create("ontoTask")
+        task = project.tasks.create("dependent")
     }
 
     @Test
-    fun `obtain task path`() {
-        StubName.fiz.path() shouldStartWith ":"
+    fun `detect a dependency on a task instance`() {
+        task.dependsOn(ontoTask)
+
+        dependsOn(task, ontoTask) shouldBe true
     }
 
     @Test
-    fun `create dynamic task name`() {
-        val expected = "dynamo"
-        TaskName.of(expected).name() shouldBe expected
+    fun `detect a dependency on a task name`() {
+        task.dependsOn("ontoTask")
+
+        dependsOn(task, TaskName.of("ontoTask")) shouldBe true
     }
 
     @Test
-    fun `provide 'value' as an alias of 'name'`() {
-        StubName.fiz.value() shouldBe "fiz"
+    fun `return 'false' when there is no dependency`() {
+        dependsOn(task, ontoTask) shouldBe false
     }
 }

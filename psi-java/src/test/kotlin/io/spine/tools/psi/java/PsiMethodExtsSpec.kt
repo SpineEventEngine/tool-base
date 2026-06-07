@@ -1,5 +1,5 @@
 /*
- * Copyright 2024, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,6 +57,17 @@ class PsiMethodExtsSpec: PsiTest() {
         }
 
         file.text shouldContain annotationCode
+    }
+
+    @Test
+    fun `add a Javadoc comment`() {
+        val method = cls.method("test")
+        val javadoc = "/**\n * A test method.\n */"
+        execute {
+            method.addJavadoc(javadoc)
+        }
+
+        method.text shouldContain "A test method."
     }
 
     @Nested inner class

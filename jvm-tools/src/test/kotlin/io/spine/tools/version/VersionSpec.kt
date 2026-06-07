@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,10 @@ package io.spine.tools.version
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import io.spine.tools.jvm.jar.KManifest
+import io.spine.tools.meta.ArtifactMeta
+import io.spine.tools.meta.Dependencies
+import io.spine.tools.meta.MavenArtifact
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -265,6 +269,27 @@ class VersionSpec {
             assertIsSnapshot(preRelease = "alpha", expected = false)
             assertIsSnapshot(buildMetadata = "build", expected = false)
             assertIsSnapshot(preRelease = "beta", buildMetadata = "build", expected = false)
+        }
+    }
+
+    @Nested
+    @DisplayName("load")
+    inner class Loading {
+
+        @Test
+        fun `from the manifest of a class`() {
+            val cls = KManifest::class.java
+            val expected = Version.parse(KManifest.load(cls).implementationVersion!!)
+
+            Version.fromManifestOf(cls) shouldBe expected
+        }
+
+        @Test
+        fun `from artifact metadata`() {
+            val artifact = MavenArtifact("io.spine.tools", "tool-base", "1.2.3")
+            val meta = ArtifactMeta(artifact, Dependencies(emptyList()))
+
+            Version.fromArtifactMeta(meta) shouldBe Version(1, 2, 3)
         }
     }
 

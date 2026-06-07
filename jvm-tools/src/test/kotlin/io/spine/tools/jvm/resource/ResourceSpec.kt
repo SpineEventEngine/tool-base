@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,14 +27,15 @@
 package io.spine.tools.jvm.resource
 
 import com.google.common.io.CharStreams
+import com.google.common.testing.EqualsTester
 import com.google.common.testing.NullPointerTester
 import com.google.common.truth.Truth.assertThat
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.spine.testing.Assertions.assertIllegalArgument
 import io.spine.testing.Assertions.assertIllegalState
 import io.spine.testing.TestValues
-import io.spine.tools.jvm.resource.Resource
 import java.io.InputStream
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -94,5 +95,34 @@ class ResourceSpec {
             val content = CharStreams.toString(reader)
             assertThat(content).isNotEmpty()
         }
+    }
+
+    @Test
+    fun `throw ISE when no resources match`() {
+        val absent = Resource.file(TestValues.randomString(), classLoader)
+        assertIllegalState { absent.locateAll() }
+    }
+
+    @Test
+    fun `reject a blank path`() {
+        assertIllegalArgument {
+            Resource.file("   ", classLoader)
+        }
+    }
+
+    @Test
+    fun `provide its path`() {
+        resource.path() shouldBe resourceFile
+    }
+
+    @Test
+    fun `support equality`() {
+        EqualsTester()
+            .addEqualityGroup(
+                Resource.file(resourceFile, classLoader),
+                Resource.file(resourceFile, classLoader)
+            )
+            .addEqualityGroup(Resource.file("another.txt", classLoader))
+            .testEquals()
     }
 }

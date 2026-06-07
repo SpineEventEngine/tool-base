@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@
 
 package io.spine.tools.protobuf.gradle.plugin
 
+import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.spine.tools.protobuf.gradle.ProtocPluginName
 import org.junit.jupiter.api.DisplayName
@@ -41,5 +42,12 @@ internal class ProtocPluginNameSpec {
     @Test
     fun `have 'kotlin' name`() {
         ProtocPluginName.kotlin.name shouldBe "kotlin"
+    }
+
+    @Test
+    fun `declare all known protoc plugins in lower camel case`() {
+        ProtocPluginName.entries.map { it.name } shouldContainExactly listOf(
+            "java", "kotlin", "js", "grpc", "spineProtoc", "dart"
+        )
     }
 }

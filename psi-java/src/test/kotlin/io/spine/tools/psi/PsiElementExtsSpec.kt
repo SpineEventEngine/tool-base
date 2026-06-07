@@ -24,35 +24,42 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.task
+package io.spine.tools.psi
 
-import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldStartWith
+import com.intellij.psi.PsiJavaFile
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.spine.tools.psi.java.FileSystem
+import io.spine.tools.psi.java.topLevelClass
+import java.nio.file.Path
+import kotlin.io.path.writeText
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 
-@DisplayName("`TaskName` should")
-internal class TaskNameSpec {
+/**
+ * Tests language-neutral [com.intellij.psi.PsiElement] extensions
+ * declared in the `psi` module.
+ */
+@DisplayName("`PsiElement` PSI extensions should")
+internal class PsiElementExtsSpec {
+
+    /**
+     * Loads a disk-backed PSI class so that its containing file has both a virtual file
+     * and a document, and the call resolves to the `PsiElement` extension rather than
+     * to a member of `PsiFile`.
+     */
+    private fun loadClass(tempDir: Path) =
+        (FileSystem.load(tempDir.resolve("Stub.java").apply {
+            writeText("class Stub {}")
+        }) as PsiJavaFile).topLevelClass
 
     @Test
-    fun `obtain a name from an enum member`() {
-        StubName.fiz.toString() shouldBe "fiz"
-        StubName.buz.toString() shouldBe "buz"
+    fun `obtain the virtual file of an element`(@TempDir tempDir: Path) {
+        loadClass(tempDir).virtualFile.shouldNotBeNull()
     }
 
     @Test
-    fun `obtain task path`() {
-        StubName.fiz.path() shouldStartWith ":"
-    }
-
-    @Test
-    fun `create dynamic task name`() {
-        val expected = "dynamo"
-        TaskName.of(expected).name() shouldBe expected
-    }
-
-    @Test
-    fun `provide 'value' as an alias of 'name'`() {
-        StubName.fiz.value() shouldBe "fiz"
+    fun `obtain the document of an element`(@TempDir tempDir: Path) {
+        loadClass(tempDir).document.shouldNotBeNull()
     }
 }

@@ -24,35 +24,58 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.task
+package io.spine.tools.gradle.testing
 
-import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldStartWith
+import org.gradle.api.Project
+import org.gradle.api.Task
+import org.gradle.testfixtures.ProjectBuilder
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-@DisplayName("`TaskName` should")
-internal class TaskNameSpec {
+@DisplayName("`GradleTruth` should")
+internal class GradleTruthSpec {
 
-    @Test
-    fun `obtain a name from an enum member`() {
-        StubName.fiz.toString() shouldBe "fiz"
-        StubName.buz.toString() shouldBe "buz"
+    private lateinit var project: Project
+    private lateinit var taskA: Task
+    private lateinit var taskB: Task
+
+    @BeforeEach
+    fun createTasks() {
+        project = ProjectBuilder.builder().build()
+        taskA = project.tasks.register("taskA").get()
+        taskB = project.tasks.register("taskB").get()
+        taskB.dependsOn(taskA)
     }
 
     @Test
-    fun `obtain task path`() {
-        StubName.fiz.path() shouldStartWith ":"
+    fun `assert a task dependency`() {
+        GradleTruth.assertThat(taskB)
+            .dependsOn(taskA)
+            .isTrue()
     }
 
     @Test
-    fun `create dynamic task name`() {
-        val expected = "dynamo"
-        TaskName.of(expected).name() shouldBe expected
+    fun `assert the absence of a task dependency`() {
+        GradleTruth.assertThat(taskA)
+            .dependsOn(taskB)
+            .isFalse()
     }
 
     @Test
-    fun `provide 'value' as an alias of 'name'`() {
-        StubName.fiz.value() shouldBe "fiz"
+    fun `assert that a task is a dependency of another`() {
+        GradleTruth.assertThat(taskA)
+            .isDependencyOf(taskB)
+            .isTrue()
+    }
+
+    @Test
+    fun `assert a task dependency by task name`() {
+        val taskName = object : io.spine.tools.gradle.task.TaskName {
+            override fun name(): String = "taskA"
+        }
+        GradleTruth.assertThat(taskB)
+            .dependsOn(taskName)
+            .isTrue()
     }
 }

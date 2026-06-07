@@ -24,35 +24,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.task
+package io.spine.tools.gradle.testing
 
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldStartWith
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 
-@DisplayName("`TaskName` should")
-internal class TaskNameSpec {
+@DisplayName("`NoOp` should")
+internal class NoOpSpec {
 
     @Test
-    fun `obtain a name from an enum member`() {
-        StubName.fiz.toString() shouldBe "fiz"
-        StubName.buz.toString() shouldBe "buz"
+    fun `do nothing on 'execute'`() {
+        assertDoesNotThrow {
+            NoOp.ACTION.execute(Any())
+        }
     }
 
     @Test
-    fun `obtain task path`() {
-        StubName.fiz.path() shouldStartWith ":"
+    fun `provide a typed no-op action`() {
+        val action = NoOp.action<String>()
+        action.shouldNotBeNull()
+        assertDoesNotThrow {
+            action.execute("anything")
+        }
     }
 
     @Test
-    fun `create dynamic task name`() {
-        val expected = "dynamo"
-        TaskName.of(expected).name() shouldBe expected
-    }
-
-    @Test
-    fun `provide 'value' as an alias of 'name'`() {
-        StubName.fiz.value() shouldBe "fiz"
+    fun `expose the single enum value`() {
+        NoOp.valueOf("ACTION") shouldBe NoOp.ACTION
     }
 }

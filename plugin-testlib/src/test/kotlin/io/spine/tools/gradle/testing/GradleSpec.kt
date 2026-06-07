@@ -24,35 +24,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.task
+package io.spine.tools.gradle.testing
 
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldStartWith
+import java.io.File
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-@DisplayName("`TaskName` should")
-internal class TaskNameSpec {
+@DisplayName("Gradle testing utilities should")
+internal class GradleSpec {
 
     @Test
-    fun `obtain a name from an enum member`() {
-        StubName.fiz.toString() shouldBe "fiz"
-        StubName.buz.toString() shouldBe "buz"
+    fun `resolve a file name under a directory`() {
+        val dir = File("parent")
+        val file = "child.txt".under(dir)
+
+        file.parentFile shouldBe dir
+        file.name shouldBe "child.txt"
     }
 
     @Test
-    fun `obtain task path`() {
-        StubName.fiz.path() shouldStartWith ":"
+    fun `expose the build file name constant`() {
+        Gradle.buildFile shouldBe "build.gradle.kts"
     }
 
     @Test
-    fun `create dynamic task name`() {
-        val expected = "dynamo"
-        TaskName.of(expected).name() shouldBe expected
+    fun `expose the settings file name constant`() {
+        Gradle.settingsFile shouldBe "settings.gradle.kts"
     }
 
     @Test
-    fun `provide 'value' as an alias of 'name'`() {
-        StubName.fiz.value() shouldBe "fiz"
+    fun `expose the success marker constant`() {
+        Gradle.BUILD_SUCCESSFUL shouldBe "BUILD SUCCESSFUL"
     }
 }

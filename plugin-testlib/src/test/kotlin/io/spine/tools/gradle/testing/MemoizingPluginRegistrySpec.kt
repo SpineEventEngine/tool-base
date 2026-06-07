@@ -24,35 +24,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.task
+package io.spine.tools.gradle.testing
 
-import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldStartWith
+import io.spine.tools.gradle.GradlePlugin
+import org.gradle.api.plugins.JavaPlugin
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 
-@DisplayName("`TaskName` should")
-internal class TaskNameSpec {
-
-    @Test
-    fun `obtain a name from an enum member`() {
-        StubName.fiz.toString() shouldBe "fiz"
-        StubName.buz.toString() shouldBe "buz"
-    }
+@DisplayName("`MemoizingPluginRegistry` should")
+internal class MemoizingPluginRegistrySpec {
 
     @Test
-    fun `obtain task path`() {
-        StubName.fiz.path() shouldStartWith ":"
-    }
-
-    @Test
-    fun `create dynamic task name`() {
-        val expected = "dynamo"
-        TaskName.of(expected).name() shouldBe expected
-    }
-
-    @Test
-    fun `provide 'value' as an alias of 'name'`() {
-        StubName.fiz.value() shouldBe "fiz"
+    fun `do nothing on 'with'`() {
+        val registry = MemoizingPluginRegistry()
+        val plugin = GradlePlugin.implementedIn(JavaPlugin::class.java)
+        assertDoesNotThrow {
+            registry.with(plugin) { }
+        }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@
 
 package io.spine.tools.meta
 
+import com.google.common.testing.EqualsTester
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
@@ -83,6 +84,27 @@ internal class DependenciesSpec {
             it shouldContain "Duplicated module: `$module`"
             it shouldContain dep1.toString()
             it shouldContain dep2.toString()
+        }
+    }
+
+    @Test
+    fun `support equality`() {
+        val maven = MavenArtifact("io.spine.tools", "tool-base", "2.0.0")
+        val ivy = IvyDependency("org.gradle", "wrapper", "7.4.2")
+        EqualsTester()
+            .addEqualityGroup(
+                Dependencies(listOf(maven, ivy)),
+                Dependencies(listOf(maven, ivy))
+            )
+            .addEqualityGroup(Dependencies(listOf(maven)))
+            .addEqualityGroup(Dependencies(emptyList()))
+            .testEquals()
+    }
+
+    @Test
+    fun `reject an unsupported dependency format`() {
+        assertThrows<IllegalStateException> {
+            parseDependency("unknown:io.spine:tool-base:2.0.0")
         }
     }
 

@@ -24,35 +24,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.gradle.task
+package io.spine.tools.gradle
 
+import io.kotest.matchers.ints.shouldBeGreaterThanOrEqual
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldStartWith
+import org.gradle.api.artifacts.repositories.MavenArtifactRepository
+import org.gradle.testfixtures.ProjectBuilder
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-@DisplayName("`TaskName` should")
-internal class TaskNameSpec {
+@DisplayName("`StandardRepos` should")
+internal class StandardReposSpec {
 
     @Test
-    fun `obtain a name from an enum member`() {
-        StubName.fiz.toString() shouldBe "fiz"
-        StubName.buz.toString() shouldBe "buz"
-    }
+    fun `add standard Maven repositories to a repository handler`() {
+        val project = ProjectBuilder.builder().build()
+        val repositories = project.repositories
 
-    @Test
-    fun `obtain task path`() {
-        StubName.fiz.path() shouldStartWith ":"
-    }
+        repositories.applyStandard()
 
-    @Test
-    fun `create dynamic task name`() {
-        val expected = "dynamo"
-        TaskName.of(expected).name() shouldBe expected
-    }
-
-    @Test
-    fun `provide 'value' as an alias of 'name'`() {
-        StubName.fiz.value() shouldBe "fiz"
+        repositories.size shouldBeGreaterThanOrEqual 4
+        val urls = repositories.withType(MavenArtifactRepository::class.java)
+            .map { it.url.toString() }
+        urls.any { it.contains("spine-event-engine/releases") } shouldBe true
+        urls.any { it.contains("spine-event-engine/snapshots") } shouldBe true
     }
 }
