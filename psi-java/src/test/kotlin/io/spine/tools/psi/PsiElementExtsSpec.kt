@@ -49,9 +49,9 @@ internal class PsiElementExtsSpec {
      * to a member of `PsiFile`.
      */
     private fun loadClass(tempDir: Path) =
-        (FileSystem.load(tempDir.resolve("Stub.java").apply {
+        FileSystem.load(tempDir.resolve("Stub.java").apply {
             writeText("class Stub {}")
-        }) as PsiJavaFile).topLevelClass
+        }).topLevelClass
 
     @Test
     fun `obtain the virtual file of an element`(@TempDir tempDir: Path) {
