@@ -43,8 +43,8 @@ internal class TaskDependenciesSpec {
     @BeforeEach
     fun setUp() {
         val project = ProjectBuilder.builder().build()
-        ontoTask = project.tasks.create("ontoTask")
-        task = project.tasks.create("dependent")
+        ontoTask = project.tasks.register("ontoTask").get()
+        task = project.tasks.register("dependent").get()
     }
 
     @Test
