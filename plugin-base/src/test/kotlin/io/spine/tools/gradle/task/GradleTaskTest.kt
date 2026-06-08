@@ -45,7 +45,7 @@ class GradleTaskTest {
     @Test
     fun `create an instance from an existing Gradle task`() {
         val project = ProjectBuilder.builder().build()
-        val task = project.tasks.create("existingTask")
+        val task = project.tasks.register("existingTask").get()
 
         val gradleTask = GradleTask.from(task)
 
@@ -58,7 +58,7 @@ class GradleTaskTest {
     @Test
     fun `provide a string representation`() {
         val project = ProjectBuilder.builder().build()
-        val task = project.tasks.create("aTask")
+        val task = project.tasks.register("aTask").get()
 
         GradleTask.from(task).toString() shouldContain "GradleTask"
     }
@@ -66,8 +66,8 @@ class GradleTaskTest {
     @Test
     fun `support equality`() {
         val project = ProjectBuilder.builder().build()
-        val taskA = project.tasks.create("taskA")
-        val taskB = project.tasks.create("taskB")
+        val taskA = project.tasks.register("taskA").get()
+        val taskB = project.tasks.register("taskB").get()
 
         EqualsTester()
             .addEqualityGroup(GradleTask.from(taskA), GradleTask.from(taskA))
