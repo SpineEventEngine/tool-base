@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -27,6 +27,7 @@
 package io.spine.tools.dart.fs;
 
 import io.spine.tools.OsFamily;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import java.nio.file.Path;
 
@@ -39,7 +40,6 @@ import static java.nio.file.Files.exists;
  * <p>See <a href="https://dart.dev/tools/pub/cmd/pub-global#running-a-script-from-your-path">
  * Pub documentation</a>.
  */
-@SuppressWarnings("unused") /* Part of the public API. */
 public final class ProtocPluginPath {
 
     private static final boolean WINDOWS = OsFamily.Windows.isCurrent();
@@ -49,7 +49,7 @@ public final class ProtocPluginPath {
     private static final String DOC_LINK =
             "https://github.com/dart-lang/protobuf/tree/master/protoc_plugin";
 
-    private static Path resolved = null;
+    private static @MonotonicNonNull Path resolved = null;
 
     /** Prevents the utility class instantiation. */
     private ProtocPluginPath() {

@@ -1,11 +1,11 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -55,7 +55,6 @@ public final class ExternalModules {
     /**
      * Creates a new instance with the passed modules.
      */
-    @SuppressWarnings("unused") /* Part of the public API. */
     public ExternalModules(ExternalModule... modules) {
         this(ImmutableList.copyOf(modules));
     }
@@ -63,7 +62,6 @@ public final class ExternalModules {
     /**
      * Creates an instance from a raw representation from a Gradle extension.
      */
-    @SuppressWarnings("unused") /* Part of the public API. */
     public ExternalModules(Map<String, List<String>> modules) {
         this(convert(checkNotNull(modules)));
     }

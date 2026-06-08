@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,7 +116,6 @@ public final class FileName extends AbstractFileName<FileName> {
      * @param path  the target file path
      * @return {@code true} in case if the file has the .java extension.
      */
-    @SuppressWarnings("unused") /* Part of the public API. */
     public static boolean isJava(Path path) {
         checkNotNull(path);
         return path.toString()

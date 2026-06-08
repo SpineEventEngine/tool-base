@@ -27,6 +27,7 @@
 package io.spine.tools.jvm.jar
 
 import com.google.common.truth.Truth.assertWithMessage
+import io.kotest.matchers.Matcher
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNot
 import io.kotest.matchers.string.beEmpty
@@ -61,9 +62,9 @@ class KManifestSpec {
 
     @Test
     fun `load from a JAR for a class packaged in it`() {
-        // Guava is a binary dependency on the test classpath, so its classes
+        // Kotest is a binary dependency on the test classpath, so its classes
         // are loaded via a `JarURLConnection`.
-        val cls = com.google.common.base.Preconditions::class.java
+        val cls = Matcher::class.java
 
         val manifest = KManifest.load(cls)
 
