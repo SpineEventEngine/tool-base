@@ -26,7 +26,6 @@
 
 package io.spine.tools.psi
 
-import com.intellij.psi.PsiJavaFile
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.spine.tools.psi.java.FileSystem
 import io.spine.tools.psi.java.topLevelClass
