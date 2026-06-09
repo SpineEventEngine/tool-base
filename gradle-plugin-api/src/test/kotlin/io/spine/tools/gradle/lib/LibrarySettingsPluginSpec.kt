@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,11 +64,11 @@ internal class LibrarySettingsPluginSpec {
         val text = """
             plugins {
                 id("$PLUGIN_ID")
-            }                        
-            
+            }
+
             spineSettings {
                 // This is the extension added by the plugin under the test.
-                nameHolder.name.set("test-name")            
+                nameHolder.name.set("test-name")
             }
             """.trimIndent()
         Gradle.settingsFile.under(projectDir).writeText(text)
@@ -84,6 +84,41 @@ internal class LibrarySettingsPluginSpec {
             .create()
 
         // Execute the build.
+        val taskName = BaseTaskName.help
+        val result = gradleProject.executeTask(taskName)
+
+        result[taskName] shouldBe TaskOutcome.SUCCESS
+        result.output shouldContain BUILD_SUCCESSFUL
+    }
+
+    @Test
+    fun `reuse an existing root extension and tolerate a null DSL spec`() {
+        // Applying two settings plugins in a row drives both remaining
+        // branches of `LibrarySettingsPlugin.apply`:
+        //  * the second plugin sees the root extension already created by
+        //    the first one (the `hasRootExtension == true` path);
+        //  * the second plugin has no `DslSpec` (the `dslSpec == null` path).
+        @Language("Groovy") // It's Kotlin, actually, but highlighting works better for Groovy.
+        val text = """
+            plugins {
+                id("$PLUGIN_ID")
+                id("$PLUGIN_ID-no-dsl")
+            }
+
+            spineSettings {
+                nameHolder.name.set("test-name")
+            }
+            """.trimIndent()
+        Gradle.settingsFile.under(projectDir).writeText(text)
+
+        @Suppress("UNCHECKED_CAST")
+        val pluginClass = StubSettingsPlugin::class.java as Class<Plugin<*>>
+        val testFixturesFile = pluginClass.classpathElement()
+
+        val gradleProject = GradleProject.setupAt(projectDir)
+            .withPluginClasspath(testFixturesFile)
+            .create()
+
         val taskName = BaseTaskName.help
         val result = gradleProject.executeTask(taskName)
 
