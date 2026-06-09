@@ -36,6 +36,10 @@ internal class IdeaStandaloneExecutionSpec {
 
     @Test
     fun `set up the system properties for the standalone PSI execution`() {
+        // The headless flag is forced on only when it was undefined, so capture
+        // its prior value to assert that exact contract below.
+        val headlessBefore = System.getProperty("java.awt.headless")
+
         IdeaStandaloneExecution.setUp()
 
         System.getProperty("idea.io.use.nio2") shouldBe "true"
@@ -46,8 +50,15 @@ internal class IdeaStandaloneExecutionSpec {
         System.getProperty("ast.loading.filter") shouldBe "false"
         System.getProperty("idea.ignore.disabled.plugins") shouldBe "true"
         System.getProperty("idea.plugins.compatible.build") shouldBe "999.SNAPSHOT"
-        // The headless flag is forced on when it was not defined by the environment.
-        System.getProperty("java.awt.headless") shouldBe "true"
+
+        // `java.awt.headless` is set to `"true"` only if it was previously
+        // undefined; an environment-provided value is left untouched.
+        val headlessAfter = System.getProperty("java.awt.headless")
+        if (headlessBefore == null) {
+            headlessAfter shouldBe "true"
+        } else {
+            headlessAfter shouldBe headlessBefore
+        }
     }
 
     @Test
