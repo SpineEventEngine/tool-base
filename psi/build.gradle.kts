@@ -26,6 +26,7 @@
 
 import io.spine.dependency.local.Base
 import io.spine.dependency.local.TestLib
+import io.spine.gradle.report.coverage.creditTestCoverageFrom
 
 plugins {
     module
@@ -36,6 +37,13 @@ dependencies {
     api(project(":intellij-platform"))
     testImplementation(TestLib.lib)
 }
+
+/**
+ * The language-neutral PSI classes of this module are exercised by the
+ * Java-PSI test fixtures in `psi-java`. Credit that coverage to this module's
+ * own Kover report, which otherwise sees only this module's `test` data.
+ */
+creditTestCoverageFrom(project(":psi-java"))
 
 /**
  * The `intellij-platform` module assembles its artifact with the Shadow plugin
