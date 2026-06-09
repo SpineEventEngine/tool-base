@@ -28,7 +28,7 @@ package io.spine.gradle.report.coverage
 
 import kotlinx.kover.gradle.plugin.dsl.KoverProjectExtension
 import org.gradle.api.Project
-
+import org.gradle.api.Task
 
 /**
  * Credits the test coverage produced by the [contributor] module for the classes
@@ -62,7 +62,7 @@ fun Project.creditTestCoverageFrom(contributor: Project) {
             }
         }
     }
-    tasks.matching { it.name in REPORT_TASK_NAMES }.configureEach {
+    tasks.matching { it.consumesCoverageBinaryReports() }.configureEach {
         dependsOn("${contributor.path}:test")
     }
 }
@@ -74,12 +74,14 @@ fun Project.creditTestCoverageFrom(contributor: Project) {
 private const val TEST_EXEC_FILE: String = "kover/bin-reports/test.exec"
 
 /**
- * The names of the Kover report tasks that read binary reports and therefore
+ * Tells whether this is a Kover task that reads the binary reports and therefore
  * must run only after the [contributor's][creditTestCoverageFrom] test data exists.
+ *
+ * This matches both the report tasks (`koverXmlReport`, `koverHtmlReport`,
+ * `koverBinaryReport`) and the verification tasks (`koverVerify` and its
+ * cacheable companion `koverCachedVerify`) — the suffix test covers the
+ * `Cached*` variants Kover registers, which are the ones that actually consume
+ * the binary reports.
  */
-private val REPORT_TASK_NAMES: Set<String> = setOf(
-    "koverXmlReport",
-    "koverHtmlReport",
-    "koverBinaryReport",
-    "koverVerify",
-)
+private fun Task.consumesCoverageBinaryReports(): Boolean =
+    name.startsWith("kover") && (name.endsWith("Report") || name.endsWith("Verify"))
