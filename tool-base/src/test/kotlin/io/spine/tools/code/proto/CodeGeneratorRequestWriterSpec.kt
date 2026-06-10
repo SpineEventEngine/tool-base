@@ -78,6 +78,23 @@ internal class CodeGeneratorRequestWriterSpec {
         writer.writeJson()
         requestFile.replaceExtension("pb.json").exists() shouldBe true
     }
+
+    @Test
+    fun `accept a request file given as a bare file name`() {
+        // A bare file name resolves against the current working directory
+        // and has no parent directory to create.
+        val bareName = "bare-request.binpb"
+        val request = constructRequest(bareName.toBase64Encoded())
+        val file = File(bareName)
+        try {
+            request.toByteArray().inputStream().use {
+                CodeGeneratorRequestWriter(it).writeBinary()
+            }
+            file.exists() shouldBe true
+        } finally {
+            file.delete()
+        }
+    }
 }
 
 /**

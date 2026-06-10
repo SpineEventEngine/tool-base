@@ -91,7 +91,8 @@ public class CodeGeneratorRequestWriter(
     }
 
     private fun ensureDirectory() {
-        val targetDir = requestFile.parentFile
-        targetDir.mkdirs()
+        // The parent directory is `null` when the request file is a bare file
+        // name resolved against the current working directory.
+        requestFile.parentFile?.mkdirs()
     }
 }
