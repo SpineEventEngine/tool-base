@@ -29,7 +29,6 @@ package io.spine.tools.code.proto
 import com.google.protobuf.compiler.PluginProtos.CodeGeneratorRequest
 import io.spine.io.replaceExtension
 import io.spine.string.decodeBase64
-import io.spine.type.ExtensionRegistryHolder.extensionRegistry
 import io.spine.type.parse
 import io.spine.type.toJson
 import java.io.File
@@ -48,7 +47,8 @@ public class CodeGeneratorRequestWriter(
     private val input: InputStream
 ) {
     /**
-     * Lazily evaluated [CodeGeneratorRequest] parsed from [input] using [extensionRegistry].
+     * Lazily evaluated [CodeGeneratorRequest] [parsed][parse] from [input] using
+     * the extension registry with all known custom Protobuf options.
      */
     public val request: CodeGeneratorRequest by lazy {
         CodeGeneratorRequest::class.parse(input)
