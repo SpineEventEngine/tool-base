@@ -1,5 +1,5 @@
 /*
- * Copyright 2024, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@
 
 import io.spine.dependency.local.Base
 import io.spine.dependency.local.TestLib
+import io.spine.gradle.report.coverage.creditTestCoverageFrom
 
 plugins {
     module
@@ -35,4 +36,23 @@ dependencies {
     api(Base.lib)
     api(project(":intellij-platform"))
     testImplementation(TestLib.lib)
+}
+
+/**
+ * The language-neutral PSI classes of this module are exercised by the
+ * Java-PSI test fixtures in `psi-java`. Credit that coverage to this module's
+ * own Kover report, which otherwise sees only this module's `test` data.
+ */
+creditTestCoverageFrom(project(":psi-java"))
+
+/**
+ * The `intellij-platform` module assembles its artifact with the Shadow plugin
+ * (via `uber-jar-module`), which disables the regular `jar` task. A consumer that
+ * puts that JAR on its runtime classpath — such as this module's `test` task —
+ * therefore does not get an automatic task dependency on `:intellij-platform:shadowJar`,
+ * which Gradle's task-output validation rejects. Declare it explicitly, mirroring
+ * the workaround already used in `uber-jar-module` for publishing.
+ */
+tasks.named("test") {
+    dependsOn(":intellij-platform:shadowJar")
 }

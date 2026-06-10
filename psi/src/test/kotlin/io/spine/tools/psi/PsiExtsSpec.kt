@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,4 +24,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val versionToPublish: String by extra("2.0.0-SNAPSHOT.399")
+package io.spine.tools.psi
+
+import io.kotest.matchers.shouldBe
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+
+@DisplayName("`PsiExts` should")
+internal class PsiExtsSpec {
+
+    @Test
+    fun `convert all kinds of line separators to the PSI form`() {
+        val mixed = "alpha\r\nbeta\rgamma\ndelta"
+        mixed.convertLineSeparators() shouldBe "alpha\nbeta\ngamma\ndelta"
+    }
+
+    @Test
+    fun `leave a string already using the PSI separators intact`() {
+        val text = "one\ntwo\nthree"
+        text.convertLineSeparators() shouldBe text
+    }
+}

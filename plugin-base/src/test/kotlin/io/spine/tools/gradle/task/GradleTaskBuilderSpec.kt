@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -126,6 +126,22 @@ internal class GradleTaskBuilderSpec {
     fun `not allow tasks without any connection to task graph`() {
         val builder = GradleTask.newBuilder(verifyModel, NoOp.action())
         assertIllegalState { builder.applyNowTo(project) }
+    }
+
+    @Test
+    fun `wrap a task registration failure into an 'IllegalStateException'`() {
+        // Reserve the task name up front so that the builder's own
+        // `register(...)` call fails with a duplicate-name error, exercising
+        // the failure-handling branch of `applyNowTo()`.
+        project.tasks.register(preClean.name)
+
+        val builder = GradleTask.newBuilder(preClean, NoOp.action())
+            .insertBeforeTask(BaseTaskName.clean)
+
+        val error = shouldThrow<IllegalStateException> {
+            builder.applyNowTo(project)
+        }
+        error.cause shouldNotBe null
     }
 
     @Test
