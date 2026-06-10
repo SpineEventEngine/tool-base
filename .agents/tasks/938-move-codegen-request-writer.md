@@ -25,14 +25,24 @@ This is the receiving half of
 
 ## Plan
 
-- [ ] Add `CodeGeneratorRequestWriter.kt` to
+- [x] Add `CodeGeneratorRequestWriter.kt` to
   `tool-base/src/main/kotlin/io/spine/tools/code/proto/`.
-- [ ] Add `CodeGeneratorRequestWriterSpec.kt` (with a local `constructRequest`
+- [x] Add `CodeGeneratorRequestWriterSpec.kt` (with a local `constructRequest`
   helper) to `tool-base/src/test/kotlin/io/spine/tools/code/proto/`.
-- [ ] Bump version `2.0.0-SNAPSHOT.398` -> `2.0.0-SNAPSHOT.399`.
+- [x] Bump version `2.0.0-SNAPSHOT.398` -> `2.0.0-SNAPSHOT.399`.
 - [ ] `./gradlew build` green; commit regenerated dependency reports if any.
-- [ ] Push and open a draft PR.
+  - Blocked in the sandbox: all Spine artifact repositories return 403 for
+    the buildscript dependency `io.spine.tools:protobuf-setup-plugins`, so
+    no Gradle build can run here at all. Verification is delegated to PR CI.
+  - Local mitigations: the moved sources are unchanged from `base` (which
+    built and passed tests) except the package line, and every consumed API
+    (`replaceExtension`, `decodeBase64`, `toBase64Encoded`,
+    `extensionRegistry`, `KClass.parse`, `toJson`) was verified present in
+    `base` at the pinned version `2.0.0-SNAPSHOT.404`.
+- [x] Push and open a draft PR.
 
 ## Log
 
 - 2026-06-10 — drafted; executing autonomously per issue #938.
+- 2026-06-10 — code added and version bumped; sandbox cannot resolve Spine
+  snapshot artifacts (403 on all repos), so the build runs on PR CI instead.
