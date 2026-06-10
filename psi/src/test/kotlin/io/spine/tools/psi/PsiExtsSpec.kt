@@ -24,35 +24,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.dependency.local.Base
-import io.spine.dependency.local.TestLib
-import io.spine.gradle.report.coverage.creditTestCoverageFrom
+package io.spine.tools.psi
 
-plugins {
-    module
-}
+import io.kotest.matchers.shouldBe
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 
-dependencies {
-    api(Base.lib)
-    api(project(":intellij-platform"))
-    testImplementation(TestLib.lib)
-}
+@DisplayName("`PsiExts` should")
+internal class PsiExtsSpec {
 
-/**
- * The language-neutral PSI classes of this module are exercised by the
- * Java-PSI test fixtures in `psi-java`. Credit that coverage to this module's
- * own Kover report, which otherwise sees only this module's `test` data.
- */
-creditTestCoverageFrom(project(":psi-java"))
+    @Test
+    fun `convert all kinds of line separators to the PSI form`() {
+        val mixed = "alpha\r\nbeta\rgamma\ndelta"
+        mixed.convertLineSeparators() shouldBe "alpha\nbeta\ngamma\ndelta"
+    }
 
-/**
- * The `intellij-platform` module assembles its artifact with the Shadow plugin
- * (via `uber-jar-module`), which disables the regular `jar` task. A consumer that
- * puts that JAR on its runtime classpath — such as this module's `test` task —
- * therefore does not get an automatic task dependency on `:intellij-platform:shadowJar`,
- * which Gradle's task-output validation rejects. Declare it explicitly, mirroring
- * the workaround already used in `uber-jar-module` for publishing.
- */
-tasks.named("test") {
-    dependsOn(":intellij-platform:shadowJar")
+    @Test
+    fun `leave a string already using the PSI separators intact`() {
+        val text = "one\ntwo\nthree"
+        text.convertLineSeparators() shouldBe text
+    }
 }
