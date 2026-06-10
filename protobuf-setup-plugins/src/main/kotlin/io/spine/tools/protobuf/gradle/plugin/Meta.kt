@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@
 
 package io.spine.tools.protobuf.gradle.plugin
 
+import io.spine.annotation.VisibleForTesting
 import io.spine.tools.meta.LazyDependency
 import io.spine.tools.meta.LazyMeta
 import io.spine.tools.meta.Module
@@ -38,9 +39,20 @@ import io.spine.tools.meta.Module
 internal object Meta : LazyMeta(Module("io.spine.tools", "protobuf-setup-plugins"))
 
 /**
+ * A base class for Protobuf dependencies.
+ */
+internal abstract class ProtobufDependency {
+
+    /**
+     * The name of the Maven group to which all Protobuf dependencies belong.
+     */
+    val group = "com.google.protobuf"
+}
+
+/**
  * The dependency on Protobuf Gradle Plugin.
  */
-internal object ProtobufGradlePlugin {
+internal object ProtobufGradlePlugin : ProtobufDependency() {
 
     /**
      * The ID of the plugin.
@@ -50,7 +62,7 @@ internal object ProtobufGradlePlugin {
     /**
      * This module is used when setting the version of the plugin in tests.
      */
-    private val module = Module("com.google.protobuf", "protobuf-gradle-plugin")
+    private val module = Module(group, "protobuf-gradle-plugin")
     val dependency: LazyDependency = LazyDependency(Meta, module)
 
     /**
@@ -59,8 +71,20 @@ internal object ProtobufGradlePlugin {
     val version: String = dependency.artifact.version
 }
 
-internal object ProtobufProtoc {
+/**
+ * The dependency on the Protobuf compiler.
+ */
+internal object ProtobufProtoc : ProtobufDependency() {
 
-    val module = Module("com.google.protobuf", "protoc")
+    val module = Module(group, "protoc")
     val dependency: LazyDependency = LazyDependency(Meta, module)
+}
+
+/**
+ * The dependency on the Protobuf Java runtime which we use in tests.
+ */
+@VisibleForTesting
+internal object ProtobufJava : ProtobufDependency() {
+    val artefact: String
+        get() = "$group:protobuf-java:${ProtobufProtoc.dependency.artifact.version}"
 }
