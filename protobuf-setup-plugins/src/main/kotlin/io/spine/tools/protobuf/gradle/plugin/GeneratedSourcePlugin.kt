@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ import io.spine.tools.resolve
 import java.io.File
 import java.nio.file.Path
 import org.gradle.api.Project
+import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.tasks.SourceSet
 import org.gradle.plugins.ide.idea.GenerateIdeaModule
@@ -72,6 +73,7 @@ public class GeneratedSourcePlugin : ProtobufSetupPlugin(), GeneratedDirectoryCo
     override fun setup(task: GenerateProtoTask): Unit = with(task) {
         builtins.maybeCreate("kotlin")
         configureSourceSetDirs()
+        declareGeneratedDirOutput()
         doLast {
             copyGeneratedFiles()
         }
@@ -102,8 +104,28 @@ private fun GenerateProtoTask.generatedDir(language: String = ""): File {
 }
 
 /**
- * Copies files from the Protobuf plugin's output base directory into our `$projectDir/generated`
- * directory and removes `com/google` packages to avoid conflicts with library classes.
+ * The name of the [GenerateProtoTask] output property for the directory
+ * receiving the copies of the generated files.
+ */
+private const val GENERATED_DIR_PROPERTY = "spineGeneratedSourcesDir"
+
+/**
+ * Declares `$projectDir/generated/<sourceSet>` as an output of this task.
+ *
+ * The files are copied into the directory by [copyGeneratedFiles] as a side effect
+ * of the task. Unless the directory is declared as an output, the build cache does
+ * not store it, and a task restored from the cache leaves the directory missing,
+ * which fails the compilation tasks consuming the copied sources.
+ */
+context(_: GeneratedDirectoryContext)
+private fun GenerateProtoTask.declareGeneratedDirOutput() {
+    outputs.dir(generatedDir())
+        .withPropertyName(GENERATED_DIR_PROPERTY)
+}
+
+/**
+ * Copies files from the Protobuf plugin's output base directory into
+ * our `$projectDir/generated` directory.
  */
 context(_: GeneratedDirectoryContext)
 private fun GenerateProtoTask.copyGeneratedFiles() {
@@ -125,6 +147,11 @@ private object GeneratedSubdir {
 /**
  * Exclude directories produced under `$buildDir/generated/(source|sources)/proto` from
  * both Java and Kotlin source sets and replace them with `$projectDir/generated/...`.
+ *
+ * The replacement directories are added with the dependency on this task so that
+ * the tasks consuming the source sets (e.g., compilation, `sourcesJar`) run after
+ * the generated code is copied. The dependency carried by the directories excluded
+ * by this function is severed, so it must be re-established this way.
  */
 @Internal
 context(_: GeneratedDirectoryContext)
@@ -147,25 +174,29 @@ public fun GenerateProtoTask.configureSourceSetDirs() {
         lang.srcDirs(newSourceDirectories)
     }
 
+    /** Obtains the generated directory for the [language] built by this task. */
+    fun generatedSrc(language: String): ConfigurableFileCollection =
+        project.files(generatedDir(language)).builtBy(this@configureSourceSetDirs)
+
     val sourceSet = sourceSet
 
     if (project.hasJava()) {
         val java = sourceSet.java
         excludeFor(java)
 
-        java.srcDir(generatedDir(JAVA))
+        java.srcDir(generatedSrc(JAVA))
 
         // Add the `grpc` directory unconditionally.
         // We may not have all the `protoc` plugins configured for the task at this time.
         // So, we cannot check if the `grpc` plugin is enabled.
         // It is safe to add the directory anyway, because `srcDir()` does not require
         // the directory to exist.
-        java.srcDir(generatedDir(GRPC))
+        java.srcDir(generatedSrc(GRPC))
     }
 
     fun SourceDirectorySet.setup() {
         excludeFor(this@setup)
-        srcDirs(generatedDir(KOTLIN))
+        srcDir(generatedSrc(KOTLIN))
     }
 
     if (project.hasKotlin()) {

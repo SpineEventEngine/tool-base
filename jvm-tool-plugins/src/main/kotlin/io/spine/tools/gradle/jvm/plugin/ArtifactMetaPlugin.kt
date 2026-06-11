@@ -186,9 +186,16 @@ public class ArtifactMetaPlugin : Plugin<Project> {
         const val id = "io.spine.artifact-meta"
 
         /**
-         * The name of the directory under the project `build` where
+         * The path of the directory under the project `build` directory where
          * the plugin creates its working files.
+         *
+         * The plugin claims its own subdirectory under `build/spine` — the root
+         * working directory shared by all Spine plugins — so that the output of
+         * the [WriteArtifactMeta] task does not overlap with working directories
+         * of other Spine plugins, such as `build/spine/compiler`.
+         * Overlapping outputs would force Gradle to require explicit ordering
+         * between tasks of otherwise unrelated plugins.
          */
-        const val WORKING_DIR = "spine"
+        const val WORKING_DIR = "spine/artifact-meta"
     }
 }

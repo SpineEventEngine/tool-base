@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,15 +31,13 @@ import io.spine.code.proto.DescriptorSetReferenceFile
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.gradle.task.JavaTaskName
 import io.spine.tools.protobuf.gradle.descriptorSetFile
+import java.io.File
 import org.gradle.kotlin.dsl.withType
 import org.gradle.language.jvm.tasks.ProcessResources
 
 /**
  * A Gradle project plugin that configures Protobuf generation tasks to produce
  * descriptor set files and expose them as resources of the corresponding source set.
- *
- * This plugin reproduces the behavior of `GenerateProtoTask.setupDescriptorSetFileCreation()`
- * defined in this repository's buildSrc utilities, but exposes it as a reusable plugin.
  */
 public class DescriptorSetFilePlugin : ProtobufSetupPlugin() {
 
@@ -78,9 +76,30 @@ public class DescriptorSetFilePlugin : ProtobufSetupPlugin() {
         task.doLast {
             DescriptorSetReferenceFile.create(descriptorsDir, descriptorSetFile)
         }
+        task.declareReferenceFileOutput(descriptorsDir)
 
         task.dependOnProcessResourcesTask()
     }
+}
+
+/**
+ * The name of the [GenerateProtoTask] output property for the descriptor set reference file.
+ */
+private const val REFERENCE_FILE_PROPERTY = "spineDescriptorSetReferenceFile"
+
+/**
+ * Declares the [reference file][DescriptorSetReferenceFile] written in
+ * the `doLast` action of this task as a task output.
+ *
+ * The descriptor set file itself is a declared output of [GenerateProtoTask],
+ * but the reference file is created as a side effect of the task.
+ * Unless it is declared as an output, the build cache does not store it,
+ * and a task restored from the cache leaves the reference file missing,
+ * so it is not packed into the resources of the source set.
+ */
+private fun GenerateProtoTask.declareReferenceFileOutput(descriptorsDir: File) {
+    outputs.file(File(descriptorsDir, DescriptorSetReferenceFile.NAME))
+        .withPropertyName(REFERENCE_FILE_PROPERTY)
 }
 
 /**
