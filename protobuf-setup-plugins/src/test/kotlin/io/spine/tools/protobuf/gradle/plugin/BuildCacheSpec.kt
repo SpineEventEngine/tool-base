@@ -70,7 +70,10 @@ internal class BuildCacheSpec : ProtobufPluginTest() {
     private val descRef: File
         get() = File(descriptorsDir, DescriptorSetReferenceFile.NAME)
     private val expectedDescriptorName: String
-        get() = "${group}_${projectDir.name}_${version}.desc"
+        get() = descriptorName(version)
+
+    private fun descriptorName(version: String): String =
+        "${group}_${projectDir.name}_${version}.desc"
 
     @Test
     fun `restore generated code and the reference file from the cache after 'clean'`() {
@@ -111,8 +114,49 @@ internal class BuildCacheSpec : ProtobufPluginTest() {
         assertCodegenComplete(result)
     }
 
+    @Test
+    fun `regenerate the descriptor set after a version change with the cache on`() {
+        setupProject()
+
+        // Seed the build cache at the initial version.
+        assertCodegenComplete(build(buildCacheArg))
+
+        // Bump the project version, leaving the Proto sources unchanged.
+        val newVersion = "1.0.1"
+        bumpVersionTo(newVersion)
+
+        // Drop the build outputs. The local build cache lives outside `build/`,
+        // so it survives `clean` and could still serve the previous descriptor set.
+        runGradleBuild(projectDir, listOf("clean", buildCacheArg))
+
+        val result = build(buildCacheArg)
+
+        // The version is a `generateProto` input, so the task re-executes instead of
+        // restoring a descriptor set produced for the previous version.
+        result.task(generateProto.path())?.outcome shouldBe SUCCESS
+
+        // The descriptor set and its reference file are regenerated for the new version
+        // and stay consistent with each other.
+        val newDescriptorName = descriptorName(newVersion)
+        descRef.readText().trim() shouldBe newDescriptorName
+        File(descriptorsDir, newDescriptorName).exists() shouldBe true
+        File(projectDir, "build/resources/main/$newDescriptorName").exists() shouldBe true
+        File(projectDir, "build/resources/main/${DescriptorSetReferenceFile.NAME}")
+            .readText().trim() shouldBe newDescriptorName
+    }
+
     private fun build(vararg options: String): BuildResult =
         runGradleBuild(projectDir, listOf("build") + options)
+
+    /**
+     * Bumps the project version in the build file, leaving the rest of the project intact.
+     */
+    private fun bumpVersionTo(newVersion: String) {
+        val buildFile = Gradle.buildFile.under(projectDir)
+        val updated = buildFile.readText()
+            .replace("version = \"$version\"", "version = \"$newVersion\"")
+        buildFile.writeText(updated)
+    }
 
     /**
      * Asserts that the [result] is successful and all the files produced by

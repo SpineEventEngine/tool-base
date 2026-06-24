@@ -47,6 +47,11 @@ public class DescriptorSetFilePlugin : ProtobufSetupPlugin() {
          * The ID of this Gradle plugin.
          */
         const val id = "io.spine.descriptor-set-file"
+
+        /**
+         * The name of the [GenerateProtoTask] input property holding the project version.
+         */
+        const val VERSION_PROPERTY = "projectVersion"
     }
 
     override fun setup(task: GenerateProtoTask) {
@@ -77,6 +82,7 @@ public class DescriptorSetFilePlugin : ProtobufSetupPlugin() {
             DescriptorSetReferenceFile.create(descriptorsDir, descriptorSetFile)
         }
         task.declareReferenceFileOutput(descriptorsDir)
+        task.declareVersionInput()
 
         task.dependOnProcessResourcesTask()
     }
@@ -100,6 +106,33 @@ private const val REFERENCE_FILE_PROPERTY = "spineDescriptorSetReferenceFile"
 private fun GenerateProtoTask.declareReferenceFileOutput(descriptorsDir: File) {
     outputs.file(File(descriptorsDir, DescriptorSetReferenceFile.NAME))
         .withPropertyName(REFERENCE_FILE_PROPERTY)
+}
+
+/**
+ * Declares the project version as an explicit input of this task so that
+ * a version change invalidates the cached descriptor set.
+ *
+ * The descriptor set file name embeds the project version (see [descriptorSetFile]),
+ * and the [reference file][DescriptorSetReferenceFile] written in the `doLast` action
+ * points to that name. [GenerateProtoTask] is a cacheable task that keys its up-to-date
+ * check and build-cache entry on the `.proto` sources and the compiler configuration
+ * only — not on the project version or the names of the produced files.
+ *
+ * After a version-only change the Proto sources are unchanged, so the task is restored
+ * from the build cache, bringing back a descriptor set produced for the previous version
+ * while the reference file points to the new name. The mismatch leaves Protobuf types
+ * unresolvable at runtime, surfacing as an `UnknownTypeException`.
+ *
+ * Declaring the version as an input makes the build cache regenerate the descriptor set
+ * and its reference file when the version changes, while preserving caching for all other
+ * changes. The value is read lazily so that it reflects the version resolved at execution
+ * time, regardless of when `project.version` is assigned during configuration.
+ */
+private fun GenerateProtoTask.declareVersionInput() {
+    inputs.property(
+        DescriptorSetFilePlugin.VERSION_PROPERTY,
+        project.provider { project.version.toString() }
+    )
 }
 
 /**
