@@ -49,9 +49,10 @@ public class DescriptorSetFilePlugin : ProtobufSetupPlugin() {
         const val id = "io.spine.descriptor-set-file"
 
         /**
-         * The name of the [GenerateProtoTask] input property holding the project version.
+         * The name of the [GenerateProtoTask] input property holding the descriptor set
+         * file name.
          */
-        const val VERSION_PROPERTY = "projectVersion"
+        const val DESCRIPTOR_SET_NAME_PROPERTY = "descriptorSetName"
     }
 
     override fun setup(task: GenerateProtoTask) {
@@ -82,7 +83,7 @@ public class DescriptorSetFilePlugin : ProtobufSetupPlugin() {
             DescriptorSetReferenceFile.create(descriptorsDir, descriptorSetFile)
         }
         task.declareReferenceFileOutput(descriptorsDir)
-        task.declareVersionInput()
+        task.declareDescriptorSetNameInput(descriptorSetFile)
 
         task.dependOnProcessResourcesTask()
     }
@@ -109,30 +110,29 @@ private fun GenerateProtoTask.declareReferenceFileOutput(descriptorsDir: File) {
 }
 
 /**
- * Declares the project version as an explicit input of this task so that
- * a version change invalidates the cached descriptor set.
+ * Declares the descriptor set file name as an explicit input of this task so that
+ * a change to the name invalidates the cached descriptor set.
  *
- * The descriptor set file name embeds the project version (see [descriptorSetFile]),
- * and the [reference file][DescriptorSetReferenceFile] written in the `doLast` action
- * points to that name. [GenerateProtoTask] is a cacheable task that keys its up-to-date
- * check and build-cache entry on the `.proto` sources and the compiler configuration
- * only — not on the project version or the names of the produced files.
+ * The descriptor set file name is derived from the project's Maven coordinates — group,
+ * artifact ID, version, and classifier (see [descriptorSetFile]) — and the
+ * [reference file][DescriptorSetReferenceFile] written in the `doLast` action points to
+ * that name. [GenerateProtoTask] is a cacheable task that keys its up-to-date check and
+ * build-cache entry on the `.proto` sources and the compiler configuration only — not on
+ * the names of the produced files.
  *
- * After a version-only change the Proto sources are unchanged, so the task is restored
- * from the build cache, bringing back a descriptor set produced for the previous version
- * while the reference file points to the new name. The mismatch leaves Protobuf types
- * unresolvable at runtime, surfacing as an `UnknownTypeException`.
+ * After a coordinate-only change — most commonly a version bump — the Proto sources are
+ * unchanged, so the task is restored from the build cache, bringing back a descriptor set
+ * produced under the previous name while the reference file points to the new name. The
+ * mismatch leaves Protobuf types unresolvable at runtime, surfacing as an
+ * `UnknownTypeException`.
  *
- * Declaring the version as an input makes the build cache regenerate the descriptor set
- * and its reference file when the version changes, while preserving caching for all other
- * changes. The value is read lazily so that it reflects the version resolved at execution
- * time, regardless of when `project.version` is assigned during configuration.
+ * Declaring the descriptor set file name as an input makes the build cache regenerate the
+ * descriptor set and its reference file whenever the name changes — covering version,
+ * group, artifact ID, and classifier changes alike — while preserving caching for all
+ * other changes.
  */
-private fun GenerateProtoTask.declareVersionInput() {
-    inputs.property(
-        DescriptorSetFilePlugin.VERSION_PROPERTY,
-        project.provider { project.version.toString() }
-    )
+private fun GenerateProtoTask.declareDescriptorSetNameInput(descriptorSetFile: File) {
+    inputs.property(DescriptorSetFilePlugin.DESCRIPTOR_SET_NAME_PROPERTY, descriptorSetFile.name)
 }
 
 /**
