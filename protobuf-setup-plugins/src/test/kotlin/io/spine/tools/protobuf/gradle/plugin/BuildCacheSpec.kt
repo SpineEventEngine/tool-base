@@ -70,7 +70,12 @@ internal class BuildCacheSpec : ProtobufPluginTest() {
     private val descRef: File
         get() = File(descriptorsDir, DescriptorSetReferenceFile.NAME)
     private val expectedDescriptorName: String
-        get() = "${group}_${projectDir.name}_${version}.desc"
+        get() = descriptorName()
+
+    private fun descriptorName(
+        group: String = this.group,
+        version: String = this.version
+    ): String = "${group}_${projectDir.name}_${version}.desc"
 
     @Test
     fun `restore generated code and the reference file from the cache after 'clean'`() {
@@ -111,8 +116,85 @@ internal class BuildCacheSpec : ProtobufPluginTest() {
         assertCodegenComplete(result)
     }
 
+    @Test
+    fun `regenerate the descriptor set after a version change with the cache on`() {
+        setupProject()
+
+        // Seed the build cache at the initial version.
+        assertCodegenComplete(build(buildCacheArg))
+
+        // Bump the project version, leaving the Proto sources unchanged.
+        val newVersion = "1.0.1"
+        bumpVersionTo(newVersion)
+
+        // Drop the build outputs. The local build cache lives outside `build/`,
+        // so it survives `clean` and could still serve the previous descriptor set.
+        runGradleBuild(projectDir, listOf("clean", buildCacheArg))
+
+        val result = build(buildCacheArg)
+
+        // The descriptor set file name (which embeds the version) is a `generateProto`
+        // input, so the task re-executes instead of restoring a descriptor set produced
+        // for the previous version.
+        result.task(generateProto.path())?.outcome shouldBe SUCCESS
+
+        // The descriptor set and its reference file are regenerated for the new version
+        // and stay consistent with each other.
+        val newDescriptorName = descriptorName(version = newVersion)
+        descRef.readText().trim() shouldBe newDescriptorName
+        File(descriptorsDir, newDescriptorName).exists() shouldBe true
+        File(projectDir, "build/resources/main/$newDescriptorName").exists() shouldBe true
+        File(projectDir, "build/resources/main/${DescriptorSetReferenceFile.NAME}")
+            .readText().trim() shouldBe newDescriptorName
+    }
+
+    @Test
+    fun `regenerate the descriptor set after a group change with the cache on`() {
+        setupProject()
+
+        // Seed the build cache at the initial Maven coordinates.
+        assertCodegenComplete(build(buildCacheArg))
+
+        // Change the project group, leaving the version and the Proto sources unchanged.
+        // The version alone is therefore not enough to distinguish the two builds.
+        val newGroup = "cache.test.renamed"
+        changeGroupTo(newGroup)
+
+        runGradleBuild(projectDir, listOf("clean", buildCacheArg))
+
+        val result = build(buildCacheArg)
+
+        // The descriptor set file name embeds the group, so a coordinate change other than
+        // the version still re-runs the task instead of restoring a stale descriptor set.
+        result.task(generateProto.path())?.outcome shouldBe SUCCESS
+
+        val newDescriptorName = descriptorName(group = newGroup)
+        descRef.readText().trim() shouldBe newDescriptorName
+        File(descriptorsDir, newDescriptorName).exists() shouldBe true
+        File(projectDir, "build/resources/main/$newDescriptorName").exists() shouldBe true
+    }
+
     private fun build(vararg options: String): BuildResult =
         runGradleBuild(projectDir, listOf("build") + options)
+
+    /**
+     * Bumps the project version in the build file, leaving the rest of the project intact.
+     */
+    private fun bumpVersionTo(newVersion: String) {
+        replaceInBuildFile("version = \"$version\"", "version = \"$newVersion\"")
+    }
+
+    /**
+     * Changes the project group in the build file, leaving the rest of the project intact.
+     */
+    private fun changeGroupTo(newGroup: String) {
+        replaceInBuildFile("group = \"$group\"", "group = \"$newGroup\"")
+    }
+
+    private fun replaceInBuildFile(old: String, new: String) {
+        val buildFile = Gradle.buildFile.under(projectDir)
+        buildFile.writeText(buildFile.readText().replace(old, new))
+    }
 
     /**
      * Asserts that the [result] is successful and all the files produced by
