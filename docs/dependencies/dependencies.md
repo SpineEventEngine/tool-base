@@ -737,11 +737,11 @@
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -860,7 +860,7 @@
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using 
+This report was generated on **Mon Jun 29 18:10:45 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
@@ -961,11 +961,11 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -1651,11 +1651,11 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -1778,7 +1778,7 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using 
+This report was generated on **Mon Jun 29 18:10:45 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
@@ -1879,11 +1879,11 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -2229,11 +2229,11 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [The Apache Software License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -2256,7 +2256,7 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using 
+This report was generated on **Mon Jun 29 18:10:45 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
@@ -2333,11 +2333,11 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -3003,11 +3003,11 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -3126,7 +3126,7 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using 
+This report was generated on **Mon Jun 29 18:10:45 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
@@ -4087,11 +4087,11 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -4219,7 +4219,7 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using 
+This report was generated on **Mon Jun 29 18:10:45 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
@@ -5825,11 +5825,11 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -6010,7 +6010,7 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using 
+This report was generated on **Mon Jun 29 18:10:46 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
@@ -6087,11 +6087,11 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -6749,11 +6749,11 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -6872,7 +6872,7 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using 
+This report was generated on **Mon Jun 29 18:10:45 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
@@ -7528,11 +7528,11 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -7651,7 +7651,7 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using 
+This report was generated on **Mon Jun 29 18:10:45 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
@@ -7728,11 +7728,11 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -8398,11 +8398,11 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -8521,7 +8521,7 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using 
+This report was generated on **Mon Jun 29 18:10:45 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
@@ -8689,11 +8689,11 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -9372,11 +9372,11 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -9495,7 +9495,7 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using 
+This report was generated on **Mon Jun 29 18:10:45 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
@@ -9584,11 +9584,11 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -10254,11 +10254,11 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -10377,7 +10377,7 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using 
+This report was generated on **Mon Jun 29 18:10:45 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
@@ -11365,11 +11365,11 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -11497,7 +11497,7 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using 
+This report was generated on **Mon Jun 29 18:10:45 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
@@ -13146,11 +13146,11 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -13331,7 +13331,7 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using 
+This report was generated on **Mon Jun 29 18:10:46 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
 
@@ -13408,11 +13408,11 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -14127,11 +14127,11 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
      * **Project URL:** [https://github.com/Kotlin/kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.7.1.
+1.  **Group** : org.jetbrains.kotlinx. **Name** : kotlinx-datetime-jvm. **Version** : 0.8.0.
      * **Project URL:** [https://github.com/Kotlin/kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
      * **License:** [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -14250,6 +14250,6 @@ This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using
 
 The dependencies distributed under several licenses, are used according their commercial-use-friendly license.
 
-This report was generated on **Mon Jun 29 18:06:27 WEST 2026** using 
+This report was generated on **Mon Jun 29 18:10:45 WEST 2026** using 
 [Gradle-License-Report plugin](https://github.com/jk1/Gradle-License-Report) by Evgeny Naumenko, licensed under 
 [Apache 2.0 License](https://github.com/jk1/Gradle-License-Report/blob/master/LICENSE).
