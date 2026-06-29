@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -160,17 +160,20 @@ fun Module.configureGitHubPages() {
 /**
  * Adds directories with the generated source code to source sets of the project.
  *
+ * Generated Kotlin sources are intentionally not added here: the
+ * `io.spine.generated-sources` plugin registers them under the Kotlin Gradle plugin's
+ * dedicated `generatedKotlin` source set, keeping them out of the plain `kotlin` set
+ * so that build tooling and IDEs can tell them apart from hand-written code.
+ *
  * @param generatedDir The name of the root directory with the generated code
  */
 fun Module.applyGeneratedDirectories(generatedDir: String) {
     val generatedMain = "$generatedDir/main"
     val generatedJava = "$generatedMain/java"
-    val generatedKotlin = "$generatedMain/kotlin"
     val generatedGrpc = "$generatedMain/grpc"
 
     val generatedTest = "$generatedDir/test"
     val generatedTestJava = "$generatedTest/java"
-    val generatedTestKotlin = "$generatedTest/kotlin"
     val generatedTestGrpc = "$generatedTest/grpc"
 
     sourceSets {
@@ -179,17 +182,11 @@ fun Module.applyGeneratedDirectories(generatedDir: String) {
                 generatedJava,
                 generatedGrpc,
             )
-            kotlin.srcDirs(
-                generatedKotlin,
-            )
         }
         test {
             java.srcDirs(
                 generatedTestJava,
                 generatedTestGrpc,
-            )
-            kotlin.srcDirs(
-                generatedTestKotlin,
             )
         }
     }

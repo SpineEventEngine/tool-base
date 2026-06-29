@@ -166,11 +166,15 @@ class GeneratedSourcePluginSpec : ProtobufPluginTest() {
         result.output shouldContain BUILD_SUCCESSFUL
 
         // The copied directory is registered under `generatedKotlin`, and is absent
-        // from the plain `kotlin` source set — this is the behavior under test.
+        // from the plain `kotlin` source set. Paths are normalized to forward slashes
+        // so the substring check holds on Windows too.
         val output = result.output
-        val generatedKotlinLine =
-            output.lineSequence().first { it.startsWith("GENERATED_KOTLIN_DIRS=") }
-        val kotlinLine = output.lineSequence().first { it.startsWith("KOTLIN_DIRS=") }
+        val generatedKotlinLine = output.lineSequence()
+            .first { it.startsWith("GENERATED_KOTLIN_DIRS=") }
+            .replace('\\', '/')
+        val kotlinLine = output.lineSequence()
+            .first { it.startsWith("KOTLIN_DIRS=") }
+            .replace('\\', '/')
         val generatedKotlinSubpath = "generated/main/kotlin"
         generatedKotlinLine shouldContain generatedKotlinSubpath
         kotlinLine shouldNotContain generatedKotlinSubpath
