@@ -32,6 +32,7 @@ import io.spine.gradle.isSnapshot
 import io.spine.gradle.publish.SpinePublishing
 import io.spine.gradle.report.license.LicenseReporter
 import io.spine.gradle.testing.enableTestKitCoverage
+import org.gradle.plugin.devel.tasks.PluginUnderTestMetadata
 
 plugins {
     `uber-jar-module`
@@ -118,7 +119,7 @@ dependencies {
 val kotlinGradlePlugin = configurations.detachedConfiguration(
     dependencies.create(Kotlin.GradlePlugin.lib)
 )
-tasks.withType<org.gradle.plugin.devel.tasks.PluginUnderTestMetadata>().configureEach {
+tasks.withType<PluginUnderTestMetadata>().configureEach {
     pluginClasspath.from(kotlinGradlePlugin)
 }
 

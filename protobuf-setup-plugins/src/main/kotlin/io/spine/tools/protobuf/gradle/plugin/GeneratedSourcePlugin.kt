@@ -197,24 +197,30 @@ public fun GenerateProtoTask.configureSourceSetDirs() {
         // Add the `grpc` directory unconditionally.
         // We may not have all the `protoc` plugins configured for the task at this time.
         // So, we cannot check if the `grpc` plugin is enabled.
-        // It is safe to add the directory anyway, because `srcDir()` does not require
+        // It is safe to add the directory anyway because `srcDir()` does not require
         // the directory to exist.
         java.srcDir(generatedSrc(GRPC))
     }
 
-    fun SourceDirectorySet.setup() {
-        excludeFor(this@setup)
-        project.findKotlinSourceSet(sourceSet.name)
-            ?.generatedKotlin
-            ?.srcDir(generatedSrc(KOTLIN))
+    fun KotlinSourceSet.setup() {
+        excludeFor(kotlin)
+        generatedKotlin.srcDir(generatedSrc(KOTLIN))
     }
 
     if (project.hasKotlin()) {
-        val kotlinDirectorySet = sourceSet.findKotlinDirectorySet()
-        kotlinDirectorySet?.setup()
-            ?: project.afterEvaluate {
-                sourceSet.findKotlinDirectorySet()?.setup()
-            }
+        fun configureKotlin() {
+            project.findKotlinSourceSet(sourceSet.name)?.setup()
+        }
+        // The Kotlin plugin registers the `kotlin` source directory set as a
+        // source-set extension once it wires the source set. Gate on its presence
+        // to keep the original timing relative to the Protobuf plugin, then drive
+        // both the exclusion and the `generatedKotlin` registration from the matching
+        // `KotlinSourceSet`, whose `kotlin` set is that same extension.
+        if (sourceSet.findKotlinDirectorySet() != null) {
+            configureKotlin()
+        } else {
+            project.afterEvaluate { configureKotlin() }
+        }
     }
 }
 
