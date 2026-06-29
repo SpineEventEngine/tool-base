@@ -44,6 +44,9 @@ import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.tasks.SourceSet
 import org.gradle.plugins.ide.idea.GenerateIdeaModule
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.dsl.KotlinBaseExtension
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 /**
@@ -152,8 +155,13 @@ private object GeneratedSubdir {
  * the tasks consuming the source sets (e.g., compilation, `sourcesJar`) run after
  * the generated code is copied. The dependency carried by the directories excluded
  * by this function is severed, so it must be re-established this way.
+ *
+ * Generated Kotlin sources are registered through the Kotlin Gradle plugin's dedicated
+ * `generatedKotlin` source directory set rather than the plain `kotlin` one, so that
+ * build tooling and IDEs can tell them apart from the hand-written code.
  */
 @Internal
+@OptIn(ExperimentalKotlinGradlePluginApi::class)
 context(_: GeneratedDirectoryContext)
 public fun GenerateProtoTask.configureSourceSetDirs() {
     val project = project
@@ -196,7 +204,9 @@ public fun GenerateProtoTask.configureSourceSetDirs() {
 
     fun SourceDirectorySet.setup() {
         excludeFor(this@setup)
-        srcDir(generatedSrc(KOTLIN))
+        project.findKotlinSourceSet(sourceSet.name)
+            ?.generatedKotlin
+            ?.srcDir(generatedSrc(KOTLIN))
     }
 
     if (project.hasKotlin()) {
@@ -207,6 +217,15 @@ public fun GenerateProtoTask.configureSourceSetDirs() {
             }
     }
 }
+
+/**
+ * Obtains the [KotlinSourceSet] with the given [name], or `null` if the project has no
+ * Kotlin extension, or it does not contain a source set with such a name.
+ */
+private fun Project.findKotlinSourceSet(name: String): KotlinSourceSet? =
+    extensions.findByType(KotlinBaseExtension::class.java)
+        ?.sourceSets
+        ?.findByName(name)
 
 private fun File.residesIn(directory: File): Boolean =
     canonicalFile.startsWith(directory.absolutePath)
