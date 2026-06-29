@@ -171,10 +171,10 @@ class GeneratedSourcePluginSpec : ProtobufPluginTest() {
         val output = result.output
         val generatedKotlinLine = output.lineSequence()
             .first { it.startsWith("GENERATED_KOTLIN_DIRS=") }
-            .replace('\\', '/')
+            .toUnix()
         val kotlinLine = output.lineSequence()
             .first { it.startsWith("KOTLIN_DIRS=") }
-            .replace('\\', '/')
+            .toUnix()
         val generatedKotlinSubpath = "generated/main/kotlin"
         generatedKotlinLine shouldContain generatedKotlinSubpath
         kotlinLine shouldNotContain generatedKotlinSubpath
@@ -184,3 +184,6 @@ class GeneratedSourcePluginSpec : ProtobufPluginTest() {
         generatedKotlinDir.walkTopDown().any { it.extension == "kt" } shouldBe true
     }
 }
+
+/** Replaces backslashes with forward slashes, normalizing a path across platforms. */
+private fun String.toUnix(): String = replace('\\', '/')
