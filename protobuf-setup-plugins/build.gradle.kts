@@ -24,6 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import io.spine.dependency.lib.Kotlin
 import io.spine.dependency.lib.Protobuf
 import io.spine.dependency.local.Base
 import io.spine.dependency.local.Logging
@@ -31,6 +32,7 @@ import io.spine.gradle.isSnapshot
 import io.spine.gradle.publish.SpinePublishing
 import io.spine.gradle.report.license.LicenseReporter
 import io.spine.gradle.testing.enableTestKitCoverage
+import org.gradle.plugin.devel.tasks.PluginUnderTestMetadata
 
 plugins {
     `uber-jar-module`
@@ -109,6 +111,16 @@ dependencies {
     implementation(Logging.lib)
 
     testImplementation(project(":plugin-testlib"))
+}
+
+// Put the Kotlin Gradle plugin on the plugin-under-test classpath so the TestKit
+// spec that applies it shares a classloader with this plugin, which uses the Kotlin
+// Gradle plugin API (`KotlinSourceSet.generatedKotlin`).
+val kotlinGradlePlugin = configurations.detachedConfiguration(
+    dependencies.create(Kotlin.GradlePlugin.lib)
+)
+tasks.withType<PluginUnderTestMetadata>().configureEach {
+    pluginClasspath.from(kotlinGradlePlugin)
 }
 
 publishing.publications.withType<MavenPublication>().configureEach {

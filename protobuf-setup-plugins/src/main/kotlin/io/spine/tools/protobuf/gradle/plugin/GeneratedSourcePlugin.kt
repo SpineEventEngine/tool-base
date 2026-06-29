@@ -44,6 +44,9 @@ import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.tasks.SourceSet
 import org.gradle.plugins.ide.idea.GenerateIdeaModule
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.dsl.KotlinBaseExtension
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 /**
@@ -152,8 +155,13 @@ private object GeneratedSubdir {
  * the tasks consuming the source sets (e.g., compilation, `sourcesJar`) run after
  * the generated code is copied. The dependency carried by the directories excluded
  * by this function is severed, so it must be re-established this way.
+ *
+ * Generated Kotlin sources are registered through the Kotlin Gradle plugin's dedicated
+ * `generatedKotlin` source directory set rather than the plain `kotlin` one, so that
+ * build tooling and IDEs can tell them apart from the hand-written code.
  */
 @Internal
+@OptIn(ExperimentalKotlinGradlePluginApi::class)
 context(_: GeneratedDirectoryContext)
 public fun GenerateProtoTask.configureSourceSetDirs() {
     val project = project
@@ -189,24 +197,41 @@ public fun GenerateProtoTask.configureSourceSetDirs() {
         // Add the `grpc` directory unconditionally.
         // We may not have all the `protoc` plugins configured for the task at this time.
         // So, we cannot check if the `grpc` plugin is enabled.
-        // It is safe to add the directory anyway, because `srcDir()` does not require
+        // It is safe to add the directory anyway because `srcDir()` does not require
         // the directory to exist.
         java.srcDir(generatedSrc(GRPC))
     }
 
-    fun SourceDirectorySet.setup() {
-        excludeFor(this@setup)
-        srcDir(generatedSrc(KOTLIN))
+    fun KotlinSourceSet.setup() {
+        excludeFor(kotlin)
+        generatedKotlin.srcDir(generatedSrc(KOTLIN))
     }
 
     if (project.hasKotlin()) {
-        val kotlinDirectorySet = sourceSet.findKotlinDirectorySet()
-        kotlinDirectorySet?.setup()
-            ?: project.afterEvaluate {
-                sourceSet.findKotlinDirectorySet()?.setup()
-            }
+        fun configureKotlin() {
+            project.findKotlinSourceSet(sourceSet.name)?.setup()
+        }
+        // The Kotlin plugin registers the `kotlin` source directory set as a
+        // source-set extension once it wires the source set. Gate on its presence
+        // to keep the original timing relative to the Protobuf plugin, then drive
+        // both the exclusion and the `generatedKotlin` registration from the matching
+        // `KotlinSourceSet`, whose `kotlin` set is that same extension.
+        if (sourceSet.findKotlinDirectorySet() != null) {
+            configureKotlin()
+        } else {
+            project.afterEvaluate { configureKotlin() }
+        }
     }
 }
+
+/**
+ * Obtains the [KotlinSourceSet] with the given [name], or `null` if the project has no
+ * Kotlin extension, or it does not contain a source set with such a name.
+ */
+private fun Project.findKotlinSourceSet(name: String): KotlinSourceSet? =
+    extensions.findByType(KotlinBaseExtension::class.java)
+        ?.sourceSets
+        ?.findByName(name)
 
 private fun File.residesIn(directory: File): Boolean =
     canonicalFile.startsWith(directory.absolutePath)

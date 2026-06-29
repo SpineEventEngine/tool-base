@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ package io.spine.tools.protobuf.gradle.plugin
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotContain
 import io.spine.tools.gradle.testing.Gradle
 import io.spine.tools.gradle.testing.Gradle.BUILD_SUCCESSFUL
 import io.spine.tools.gradle.testing.runGradleBuild
@@ -97,4 +98,92 @@ class GeneratedSourcePluginSpec : ProtobufPluginTest() {
         val sampleOuter = File(generatedJava, "sample/Sample.java")
         sampleOuter.exists() shouldBe true
     }
+
+    @Test
+    fun `register generated Kotlin sources under the 'generatedKotlin' source set`() {
+
+        // Settings file (empty is fine for single-project build).
+        Gradle.settingsFile.under(projectDir).writeText("")
+
+        // Create a minimal proto file. The Kotlin `protoc` builtin (enabled by our
+        // plugin) generates a Kotlin DSL file for the message.
+        File(protoDir, "sample.proto").writeText(
+            """
+            syntax = "proto3";
+            package sample;
+            message Msg {}
+            """.trimIndent()
+        )
+
+        // Build file applying the Kotlin JVM, Protobuf, and our plugins.
+        // The `printKotlinSourceDirs` task reports which source set the generated
+        // Kotlin directory is registered under.
+        Gradle.buildFile.under(projectDir).writeText(
+            """
+            import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+            import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+
+            plugins {
+                // No version: resolved from the plugin-under-test classpath.
+                id("org.jetbrains.kotlin.jvm")
+                id("${ProtobufGradlePlugin.id}") version "${ProtobufGradlePlugin.version}"
+                id("${GeneratedSourcePlugin.id}")
+            }
+
+            group = "$group"
+            version = "$version"
+
+            repositories {
+                mavenCentral()
+            }
+
+            protobuf {
+                protoc { artifact = "${ProtobufProtoc.dependency.artifact.coordinates}" }
+            }
+
+            @OptIn(ExperimentalKotlinGradlePluginApi::class)
+            fun generatedKotlinSrcDirs(set: KotlinSourceSet) =
+                set.generatedKotlin.srcDirs
+
+            val main = kotlin.sourceSets.getByName("main")
+            tasks.register("printKotlinSourceDirs") {
+                doLast {
+                    println("KOTLIN_DIRS=" + main.kotlin.srcDirs)
+                    println("GENERATED_KOTLIN_DIRS=" + generatedKotlinSrcDirs(main))
+                }
+            }
+            """.trimIndent()
+        )
+
+        val generateProto = ProtobufTaskName.generateProto
+        val result = runGradleBuild(
+            projectDir,
+            listOf(generateProto.name(), "printKotlinSourceDirs"),
+            debug = false
+        )
+
+        result.task(generateProto.path())?.outcome shouldBe TaskOutcome.SUCCESS
+        result.output shouldContain BUILD_SUCCESSFUL
+
+        // The copied directory is registered under `generatedKotlin`, and is absent
+        // from the plain `kotlin` source set. Paths are normalized to forward slashes
+        // so the substring check holds on Windows too.
+        val output = result.output
+        val generatedKotlinLine = output.lineSequence()
+            .first { it.startsWith("GENERATED_KOTLIN_DIRS=") }
+            .toUnix()
+        val kotlinLine = output.lineSequence()
+            .first { it.startsWith("KOTLIN_DIRS=") }
+            .toUnix()
+        val generatedKotlinSubpath = "generated/main/kotlin"
+        generatedKotlinLine shouldContain generatedKotlinSubpath
+        kotlinLine shouldNotContain generatedKotlinSubpath
+
+        // The generated Kotlin sources are copied under `$projectDir/generated/main/kotlin`.
+        val generatedKotlinDir = File(projectDir, "generated/main/kotlin")
+        generatedKotlinDir.walkTopDown().any { it.extension == "kt" } shouldBe true
+    }
 }
+
+/** Replaces backslashes with forward slashes, normalizing a path across platforms. */
+private fun String.toUnix(): String = replace('\\', '/')
