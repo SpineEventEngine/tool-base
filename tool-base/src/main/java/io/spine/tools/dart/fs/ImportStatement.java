@@ -177,10 +177,9 @@ final class ImportStatement implements Element, WithLogging {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof ImportStatement)) {
+        if (!(o instanceof ImportStatement other)) {
             return false;
         }
-        var other = (ImportStatement) o;
         return text.equals(other.text) && sourceDirectory.equals(other.sourceDirectory);
     }
 

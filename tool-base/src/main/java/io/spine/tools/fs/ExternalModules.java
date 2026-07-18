@@ -104,10 +104,9 @@ public final class ExternalModules {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof ExternalModules)) {
+        if (!(o instanceof ExternalModules other)) {
             return false;
         }
-        var other = (ExternalModules) o;
         return modules.equals(other.modules);
     }
 
