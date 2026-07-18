@@ -32,8 +32,10 @@ import io.spine.tools.gradle.jvm.plugin.WriteArtifactMeta.Companion.TASK_NAME
 import io.spine.tools.gradle.task.JavaTaskName.Companion.processResources
 import io.spine.tools.gradle.task.JavaTaskName.Companion.sourcesJar
 import io.spine.tools.gradle.task.SpineTaskGroup
+import io.spine.tools.meta.MavenArtifact
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Dependency
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.register
@@ -161,6 +163,14 @@ public class ArtifactMetaPlugin : Plugin<Project> {
             task.description =
                 "Writes artifact metadata under `META-INF/io.spine` of the resources"
             task.outputDirectory.convention(outputDir)
+
+            // Snapshot the project state the task needs at configuration time, so that
+            // its action does not access `Task.project` during execution. See the
+            // `Task.project` deprecation: it is incompatible with the configuration cache.
+            task.artifactGroup.set(project.provider { project.group.toString() })
+            task.artifactId.set(ext.artifactId)
+            task.artifactVersion.set(project.provider { project.version.toString() })
+            task.dependencyCoordinates.set(project.provider { collectCoordinates(project, ext) })
         }
 
         tasks.named(processResources.value()).configure {
@@ -198,4 +208,47 @@ public class ArtifactMetaPlugin : Plugin<Project> {
          */
         const val WORKING_DIR = "spine/artifact-meta"
     }
+}
+
+/**
+ * Collects Maven coordinates of the dependencies to be written into the metadata.
+ *
+ * Reads the project configurations — honoring the exclusions configured via the
+ * [`artifactMeta`][ArtifactMetaExtension] extension — and merges the explicitly declared
+ * dependency notations. Invoked from a provider so that the project is read at
+ * configuration time (or when the task input is finalized) rather than from the task action.
+ */
+private fun collectCoordinates(project: Project, ext: ArtifactMetaExtension): Set<String> {
+    val excludedByName = ext.excludeConfigurations.named.orNull ?: emptySet()
+    val excludedBySubstring = ext.excludeConfigurations.containing.orNull ?: emptySet()
+
+    // Collect from configurations (according to exclusions).
+    val coordinates = project.configurations
+        .asSequence()
+        .filter { it.name !in excludedByName }
+        .filter { configuration ->
+            val lower = configuration.name.lowercase()
+            excludedBySubstring.none { sub -> lower.contains(sub.lowercase()) }
+        }
+        .flatMap { it.dependencies }
+        .mapNotNull { it.toMavenArtifact()?.coordinates }
+        .toMutableSet()
+
+    // Add explicitly declared dependencies from the extension.
+    coordinates.addAll(ext.explicitDependencies.orNull ?: emptySet())
+    return coordinates
+}
+
+/**
+ * Creates a [MavenArtifact] from a Gradle [Dependency].
+ *
+ * The `null` checks filter out dependencies that do not have a `group` or a `version`
+ * attribute available, which is a safety feature for the dynamic Gradle environment.
+ * The dependencies of our interest have the required attributes.
+ */
+@Suppress("ReturnCount")
+private fun Dependency.toMavenArtifact(): MavenArtifact? {
+    val group = this.group ?: return null
+    val version = this.version ?: return null
+    return MavenArtifact(group, this.name, version)
 }
