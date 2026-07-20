@@ -89,7 +89,7 @@ internal class PlugableProjectSpec {
 
     @Nested internal inner class
     LogOnDuplicate :
-        LoggingTest(PlugableProject::class.java, Level.Companion.DEBUG.toJavaLogging()) {
+        LoggingTest(PlugableProject::class.java, Level.DEBUG.toJavaLogging()) {
 
         private lateinit var plugin: GradlePlugin<*>
 
