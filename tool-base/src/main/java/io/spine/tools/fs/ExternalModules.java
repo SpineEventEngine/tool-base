@@ -101,14 +101,7 @@ public final class ExternalModules {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof ExternalModules)) {
-            return false;
-        }
-        var other = (ExternalModules) o;
-        return modules.equals(other.modules);
+        return this == o || o instanceof ExternalModules other && modules.equals(other.modules);
     }
 
     @Override

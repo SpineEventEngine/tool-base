@@ -58,7 +58,7 @@ artifactMeta {
 }
 
 // As defined in `versions.gradle.kts`.
-val versionToPublish: String by extra
+val versionToPublish = extra["versionToPublish"] as String
 
 description = "Utilities for working with Protobuf projects under Gradle."
 
@@ -90,12 +90,11 @@ gradlePlugin {
 
 // Do not publish to Gradle Plugin Portal snapshot versions.
 // It is prohibited by their policy: https://plugins.gradle.org/docs/publish-plugin
-val publishPlugins: Task by tasks.getting {
+val publishPlugins = tasks.getByName("publishPlugins") {
     enabled = !versionToPublish.isSnapshot()
 }
 
-@Suppress("unused")
-val publish: Task by tasks.getting {
+tasks.getByName("publish") {
     dependsOn(publishPlugins)
 }
 

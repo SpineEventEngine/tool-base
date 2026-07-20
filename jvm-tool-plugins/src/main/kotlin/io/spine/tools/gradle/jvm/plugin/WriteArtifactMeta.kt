@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,8 +31,10 @@ import io.spine.tools.meta.Dependencies
 import io.spine.tools.meta.MavenArtifact
 import io.spine.tools.meta.Module
 import org.gradle.api.DefaultTask
-import org.gradle.api.artifacts.Dependency
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.provider.Property
+import org.gradle.api.provider.SetProperty
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import org.gradle.work.DisableCachingByDefault
@@ -63,19 +65,46 @@ public abstract class WriteArtifactMeta : DefaultTask() {
     public abstract val outputDirectory: DirectoryProperty
 
     /**
-     * Writes the dependencies of the project to a file.
+     * The Maven group of the project being described.
+     */
+    @get:Input
+    public abstract val artifactGroup: Property<String>
+
+    /**
+     * The artifact ID of the project being described.
+     *
+     * Defaults to the project name unless overridden via the
+     * [`artifactMeta`][ArtifactMetaExtension] extension.
+     */
+    @get:Input
+    public abstract val artifactId: Property<String>
+
+    /**
+     * The version of the project being described.
+     */
+    @get:Input
+    public abstract val artifactVersion: Property<String>
+
+    /**
+     * Maven coordinates of the dependencies to be written into the metadata.
+     *
+     * These are collected from the project configurations and the explicitly
+     * declared dependencies at configuration time by [ArtifactMetaPlugin], so
+     * that the task action does not access the project during execution.
+     */
+    @get:Input
+    public abstract val dependencyCoordinates: SetProperty<String>
+
+    /**
+     * Writes the metadata of the project to a file.
      */
     @TaskAction
     public fun writeFile() {
         outputDirectory.finalizeValue()
 
-        val group = project.group.toString()
-        val projectName = project.name
-        val extension = project.extensions.findByType(ArtifactMetaExtension::class.java)
-
-        // If the `artifactId` is not specified explicitly, use the project name.
-        val artifactId = extension?.artifactId?.orNull ?: projectName
-        val artifact = MavenArtifact(group, artifactId, project.version.toString())
+        val group = artifactGroup.get()
+        val id = artifactId.get()
+        val artifact = MavenArtifact(group, id, artifactVersion.get())
 
         val dependencies = collectDependencies()
         val artifactMeta = ArtifactMeta(artifact, dependencies)
@@ -83,7 +112,7 @@ public abstract class WriteArtifactMeta : DefaultTask() {
         val outputDir = outputDirectory.get().asFile
         outputDir.mkdirs()
 
-        val module = Module(group, artifactId)
+        val module = Module(group, id)
         val fileName = ArtifactMeta.resourcePath(module)
         val file = outputDir.resolve(fileName)
 
@@ -91,37 +120,18 @@ public abstract class WriteArtifactMeta : DefaultTask() {
     }
 
     /**
-     * Collects all the non-test dependencies of the project.
+     * Rebuilds the collected dependencies from their [coordinates][dependencyCoordinates],
+     * keeping one artifact per module and sorting the result.
      */
     private fun collectDependencies(): Dependencies {
-        val extension = project.extensions.findByType(ArtifactMetaExtension::class.java)
-        val cfg = extension!!.excludeConfigurations
-        val excludedByName = cfg.named.orNull ?: emptySet()
-        val excludedBySubstring = cfg.containing.orNull ?: emptySet()
-
-        // Collect from configurations (according to exclusions).
-        val discovered = project.configurations
-            .asSequence()
-            .filter { cfg -> cfg.name !in excludedByName }
-            .filter { cfg ->
-                val lower = cfg.name.lowercase()
-                !excludedBySubstring.any { sub -> lower.contains(sub.lowercase()) }
-            }
-            .flatMap { c -> c.dependencies }
-            .mapNotNull { d -> d.toMavenArtifact() }
-            .toMutableSet()
-
-        // Add explicitly declared dependencies from the extension.
-        val explicitNotations = extension.explicitDependencies.orNull ?: emptySet()
-        explicitNotations.asSequence()
+        val artifacts = dependencyCoordinates.get()
             .map { MavenArtifact.withCoordinates(it) }
-            .forEach { discovered.add(it) }
 
         // Deduplicate by module keeping the artifact with the highest sorting order.
-        val deduplicated = discovered
+        val deduplicated = artifacts
             .groupBy { it.module }
             .values
-            .mapNotNull { artifacts -> artifacts.maxWithOrNull(mavenArtifactComparator) }
+            .mapNotNull { perModule -> perModule.maxWithOrNull(mavenArtifactComparator) }
             .sortedWith(mavenArtifactComparator)
         return Dependencies(deduplicated)
     }
@@ -143,19 +153,3 @@ private val mavenArtifactComparator: Comparator<MavenArtifact> =
         .thenBy { it.version }
         .thenBy { it.classifier }
         .thenBy { it.extension }
-
-/**
- * Creates a [MavenArtifact] from a Gradle [Dependency].
- *
- * The `null` checks performed by the function filter out dependencies that
- * do have either `group`, `name`, or `version` attribute available,
- * which is a safety feature for the dynamic Gradle environment.
- *
- * The dependencies of our interest are going to have the required attributes.
- */
-@Suppress("ReturnCount")
-private fun Dependency.toMavenArtifact(): MavenArtifact? {
-    val group = this.group ?: return null
-    val version = this.version ?: return null
-    return MavenArtifact(group, this.name, version)
-}

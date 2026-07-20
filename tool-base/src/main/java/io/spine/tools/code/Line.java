@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,14 +74,7 @@ public class Line implements Element{
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Line)) {
-            return false;
-        }
-        var other = (Line) o;
-        return text.equals(other.text);
+        return this == o || o instanceof Line other && text.equals(other.text);
     }
 
     @Override

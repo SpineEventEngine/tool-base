@@ -154,10 +154,9 @@ public final class ExternalModule {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof ExternalModule)) {
+        if (!(o instanceof ExternalModule module)) {
             return false;
         }
-        var module = (ExternalModule) o;
         return name.equals(module.name) &&
                 directories.equals(module.directories);
     }

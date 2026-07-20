@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,22 +37,8 @@ import io.spine.testing.logging.LoggingTest
 import io.spine.tools.gradle.GradlePlugin
 import io.spine.tools.gradle.PluginScript
 import java.util.concurrent.atomic.AtomicBoolean
-import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
-import org.gradle.api.problems.Problem
-import org.gradle.api.problems.ProblemId
-import org.gradle.api.problems.ProblemReporter
-import org.gradle.api.problems.ProblemSpec
-import org.gradle.api.problems.internal.InternalProblem
-import org.gradle.api.problems.internal.InternalProblemBuilder
-import org.gradle.api.problems.internal.InternalProblemReporter
-import org.gradle.api.problems.internal.InternalProblemSpec
-import org.gradle.api.problems.internal.InternalProblems
-import org.gradle.api.problems.internal.ProblemsInfrastructure
-import org.gradle.api.problems.internal.ProblemsProgressEventEmitterHolder
-import org.gradle.internal.operations.OperationIdentifier
-import org.gradle.internal.reflect.Instantiator
 import org.gradle.plugins.ide.idea.IdeaPlugin
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.jupiter.api.AfterEach
@@ -63,7 +49,7 @@ import org.junit.jupiter.api.Test
 
 @DisplayName("`PlugableProject` should")
 internal class PlugableProjectSpec {
-    
+
     private lateinit var plugableProject: PlugableProject
     private lateinit var project: Project
 
@@ -103,7 +89,7 @@ internal class PlugableProjectSpec {
 
     @Nested internal inner class
     LogOnDuplicate :
-        LoggingTest(PlugableProject::class.java, Level.Companion.DEBUG.toJavaLogging()) {
+        LoggingTest(PlugableProject::class.java, Level.DEBUG.toJavaLogging()) {
 
         private lateinit var plugin: GradlePlugin<*>
 
@@ -139,10 +125,6 @@ internal class PlugableProjectSpec {
 
     @Test
     fun `apply Gradle scripts from classpath`() {
-        // See: https://github.com/gradle/gradle/issues/31862#issuecomment-2687633265
-        // and stub classes below.
-        ProblemsProgressEventEmitterHolder.init(InternalProblemsStub())
-
         val resource = Resource.file("test-script.gradle", javaClass.classLoader)
         plugableProject.apply(PluginScript.declaredIn(resource))
         val success = project.extensions
@@ -176,53 +158,4 @@ internal class PlugableProjectSpec {
         plugableProject.apply(plugin)
         run.get() shouldBe true
     }
-}
-
-/**
- * The stub class for workaround for
- * [this Gradle issue](https://github.com/gradle/gradle/issues/31862).
- *
- * @see <a href="https://github.com/gradle/gradle/issues/31862#issuecomment-2687633265">
- *     Workaround</a>
- */
-private class InternalProblemsStub : InternalProblems {
-    override fun getReporter(): ProblemReporter = notImplemented()
-    override fun getInternalReporter(): InternalProblemReporter = InternalProblemReporterStub()
-    override fun getInfrastructure(): ProblemsInfrastructure = notImplemented()
-    override fun getProblemBuilder(): InternalProblemBuilder = notImplemented()
-}
-
-private fun notImplemented(): Nothing = TODO("Not yet implemented")
-
-/**
- * The stub class for workaround for
- * [this Gradle issue](https://github.com/gradle/gradle/issues/31862).
- *
- * @see <a href="https://github.com/gradle/gradle/issues/31862#issuecomment-2687633265">
- *     Workaround</a>
- */
-private class InternalProblemReporterStub : InternalProblemReporter {
-    override fun create(problemId: ProblemId, action: Action<in ProblemSpec>): Problem =
-        notImplemented()
-    override fun report(problem: Problem, id: OperationIdentifier) = notImplemented()
-    override fun report(problemId: ProblemId, spec: Action<in ProblemSpec>) = notImplemented()
-    override fun report(problem: Problem) = notImplemented()
-    override fun report(problems: MutableCollection<out Problem>) = notImplemented()
-
-    override fun throwing(
-        exception: Throwable,
-        problemId: ProblemId,
-        spec: Action<in ProblemSpec>
-    ): RuntimeException = notImplemented()
-
-    override fun throwing(exception: Throwable, problem: Problem): RuntimeException =
-        notImplemented()
-
-    override fun throwing(
-        exception: Throwable,
-        problems: MutableCollection<out Problem>
-    ): RuntimeException = notImplemented()
-
-    override fun internalCreate(action: Action<in InternalProblemSpec>): InternalProblem =
-        notImplemented()
 }
