@@ -74,7 +74,8 @@ public class Line implements Element{
 
     @Override
     public boolean equals(Object o) {
-        return this == o || o instanceof Line other && text.equals(other.text);
+        return (this == o)
+                || ((o instanceof Line other) && text.equals(other.text));
     }
 
     @Override
