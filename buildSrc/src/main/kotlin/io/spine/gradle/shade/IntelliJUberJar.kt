@@ -103,10 +103,24 @@ object IntelliJUberJar {
      * Maven groups deliberately absent from both the shade and the POM.
      *
      * The Kotlin runtime is provided by consumers, as it always was for these
-     * artifacts. The rest is OS-integration machinery — terminal emulation and
-     * Windows process management — never exercised by the headless PSI code.
+     * artifacts. The rest is machinery never exercised by the headless PSI
+     * code: OS integration — terminal emulation and Windows process
+     * management — and the BouncyCastle cryptography stack, reached only from
+     * the remote-development and plugin-signing paths of `ide-impl`.
      * Tool users who need these components add the genuine Central artifacts
      * explicitly; the platform classes reference them by their original names.
+     *
+     * Declaring BouncyCastle would publish a self-contradicting graph, since
+     * the two paths that reach it disagree on the version:
+     *
+     *  - `bcpg-jdk15on:1.69`, via `remote-dev-util`, requires
+     *    `bcprov-jdk15on:1.69`;
+     *  - `marketplace-zip-signer:0.1.3` (see [droppedModules]) requires
+     *    `bcpkix-jdk15on:1.64`, which requires `bcprov-jdk15on:1.64`.
+     *
+     * A consumer resolving with `failOnVersionConflict()` cannot build
+     * against such a POM without forcing a version of its own, which is
+     * exactly the per-consumer boilerplate the POM is meant to remove.
      */
     private val droppedGroups = setOf(
         "org.jetbrains.kotlin",
@@ -114,6 +128,24 @@ object IntelliJUberJar {
         "org.jetbrains.pty4j",
         "org.jetbrains.jediterm",
         "org.jvnet.winp",
+        "org.bouncycastle",
+    )
+
+    /**
+     * Individual artifacts deliberately absent from both the shade and
+     * the POM, identified as `group:name`.
+     *
+     * Unlike [droppedGroups], these belong to groups whose other artifacts
+     * are declared: `org.jetbrains` also holds `annotations`, which consumers
+     * do need.
+     *
+     * `marketplace-zip-signer` signs plugin ZIP archives for the JetBrains
+     * Marketplace. It arrives through `ide-impl`, and headless PSI signs
+     * nothing. Declaring it would also bring the older half of
+     * the BouncyCastle version clash described in [droppedGroups].
+     */
+    private val droppedModules = setOf(
+        "org.jetbrains:marketplace-zip-signer",
     )
 
     /**
@@ -124,11 +156,13 @@ object IntelliJUberJar {
         shadedGroups.any { it.matches(group) }
 
     /**
-     * Tells if the given Maven [group] belongs to the published POM
-     * as a `runtime` dependency.
+     * Tells if the artifact with the given Maven [group] and [name] belongs
+     * to the published POM as a `runtime` dependency.
      */
-    fun isPomDependency(group: String): Boolean =
-        !isShaded(group) && group !in droppedGroups
+    fun isPomDependency(group: String, name: String): Boolean =
+        !isShaded(group)
+                && group !in droppedGroups
+                && "$group:$name" !in droppedModules
 
     /**
      * Applies [relocations] to the given [ShadowJar] task.
@@ -254,7 +288,7 @@ fun MavenPublication.declareUnshadedDependencies(project: Project) {
                 val id = artifact.moduleVersion.id
                 when {
                     fromProject -> id to "compile"
-                    IntelliJUberJar.isPomDependency(id.group) -> id to "runtime"
+                    IntelliJUberJar.isPomDependency(id.group, id.name) -> id to "runtime"
                     else -> null
                 }
             }

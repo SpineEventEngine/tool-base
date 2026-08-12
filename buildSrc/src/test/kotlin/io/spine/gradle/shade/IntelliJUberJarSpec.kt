@@ -58,20 +58,36 @@ internal class IntelliJUberJarSpec {
 
     @Test
     fun `declare only unshaded, non-dropped groups in the POM`() {
-        IntelliJUberJar.isPomDependency("com.google.guava") shouldBe true
-        IntelliJUberJar.isPomDependency("org.apache.commons") shouldBe true
-        IntelliJUberJar.isPomDependency("org.jdom") shouldBe true
+        IntelliJUberJar.isPomDependency("com.google.guava", "guava") shouldBe true
+        IntelliJUberJar.isPomDependency("org.apache.commons", "commons-compress") shouldBe true
+        IntelliJUberJar.isPomDependency("org.jdom", "jdom") shouldBe true
 
         // Shaded groups do not belong to the POM.
-        IntelliJUberJar.isPomDependency("com.jetbrains.intellij.platform") shouldBe false
-        IntelliJUberJar.isPomDependency("org.jetbrains.intellij.deps") shouldBe false
+        IntelliJUberJar.isPomDependency("com.jetbrains.intellij.platform", "ide-impl") shouldBe
+                false
+        IntelliJUberJar.isPomDependency("org.jetbrains.intellij.deps", "jdom") shouldBe false
 
         // Deliberately dropped groups do not belong to the POM either.
-        IntelliJUberJar.isPomDependency("org.jetbrains.kotlin") shouldBe false
-        IntelliJUberJar.isPomDependency("org.jetbrains.kotlinx") shouldBe false
-        IntelliJUberJar.isPomDependency("org.jetbrains.pty4j") shouldBe false
-        IntelliJUberJar.isPomDependency("org.jetbrains.jediterm") shouldBe false
-        IntelliJUberJar.isPomDependency("org.jvnet.winp") shouldBe false
+        IntelliJUberJar.isPomDependency("org.jetbrains.kotlin", "kotlin-stdlib") shouldBe false
+        IntelliJUberJar.isPomDependency("org.jetbrains.kotlinx", "kotlinx-serialization-core-jvm")
+            .shouldBe(false)
+        IntelliJUberJar.isPomDependency("org.jetbrains.pty4j", "pty4j") shouldBe false
+        IntelliJUberJar.isPomDependency("org.jetbrains.jediterm", "jediterm-core") shouldBe false
+        IntelliJUberJar.isPomDependency("org.jvnet.winp", "winp") shouldBe false
+
+        // The BouncyCastle stack is dropped as a whole, so that the POM does not
+        // carry the `1.69` vs. `1.64` clash of its two entry points.
+        IntelliJUberJar.isPomDependency("org.bouncycastle", "bcpg-jdk15on") shouldBe false
+        IntelliJUberJar.isPomDependency("org.bouncycastle", "bcprov-jdk15on") shouldBe false
+        IntelliJUberJar.isPomDependency("org.bouncycastle", "bcpkix-jdk15on") shouldBe false
+    }
+
+    @Test
+    fun `drop an individual artifact, keeping the rest of its group`() {
+        IntelliJUberJar.isPomDependency("org.jetbrains", "marketplace-zip-signer") shouldBe false
+
+        // The group of the dropped artifact stays declarable.
+        IntelliJUberJar.isPomDependency("org.jetbrains", "annotations") shouldBe true
     }
 
     @Test

@@ -158,11 +158,60 @@ identical treatment:
   artifacts explicitly if ever needed): `org.jetbrains.kotlin(x)` (provided,
   as before), `org.jetbrains.pty4j`, `org.jetbrains.jediterm` (terminal),
   `org.jvnet.winp` (Windows process management; its DLLs were excluded
-  from the old shade anyway).
+  from the old shade anyway), `org.bouncycastle` (cryptography; see below).
+- **Dropped modules** — the same treatment at artifact granularity, for
+  groups whose *other* artifacts are declared:
+  `org.jetbrains:marketplace-zip-signer` (the group also holds `annotations`,
+  which consumers need).
 - **Central audit**: every POM candidate of both modules verified against
   `repo1.maven.org` — 85/86 present; the miss (`org.jetbrains.intellij:blockmap`)
   is shaded instead (self-namespaced package). `marketplace-zip-signer`'s
   Central POM does not reference `blockmap`, so declaring it is safe.
+
+### The BouncyCastle clash (2026-08-12)
+
+Reported downstream from `core-jvm-compiler`'s integration tests, as
+`Cause 19` of a multi-conflict failure:
+
+    Conflict found for module 'org.bouncycastle:bcprov-jdk15on':
+        between versions 1.69 and 1.64
+
+`ide-impl` reaches BouncyCastle twice, at versions that disagree:
+
+| POM entry (as published in `.410`)           | Reached via         | Requires                                      |
+|----------------------------------------------|---------------------|-----------------------------------------------|
+| `org.bouncycastle:bcpg-jdk15on:1.69`         | `remote-dev-util`   | `bcprov-jdk15on:1.69`                         |
+| `org.jetbrains:marketplace-zip-signer:0.1.3` | `ide-impl` directly | `bcpkix-jdk15on:1.64` → `bcprov-jdk15on:1.64` |
+
+Neither `bcprov` nor `bcpkix` appears on *this* repo's runtime classpath —
+only the two entry points above do — so the clash is invisible here and
+surfaces only in consumers, which re-resolve each declared entry's own POM.
+Both entry points are remote-development and plugin-signing machinery, never
+exercised by headless PSI, i.e. the same category as the pty4j/jediterm/winp
+drops. Dropping both removes the whole cryptography surface rather than
+merely aligning it, so no future consumer inherits the clash. POM entries:
+86 → 84; `org.jetbrains:annotations` and `annotations-java5` verified to
+survive the artifact-level drop.
+
+### Open — the same defect class remains for 10 other modules
+
+The flattened POM lists every resolved artifact at *this repo's* version, but
+each listed entry still carries its own transitive graph, which re-requests
+older versions. Resolving the regenerated 84-entry POM in a bare consumer
+with `failOnVersionConflict()` yields 10 conflicting modules:
+`error_prone_annotations`, `commons-{codec,collections,io,logging}`,
+`kotlin-{stdlib,stdlib-common,reflect}`, `org.jetbrains:annotations`,
+`objenesis`. The standard Spine `forceVersions()` already covers the
+ErrorProne and Kotlin ones; the `commons-*`, `annotations` and `objenesis`
+conflicts are new boilerplate for consumers.
+
+The dependency-less POM that preceded this task had none of these, so the
+task introduces them. Measured remedy: declare each entry **non-transitive**
+(`<exclusions>` of `*:*`). The published list is already the complete
+flattened closure, so nothing is lost, and each module is then requested at
+exactly one version — the same 84 artifacts resolve with zero conflicts.
+Consumers can still upgrade any entry by ordinary resolution, so the Jib
+`commons-compress` fix is preserved. Not implemented; needs a decision.
 - **Subtraction vs Shadow transforms**: the `intellij-platform-java`
   subtraction filter sees pre-transform source paths while the sibling JAR
   stores post-transform ones. `IntelliJUberJar.sourceFormOf()` reverse-maps
