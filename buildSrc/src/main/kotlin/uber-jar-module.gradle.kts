@@ -150,18 +150,6 @@ private fun ShadowJar.excludeFiles() {
         "windows/**",
         "xml/**",
 
-        /*
-          Exclude the native binaries of `https://github.com/JetBrains/pty4j`.
-          We don't need the terminal.
-         */
-        "resources/com/pty4j/**",
-
-        /* Exclude the IntelliJ fork of
-          `http://www.sparetimelabs.com/purejavacomm/purejavacomm.php`.
-           It is the part of the IDEA's terminal implementation.
-         */
-        "purejavacomm/**",
-
         /* Exclude IDEA project templates. */
         "resources/projectTemplates/**",
 
@@ -193,13 +181,6 @@ private fun ShadowJar.excludeFiles() {
          */
         "win32-x86/**",
         "win32-x86-64/**",
-
-        /**
-         * Exclude the Windows process management (WinP) libraries.
-         * See: `https://github.com/jenkinsci/winp`.
-         */
-        "winp.dll",
-        "winp.x64.dll",
 
         /*
           Exclude the JetBrains fork of JNA (`org.jetbrains.intellij.deps.jna`),

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,9 @@
  */
 
 import io.spine.dependency.lib.IntelliJ
+import io.spine.gradle.shade.IntelliJUberJar
+import io.spine.gradle.shade.declareUnshadedDependencies
+import io.spine.gradle.shade.shadeOnlyJetBrainsArtifacts
 
 plugins {
     `uber-jar-module`
@@ -130,8 +133,14 @@ dependencies {
 
 /**
  * Exclude files from `intellij-platform` fat JAR when packing fat JAR for this module.
+ *
+ * The sibling JAR stores Shadow-transformed entries — relocated fork classes,
+ * renamed service files and Kotlin module files — under their new paths, while
+ * the exclusion predicate below sees the untransformed source paths, so every
+ * transformed entry is subtracted in its source form as well.
  */
 tasks.shadowJar {
+    shadeOnlyJetBrainsArtifacts()
     val platformJarTask = intellijPlatformModule.tasks.shadowJar
     dependsOn(platformJarTask)
     val pathsToExclude = mutableListOf<String>()
@@ -141,10 +150,19 @@ tasks.shadowJar {
         zipTree(jarPath).visit {
             if (!isDirectory) {
                 pathsToExclude.add(this.path)
+                IntelliJUberJar.sourceFormOf(this.path)?.let {
+                    pathsToExclude.add(it)
+                }
             }
         }
-    }                                                               
+    }
     exclude {
         it.path in pathsToExclude
+    }
+}
+
+publishing {
+    publications.named<MavenPublication>("fatJar") {
+        declareUnshadedDependencies(project)
     }
 }

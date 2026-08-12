@@ -27,6 +27,8 @@
 import io.spine.dependency.lib.IntelliJ
 import io.spine.dependency.lib.Kotlin
 import io.spine.gradle.report.license.LicenseReporter
+import io.spine.gradle.shade.declareUnshadedDependencies
+import io.spine.gradle.shade.shadeOnlyJetBrainsArtifacts
 
 plugins {
     `uber-jar-module`
@@ -34,6 +36,16 @@ plugins {
 LicenseReporter.generateReportIn(project)
 
 description = "Core IntelliJ Platform services and language-neutral utils"
+
+tasks.shadowJar {
+    shadeOnlyJetBrainsArtifacts()
+}
+
+publishing {
+    publications.named<MavenPublication>("fatJar") {
+        declareUnshadedDependencies(project)
+    }
+}
 
 dependencies {
     IntelliJ.Platform.run {

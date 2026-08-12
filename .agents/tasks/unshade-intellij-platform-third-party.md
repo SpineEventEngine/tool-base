@@ -74,15 +74,32 @@ Genuine Maven Central artifacts, bundled unrelocated:
 | Batik + xmlgraphics, `org.imgscalr`, `net.n3.nanoxml`, `it.unimi.dsi` (fastutil classes) | —                         | various                                            |
 
 JetBrains **forks** (published only in the JetBrains `intellij-dependencies`
-repository, *not* Central), also unrelocated:
+repository, *not* Central), also unrelocated. Measured from the resolved
+runtime graphs of both modules (the original table missed that Batik here is
+the JetBrains fork group, and the `intellij-platform-java` graph adds more):
 
-| Fork artifact                                  | Claims package        |
-|------------------------------------------------|-----------------------|
-| `org.jetbrains.intellij.deps:jdom:2.0.6`       | `org.jdom.**`         |
-| `org.jetbrains.intellij.deps:log4j:1.2.17.2`   | `org.apache.log4j.**` |
-| `org.jetbrains.intellij.deps:trove4j`          | `gnu.trove.**`        |
-| `org.jetbrains.intellij.deps.jna:jna-platform` | `com.sun.jna.**`      |
-| `org.jetbrains.intellij.deps.fastutil`         | `it.unimi.dsi.**`     |
+| Fork artifact                                    | Claims package                 | Treatment            |
+|--------------------------------------------------|--------------------------------|----------------------|
+| `org.jetbrains.intellij.deps:jdom:2.0.6`         | `org.jdom.**`                  | relocated            |
+| `org.jetbrains.intellij.deps:log4j:1.2.17.2`     | `org.apache.log4j.**`          | relocated            |
+| `org.jetbrains.intellij.deps:trove4j`            | `gnu.trove.**`                 | relocated            |
+| `org.jetbrains.intellij.deps.fastutil`           | `it.unimi.dsi.**`              | relocated            |
+| `org.jetbrains.intellij.deps.batik:batik-*` (15) | `org.apache.batik.**`          | relocated            |
+| `org.jetbrains.intellij.deps:ion-java`           | `com.amazon.ion.**`            | relocated            |
+| `org.jetbrains.intellij.deps:commons-imaging`    | `org.apache.commons.imaging.**`| relocated            |
+| `org.jetbrains.intellij.deps.jna:jna{,-platform}`| `com.sun.jna.**`               | excluded (JNI names) |
+| `org.jetbrains.intellij.deps.jcef:jcef`          | `org.cef.**`                   | shaded as is (JNI)   |
+| `org.jetbrains.intellij.deps:asm-all`            | `org.jetbrains.org.objectweb`  | shaded as is         |
+| `org.jetbrains.intellij.deps:jb-jdi`, `sa-jdwp`  | `com.jetbrains.{jdi,sa}`       | shaded as is         |
+| `org.jetbrains.intellij.deps:java-compatibility` | `com.intellij.util.ui`         | shaded as is         |
+| coverage/test-discovery/memory agents            | `com.intellij.*`, `org.jetbrains.*` | shaded as is    |
+| `org.jetbrains.intellij:blockmap` (not on Central)| `com.jetbrains.plugin.blockmap`| shaded as is        |
+
+`com.jetbrains.intellij.platform:ide-impl` additionally *vendors* two
+JetBrains-authored classes inside the `io.netty.buffer` package
+(`ByteBufUtf8Writer`, `ByteBufUtilEx`). They have no counterpart in genuine
+Netty, so they are additive, not colliding; artifact-level filtering cannot
+remove them, and they stay.
 
 ### The two IJ fat JARs are a layered pair, not independent bundles
 
@@ -115,6 +132,43 @@ only because resolution *order* happens to place them before the uber JAR —
 order is not a contract, and the Guava skew (31.0.1 vs 33.6.0) is two-plus
 major versions. `org.apache.log4j` is a latent trap of the same kind: the
 log4j2 `log4j-1.2-api` bridge claims the identical package.
+
+## Implemented shape (2026-08-12)
+
+The hybrid fix below is implemented by
+`buildSrc/src/main/kotlin/io/spine/gradle/shade/IntelliJUberJar.kt` — a single
+policy object used by both IJ modules, because the layered pair demands
+identical treatment:
+
+- **Include filter**: only groups `com.jetbrains.intellij(.*)` and
+  `org.jetbrains.intellij(.*)` enter the shade
+  (`ShadowJar.shadeOnlyJetBrainsArtifacts()`).
+- **Relocations** (see the fork table above) under the
+  `io.spine.tools.ij` prefix.
+- **POM generation** (`MavenPublication.declareUnshadedDependencies()`):
+  every resolved runtime artifact outside the shaded and dropped groups
+  becomes a `runtime` dependency; sibling uber modules arriving as project
+  dependencies are declared too (`intellij-platform-java` → `intellij-platform`).
+  Versions are pinned **as resolved in this repo** — i.e. after the Spine
+  version forcing (e.g. Guava `33.6.0-jre`, not IJ's requested `31.0.1-jre`)
+  — which is exactly the combination the repo's own test suites run against.
+  `commons-compress` stays at IJ's `1.21` and upgrades in consumers by
+  resolution, which is the designed fix for the Jib incident.
+- **Dropped groups** (neither shaded nor declared; users add genuine
+  artifacts explicitly if ever needed): `org.jetbrains.kotlin(x)` (provided,
+  as before), `org.jetbrains.pty4j`, `org.jetbrains.jediterm` (terminal),
+  `org.jvnet.winp` (Windows process management; its DLLs were excluded
+  from the old shade anyway).
+- **Central audit**: every POM candidate of both modules verified against
+  `repo1.maven.org` — 85/86 present; the miss (`org.jetbrains.intellij:blockmap`)
+  is shaded instead (self-namespaced package). `marketplace-zip-signer`'s
+  Central POM does not reference `blockmap`, so declaring it is safe.
+- **Subtraction vs Shadow transforms**: the `intellij-platform-java`
+  subtraction filter sees pre-transform source paths while the sibling JAR
+  stores post-transform ones. `IntelliJUberJar.sourceFormOf()` reverse-maps
+  all three transforms (relocated paths, relocated `META-INF/services` file
+  names, `.shadow.kotlin_module` renames); without it the fork classes and
+  metadata duplicate into the java JAR.
 
 ## Recommended fix (hybrid)
 
@@ -175,19 +229,30 @@ log4j2 `log4j-1.2-api` bridge claims the identical package.
 
 ### Caveats to verify during implementation
 
-- [ ] `psi` / `psi-java` public API does not leak types from the newly
-      relocated fork packages.
-- [ ] IntelliJ 213 code does not reflectively load fork classes by
-      string FQN (grep the platform sources for `"org.jdom`, `"org.apache.log4j`).
-- [ ] The Guava the consumers resolve (33.x) keeps IJ 213 working — IJ uses a
-      narrow, stable Guava surface, but run the `psi`-dependent test suites.
-- [ ] License report / notices still cover the remaining bundled forks.
+- [x] `psi` / `psi-java` public API does not leak types from the newly
+      relocated fork packages — no Spine source in this repo imports
+      `org.jdom`, `gnu.trove`, `org.apache.log4j`, `it.unimi`,
+      `org.apache.oro`, `net.jpountz`, or `dk.brics` (grepped 2026-08-12).
+- [x] IntelliJ 213 code does not reflectively load fork classes by string
+      FQN — Shadow rewrites class-name string constants under the relocated
+      prefixes in all shaded bytecode; `psi` / `psi-java` suites pass against
+      the relocated JARs (148 tests). Residual risk: FQNs assembled by
+      concatenation at runtime; none surfaced in tests.
+- [x] The Guava the consumers resolve (33.x) keeps IJ 213 working — the POM
+      pins the repo-resolved `33.6.0-jre`, and this repo's suites have always
+      run IJ 213 against the forced 33.x by construction.
+- [x] License report / notices still cover the remaining bundled forks —
+      the reports enumerate configuration dependencies, which the shade
+      filter does not alter; the full `build` (incl. report regeneration)
+      passes. The regenerated `docs/dependencies/*` changes are version-bump
+      catch-up only.
 
 ## Verification
 
-- [ ] `tool-base`: full build; inspect the new JAR — no `com/google/common`,
-      `org/apache/commons/compress`, unrelocated `org/jdom` etc. entries;
-      published POM lists the Central artifacts as `runtime` deps.
+- [x] `tool-base`: full build passes (241 tasks); both JARs inspected — no
+      `com/google/common`, `org/apache/commons/compress`, unrelocated
+      `org/jdom` etc. entries; generated POMs list the Central artifacts as
+      `runtime` deps (platform: 20, java: 86 incl. the sibling JAR).
 - [ ] Consumer proof: in `delivery-server`, drop the `CommonsCompress`
       classpath-ordering workaround (`build.gradle.kts`, buildscript block) and
       the `buildSrc/.../CommonsCompress.kt` declaration, bump the tool
@@ -218,3 +283,23 @@ log4j2 `log4j-1.2-api` bridge claims the identical package.
   identical before vs after; java JAR delta is exactly −1477 `com/sun/jna`
   entries and −33 `resources/` tree entries (31 pty4j natives + 2 emptied
   parent dirs), nothing added; 119.1 → 115.1 MB.
+- 2026-08-12 (main fix) — implemented the hybrid plan (see "Implemented
+  shape"). New `IntelliJUberJar.kt` policy in `buildSrc`; both IJ module
+  scripts apply the include filter, relocations, and POM generation; dead
+  pty4j / purejavacomm / winp path excludes removed from `uber-jar-module`.
+  Measured results:
+  - `intellij-platform`: 25.8 → **17.4 MB**; POM declares **20** runtime
+    deps (incl. `commons-compress:1.21`, `guava:33.6.0-jre`); zero
+    third-party packages left; relocated trees `io/spine/tools/ij/{jdom
+    (234), log4j (326), trove (457), unimi/dsi (2090), batik (2065)}`.
+  - `intellij-platform-java`: 115.1 → **78.6 MB**; POM declares **86**
+    runtime deps incl. `io.spine.tools:intellij-platform`; relocated
+    `io/spine/tools/ij/{ion (420), imaging (471)}`; jackson/httpclient/
+    xstream/icu4j/gson/… all unbundled into the POM.
+  - Cross-JAR duplicate files: `META-INF/MANIFEST.MF` only (the
+    `sourceFormOf` reverse mapping removed 13 duplicated
+    `.shadow.kotlin_module` files and 2 relocated batik service files
+    discovered during verification).
+  - `:psi:test` + `:psi-java:test`: 148 passed, 0 failed.
+  - Kotlin block comments nest: a literal `META-INF/*.kotlin_module` glob in
+    KDoc broke `buildSrc` compilation ("unclosed comment") until rephrased.
