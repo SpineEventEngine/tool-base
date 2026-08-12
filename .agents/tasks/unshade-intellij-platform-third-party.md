@@ -193,25 +193,47 @@ merely aligning it, so no future consumer inherits the clash. POM entries:
 86 → 84; `org.jetbrains:annotations` and `annotations-java5` verified to
 survive the artifact-level drop.
 
-### Open — the same defect class remains for 10 other modules
+### POM entries are published non-transitive (2026-08-12)
 
 The flattened POM lists every resolved artifact at *this repo's* version, but
-each listed entry still carries its own transitive graph, which re-requests
-older versions. Resolving the regenerated 84-entry POM in a bare consumer
-with `failOnVersionConflict()` yields 10 conflicting modules:
+each listed entry initially carried its own transitive graph, re-requesting
+older versions. Resolving the 84-entry POM of `intellij-platform-java` in a
+bare consumer with `failOnVersionConflict()` yielded 10 conflicting modules:
 `error_prone_annotations`, `commons-{codec,collections,io,logging}`,
 `kotlin-{stdlib,stdlib-common,reflect}`, `org.jetbrains:annotations`,
-`objenesis`. The standard Spine `forceVersions()` already covers the
-ErrorProne and Kotlin ones; the `commons-*`, `annotations` and `objenesis`
-conflicts are new boilerplate for consumers.
+`objenesis` — new forcing boilerplate for every consumer, which the
+dependency-less POM preceding this task never required.
 
-The dependency-less POM that preceded this task had none of these, so the
-task introduces them. Measured remedy: declare each entry **non-transitive**
-(`<exclusions>` of `*:*`). The published list is already the complete
-flattened closure, so nothing is lost, and each module is then requested at
-exactly one version — the same 84 artifacts resolve with zero conflicts.
-Consumers can still upgrade any entry by ordinary resolution, so the Jib
-`commons-compress` fix is preserved. Not implemented; needs a decision.
+Implemented remedy, after the downstream decision that consumers must not
+force this repo's transitives: `declareUnshadedDependencies` publishes every
+entry with a wildcard `<exclusions>` block (`*:*`), cutting off its
+transitive graph. The published list is already the complete flattened
+closure, so nothing is lost; each module is requested at exactly one version,
+and the same 84 artifacts resolve with **zero** conflicts under
+`failOnVersionConflict()` with no consumer-side forces (measured on the
+regenerated POM). Consumers still upgrade any entry by ordinary resolution,
+so the Jib `commons-compress` fix is preserved. A side benefit: the curation
+is now authoritative — Slf4J, the Kotlin runtime, and the dropped
+groups/modules cannot re-enter through an entry's own POM.
+
+### POM pins align with the Spine-stack versions (2026-08-12)
+
+With the entries non-transitive, the remaining conflict source in a Spine
+consumer is a pin that *disagrees* with what the rest of the consumer's
+graph requests. Measured in `core-jvm-compiler/tests` (strict resolution):
+Jackson `2.13.0` and Caffeine `3.0.4` — the versions the IJ-213 POMs
+request, which stood because this repository never forced these families —
+against `2.21.1`/`3.2.4` requested by the published compiler stack.
+`uber-jar-module.gradle.kts` now forces `Jackson` (2.x), `Jackson.Junior`,
+`Jackson.annotations`, and `Caffeine.lib` in the uber modules' resolution,
+so the published pins become the versions this repository is built and
+tested with (`2.22.1`/`2.22`/`3.2.4`) — the same treatment Guava already
+receives from `forceVersions()`. Caffeine then agrees across the stack with
+no force anywhere; Jackson still skews against artifacts published before
+the stack moved to `2.22.1` (e.g. `compiler-jvm .066` requests `2.21.1` via
+`palantir-java-format`) — that transition-window skew is covered by the
+consumer conventions' `JacksonV2` forces until the stack republishes, and
+disappears entirely once it does.
 - **Subtraction vs Shadow transforms**: the `intellij-platform-java`
   subtraction filter sees pre-transform source paths while the sibling JAR
   stores post-transform ones. `IntelliJUberJar.sourceFormOf()` reverse-maps

@@ -27,6 +27,8 @@
 @file:Suppress("UnstableApiUsage") // `configurations` block.
 
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import io.spine.dependency.lib.Caffeine
+import io.spine.dependency.lib.Jackson
 import io.spine.gradle.publish.IncrementGuard
 import io.spine.gradle.publish.SpinePublishing
 import io.spine.gradle.publish.setup
@@ -43,6 +45,29 @@ plugins {
 }
 apply<IncrementGuard>()
 LicenseReporter.generateReportIn(project)
+
+/*
+ * Align third-party components shared with the rest of the Spine stack
+ * to the versions this repository is built and tested with.
+ *
+ * The versions resolved here become the pins of the published POM entries
+ * (see `declareUnshadedDependencies`). Without this block, the versions
+ * requested by the IntelliJ Platform POMs stand — e.g. Jackson `2.13.0`,
+ * Caffeine `3.0.4` — and every consumer resolving with
+ * `failOnVersionConflict()` fails on the disagreement with the versions
+ * the rest of its graph requests. Guava and other components covered by
+ * `forceVersions()` of the `module` plugin are aligned the same way already.
+ */
+configurations.all {
+    resolutionStrategy {
+        Jackson.forceArtifacts(project, this@all, this@resolutionStrategy)
+        Jackson.Junior.forceArtifacts(project, this@all, this@resolutionStrategy)
+        force(
+            Jackson.annotations,
+            Caffeine.lib,
+        )
+    }
+}
 
 spinePublishing {
     // This prefix does not apply to the modules of this project because they all belong

@@ -269,6 +269,20 @@ fun ShadowJar.shadeOnlyJetBrainsArtifacts() {
  * by the IntelliJ Platform POMs; consumer projects upgrade them further
  * via the standard Gradle conflict resolution.
  *
+ * Every entry is declared with a wildcard `<exclusions>` block, cutting off
+ * its own transitive graph. The declared list is already the complete
+ * flattened runtime closure — each entry's transitives are themselves
+ * entries — so the exclusions lose nothing. Without them, each entry
+ * re-requests its transitives at the version *it* was built against,
+ * older than the resolved version pinned here, and a consumer resolving
+ * with `failOnVersionConflict()` fails on every such disagreement
+ * (measured: 10 conflicting modules, from `commons-io` to `kotlin-stdlib`).
+ * With them, every module is requested at exactly one version, and the POM
+ * resolves conflict-free with no forcing on the consumer side. The flattening
+ * also makes the deliberate curation authoritative: components resolved away
+ * in this project — Slf4J, the Kotlin runtime, the [dropped][IntelliJUberJar]
+ * groups and modules — cannot sneak back in through an entry's own POM.
+ *
  * The publication must not declare dependencies of its own, as those created
  * by `uber-jar-module` do not: this function appends a new `dependencies`
  * block to the POM without merging into an existing one.
@@ -300,6 +314,13 @@ fun MavenPublication.declareUnshadedDependencies(project: Project) {
                     appendNode("artifactId", id.name)
                     appendNode("version", id.version)
                     appendNode("scope", scope)
+                    // The declared list is the complete flattened closure;
+                    // see the function KDoc for why each entry drops its own
+                    // transitive graph.
+                    with(appendNode("exclusions").appendNode("exclusion")) {
+                        appendNode("groupId", "*")
+                        appendNode("artifactId", "*")
+                    }
                 }
             }
     }
