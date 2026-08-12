@@ -151,10 +151,10 @@ private fun ShadowJar.excludeFiles() {
         "xml/**",
 
         /*
-          Exclude `https://github.com/JetBrains/pty4j`.
+          Exclude the native binaries of `https://github.com/JetBrains/pty4j`.
           We don't need the terminal.
          */
-        "resources/com/pti4j/**",
+        "resources/com/pty4j/**",
 
         /* Exclude the IntelliJ fork of
           `http://www.sparetimelabs.com/purejavacomm/purejavacomm.php`.
@@ -200,5 +200,21 @@ private fun ShadowJar.excludeFiles() {
          */
         "winp.dll",
         "winp.x64.dll",
+
+        /*
+          Exclude the JetBrains fork of JNA (`org.jetbrains.intellij.deps.jna`),
+          which arrives transitively with the IntelliJ Platform artifacts.
+          Despite the `com.sun.jna` package, JNA is not part of the JDK, and
+          the unrelocated classes would shadow the genuine `net.java.dev.jna`
+          artifacts on a consumer's classpath. The headless PSI code does not
+          use this OS-integration layer. Should the tool users need JNA, they
+          would add `net.java.dev.jna:jna:5.9.0` (a drop-in) explicitly.
+
+          This entry must stay in the shared list: `intellij-platform-java`
+          excludes whatever the `intellij-platform` JAR already contains, so
+          an exclusion made only in one module resurfaces the files in the
+          other module's JAR.
+         */
+        "com/sun/jna/**",
     )
 }
