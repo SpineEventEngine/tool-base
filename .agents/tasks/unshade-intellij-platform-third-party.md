@@ -303,3 +303,18 @@ identical treatment:
   - `:psi:test` + `:psi-java:test`: 148 passed, 0 failed.
   - Kotlin block comments nest: a literal `META-INF/*.kotlin_module` glob in
     KDoc broke `buildSrc` compilation ("unclosed comment") until rephrased.
+- 2026-08-12 (pre-PR review round) — five reviewers (spine-code-review,
+  kotlin-engineer, review-docs, dependency-audit, gradle-review) all
+  APPROVE after fixes: added `IntelliJUberJarSpec` (7 tests, buildSrc);
+  repaired a dangling KDoc link (`unrelocatedFormOf` → `sourceFormOf`);
+  CC-hardening in `intellij-platform-java` (sibling JAR tracked via
+  `inputs.file` instead of bare `dependsOn` — the up-to-date/build-cache
+  staleness gap is closed; `ArchiveOperations` instead of ambient
+  `Project.zipTree`; `pathsToExclude` is a cleared `Set`). JAR entry
+  listings verified byte-identical before/after the fixes.
+  Measured CC status: `generatePomFileForFatJarPublication` executes under
+  `--configuration-cache`, but the entry is discarded — the `withXml`
+  action's captured `Configuration` is not serializable (a `Provider` of
+  resolution results would be), and the root build script's `gcloud` call
+  is another pre-existing blocker. Full CC-readiness is out of scope; the
+  repository does not enable the configuration cache.

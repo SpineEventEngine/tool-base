@@ -28,6 +28,7 @@ import io.spine.dependency.lib.IntelliJ
 import io.spine.gradle.shade.IntelliJUberJar
 import io.spine.gradle.shade.declareUnshadedDependencies
 import io.spine.gradle.shade.shadeOnlyJetBrainsArtifacts
+import org.gradle.kotlin.dsl.support.serviceOf
 
 plugins {
     `uber-jar-module`
@@ -142,12 +143,18 @@ dependencies {
 tasks.shadowJar {
     shadeOnlyJetBrainsArtifacts()
     val platformJarTask = intellijPlatformModule.tasks.shadowJar
-    dependsOn(platformJarTask)
-    val pathsToExclude = mutableListOf<String>()
+    // Track the sibling JAR as an input, so that a change in its content
+    // re-runs this task. The provider also carries the task dependency.
+    inputs.file(platformJarTask.flatMap { it.archiveFile })
+        .withPropertyName("intellijPlatformJar")
+        .withPathSensitivity(PathSensitivity.NONE)
+    val archiveOperations = serviceOf<ArchiveOperations>()
+    val pathsToExclude = mutableSetOf<String>()
     doFirst {
+        pathsToExclude.clear()
         // The path to the file produced for `intellij-platform` module.
         val jarPath = platformJarTask.get().archiveFile.get().asFile
-        zipTree(jarPath).visit {
+        archiveOperations.zipTree(jarPath).visit {
             if (!isDirectory) {
                 pathsToExclude.add(this.path)
                 IntelliJUberJar.sourceFormOf(this.path)?.let {

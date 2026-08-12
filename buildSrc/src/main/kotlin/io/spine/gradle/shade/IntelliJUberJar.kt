@@ -42,7 +42,7 @@ import org.gradle.api.publish.maven.MavenPublication
  * and the bundled copies can no longer shadow genuine artifacts on
  * a consumer's classpath.
  *
- * JetBrains forks which claim the package names of libraries published on
+ * JetBrains forks that claim the package names of libraries published on
  * Maven Central are [relocated][relocations]. They exist only in JetBrains
  * repositories, so declaring them in the POM would force every consumer to
  * add those repositories; relocation removes the collision instead.
@@ -50,7 +50,7 @@ import org.gradle.api.publish.maven.MavenPublication
  * The two uber JARs form a layered pair: `intellij-platform-java` excludes
  * every path already present in the `intellij-platform` JAR. Both modules
  * must therefore apply this policy identically, and the subtraction must
- * account for [relocations] via [unrelocatedFormOf].
+ * account for [relocations] via [sourceFormOf].
  */
 object IntelliJUberJar {
 
@@ -229,11 +229,19 @@ fun ShadowJar.shadeOnlyJetBrainsArtifacts() {
  * The versions are those resolved in this project, i.e. the ones declared
  * by the IntelliJ Platform POMs; consumer projects upgrade them further
  * via the standard Gradle conflict resolution.
+ *
+ * The publication must not declare dependencies of its own, as those created
+ * by `uber-jar-module` do not: this function appends a new `dependencies`
+ * block to the POM without merging into an existing one.
  */
 fun MavenPublication.declareUnshadedDependencies(project: Project) {
+    // Look up the configuration eagerly: the deferred action below must not
+    // capture the `Project` instance. This alone does not make the task
+    // configuration-cache-ready — serializing a `Configuration` is equally
+    // unsupported, and this repository does not enable that cache.
+    val runtimeClasspath = project.configurations.getByName("runtimeClasspath")
     pom.withXml {
         val dependencies = asNode().appendNode("dependencies")
-        val runtimeClasspath = project.configurations.getByName("runtimeClasspath")
         runtimeClasspath.resolvedConfiguration.resolvedArtifacts
             .filter { artifact ->
                 val fromProject =
