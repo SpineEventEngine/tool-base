@@ -318,3 +318,12 @@ identical treatment:
   resolution results would be), and the root build script's `gcloud` call
   is another pre-existing blocker. Full CC-readiness is out of scope; the
   repository does not enable the configuration cache.
+- 2026-08-12 (PR #188 review) — Codex flagged that flattening every POM
+  dependency to the `runtime` scope leaves the sibling `intellij-platform`
+  (declared `api`) off the compile classpath of a consumer compiling
+  directly against `intellij-platform-java`, whose classes extend platform
+  types. Fixed: project (sibling) dependencies now get the `compile` scope;
+  third-party stays `runtime` — the old zero-dependency POM never offered
+  third-party types at compile scope, and widening that is not this task's
+  goal. Verified: java POM = 1 compile (`intellij-platform`) + 85 runtime;
+  platform POM unchanged (20 runtime).

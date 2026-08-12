@@ -222,10 +222,15 @@ fun ShadowJar.shadeOnlyJetBrainsArtifacts() {
 
 /**
  * Declares the artifacts of the module's runtime classpath that are not
- * welded into the uber JAR as `runtime` dependencies of the published POM.
+ * welded into the uber JAR as dependencies of the published POM.
  *
  * Dependencies on sibling uber-JAR modules, arriving as project dependencies,
- * are declared as well, preserving the link between the layered JARs.
+ * receive the `compile` scope: the classes of this JAR compile against the
+ * classes of the sibling, so a consumer compiling directly against this
+ * artifact needs the sibling on the compile classpath, too. Third-party
+ * artifacts receive the `runtime` scope, which serves the purpose of their
+ * declaration — correct runtime resolution — without widening the compile
+ * classpath beyond what the previously dependency-less POM provided.
  * The versions are those resolved in this project, i.e. the ones declared
  * by the IntelliJ Platform POMs; consumer projects upgrade them further
  * via the standard Gradle conflict resolution.
@@ -243,20 +248,24 @@ fun MavenPublication.declareUnshadedDependencies(project: Project) {
     pom.withXml {
         val dependencies = asNode().appendNode("dependencies")
         runtimeClasspath.resolvedConfiguration.resolvedArtifacts
-            .filter { artifact ->
+            .mapNotNull { artifact ->
                 val fromProject =
                     artifact.id.componentIdentifier is ProjectComponentIdentifier
-                fromProject || IntelliJUberJar.isPomDependency(artifact.moduleVersion.id.group)
+                val id = artifact.moduleVersion.id
+                when {
+                    fromProject -> id to "compile"
+                    IntelliJUberJar.isPomDependency(id.group) -> id to "runtime"
+                    else -> null
+                }
             }
-            .map { it.moduleVersion.id }
-            .distinctBy { "${it.group}:${it.name}" }
-            .sortedBy { "${it.group}:${it.name}" }
-            .forEach { id ->
+            .distinctBy { (id, _) -> "${id.group}:${id.name}" }
+            .sortedBy { (id, _) -> "${id.group}:${id.name}" }
+            .forEach { (id, scope) ->
                 with(dependencies.appendNode("dependency")) {
                     appendNode("groupId", id.group)
                     appendNode("artifactId", id.name)
                     appendNode("version", id.version)
-                    appendNode("scope", "runtime")
+                    appendNode("scope", scope)
                 }
             }
     }
