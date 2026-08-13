@@ -1,5 +1,5 @@
 /*
- * Copyright 2024, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,10 @@
  */
 
 import io.spine.dependency.lib.IntelliJ
+import io.spine.gradle.shade.IntelliJUberJar
+import io.spine.gradle.shade.declareUnshadedDependencies
+import io.spine.gradle.shade.shadeOnlyJetBrainsArtifacts
+import org.gradle.kotlin.dsl.support.serviceOf
 
 plugins {
     `uber-jar-module`
@@ -130,21 +134,42 @@ dependencies {
 
 /**
  * Exclude files from `intellij-platform` fat JAR when packing fat JAR for this module.
+ *
+ * The sibling JAR stores Shadow-transformed entries — relocated fork classes,
+ * renamed service files and Kotlin module files — under their new paths, while
+ * the exclusion predicate below sees the untransformed source paths, so every
+ * transformed entry is subtracted in its source form as well.
  */
 tasks.shadowJar {
+    shadeOnlyJetBrainsArtifacts()
     val platformJarTask = intellijPlatformModule.tasks.shadowJar
-    dependsOn(platformJarTask)
-    val pathsToExclude = mutableListOf<String>()
+    // Track the sibling JAR as an input, so that a change in its content
+    // re-runs this task. The provider also carries the task dependency.
+    inputs.file(platformJarTask.flatMap { it.archiveFile })
+        .withPropertyName("intellijPlatformJar")
+        .withPathSensitivity(PathSensitivity.NONE)
+    val archiveOperations = serviceOf<ArchiveOperations>()
+    val pathsToExclude = mutableSetOf<String>()
     doFirst {
+        pathsToExclude.clear()
         // The path to the file produced for `intellij-platform` module.
         val jarPath = platformJarTask.get().archiveFile.get().asFile
-        zipTree(jarPath).visit {
+        archiveOperations.zipTree(jarPath).visit {
             if (!isDirectory) {
                 pathsToExclude.add(this.path)
+                IntelliJUberJar.sourceFormOf(this.path)?.let {
+                    pathsToExclude.add(it)
+                }
             }
         }
-    }                                                               
+    }
     exclude {
         it.path in pathsToExclude
+    }
+}
+
+publishing {
+    publications.named<MavenPublication>("fatJar") {
+        declareUnshadedDependencies(project)
     }
 }
