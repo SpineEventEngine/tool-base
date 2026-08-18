@@ -1,11 +1,11 @@
 /*
- * Copyright 2024, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -24,24 +24,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-rootProject.name = "tool-base"
+import io.spine.dependency.local.Base
 
-include(
-    "classic-codegen",
-    "dart-code",
-    "gradle-plugin-api",
-    "gradle-plugin-api-test-fixtures",
-    "gradle-root-plugin",
-    "intellij-platform",
-    "intellij-platform-java",
-    "java-code",
-    "js-code",
-    "jvm-tool-plugins",
-    "jvm-tools",
-    "plugin-base",
-    "plugin-testlib",
-    "protobuf-setup-plugins",
-    "psi",
-    "psi-java",
-    "tool-base",
-)
+plugins {
+    module
+}
+
+description = "JavaScript-specific types for code generation and file system layout"
+
+dependencies {
+    api(Base.lib)
+
+    // `io.spine.tools.js.fs` specializes the language-neutral file system
+    // abstractions of `io.spine.tools.fs`, exposing them in its own API.
+    api(project(":tool-base"))
+}
