@@ -26,7 +26,7 @@
 
 package io.spine.tools.code
 
-import io.spine.tools.titlecaseFirstChar
+import io.spine.string.titleCase
 
 /**
  * A base for names of Gradle project objects that are based on a name of a source set.
@@ -88,6 +88,6 @@ public open class SourceSetBasedName protected constructor(
             if (ssnAsPrefix.toPrefix().isEmpty())
                 value
             else
-                value.titlecaseFirstChar()
+                value.titleCase()
     }
 }

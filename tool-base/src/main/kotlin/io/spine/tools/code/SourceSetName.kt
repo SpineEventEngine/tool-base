@@ -26,7 +26,7 @@
 
 package io.spine.tools.code
 
-import io.spine.tools.titlecaseFirstChar
+import io.spine.string.titleCase
 
 /**
  * A name of a Gradle project source set.
@@ -60,7 +60,7 @@ public data class SourceSetName(val value: String) {
         if (this == main) {
             return ""
         }
-        return value.titlecaseFirstChar()
+        return value.titleCase()
     }
 
     /**

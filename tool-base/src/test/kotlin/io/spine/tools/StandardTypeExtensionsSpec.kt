@@ -27,6 +27,7 @@
 package io.spine.tools
 
 import io.kotest.matchers.shouldBe
+import io.spine.string.titleCase
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
@@ -35,8 +36,8 @@ class StandardTypeExtensionsSpec {
 
     @Test
     fun `provide title case version of 'String'`() {
-        "foo".titlecaseFirstChar() shouldBe "Foo"
-        "Bar".titlecaseFirstChar() shouldBe "Bar"
-        "".titlecaseFirstChar() shouldBe ""
+        "foo".titleCase() shouldBe "Foo"
+        "Bar".titleCase() shouldBe "Bar"
+        "".titleCase() shouldBe ""
     }
 }

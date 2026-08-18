@@ -27,9 +27,9 @@
 package io.spine.tools.gradle
 
 import io.kotest.matchers.shouldBe
+import io.spine.string.titleCase
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.code.SourceSetName.Companion.main
-import io.spine.tools.titlecaseFirstChar
 import org.gradle.api.tasks.SourceSet.MAIN_SOURCE_SET_NAME
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -65,7 +65,7 @@ class SourceSetNameSpec {
         @Test
         fun `as value in 'TitleCase'`() {
             val customName = "customName"
-            SourceSetName(customName).toInfix() shouldBe customName.titlecaseFirstChar()
+            SourceSetName(customName).toInfix() shouldBe customName.titleCase()
         }
     }
 
