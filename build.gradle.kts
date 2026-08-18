@@ -76,8 +76,14 @@ spinePublishing {
         "jvm-tool-plugins",
         "protobuf-setup-plugins",
     )
+    // `fixtures` carries Protobuf declarations for the tests of this repository
+    // only. Publishing them would let downstream projects depend on types we
+    // rename and delete as our own tests change.
+    val notPublished = "fixtures"
+
     modules = productionModuleNames.toSet()
         .minus(customPublishing)
+        .minus(notPublished)
 
     modulesWithCustomPublishing = customPublishing.toSet()
 

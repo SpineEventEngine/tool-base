@@ -1,5 +1,5 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,76 +24,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@file:Suppress("RemoveRedundantQualifierName")
-
-import com.google.protobuf.gradle.id
-import io.spine.dependency.lib.Grpc
-import io.spine.dependency.lib.GrpcKotlin
-import io.spine.dependency.lib.Protobuf
 import io.spine.dependency.local.Base
-import io.spine.dependency.local.Logging
 
 plugins {
     module
-    `java-test-fixtures`
-    protobuf
-    id("io.spine.descriptor-set-file")
-    id("io.spine.generated-sources")
 }
 
-configurations {
-    all {
-        resolutionStrategy {
-            Grpc.forceArtifacts(project, this@all, this@resolutionStrategy)
-        }
-    }
-}
+description = "Common types for build-time tools"
 
 dependencies {
     api(Base.lib)
-
-
-    listOf(
-        Grpc.protobuf,
-        Grpc.core,
-        Grpc.stub,
-        GrpcKotlin.stub,
-    ).forEach {
-        testImplementation(it)
-        testFixturesImplementation(it)
-    }
 }
-
-sourceSets {
-    testFixtures {
-        java.srcDirs("$projectDir/generated/testFixtures/grpc")
-    }
-}
-
-/**
- * Force `generated` directory and Kotlin code generation.
- */
-protobuf {
-    protoc {
-        artifact = Protobuf.compiler
-    }
-
-    plugins {
-        Grpc.ProtocPlugin.let {
-            id(it.id) { artifact = it.artifact }
-        }
-        GrpcKotlin.ProtocPlugin.let {
-            id(it.id) { artifact = it.artifact }
-        }
-    }
-
-    generateProtoTasks.all().configureEach {
-        builtins.maybeCreate("kotlin")
-        plugins {
-            id(Grpc.ProtocPlugin.id)
-            id(GrpcKotlin.ProtocPlugin.id)
-        }
-    }
-}
-
-allowDuplicationInSourcesJar()

@@ -47,9 +47,9 @@ dependencies {
 
     testImplementation(project(":code"))?.because("`ClassExtsSpec` uses `Line`.")
 
-    // `SourceFileSpec` maps Protobuf declarations to Java files using the fixture
-    // types of `tool-base`, which the tests of that module share.
-    testImplementation(testFixtures(project(":tool-base")))
+    // `SourceFileSpec` maps Protobuf declarations to Java files using the
+    // repository-local fixtures.
+    testImplementation(project(":fixtures"))
     listOf(
         Grpc.protobuf,
         Grpc.core,

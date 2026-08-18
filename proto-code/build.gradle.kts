@@ -56,10 +56,8 @@ dependencies {
     testImplementation(project(":java-code"))
 
     // `FileDescriptorSupersetTest` builds descriptor sets from the `PersonProto`,
-    // `ProjectProto` and `TaskProto` fixtures of `tool-base`, which generate into
-    // `io.spine.tools.type` — the same package, hence no import to give them away.
-    // The tests of `tool-base` and `java-code` share these fixtures.
-    testImplementation(testFixtures(project(":tool-base")))
+    // `ProjectProto` and `TaskProto` repository-local fixtures.
+    testImplementation(project(":fixtures"))
 
     // Those fixtures carry gRPC-generated code, whose versions `tool-base`
     // supplies through the resolution strategy below rather than through

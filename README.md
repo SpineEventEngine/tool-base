@@ -28,6 +28,10 @@ Base code for the development tool subprojects of the Spine SDK.
   manipulations, Protobuf reflection, simple code generation, etc.
 
 
+* [`fixtures`](fixtures) — Protobuf declarations used solely by the tests of this
+  repository. **Not published** — nothing outside this repo may depend on them.
+
+
 * [`code`](code) — language-neutral types for describing generated code: lines,
   indentation, languages, and source set names.
 
