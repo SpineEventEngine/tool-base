@@ -6,10 +6,11 @@ See [README.md](README.md) for the format and routing rules.
 ## Feedback (validated patterns & corrections)
 
 - [copilot-review-request](feedback/copilot-review-request.md) — GraphQL `requestReviews` with `botIds: ["BOT_kgDOCnlnWA"]`; REST endpoint silently no-ops on re-requests.
+- [proportional-machinery](feedback/proportional-machinery.md) — keep build machinery proportional; no external tools for verification — Gradle API suffices.
 
 ## Project (durable context & rationale)
 
-*(no entries yet)*
+- [ij-layer-no-bom](project/ij-layer-no-bom.md) — the IJ layer publishes no BOM; the uber POMs are the contract, and platform variants can be derived from them if ever needed.
 
 ## Reference (external systems)
 
