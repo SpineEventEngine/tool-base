@@ -31,6 +31,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import io.spine.value.StringTypeValue;
 
+import java.io.Serial;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -43,6 +44,7 @@ import static io.spine.util.Preconditions2.checkNotEmptyOrBlank;
 @SuppressWarnings("ComparableImplementedButEqualsNotOverridden") // provided by parent class.
 public final class FileReference extends StringTypeValue implements Comparable<FileReference> {
 
+    @Serial
     private static final long serialVersionUID = 0L;
     /** The path separator used in JavaScript-like imports. Not platform-dependant. */
     private static final String IMPORT_PATH_SEPARATOR = "/";
