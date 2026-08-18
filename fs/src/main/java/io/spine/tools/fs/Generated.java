@@ -44,6 +44,8 @@ public abstract class Generated extends SourceRoot {
      *
      * @param sourceSetName
      *         the name of the source set, such as {@code "main"} or {@code "test"}
+     * @throws IllegalArgumentException
+     *         if the {@code sourceSetName} is empty or blank
      */
     public abstract SourceDir dir(String sourceSetName);
 }

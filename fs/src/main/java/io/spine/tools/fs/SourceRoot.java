@@ -28,6 +28,8 @@ package io.spine.tools.fs;
 
 import com.google.errorprone.annotations.Immutable;
 
+import static io.spine.util.Preconditions2.checkNotEmptyOrBlank;
+
 /**
  * A root source code directory in a project or a module.
  */
@@ -45,8 +47,14 @@ public abstract class SourceRoot extends AbstractDirectory {
      * <p>The source set is named by a plain string rather than by
      * {@code io.spine.tools.code.SourceSetName} on purpose: it keeps this package free of
      * a dependency on {@code io.spine.tools.code}, which in turn depends back on this one.
+     * The blank-name check that {@code SourceSetName} performed is kept here, so that
+     * a blank name cannot silently resolve to this root itself.
+     *
+     * @throws IllegalArgumentException
+     *         if the {@code sourceSetName} is empty or blank
      */
     protected final SourceDir subDir(String sourceSetName, String language) {
+        checkNotEmptyOrBlank(sourceSetName);
         var sourceSetDir = subDir(sourceSetName);
         return sourceSetDir.subDir(language);
     }

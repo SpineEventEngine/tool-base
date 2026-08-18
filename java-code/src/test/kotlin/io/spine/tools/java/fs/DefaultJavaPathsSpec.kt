@@ -26,6 +26,7 @@
 
 package io.spine.tools.java.fs
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.spine.tools.fs.DirectoryName
 import io.spine.tools.fs.DirectoryName.build
@@ -68,6 +69,16 @@ internal class DefaultJavaPathsSpec {
     fun `obtain the generated Java directory for a source set`() {
         val dir = DefaultJavaPaths.at(projectPath).generated().dir("main")
         dir.path().fileName.toString() shouldBe "java"
+    }
+
+    @Test
+    fun `reject a blank source set name`() {
+        val generated = DefaultJavaPaths.at(projectPath).generated()
+
+        // A blank name would otherwise resolve to the `generated` root itself.
+        listOf("", " ", "\t").forEach {
+            shouldThrow<IllegalArgumentException> { generated.dir(it) }
+        }
     }
 
     companion object {
