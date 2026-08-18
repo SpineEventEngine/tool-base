@@ -30,7 +30,7 @@ import com.google.errorprone.annotations.Immutable;
 import io.spine.annotation.Internal;
 
 /**
- * The JavaScript code line as it appears in a source code file.
+ * A code line as it appears in a source code file.
  *
  * <p>Consists of the code itself and the level on which the code is indented.
  *
