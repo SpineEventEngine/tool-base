@@ -32,6 +32,10 @@ Base code for the development tool subprojects of the Spine SDK.
   directories, external modules, and file references.
 
 
+* [`proto-code`](proto-code) — Protobuf-specific types: descriptor set merging, known
+  type extension, the code generator request, and the `proto` source directory.
+
+
 * [`java-code`](java-code) — Java-specific types for code generation, together with
   the file system layout and Javadoc utilities of a Java project.
 

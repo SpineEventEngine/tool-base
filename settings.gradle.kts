@@ -41,6 +41,7 @@ include(
     "jvm-tools",
     "plugin-base",
     "plugin-testlib",
+    "proto-code",
     "protobuf-setup-plugins",
     "psi",
     "psi-java",

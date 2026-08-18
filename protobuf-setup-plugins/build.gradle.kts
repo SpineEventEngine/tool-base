@@ -107,6 +107,9 @@ dependencies {
 
     implementation(Base.lib)?.because("We need `DescriptorSetReferenceFile` at compile time.")
     implementation(project(":java-code"))?.because("We need `DefaultJavaPaths`.")
+    implementation(project(":proto-code"))?.because(
+        "We need `FileDescriptorSuperset`, `MoreKnownTypes`, and the proto `Directory`."
+    )
     implementation(project(":plugin-base"))
     implementation(Logging.lib)
 
