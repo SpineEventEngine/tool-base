@@ -44,8 +44,8 @@ import io.spine.option.EntityOption
 import io.spine.test.code.NoOuterClassnameSourceFileTest.NoOuterClassnameMessage
 import io.spine.test.code.SourceFile.NestedMessage
 import io.spine.test.code.StandaloneMessage
+import io.spine.test.tools.type.ProjectServiceGrpc
 import io.spine.testing.setDefault
-import io.spine.tools.type.ProjectServiceGrpc
 import io.spine.type.MessageType
 import java.nio.file.Paths
 import org.junit.jupiter.api.DisplayName

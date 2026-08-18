@@ -28,6 +28,9 @@ package io.spine.tools.type;
 
 import com.google.protobuf.DescriptorProtos.FileDescriptorSet;
 import com.google.protobuf.Descriptors.FileDescriptor;
+import io.spine.test.tools.type.PersonProto;
+import io.spine.test.tools.type.ProjectProto;
+import io.spine.test.tools.type.TaskProto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -15,4 +15,5 @@ See [README.md](README.md) for the format and routing rules.
 ## Reference (external systems)
 
 - [cache-warm-window](reference/cache-warm-window.md) — How prompt cache entries are shared between sibling-repo sessions and how to maximise overlap.
+- [stale-generated-from-build-cache](reference/stale-generated-from-build-cache.md) — renamed proto packages come back from the Gradle build cache; verify with `--no-build-cache`.
 - [anthropic-api-caching](reference/anthropic-api-caching.md) — Pattern and pricing for adding prompt caching to any direct Anthropic API call.

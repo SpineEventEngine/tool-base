@@ -25,22 +25,13 @@
  */
 syntax = "proto3";
 
-package spine.tools.type;
+package spine.test.tools.type;
 
-option java_package = "io.spine.tools.type";
-option java_outer_classname = "ProjectProto";
+option java_package = "io.spine.test.tools.type";
+option java_outer_classname = "PersonProto";
 option java_multiple_files = true;
 
-import "google/protobuf/wrappers.proto";
-import "spine/tools/type/task.proto";
-
-message Project {
+message Person {
 
     string name = 1;
-
-    repeated TaskId tasks = 2;
-}
-
-service ProjectService {
-    rpc CreateProject(Project) returns (google.protobuf.BoolValue);
 }
