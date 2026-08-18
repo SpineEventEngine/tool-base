@@ -57,7 +57,7 @@ public final class IndentedLine extends Line {
      * Creates a new instance with the specified indentation and code.
      */
     public static IndentedLine of(Indent indent, String code) {
-        var pure = Line.of(code);
+        var pure = of(code);
         return of(indent, pure);
     }
 
