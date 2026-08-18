@@ -28,6 +28,10 @@ Base code for the development tool subprojects of the Spine SDK.
   manipulations, Protobuf reflection, simple code generation, etc.
 
 
+* [`java-code`](java-code) — Java-specific types for code generation, together with
+  the file system layout and Javadoc utilities of a Java project.
+
+
 * [`plugin-base`](plugin-base) — abstractions for building Gradle plugins.
 
 

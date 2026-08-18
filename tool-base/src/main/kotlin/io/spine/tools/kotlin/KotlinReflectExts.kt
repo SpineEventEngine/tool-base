@@ -51,12 +51,11 @@ public val defaultPackages: List<String> by lazy {
 /**
  * Obtains the code which is used for referencing this Kotlin class in the _Kotlin_ code.
  *
- * For referencing a Kotlin class from the Java code, please
- * use [KClass.java.reference][io.spine.tools.java.reference].
+ * For referencing a Kotlin class from the Java code, please use
+ * `io.spine.tools.java.reference` of the `java-code` module.
  *
  * @return [KClass.simpleName] for the class belonging to [defaultPackages].
  *         Otherwise, [KClass.qualifiedName] is returned.
- * @see io.spine.tools.java.reference
  */
 public val <T: Any> KClass<T>.reference: String
     get() {

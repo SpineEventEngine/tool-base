@@ -24,7 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.java.code
+package io.spine.tools.java.code.roaster
 
 import io.kotest.matchers.shouldBe
 import org.jboss.forge.roaster.model.JavaDoc

@@ -106,6 +106,7 @@ dependencies {
     implementation(Protobuf.GradlePlugin.lib)
 
     implementation(Base.lib)?.because("We need `DescriptorSetReferenceFile` at compile time.")
+    implementation(project(":java-code"))?.because("We need `DefaultJavaPaths`.")
     implementation(project(":plugin-base"))
     implementation(Logging.lib)
 

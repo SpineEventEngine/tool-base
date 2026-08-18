@@ -24,11 +24,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.java.code
+package io.spine.tools.java.code.poet
 
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import io.spine.tools.java.code.Method
 import javax.lang.model.element.Modifier
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -78,5 +79,14 @@ internal class PoetExtsSpec {
     @Test
     fun `format a code block into a string`() {
         codeBlock("int \$L = 1;", "x") shouldBe "int x = 1;"
+    }
+
+    @Test
+    fun `convert a method spec into a 'Method'`() {
+        val spec = methodSpec("doThing") {
+            addModifiers(Modifier.PUBLIC)
+        }
+
+        spec.toMethod() shouldBe Method(spec.toString())
     }
 }

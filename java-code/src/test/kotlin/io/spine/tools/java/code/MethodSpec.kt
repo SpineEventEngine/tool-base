@@ -27,7 +27,6 @@
 package io.spine.tools.java.code
 
 import io.kotest.matchers.shouldBe
-import javax.lang.model.element.Modifier
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
@@ -38,14 +37,5 @@ internal class MethodSpec {
     fun `wrap a raw code string`() {
         val code = "void doNothing() {}"
         Method(code).value() shouldBe code
-    }
-
-    @Test
-    fun `take its code from a JavaPoet method spec`() {
-        val spec = methodSpec("doThing") {
-            addModifiers(Modifier.PUBLIC)
-        }
-
-        Method(spec).value() shouldBe spec.toString()
     }
 }

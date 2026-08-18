@@ -53,6 +53,7 @@ dependencies {
     }
     implementation(Jackson.DataFormat.yamlArtifact)
 
+    testImplementation(project(":java-code"))?.because("We need `classpathElement()`.")
     testImplementation(project(":plugin-base"))
     testImplementation(project(":plugin-testlib"))
     testImplementation(pluginTestFixturesProject)

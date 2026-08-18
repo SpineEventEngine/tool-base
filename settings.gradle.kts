@@ -33,6 +33,7 @@ include(
     "gradle-root-plugin",
     "intellij-platform",
     "intellij-platform-java",
+    "java-code",
     "jvm-tool-plugins",
     "jvm-tools",
     "plugin-base",

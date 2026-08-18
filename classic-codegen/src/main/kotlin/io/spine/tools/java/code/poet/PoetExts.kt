@@ -24,11 +24,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.java.code
+package io.spine.tools.java.code.poet
 
 import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.TypeSpec
+import io.spine.tools.java.code.Method
 
 /**
  * Creates a new [MethodSpec] with via customizing it using
@@ -83,3 +84,8 @@ public fun codeBlock(action: CodeBlock.Builder.() -> Unit): CodeBlock {
  */
 public fun codeBlock(format: String, vararg args: Any): String =
     CodeBlock.of(format, *args).toString()
+
+/**
+ * Creates a [Method] with the code obtained from this method spec.
+ */
+public fun MethodSpec.toMethod(): Method = Method(toString())

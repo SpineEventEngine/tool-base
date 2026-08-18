@@ -24,23 +24,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.java.code
+package io.spine.tools.java.code;
 
-import org.jboss.forge.roaster.model.JavaDoc
+import com.google.errorprone.annotations.Immutable;
+import io.spine.annotation.Internal;
+import io.spine.value.StringTypeValue;
+
+import java.io.Serial;
 
 /**
- * Obtains the full text of the Javadoc and normalizes it.
+ * A generated Java method source code.
  *
- * This extension function should be used instead of [JavaDoc.getFullText] to avoid
- * issues with extra spaces that implementers of the `JavaDoc` interface may add.
+ * <p>SPI users are responsible for checking that the content of the method is properly formatted
+ * and contains all the required modifiers, comments, and Javadoc.
  *
- * The following actions are performed:
- *  1. All double spaces are replaced with single spaces.
- *  2. All `} .` are replaced with `}.`.
+ * <p>The actual compilation of the generated method is performed as a part of the compilation
+ * of other Protobuf-generated sources.
  */
-public fun JavaDoc<*>.fullTextNormalized(): String {
-    val normalized = fullText
-        .replace("  ", " ")
-        .replace("} .", "}.")
-    return normalized
+@Internal
+@Immutable
+public class Method extends StringTypeValue {
+
+    @Serial
+    private static final long serialVersionUID = 0L;
+
+    /**
+     * Creates a new instance with the passed code block.
+     */
+    public Method(String code) {
+        super(code);
+    }
 }
