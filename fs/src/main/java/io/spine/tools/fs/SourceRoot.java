@@ -27,19 +27,31 @@
 package io.spine.tools.fs;
 
 import com.google.errorprone.annotations.Immutable;
-import io.spine.tools.code.SourceSetName;
-
-import static io.spine.tools.fs.DirectoryName.generated;
 
 /**
- * A root directory for the generated source code.
+ * A root source code directory in a project or a module.
  */
 @Immutable
-public abstract class Generated extends SourceRoot {
+public abstract class SourceRoot extends AbstractDirectory {
 
-    protected Generated(AbstractDirectory projectDir) {
-        super(projectDir, generated.value());
+    protected SourceRoot(AbstractDirectory parent, String name) {
+        super(parent.path().resolve(name));
     }
 
-    public abstract SourceDir dir(SourceSetName ssn);
+    /**
+     * Obtains a subdirectory for the given source set name (such as {@code main} or {@code test})
+     * for the specified programming language.
+     *
+     * <p>The source set is named by a plain string rather than by
+     * {@code io.spine.tools.code.SourceSetName} on purpose: it keeps this package free of
+     * a dependency on {@code io.spine.tools.code}, which in turn depends back on this one.
+     */
+    protected final SourceDir subDir(String sourceSetName, String language) {
+        var sourceSetDir = subDir(sourceSetName);
+        return sourceSetDir.subDir(language);
+    }
+
+    private SourceDir subDir(String name) {
+        return new SourceDir(this, name);
+    }
 }

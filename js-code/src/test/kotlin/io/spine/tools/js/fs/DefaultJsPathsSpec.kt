@@ -28,7 +28,6 @@ package io.spine.tools.js.fs
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
-import io.spine.tools.code.SourceSetName
 import java.nio.file.Path
 import kotlin.io.path.invariantSeparatorsPathString
 import org.junit.jupiter.api.BeforeEach
@@ -48,7 +47,7 @@ class DefaultJsPathsSpec {
 
     @Test
     fun `obtain 'js' directory for a source set`() {
-        val subDir = defaultPaths.generated().dir(SourceSetName.main)
+        val subDir = defaultPaths.generated().dir("main")
 
         subDir.path().invariantSeparatorsPathString shouldContain "/main/js"
     }

@@ -43,7 +43,7 @@ dependencies {
 
     // `io.spine.tools.java.fs` specializes the language-neutral file system
     // abstractions of `io.spine.tools.fs`, exposing them in its own API.
-    api(project(":tool-base"))
+    api(project(":fs"))
 
     // `SourceFileSpec` maps Protobuf declarations to Java files using the fixture
     // types of `tool-base`, which the tests of that module share.

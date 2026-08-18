@@ -27,7 +27,6 @@
 package io.spine.tools.java.fs
 
 import io.kotest.matchers.shouldBe
-import io.spine.tools.code.SourceSetName
 import io.spine.tools.div
 import io.spine.tools.fs.DirectoryName
 import io.spine.tools.fs.DirectoryName.build
@@ -67,7 +66,7 @@ internal class DefaultJavaPathsSpec {
 
     @Test
     fun `obtain the generated Java directory for a source set`() {
-        val dir = DefaultJavaPaths.at(projectPath).generated().dir(SourceSetName.main)
+        val dir = DefaultJavaPaths.at(projectPath).generated().dir("main")
         dir.path().fileName.toString() shouldBe "java"
     }
 

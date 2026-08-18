@@ -38,6 +38,10 @@ dependencies {
 
     // `io.spine.tools.dart.fs` specializes the language-neutral file system
     // abstractions of `io.spine.tools.fs`, exposing them in its own API.
+    api(project(":fs"))
+
+    // `ImportStatement` is an `io.spine.tools.code.Element`, and the Dart tool
+    // paths branch on `io.spine.tools.OsFamily`. Neither belongs to `fs`.
     api(project(":tool-base"))
 
     implementation(Logging.lib)?.because("`ImportStatement` is `WithLogging`.")

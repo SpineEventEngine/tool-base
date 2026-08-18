@@ -28,6 +28,10 @@ Base code for the development tool subprojects of the Spine SDK.
   manipulations, Protobuf reflection, simple code generation, etc.
 
 
+* [`fs`](fs) — language-neutral file system abstractions: source roots, generated
+  directories, external modules, and file references.
+
+
 * [`java-code`](java-code) — Java-specific types for code generation, together with
   the file system layout and Javadoc utilities of a Java project.
 

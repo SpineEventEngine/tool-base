@@ -30,12 +30,8 @@ plugins {
     module
 }
 
-description = "JavaScript-specific types for code generation and file system layout"
+description = "Language-neutral file system abstractions for build-time tools"
 
 dependencies {
     api(Base.lib)
-
-    // `io.spine.tools.js.fs` specializes the language-neutral file system
-    // abstractions of `io.spine.tools.fs`, exposing them in its own API.
-    api(project(":fs"))
 }

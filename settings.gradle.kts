@@ -29,6 +29,7 @@ rootProject.name = "tool-base"
 include(
     "classic-codegen",
     "dart-code",
+    "fs",
     "gradle-plugin-api",
     "gradle-plugin-api-test-fixtures",
     "gradle-root-plugin",

@@ -30,7 +30,6 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldEndWith
 import io.spine.code.java.PackageName
-import io.spine.tools.code.SourceSetName
 import java.nio.file.Path
 import java.nio.file.Paths
 import org.junit.jupiter.api.DisplayName
@@ -61,7 +60,7 @@ class FsTypeExtensionsSpec {
 
     @Test
     fun `obtain a source file under a source code directory`(@TempDir projectDir: Path) {
-        val directory = DefaultJavaPaths.at(projectDir).generated().dir(SourceSetName.main)
+        val directory = DefaultJavaPaths.at(projectDir).generated().dir("main")
         val file = FileName.forType("MyType")
 
         directory.resolve(file).path().toString() shouldEndWith "MyType.java"
@@ -69,7 +68,7 @@ class FsTypeExtensionsSpec {
 
     @Test
     fun `obtain a path under a source code directory`(@TempDir projectDir: Path) {
-        val directory = DefaultJavaPaths.at(projectDir).generated().dir(SourceSetName.main)
+        val directory = DefaultJavaPaths.at(projectDir).generated().dir("main")
 
         directory.resolve(Paths.get("nested", "File.java")).toString() shouldEndWith
                 "File.java"

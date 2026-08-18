@@ -26,7 +26,6 @@
 package io.spine.tools.js.fs
 
 import io.kotest.matchers.string.shouldEndWith
-import io.spine.tools.code.SourceSetName.Companion.main
 import io.spine.tools.fs.SourceCodeDirectory
 import java.nio.file.Path
 import org.junit.jupiter.api.BeforeEach
@@ -41,7 +40,7 @@ class FsTypesExtensionsSpec {
 
     @BeforeEach
     fun setUp(@TempDir projectDir: Path) {
-        directory = DefaultJsPaths.at(projectDir).generated().dir(main)
+        directory = DefaultJsPaths.at(projectDir).generated().dir("main")
     }
 
     @Test

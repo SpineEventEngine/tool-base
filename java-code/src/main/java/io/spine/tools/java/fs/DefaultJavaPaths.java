@@ -28,7 +28,6 @@ package io.spine.tools.java.fs;
 
 import com.google.errorprone.annotations.Immutable;
 import io.spine.annotation.Internal;
-import io.spine.tools.code.SourceSetName;
 import io.spine.tools.fs.AbstractDirectory;
 import io.spine.tools.fs.DefaultPaths;
 import io.spine.tools.fs.DirectoryName;
@@ -97,8 +96,8 @@ public final class DefaultJavaPaths extends DefaultPaths {
         }
 
         @Override
-        public SourceDir dir(SourceSetName ssn) {
-            return subDir(ssn, ROOT_NAME);
+        public SourceDir dir(String sourceSetName) {
+            return subDir(sourceSetName, ROOT_NAME);
         }
     }
 }
