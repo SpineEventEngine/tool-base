@@ -24,10 +24,6 @@ Base code for the development tool subprojects of the Spine SDK.
   the [`gradle-root-plugin`](gradle-root-plugin) module.
 
 
-* [`tool-base`](tool-base) — common components for building build-time tools, including file
-  manipulations, Protobuf reflection, simple code generation, etc.
-
-
 * [`fixtures`](fixtures) — Protobuf declarations used solely by the tests of this
   repository. **Not published** — nothing outside this repo may depend on them.
 

@@ -49,5 +49,4 @@ include(
     "protobuf-setup-plugins",
     "psi",
     "psi-java",
-    "tool-base",
 )

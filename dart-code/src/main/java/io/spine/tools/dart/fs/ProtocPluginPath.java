@@ -26,7 +26,7 @@
 
 package io.spine.tools.dart.fs;
 
-import io.spine.tools.OsFamily;
+import io.spine.environment.OsFamily;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import java.nio.file.Path;

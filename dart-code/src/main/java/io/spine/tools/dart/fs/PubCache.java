@@ -28,7 +28,7 @@ package io.spine.tools.dart.fs;
 
 import io.spine.annotation.VisibleForTesting;
 import com.google.common.base.Strings;
-import io.spine.tools.OsFamily;
+import io.spine.environment.OsFamily;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;

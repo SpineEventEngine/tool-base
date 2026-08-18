@@ -40,10 +40,12 @@ dependencies {
     // abstractions of `io.spine.tools.fs`, exposing them in its own API.
     api(project(":fs"))
 
-    // `ImportStatement` is an `io.spine.tools.code.Element`, and the Dart tool
-    // paths branch on `io.spine.tools.OsFamily`. Both stay inside implementations.
+    // `ImportStatement` is an `io.spine.tools.code.Element`, used only inside
+    // the implementation.
     implementation(project(":code"))
-    implementation(project(":tool-base"))
+
+    // The Dart tool paths branch on `io.spine.environment.OsFamily`.
+    implementation(Base.environment)
 
     implementation(Logging.lib)?.because("`ImportStatement` is `WithLogging`.")
 }
