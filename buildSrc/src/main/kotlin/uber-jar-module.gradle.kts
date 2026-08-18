@@ -27,8 +27,6 @@
 @file:Suppress("UnstableApiUsage") // `configurations` block.
 
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import io.spine.dependency.lib.Caffeine
-import io.spine.dependency.lib.Jackson
 import io.spine.gradle.publish.IncrementGuard
 import io.spine.gradle.publish.SpinePublishing
 import io.spine.gradle.publish.setup
@@ -46,29 +44,6 @@ plugins {
 apply<IncrementGuard>()
 LicenseReporter.generateReportIn(project)
 
-/*
- * Align third-party components shared with the rest of the Spine stack
- * to the versions this repository is built and tested with.
- *
- * The versions resolved here become the pins of the published POM entries
- * (see `declareUnshadedDependencies`). Without this block, the versions
- * requested by the IntelliJ Platform POMs stand — e.g. Jackson `2.13.0`,
- * Caffeine `3.0.4` — and every consumer resolving with
- * `failOnVersionConflict()` fails on the disagreement with the versions
- * the rest of its graph requests. Guava and other components covered by
- * `forceVersions()` of the `module` plugin are aligned the same way already.
- */
-configurations.all {
-    resolutionStrategy {
-        Jackson.forceArtifacts(project, this@all, this@resolutionStrategy)
-        Jackson.Junior.forceArtifacts(project, this@all, this@resolutionStrategy)
-        force(
-            Jackson.annotations,
-            Caffeine.lib,
-        )
-    }
-}
-
 spinePublishing {
     // This prefix does not apply to the modules of this project because they all belong
     // to the `io.spine.tools` group, and therefore `toolArtifactPrefix` applies instead.
@@ -78,7 +53,7 @@ spinePublishing {
     customPublishing = true
 }
 
-/** The ID of the far JAR artifact. */
+/** The ID of the fat JAR artifact. */
 private val projectArtifact = project.name.replace(":", "")
 
 publishing {
@@ -95,8 +70,10 @@ publishing {
     }
 }
 
-// Declare dependency explicitly to address the Gradle error.
-tasks.getByName("publishFatJarPublicationToMavenLocal") {
+/**
+ * Declare dependency explicitly to address the Gradle error.
+ */
+tasks.named("publishFatJarPublicationToMavenLocal") {
     dependsOn(tasks.shadowJar)
 }
 
@@ -175,6 +152,18 @@ private fun ShadowJar.excludeFiles() {
         "windows/**",
         "xml/**",
 
+        /*
+          Exclude `https://github.com/JetBrains/pty4j`.
+          We don't need the terminal.
+         */
+        "resources/com/pti4j/**",
+
+        /* Exclude the IntelliJ fork of
+          `http://www.sparetimelabs.com/purejavacomm/purejavacomm.php`.
+           It is the part of the IDEA's terminal implementation.
+         */
+        "purejavacomm/**",
+
         /* Exclude IDEA project templates. */
         "resources/projectTemplates/**",
 
@@ -207,20 +196,11 @@ private fun ShadowJar.excludeFiles() {
         "win32-x86/**",
         "win32-x86-64/**",
 
-        /*
-          Exclude the JetBrains fork of JNA (`org.jetbrains.intellij.deps.jna`),
-          which arrives transitively with the IntelliJ Platform artifacts.
-          Despite the `com.sun.jna` package, JNA is not part of the JDK, and
-          the unrelocated classes would shadow the genuine `net.java.dev.jna`
-          artifacts on a consumer's classpath. The headless PSI code does not
-          use this OS-integration layer. Should the tool users need JNA, they
-          would add `net.java.dev.jna:jna:5.9.0` (a drop-in) explicitly.
-
-          This entry must stay in the shared list: `intellij-platform-java`
-          excludes whatever the `intellij-platform` JAR already contains, so
-          an exclusion made only in one module resurfaces the files in the
-          other module's JAR.
+        /**
+         * Exclude the Windows process management (WinP) libraries.
+         * See: `https://github.com/jenkinsci/winp`.
          */
-        "com/sun/jna/**",
+        "winp.dll",
+        "winp.x64.dll",
     )
 }
