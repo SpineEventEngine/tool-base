@@ -52,10 +52,6 @@ configurations {
 dependencies {
     api(Base.lib)
 
-    // `io.spine.tools.proto.fs.Directory` extends `SourceCodeDirectory`, and the
-    // `StandardTypes` extensions accept `DirectoryName`, so both are API here.
-    api(project(":fs"))
-
     implementation(Logging.lib)
 
     listOf(

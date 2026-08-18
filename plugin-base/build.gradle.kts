@@ -37,6 +37,10 @@ dependencies {
     compileOnlyApi(Protobuf.GradlePlugin.lib)
     compileOnlyApi(Kotlin.GradlePlugin.api)
     api(project(":jvm-tools"))
+
+    // `GeneratedSourceRoot` and `GeneratedSourceSet` extend `AbstractDirectory`.
+    api(project(":fs"))
+
     api(project(":tool-base"))
     compileOnly(gradleKotlinDsl())
     implementation(Logging.lib)
