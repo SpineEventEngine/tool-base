@@ -46,9 +46,9 @@ dependencies {
     // and accepts an `AbstractDirectory` as its parent.
     api(project(":fs"))
 
-    // `FileDescriptorSuperset` reads descriptor sets out of archives using
-    // `io.spine.tools.archive`. The types stay inside its implementation.
-    implementation(project(":tool-base"))
+    // `FileDescriptorSuperset` reads descriptor sets out of archives.
+    // The types stay inside its implementation.
+    implementation(project(":archive"))
 
     implementation(Logging.lib)?.because("`FileDescriptorSuperset` is `WithLogging`.")
 

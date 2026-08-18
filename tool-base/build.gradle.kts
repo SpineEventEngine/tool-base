@@ -52,7 +52,6 @@ configurations {
 dependencies {
     api(Base.lib)
 
-    implementation(Logging.lib)
 
     listOf(
         Grpc.protobuf,

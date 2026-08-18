@@ -41,7 +41,9 @@ dependencies {
     // `GeneratedSourceRoot` and `GeneratedSourceSet` extend `AbstractDirectory`.
     api(project(":fs"))
 
-    api(project(":tool-base"))
+    // `SourceSetName` appears in the signatures of `JavaConfigurationName`
+    // and the `SourceSet.named` extension.
+    api(project(":code"))
     compileOnly(gradleKotlinDsl())
     implementation(Logging.lib)
 

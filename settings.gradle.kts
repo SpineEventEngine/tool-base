@@ -27,7 +27,9 @@
 rootProject.name = "tool-base"
 
 include(
+    "archive",
     "classic-codegen",
+    "code",
     "dart-code",
     "fs",
     "gradle-plugin-api",
@@ -39,6 +41,7 @@ include(
     "js-code",
     "jvm-tool-plugins",
     "jvm-tools",
+    "kotlin-code",
     "plugin-base",
     "plugin-testlib",
     "proto-code",

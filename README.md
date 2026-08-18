@@ -28,6 +28,16 @@ Base code for the development tool subprojects of the Spine SDK.
   manipulations, Protobuf reflection, simple code generation, etc.
 
 
+* [`code`](code) — language-neutral types for describing generated code: lines,
+  indentation, languages, and source set names.
+
+
+* [`archive`](archive) — reading Protobuf descriptor sets out of ZIP and JAR archives.
+
+
+* [`kotlin-code`](kotlin-code) — Kotlin-specific types for code generation.
+
+
 * [`fs`](fs) — language-neutral file system abstractions: source roots, generated
   directories, external modules, and file references.
 

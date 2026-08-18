@@ -24,54 +24,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.dependency.lib.Grpc
-import io.spine.dependency.lib.GrpcKotlin
-import io.spine.dependency.lib.Protobuf
 import io.spine.dependency.local.Base
 
 plugins {
     module
-    protobuf
-    id("io.spine.descriptor-set-file")
-    id("io.spine.generated-sources")
 }
 
-description = "Java-specific code generation types and file system layout"
+description = "Language-neutral types for describing generated code"
 
 dependencies {
     api(Base.lib)
-
-    // `io.spine.tools.java.fs` specializes the language-neutral file system
-    // abstractions of `io.spine.tools.fs`, exposing them in its own API.
-    api(project(":fs"))
-
-    testImplementation(project(":code"))?.because("`ClassExtsSpec` uses `Line`.")
-
-    // `SourceFileSpec` maps Protobuf declarations to Java files using the fixture
-    // types of `tool-base`, which the tests of that module share.
-    testImplementation(testFixtures(project(":tool-base")))
-    listOf(
-        Grpc.protobuf,
-        Grpc.core,
-        Grpc.stub,
-        GrpcKotlin.stub,
-    ).forEach {
-        testImplementation(it)
-    }
 }
-
-configurations {
-    all {
-        resolutionStrategy {
-            Grpc.forceArtifacts(project, this@all, this@resolutionStrategy)
-        }
-    }
-}
-
-protobuf {
-    protoc {
-        artifact = Protobuf.compiler
-    }
-}
-
-allowDuplicationInSourcesJar()

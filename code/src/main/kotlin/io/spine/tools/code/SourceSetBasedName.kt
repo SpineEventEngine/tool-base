@@ -81,7 +81,7 @@ public open class SourceSetBasedName protected constructor(
          *
          * If the source set name prefix form is an empty string, the given [value] is returned.
          * If the prefix form of the source set name is not an empty string, the first
-         * character of the `value` is [titlecassed][String.titlecaseFirstChar] in
+         * character of the `value` is [title-cased][String.titleCase] in
          * the returned value.
          */
         public fun suffix(ssnAsPrefix: SourceSetName, value: String): String =
