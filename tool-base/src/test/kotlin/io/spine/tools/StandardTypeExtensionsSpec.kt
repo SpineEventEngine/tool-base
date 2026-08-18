@@ -27,10 +27,6 @@
 package io.spine.tools
 
 import io.kotest.matchers.shouldBe
-import io.spine.tools.fs.DirectoryName
-import java.io.File
-import java.nio.file.Paths
-import java.util.function.Supplier
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
@@ -42,33 +38,5 @@ class StandardTypeExtensionsSpec {
         "foo".titlecaseFirstChar() shouldBe "Foo"
         "Bar".titlecaseFirstChar() shouldBe "Bar"
         "".titlecaseFirstChar() shouldBe ""
-    }
-
-    @Test
-    fun `resolve a directory name against a 'File'`() {
-        File("root").resolve(DirectoryName.java) shouldBe File("root", "java")
-    }
-
-    @Test
-    fun `resolve a directory name against a 'File' using the 'div' operator`() {
-        File("root") / DirectoryName.java shouldBe File("root", "java")
-    }
-
-    @Test
-    fun `resolve a directory name against a 'Path'`() {
-        Paths.get("root").resolve(DirectoryName.java) shouldBe Paths.get("root", "java")
-    }
-
-    @Test
-    fun `convert a 'String' 'Supplier' to absolute file`() {
-        val sup: Supplier<String> = Supplier { "." }
-
-        sup.toAbsoluteFile().isAbsolute shouldBe true
-    }
-
-    @Test
-    fun `tell if a file is a Protobuf source code file`() {
-        File("mycode.proto").isProtoSource() shouldBe true
-        File("util.java").isProtoSource() shouldBe false
     }
 }

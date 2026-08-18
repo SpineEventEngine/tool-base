@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2026, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,11 +24,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@file:JvmName("StandardTypes")
+@file:JvmName("Paths")
 
-package io.spine.tools
+package io.spine.tools.fs
 
-import io.spine.string.titleCase
+import io.spine.io.Files2
+import java.io.File
+import java.nio.file.Path
+import java.util.function.Supplier
 
-/** Obtains a copy of this string with the first character capitalized . */
-public fun String.titlecaseFirstChar(): String = titleCase()
+/** Resolves an absolute file name obtained from the supplier. */
+public fun Supplier<String>.toAbsoluteFile(): File = Files2.toAbsolute(get())
+
+/** Adds relative name to this directory. */
+public fun File.resolve(dir: DirectoryName): File = resolve(dir.value())
+
+/** Adds relative directory to this directory. */
+public operator fun File.div(dir: DirectoryName): File = resolve(dir)
+
+/** Adds relative name to this directory. */
+public fun Path.resolve(dir: DirectoryName): Path = resolve(dir.value())
+
+/** Adds relative name to this directory. */
+public operator fun Path.div(dir: DirectoryName): Path = resolve(dir)
+
+/** Tells if this is a Protobuf source code file. */
+public fun File.isProtoSource(): Boolean = extension == "proto"

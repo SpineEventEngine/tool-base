@@ -31,12 +31,12 @@ import io.spine.annotation.Internal
 import io.spine.tools.fs.DirectoryName
 import io.spine.tools.gradle.project.hasJava
 import io.spine.tools.gradle.project.hasKotlin
+import io.spine.tools.fs.resolve
 import io.spine.tools.gradle.task.findKotlinDirectorySet
 import io.spine.tools.protobuf.gradle.GeneratedDirectoryContext
 import io.spine.tools.protobuf.gradle.plugin.GeneratedSubdir.GRPC
 import io.spine.tools.protobuf.gradle.plugin.GeneratedSubdir.JAVA
 import io.spine.tools.protobuf.gradle.plugin.GeneratedSubdir.KOTLIN
-import io.spine.tools.resolve
 import java.io.File
 import java.nio.file.Path
 import org.gradle.api.Project

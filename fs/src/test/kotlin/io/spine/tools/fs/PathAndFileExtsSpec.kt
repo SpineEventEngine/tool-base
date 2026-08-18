@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * https://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -24,54 +24,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.java.fs
+package io.spine.tools.fs
 
 import io.kotest.matchers.shouldBe
-import io.spine.tools.fs.DirectoryName
-import io.spine.tools.fs.DirectoryName.build
-import io.spine.tools.fs.div
+import java.io.File
 import java.nio.file.Path
-import kotlin.io.path.div
+import java.util.function.Supplier
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-@DisplayName("`DefaultJavaPaths` should")
-internal class DefaultJavaPathsSpec {
+@DisplayName("Path and file extensions should")
+internal class PathAndFileExtsSpec {
 
     @Test
-    fun `obtain 'build' dir`() {
-        val paths = DefaultJavaPaths.at(projectPath)
-        paths.buildRoot().path() shouldBe
-
-                projectPath / build
+    fun `resolve a directory name against a 'File'`() {
+        File("root").resolve(DirectoryName.java) shouldBe File("root", "java")
     }
 
     @Test
-    fun `obtain 'generated' dir`() {
-        val paths = DefaultJavaPaths.at(projectPath)
-        paths.generated().path() shouldBe
-
-                projectPath / GENERATED_DIR
+    fun `resolve a directory name against a 'File' using the 'div' operator`() {
+        File("root") / DirectoryName.java shouldBe File("root", "java")
     }
 
     @Test
-    fun `be created from a 'File'`() {
-        DefaultJavaPaths.at(projectPath.toFile()).path() shouldBe projectPath
+    fun `resolve a directory name against a 'Path'`() {
+        Path.of("root").resolve(DirectoryName.java) shouldBe Path.of("root", "java")
     }
 
     @Test
-    fun `obtain the 'src' directory`() {
-        DefaultJavaPaths.at(projectPath).src().path().fileName.toString() shouldBe "src"
+    fun `convert a 'String' 'Supplier' to absolute file`() {
+        val sup: Supplier<String> = Supplier { "." }
+
+        sup.toAbsoluteFile().isAbsolute shouldBe true
     }
 
     @Test
-    fun `obtain the generated Java directory for a source set`() {
-        val dir = DefaultJavaPaths.at(projectPath).generated().dir("main")
-        dir.path().fileName.toString() shouldBe "java"
-    }
-
-    companion object {
-        private val projectPath = Path.of("/test-path")
-        private val GENERATED_DIR = DirectoryName.generated.value()
+    fun `tell if a file is a Protobuf source code file`() {
+        File("mycode.proto").isProtoSource() shouldBe true
+        File("util.java").isProtoSource() shouldBe false
     }
 }
