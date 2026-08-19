@@ -50,14 +50,6 @@ Base code for the development tool subprojects of the Spine SDK.
   the file system layout and Javadoc utilities of a Java project.
 
 
-* [`js-code`](js-code) — JavaScript-specific types for code generation and the file
-  system layout of a JavaScript project.
-
-
-* [`dart-code`](dart-code) — Dart-specific types for code generation and the file
-  system layout of a Dart project.
-
-
 * [`plugin-base`](plugin-base) — abstractions for building Gradle plugins.
 
 
