@@ -24,7 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.type;
+package io.spine.tools.proto.type;
 
 import io.spine.annotation.VisibleForTesting;
 import com.google.common.collect.ImmutableSet;

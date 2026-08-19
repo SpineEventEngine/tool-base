@@ -24,7 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.code.proto
+package io.spine.tools.proto.code
 
 import com.google.protobuf.compiler.PluginProtos.CodeGeneratorRequest
 import io.spine.io.replaceExtension

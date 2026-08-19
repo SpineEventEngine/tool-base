@@ -29,8 +29,8 @@ package io.spine.tools.protobuf.gradle;
 import io.spine.code.proto.FileSet;
 import io.spine.tools.code.SourceSetName;
 import io.spine.tools.gradle.JavaConfigurationName;
-import io.spine.tools.type.FileDescriptorSuperset;
-import io.spine.tools.type.MoreKnownTypes;
+import io.spine.tools.proto.type.FileDescriptorSuperset;
+import io.spine.tools.proto.type.MoreKnownTypes;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
 

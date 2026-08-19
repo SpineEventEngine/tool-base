@@ -24,36 +24,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.type
+package io.spine.tools.proto.type
 
-import com.google.protobuf.DescriptorProtos.FileDescriptorSet
-import com.google.protobuf.Empty
-import io.kotest.matchers.collections.shouldContain
-import io.kotest.matchers.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import java.nio.file.Path
+import kotlin.io.path.createDirectory
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 
-@DisplayName("`MergedDescriptorSet` should")
-internal class MergedDescriptorSetSpec {
-
-    private val descriptorSet: FileDescriptorSet = FileDescriptorSet.newBuilder()
-        .addFile(Empty.getDescriptor().file.toProto())
-        .build()
+@DisplayName("`FileDescriptorSuperset` should")
+internal class FileDescriptorSupersetSpec {
 
     @Test
-    fun `expose the file set built from the descriptors`() {
-        val merged = MergedDescriptorSet(descriptorSet)
+    fun `ignore a directory which has no descriptor files`(@TempDir sandbox: Path) {
+        val emptyDir = sandbox.resolve("empty")
+        emptyDir.createDirectory()
 
-        merged.fileSet().isEmpty shouldBe false
-    }
+        val superset = FileDescriptorSuperset()
+        superset.addFromDependency(emptyDir.toFile())
 
-    @Test
-    fun `extend the known types`() {
-        val merged = MergedDescriptorSet(descriptorSet)
-
-        // Should not throw: `Empty` is a well-known type already present in the registry.
-        merged.loadIntoKnownTypes()
-
-        merged.descriptors() shouldContain Empty.getDescriptor().file.toProto()
+        superset.merge().descriptors().shouldBeEmpty()
     }
 }

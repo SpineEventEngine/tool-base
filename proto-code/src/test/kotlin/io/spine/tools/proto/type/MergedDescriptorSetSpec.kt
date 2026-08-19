@@ -24,38 +24,42 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.protobuf.gradle
+package io.spine.tools.proto.type
 
-import io.kotest.matchers.nulls.shouldNotBeNull
-import io.spine.tools.code.SourceSetName.Companion.main
-import org.gradle.api.plugins.JavaPlugin
-import org.gradle.testfixtures.ProjectBuilder
+import com.google.protobuf.DescriptorProtos.FileDescriptorSet
+import com.google.protobuf.Empty
+import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-@DisplayName("`ProtoFiles` should")
-internal class ProtoFilesSpec {
+@DisplayName("`MergedDescriptorSet` should")
+internal class MergedDescriptorSetSpec {
+
+    private val descriptorSet: FileDescriptorSet = FileDescriptorSet.newBuilder()
+        .addFile(Empty.getDescriptor().file.toProto())
+        .build()
+
+    @Test
+    fun `expose the file set built from the descriptors`() {
+        val merged = MergedDescriptorSet(descriptorSet)
+
+        merged.fileSet().isEmpty shouldBe false
+    }
 
     @Test
     @Disabled(
-        "Blocked by base-libraries#958: `ProtoFiles.collect` reaches" +
-                " `KnownTypes.Holder.extendWith`, which guards its caller by the hard-coded" +
-                " name `io.spine.tools.type.MoreKnownTypes`. Re-enable once Base ships" +
-                " the updated guard."
+        "Blocked by base-libraries#958: `KnownTypes.Holder.extendWith` guards its caller" +
+                " by the hard-coded name `io.spine.tools.type.MoreKnownTypes`, which this" +
+                " package no longer matches. Re-enable once Base ships the updated guard."
     )
-    fun `supply a merged file set for a source set with no dependencies`() {
-        val project = ProjectBuilder.builder().build()
-        with(project) {
-            pluginManager.apply(JavaPlugin::class.java)
-            group = "io.spine.tests"
-            version = "1.0.0"
-        }
+    fun `extend the known types`() {
+        val merged = MergedDescriptorSet(descriptorSet)
 
-        val supplier = ProtoFiles.collect(project, main)
+        // Should not throw: `Empty` is a well-known type already present in the registry.
+        merged.loadIntoKnownTypes()
 
-        // Evaluating the supplier merges the (empty) descriptor sets and produces a `FileSet`.
-        val fileSet = supplier.get()
-        fileSet.shouldNotBeNull()
+        merged.descriptors() shouldContain Empty.getDescriptor().file.toProto()
     }
 }

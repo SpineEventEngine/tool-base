@@ -1,5 +1,5 @@
 /*
- * Copyright 2026, TeamDev. All rights reserved.
+ * Copyright 2025, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,26 +24,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.type
+/**
+ * This package contains utilities for the Spine type system for the needs of the compile-time
+ * checkers and processors.
+ *
+ * <p>DO NOT use these classes, as well as any other classes of the {@code plugin-base} module in
+ * the production code.
+ */
 
-import io.kotest.matchers.collections.shouldBeEmpty
-import java.nio.file.Path
-import kotlin.io.path.createDirectory
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
+@CheckReturnValue
+@NullMarked
+package io.spine.tools.proto.type;
 
-@DisplayName("`FileDescriptorSuperset` should")
-internal class FileDescriptorSupersetSpec {
+import com.google.errorprone.annotations.CheckReturnValue;
+import io.spine.annotation.Internal;
 
-    @Test
-    fun `ignore a directory which has no descriptor files`(@TempDir sandbox: Path) {
-        val emptyDir = sandbox.resolve("empty")
-        emptyDir.createDirectory()
-
-        val superset = FileDescriptorSuperset()
-        superset.addFromDependency(emptyDir.toFile())
-
-        superset.merge().descriptors().shouldBeEmpty()
-    }
-}
+import org.jspecify.annotations.NullMarked;
