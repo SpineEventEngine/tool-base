@@ -30,7 +30,6 @@ import com.google.protobuf.DescriptorProtos.FileDescriptorSet
 import com.google.protobuf.Empty
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
@@ -49,11 +48,6 @@ internal class MergedDescriptorSetSpec {
     }
 
     @Test
-    @Disabled(
-        "Blocked by base-libraries#958: `KnownTypes.Holder.extendWith` guards its caller" +
-                " by the hard-coded name `io.spine.tools.type.MoreKnownTypes`, which this" +
-                " package no longer matches. Re-enable once Base ships the updated guard."
-    )
     fun `extend the known types`() {
         val merged = MergedDescriptorSet(descriptorSet)
 

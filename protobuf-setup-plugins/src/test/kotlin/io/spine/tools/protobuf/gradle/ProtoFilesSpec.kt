@@ -30,7 +30,6 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.spine.tools.code.SourceSetName.Companion.main
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.testfixtures.ProjectBuilder
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
@@ -38,12 +37,6 @@ import org.junit.jupiter.api.Test
 internal class ProtoFilesSpec {
 
     @Test
-    @Disabled(
-        "Blocked by base-libraries#958: `ProtoFiles.collect` reaches" +
-                " `KnownTypes.Holder.extendWith`, which guards its caller by the hard-coded" +
-                " name `io.spine.tools.type.MoreKnownTypes`. Re-enable once Base ships" +
-                " the updated guard."
-    )
     fun `supply a merged file set for a source set with no dependencies`() {
         val project = ProjectBuilder.builder().build()
         with(project) {

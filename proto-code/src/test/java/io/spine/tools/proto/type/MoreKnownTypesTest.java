@@ -36,7 +36,6 @@ import io.spine.testing.UtilityClassTest;
 import io.spine.type.KnownTypes;
 import io.spine.type.TypeUrl;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -103,12 +102,6 @@ class MoreKnownTypesTest extends UtilityClassTest<MoreKnownTypes> {
 
     @Test
     @DisplayName("extend known type set")
-    @Disabled(
-            "Blocked by base-libraries#958: `KnownTypes.Holder.extendWith` guards its caller"
-                    + " by the hard-coded name `io.spine.tools.type.MoreKnownTypes`, which"
-                    + " this package no longer matches. Re-enable once Base ships"
-                    + " the updated guard."
-    )
     void extendKnownTypes() {
         var dynamicType = TypeUrl.parse("type.spine.io/spine.test.TestDynamicType");
         assertFalse(KnownTypes.instance().contains(dynamicType));
