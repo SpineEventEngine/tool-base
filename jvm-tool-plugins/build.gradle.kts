@@ -92,6 +92,8 @@ gradlePlugin {
 }
 
 dependencies {
+    implementation(project(":code"))?.because("`ArtifactMetaPlugin` uses `SourceSetName`.")
+
     compileOnlyApi(gradleApi())
     compileOnlyApi(Kotlin.GradlePlugin.api)
     compileOnly(gradleKotlinDsl())

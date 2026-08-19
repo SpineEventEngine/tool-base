@@ -39,6 +39,7 @@ dependencies {
     api(project(":psi"))
     api(intellijPlatformJavaModule)
     testImplementation(Base.lib)
+    testImplementation(project(":java-code"))?.because("We need `Class.reference`.")
     testImplementation(TestLib.lib)
     testImplementation(project(":plugin-testlib"))
 }

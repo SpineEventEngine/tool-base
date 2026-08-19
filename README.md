@@ -24,8 +24,30 @@ Base code for the development tool subprojects of the Spine SDK.
   the [`gradle-root-plugin`](gradle-root-plugin) module.
 
 
-* [`tool-base`](tool-base) — common components for building build-time tools, including file
-  manipulations, Protobuf reflection, simple code generation, etc.
+* [`fixtures`](fixtures) — Protobuf declarations used solely by the tests of this
+  repository. **Not published** — nothing outside this repo may depend on them.
+
+
+* [`code`](code) — language-neutral types for describing generated code: lines,
+  indentation, languages, and source set names.
+
+
+* [`archive`](archive) — reading Protobuf descriptor sets out of ZIP and JAR archives.
+
+
+* [`kotlin-code`](kotlin-code) — Kotlin-specific types for code generation.
+
+
+* [`fs`](fs) — language-neutral file system abstractions: source roots, generated
+  directories, external modules, and file references.
+
+
+* [`proto-code`](proto-code) — Protobuf-specific types: descriptor set merging, known
+  type extension, the code generator request, and the `proto` source directory.
+
+
+* [`java-code`](java-code) — Java-specific types for code generation, together with
+  the file system layout and Javadoc utilities of a Java project.
 
 
 * [`plugin-base`](plugin-base) — abstractions for building Gradle plugins.

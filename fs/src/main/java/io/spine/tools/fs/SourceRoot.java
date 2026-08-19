@@ -1,0 +1,65 @@
+/*
+ * Copyright 2022, TeamDev. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Redistribution and use in source and/or binary forms, with or without
+ * modification, must retain the above copyright notice and the following
+ * disclaimer.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+package io.spine.tools.fs;
+
+import com.google.errorprone.annotations.Immutable;
+
+import static io.spine.util.Preconditions2.checkNotEmptyOrBlank;
+
+/**
+ * A root source code directory in a project or a module.
+ */
+@Immutable
+public abstract class SourceRoot extends AbstractDirectory {
+
+    protected SourceRoot(AbstractDirectory parent, String name) {
+        super(parent.path().resolve(name));
+    }
+
+    /**
+     * Obtains a subdirectory for the given source set name (such as {@code main} or {@code test})
+     * for the specified programming language.
+     *
+     * <p>The source set is named by a plain string rather than by
+     * {@code io.spine.tools.code.SourceSetName} on purpose: it keeps this package free of
+     * a dependency on {@code io.spine.tools.code}, which in turn depends back on this one.
+     * The blank-name check that {@code SourceSetName} performed is kept here, so that
+     * a blank name cannot silently resolve to this root itself.
+     *
+     * @throws IllegalArgumentException
+     *         if the {@code sourceSetName} is empty or blank
+     */
+    protected final SourceDir subDir(String sourceSetName, String language) {
+        checkNotEmptyOrBlank(sourceSetName);
+        var sourceSetDir = subDir(sourceSetName);
+        return sourceSetDir.subDir(language);
+    }
+
+    private SourceDir subDir(String name) {
+        return new SourceDir(this, name);
+    }
+}

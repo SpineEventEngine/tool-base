@@ -25,28 +25,19 @@
  */
 
 import io.spine.dependency.lib.JavaPoet
-import io.spine.dependency.lib.Protobuf
 import io.spine.dependency.lib.Roaster
-import io.spine.dependency.local.Base
 
 plugins {
     module
-    protobuf
-    id("io.spine.descriptor-set-file")
-    id("io.spine.generated-sources")
 }
 
+description = "JavaPoet and Roaster wrappers for generating Java code"
+
 dependencies {
-    api(Base.lib)
+    // `toMethod()` bridges a JavaPoet spec to `io.spine.tools.java.code.Method`.
+    api(project(":java-code"))
+
     api(JavaPoet.lib)
     api(Roaster.api)
     api(Roaster.jdt)
 }
-
-protobuf {
-    protoc {
-        artifact = Protobuf.compiler
-    }
-}
-
-allowDuplicationInSourcesJar()

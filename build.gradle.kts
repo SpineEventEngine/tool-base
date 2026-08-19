@@ -54,7 +54,7 @@ buildscript {
         classpath(io.spine.dependency.local.ToolBase.jvmToolPlugins)
             ?.because("We need `artifactMeta` in `protobuf-tool-plugins`.")
         classpath(io.spine.dependency.local.ToolBase.protobufSetupPlugins)
-            ?.because("We compile Protobuf code in the `tool-base` and `classic-codegen` modules.")
+            ?.because("We compile Protobuf code in the `tool-base` and `java-code` modules.")
     }
 }
 
@@ -76,8 +76,14 @@ spinePublishing {
         "jvm-tool-plugins",
         "protobuf-setup-plugins",
     )
+    // `fixtures` carries Protobuf declarations for the tests of this repository
+    // only. Publishing them would let downstream projects depend on types we
+    // rename and delete as our own tests change.
+    val notPublished = "fixtures"
+
     modules = productionModuleNames.toSet()
         .minus(customPublishing)
+        .minus(notPublished)
 
     modulesWithCustomPublishing = customPublishing.toSet()
 

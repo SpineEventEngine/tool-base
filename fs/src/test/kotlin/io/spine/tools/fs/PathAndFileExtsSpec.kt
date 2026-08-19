@@ -1,0 +1,66 @@
+/*
+ * Copyright 2026, TeamDev. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Redistribution and use in source and/or binary forms, with or without
+ * modification, must retain the above copyright notice and the following
+ * disclaimer.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+package io.spine.tools.fs
+
+import io.kotest.matchers.shouldBe
+import java.io.File
+import java.nio.file.Path
+import java.util.function.Supplier
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+
+@DisplayName("Path and file extensions should")
+internal class PathAndFileExtsSpec {
+
+    @Test
+    fun `resolve a directory name against a 'File'`() {
+        File("root").resolve(DirectoryName.java) shouldBe File("root", "java")
+    }
+
+    @Test
+    fun `resolve a directory name against a 'File' using the 'div' operator`() {
+        File("root") / DirectoryName.java shouldBe File("root", "java")
+    }
+
+    @Test
+    fun `resolve a directory name against a 'Path'`() {
+        Path.of("root").resolve(DirectoryName.java) shouldBe Path.of("root", "java")
+    }
+
+    @Test
+    fun `convert a 'String' 'Supplier' to absolute file`() {
+        val sup: Supplier<String> = Supplier { "." }
+
+        sup.toAbsoluteFile().isAbsolute shouldBe true
+    }
+
+    @Test
+    fun `tell if a file is a Protobuf source code file`() {
+        File("mycode.proto").isProtoSource() shouldBe true
+        File("util.java").isProtoSource() shouldBe false
+    }
+}

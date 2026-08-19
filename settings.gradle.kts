@@ -27,18 +27,24 @@
 rootProject.name = "tool-base"
 
 include(
+    "archive",
     "classic-codegen",
+    "code",
+    "fixtures",
+    "fs",
     "gradle-plugin-api",
     "gradle-plugin-api-test-fixtures",
     "gradle-root-plugin",
     "intellij-platform",
     "intellij-platform-java",
+    "java-code",
     "jvm-tool-plugins",
     "jvm-tools",
+    "kotlin-code",
     "plugin-base",
     "plugin-testlib",
+    "proto-code",
     "protobuf-setup-plugins",
     "psi",
     "psi-java",
-    "tool-base",
 )
