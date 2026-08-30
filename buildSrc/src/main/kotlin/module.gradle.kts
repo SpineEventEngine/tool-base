@@ -28,6 +28,8 @@ import io.spine.dependency.boms.BomsPlugin
 import io.spine.dependency.build.CheckerFramework
 import io.spine.dependency.build.ErrorProne
 import io.spine.dependency.build.FindBugs
+import io.spine.dependency.kotlinx.AtomicFu
+import io.spine.dependency.kotlinx.Coroutines
 import io.spine.dependency.lib.GrpcKotlin
 import io.spine.dependency.lib.Kotlin
 import io.spine.dependency.local.Base
@@ -104,6 +106,8 @@ fun Module.forceConfigurations() {
                 force(
                     JUnit.bom,
                     Kotlin.bom,
+                    Coroutines.bom,
+                    AtomicFu.lib,
                     Base.lib,
                     Base.annotations,
                     Reflect.lib,
