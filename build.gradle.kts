@@ -40,7 +40,6 @@ buildscript {
     configurations {
         all {
             resolutionStrategy {
-                @Suppress("DEPRECATION")
                 force(
                     io.spine.dependency.local.Base.lib,
                     io.spine.dependency.local.Reflect.lib,
