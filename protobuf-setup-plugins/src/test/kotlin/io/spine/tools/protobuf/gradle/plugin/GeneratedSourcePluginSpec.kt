@@ -150,14 +150,24 @@ class GeneratedSourcePluginSpec : ProtobufPluginTest() {
         // The configuration cache fails the build if a task action invokes `Task.project`,
         // which Gradle deprecates at execution time even with the cache disabled.
         val task = ProtobufTaskName.generateProto
-        val result = runGradleBuild(
-            projectDir,
-            listOf(task.name(), "--configuration-cache"),
-            debug = false
-        )
+        val arguments = listOf(task.name(), "--configuration-cache")
+        val sampleJava = File(generatedJava, "sample/Sample.java")
 
-        result.task(task.path())?.outcome shouldBe TaskOutcome.SUCCESS
-        File(generatedJava, "sample/Sample.java").exists() shouldBe true
+        val stored = runGradleBuild(projectDir, arguments, debug = false)
+
+        stored.output shouldContain "Configuration cache entry stored"
+        stored.task(task.path())?.outcome shouldBe TaskOutcome.SUCCESS
+        sampleJava.exists() shouldBe true
+
+        // Make the task run again, so that the copy action is replayed
+        // from the deserialized cache entry.
+        generatedJava.deleteRecursively() shouldBe true
+
+        val reused = runGradleBuild(projectDir, arguments, debug = false)
+
+        reused.output shouldContain "Configuration cache entry reused"
+        reused.task(task.path())?.outcome shouldBe TaskOutcome.SUCCESS
+        sampleJava.exists() shouldBe true
     }
 
     /**
