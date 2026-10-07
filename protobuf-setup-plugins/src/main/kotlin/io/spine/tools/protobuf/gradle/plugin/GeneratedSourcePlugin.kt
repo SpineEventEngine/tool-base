@@ -39,8 +39,10 @@ import io.spine.tools.protobuf.gradle.plugin.GeneratedSubdir.JAVA
 import io.spine.tools.protobuf.gradle.plugin.GeneratedSubdir.KOTLIN
 import java.io.File
 import java.nio.file.Path
+import javax.inject.Inject
 import org.gradle.api.Project
 import org.gradle.api.file.ConfigurableFileCollection
+import org.gradle.api.file.FileSystemOperations
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.tasks.SourceSet
 import org.gradle.plugins.ide.idea.GenerateIdeaModule
@@ -77,9 +79,7 @@ public class GeneratedSourcePlugin : ProtobufSetupPlugin(), GeneratedDirectoryCo
         builtins.maybeCreate("kotlin")
         configureSourceSetDirs()
         declareGeneratedDirOutput()
-        doLast {
-            copyGeneratedFiles()
-        }
+        copyGeneratedFilesWhenDone()
         setupKotlinCompile()
         makeDirsForIdeaModule()
     }
@@ -115,7 +115,7 @@ private const val GENERATED_DIR_PROPERTY = "spineGeneratedSourcesDir"
 /**
  * Declares `$projectDir/generated/<sourceSet>` as an output of this task.
  *
- * The files are copied into the directory by [copyGeneratedFiles] as a side effect
+ * The files are copied into the directory by [copyGeneratedFilesWhenDone] as a side effect
  * of the task. Unless the directory is declared as an output, the build cache does
  * not store it, and a task restored from the cache leaves the directory missing,
  * which fails the compilation tasks consuming the copied sources.
@@ -127,15 +127,33 @@ private fun GenerateProtoTask.declareGeneratedDirOutput() {
 }
 
 /**
- * Copies files from the Protobuf plugin's output base directory into
- * our `$projectDir/generated` directory.
+ * Makes this task copy files from the Protobuf plugin's output base directory into
+ * our `$projectDir/generated` directory once the code is generated.
+ *
+ * The target directory and the file system service are obtained at configuration time
+ * because calling [Task.getProject][org.gradle.api.Task.getProject] at execution time
+ * is deprecated and incompatible with the configuration cache.
  */
 context(_: GeneratedDirectoryContext)
-private fun GenerateProtoTask.copyGeneratedFiles() {
-    project.copy { spec ->
-        spec.from(this@copyGeneratedFiles.outputBaseDir)
-        spec.into(generatedDir())
+private fun GenerateProtoTask.copyGeneratedFilesWhenDone() {
+    val fileSystem = project.objects.newInstance(InjectedFileSystem::class.java)
+    val targetDir = generatedDir()
+    doLast {
+        fileSystem.operations.copy { spec ->
+            spec.from(this@copyGeneratedFilesWhenDone.outputBaseDir)
+            spec.into(targetDir)
+        }
     }
+}
+
+/**
+ * Provides [FileSystemOperations] injected by Gradle into the instances
+ * created via [ObjectFactory.newInstance][org.gradle.api.model.ObjectFactory.newInstance].
+ */
+private interface InjectedFileSystem {
+
+    @get:Inject
+    val operations: FileSystemOperations
 }
 
 /**

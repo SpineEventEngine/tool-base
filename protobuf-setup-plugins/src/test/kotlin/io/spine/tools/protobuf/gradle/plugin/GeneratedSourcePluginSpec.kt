@@ -47,40 +47,8 @@ class GeneratedSourcePluginSpec : ProtobufPluginTest() {
 
     @Test
     fun `copy generated Java sources under project generated directory`() {
-
-        // Settings file (empty is fine for single-project build).
-        Gradle.settingsFile.under(projectDir).writeText("")
-
-        // Create a minimal proto file.
-        File(protoDir, "sample.proto").writeText(
-            """
-            syntax = "proto3";
-            package sample;
-            message Msg {}
-            """.trimIndent()
-        )
-
-        // Build file applying Protobuf plugin and our plugin.
-        Gradle.buildFile.under(projectDir).writeText(
-            """
-            plugins {
-                id("java")
-                id("${ProtobufGradlePlugin.id}") version "${ProtobufGradlePlugin.version}"
-                id("${GeneratedSourcePlugin.id}")
-            }
-
-            group = "$group"
-            version = "$version"
-
-            repositories {
-                mavenCentral()
-            }
-
-            protobuf {
-                protoc { artifact = "${ProtobufProtoc.dependency.artifact.coordinates}" }
-            }
-            """.trimIndent()
-        )
+        writeSampleProto()
+        writeJavaBuildFile()
 
         // Run the `generateProto` task.
         val task = ProtobufTaskName.generateProto
@@ -101,19 +69,9 @@ class GeneratedSourcePluginSpec : ProtobufPluginTest() {
 
     @Test
     fun `register generated Kotlin sources under the 'generatedKotlin' source set`() {
-
-        // Settings file (empty is fine for single-project build).
-        Gradle.settingsFile.under(projectDir).writeText("")
-
-        // Create a minimal proto file. The Kotlin `protoc` builtin (enabled by our
-        // plugin) generates a Kotlin DSL file for the message.
-        File(protoDir, "sample.proto").writeText(
-            """
-            syntax = "proto3";
-            package sample;
-            message Msg {}
-            """.trimIndent()
-        )
+        // The Kotlin `protoc` builtin (enabled by our plugin) generates
+        // a Kotlin DSL file for the message.
+        writeSampleProto()
 
         // Build file applying the Kotlin JVM, Protobuf, and our plugins.
         // The `printKotlinSourceDirs` task reports which source set the generated
@@ -182,6 +140,63 @@ class GeneratedSourcePluginSpec : ProtobufPluginTest() {
         // The generated Kotlin sources are copied under `$projectDir/generated/main/kotlin`.
         val generatedKotlinDir = File(projectDir, "generated/main/kotlin")
         generatedKotlinDir.walkTopDown().any { it.extension == "kt" } shouldBe true
+    }
+
+    @Test
+    fun `copy generated sources with the configuration cache enabled`() {
+        writeSampleProto()
+        writeJavaBuildFile()
+
+        // The configuration cache fails the build if a task action invokes `Task.project`,
+        // which Gradle deprecates at execution time even with the cache disabled.
+        val task = ProtobufTaskName.generateProto
+        val result = runGradleBuild(
+            projectDir,
+            listOf(task.name(), "--configuration-cache"),
+            debug = false
+        )
+
+        result.task(task.path())?.outcome shouldBe TaskOutcome.SUCCESS
+        File(generatedJava, "sample/Sample.java").exists() shouldBe true
+    }
+
+    /**
+     * Creates a minimal proto file in the [protoDir].
+     */
+    private fun writeSampleProto() {
+        File(protoDir, "sample.proto").writeText(
+            """
+            syntax = "proto3";
+            package sample;
+            message Msg {}
+            """.trimIndent()
+        )
+    }
+
+    /**
+     * Writes the build file applying the `java`, Protobuf, and our plugins.
+     */
+    private fun writeJavaBuildFile() {
+        Gradle.buildFile.under(projectDir).writeText(
+            """
+            plugins {
+                id("java")
+                id("${ProtobufGradlePlugin.id}") version "${ProtobufGradlePlugin.version}"
+                id("${GeneratedSourcePlugin.id}")
+            }
+
+            group = "$group"
+            version = "$version"
+
+            repositories {
+                mavenCentral()
+            }
+
+            protobuf {
+                protoc { artifact = "${ProtobufProtoc.dependency.artifact.coordinates}" }
+            }
+            """.trimIndent()
+        )
     }
 }
 
