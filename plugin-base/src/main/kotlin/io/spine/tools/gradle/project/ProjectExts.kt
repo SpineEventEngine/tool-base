@@ -16,7 +16,6 @@
 
 package io.spine.tools.gradle.project
 
-import com.google.common.collect.ImmutableList
 import io.spine.tools.code.Java
 import io.spine.tools.code.Kotlin
 import io.spine.tools.code.Language
@@ -149,14 +148,14 @@ public fun Project.hasKotlin(): Boolean = hasCompileTask(Kotlin)
 
 /**
  * Tells if this project has a compile task for the given language.
+ *
+ * The check looks only at task names, including the names of tasks that are
+ * registered but not yet created. Therefore, the call does not realize any tasks.
  */
-public fun Project.hasCompileTask(language: Language): Boolean {
-    val currentTasks = ImmutableList.copyOf(tasks)
-    val compileTask = currentTasks.find {
-        it.name.startsWith(TaskName.COMPILE_PREFIX) && it.name.endsWith(language.name)
+public fun Project.hasCompileTask(language: Language): Boolean =
+    tasks.names.any {
+        it.startsWith(TaskName.COMPILE_PREFIX) && it.endsWith(language.name)
     }
-    return compileTask != null
-}
 
 /**
  * Verifies if the project can deal with Java or Kotlin code.

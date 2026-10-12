@@ -14,10 +14,13 @@
 
 package io.spine.tools.gradle.project
 
+import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.spine.tools.code.Java
+import io.spine.tools.code.Kotlin
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.code.SourceSetName.Companion.main
 import io.spine.tools.code.SourceSetName.Companion.test
@@ -34,6 +37,7 @@ import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
@@ -78,6 +82,50 @@ class ProjectExtsSpec {
             it.hasJava() shouldBe true
             it.hasKotlin() shouldBe false
             it.hasJavaOrKotlin() shouldBe true
+        }
+    }
+
+    @Nested inner class
+    `tell if there is a compile task for a language` {
+
+        @Test
+        fun `detecting a lazily registered task`() {
+            project.tasks.register("compileKotlin")
+
+            project.hasKotlin() shouldBe true
+            project.hasCompileTask(Kotlin) shouldBe true
+            // The `java` plugin registers `compileJava` lazily too.
+            project.hasCompileTask(Java) shouldBe true
+        }
+
+        @Test
+        fun `detecting a task of a custom source set`() {
+            project.tasks.register("compileIntegrationTestKotlin")
+
+            project.hasKotlin() shouldBe true
+        }
+
+        @Test
+        fun `ignoring a task which does not follow the naming pattern`() {
+            project.tasks.register("kotlinCompile")
+
+            project.hasKotlin() shouldBe false
+        }
+
+        @Test
+        fun `without realizing tasks`() {
+            var compileKotlinConfigured = false
+            project.tasks.register("compileKotlin") { compileKotlinConfigured = true }
+            val realized = mutableListOf<String>()
+            project.tasks.configureEach { realized += it.name }
+            // `configureEach` runs at once for the tasks created earlier, so start afresh.
+            realized.clear()
+
+            project.hasKotlin() shouldBe true
+            project.hasCompileTask(Java) shouldBe true
+
+            compileKotlinConfigured shouldBe false
+            realized.shouldBeEmpty()
         }
     }
 
