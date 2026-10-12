@@ -33,7 +33,6 @@ import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.FileSystemOperations
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.tasks.SourceSet
-import org.gradle.plugins.ide.idea.GenerateIdeaModule
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.KotlinBaseExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
@@ -50,8 +49,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
  *  - excludes Protobuf plugin output directories from Kotlin/Java source sets and
  *    includes the copied ones;
  *  - makes Kotlin compilation and `processResources` depend on the corresponding
- *    `GenerateProtoTask` to avoid race conditions;
- *  - ensures generated source directories exist for IDEA module configuration.
+ *    `GenerateProtoTask` to avoid race conditions.
  */
 public class GeneratedSourcePlugin : ProtobufSetupPlugin(), GeneratedDirectoryContext {
 
@@ -69,7 +67,6 @@ public class GeneratedSourcePlugin : ProtobufSetupPlugin(), GeneratedDirectoryCo
         declareGeneratedDirOutput()
         copyGeneratedFilesWhenDone()
         setupKotlinCompile()
-        makeDirsForIdeaModule()
     }
 
     /**
@@ -253,24 +250,5 @@ public fun GenerateProtoTask.setupKotlinCompile() {
         kotlinCompile?.dependsOn(this)
     } catch (_: Throwable) {
         // Kotlin plugin is likely not applied; nothing to do.
-    }
-}
-
-/**
- * Ensures the generated dirs exist before an IDEA module is created,
- * so they can be added as sources.
- */
-@Internal
-context(_: GeneratedDirectoryContext)
-public fun GenerateProtoTask.makeDirsForIdeaModule() {
-    project.plugins.withId("idea") {
-        val javaDir = generatedDir(JAVA)
-        val kotlinDir = generatedDir(KOTLIN)
-        project.tasks.withType(GenerateIdeaModule::class.java).forEach {
-            it.doFirst {
-                javaDir.mkdirs()
-                kotlinDir.mkdirs()
-            }
-        }
     }
 }
