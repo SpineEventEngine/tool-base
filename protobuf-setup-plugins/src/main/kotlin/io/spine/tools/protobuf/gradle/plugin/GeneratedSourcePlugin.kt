@@ -1,27 +1,15 @@
 /*
- * Copyright 2026, TeamDev. All rights reserved.
+ * Copyright 2026 CodeMatters, Lda.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
  * https://www.apache.org/licenses/LICENSE-2.0
  *
- * Redistribution and use in source and/or binary forms, with or without
- * modification, must retain the above copyright notice and the following
- * disclaimer.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 
 package io.spine.tools.protobuf.gradle.plugin
@@ -45,7 +33,6 @@ import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.FileSystemOperations
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.tasks.SourceSet
-import org.gradle.plugins.ide.idea.GenerateIdeaModule
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.KotlinBaseExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
@@ -62,8 +49,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
  *  - excludes Protobuf plugin output directories from Kotlin/Java source sets and
  *    includes the copied ones;
  *  - makes Kotlin compilation and `processResources` depend on the corresponding
- *    `GenerateProtoTask` to avoid race conditions;
- *  - ensures generated source directories exist for IDEA module configuration.
+ *    `GenerateProtoTask` to avoid race conditions.
  */
 public class GeneratedSourcePlugin : ProtobufSetupPlugin(), GeneratedDirectoryContext {
 
@@ -81,7 +67,6 @@ public class GeneratedSourcePlugin : ProtobufSetupPlugin(), GeneratedDirectoryCo
         declareGeneratedDirOutput()
         copyGeneratedFilesWhenDone()
         setupKotlinCompile()
-        makeDirsForIdeaModule()
     }
 
     /**
@@ -265,24 +250,5 @@ public fun GenerateProtoTask.setupKotlinCompile() {
         kotlinCompile?.dependsOn(this)
     } catch (_: Throwable) {
         // Kotlin plugin is likely not applied; nothing to do.
-    }
-}
-
-/**
- * Ensures the generated dirs exist before an IDEA module is created,
- * so they can be added as sources.
- */
-@Internal
-context(_: GeneratedDirectoryContext)
-public fun GenerateProtoTask.makeDirsForIdeaModule() {
-    project.plugins.withId("idea") {
-        val javaDir = generatedDir(JAVA)
-        val kotlinDir = generatedDir(KOTLIN)
-        project.tasks.withType(GenerateIdeaModule::class.java).forEach {
-            it.doFirst {
-                javaDir.mkdirs()
-                kotlinDir.mkdirs()
-            }
-        }
     }
 }

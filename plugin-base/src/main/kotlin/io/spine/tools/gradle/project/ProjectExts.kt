@@ -1,34 +1,21 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026 CodeMatters, Lda.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
  * https://www.apache.org/licenses/LICENSE-2.0
  *
- * Redistribution and use in source and/or binary forms, with or without
- * modification, must retain the above copyright notice and the following
- * disclaimer.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 
 @file:JvmName("Projects")
 
 package io.spine.tools.gradle.project
 
-import com.google.common.collect.ImmutableList
 import io.spine.tools.code.Java
 import io.spine.tools.code.Kotlin
 import io.spine.tools.code.Language
@@ -161,14 +148,14 @@ public fun Project.hasKotlin(): Boolean = hasCompileTask(Kotlin)
 
 /**
  * Tells if this project has a compile task for the given language.
+ *
+ * The check looks only at task names, including the names of tasks that are
+ * registered but not yet created. Therefore, the call does not realize any tasks.
  */
-public fun Project.hasCompileTask(language: Language): Boolean {
-    val currentTasks = ImmutableList.copyOf(tasks)
-    val compileTask = currentTasks.find {
-        it.name.startsWith(TaskName.COMPILE_PREFIX) && it.name.endsWith(language.name)
+public fun Project.hasCompileTask(language: Language): Boolean =
+    tasks.names.any {
+        it.startsWith(TaskName.COMPILE_PREFIX) && it.endsWith(language.name)
     }
-    return compileTask != null
-}
 
 /**
  * Verifies if the project can deal with Java or Kotlin code.

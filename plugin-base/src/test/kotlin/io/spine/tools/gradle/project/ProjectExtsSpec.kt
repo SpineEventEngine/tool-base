@@ -1,35 +1,26 @@
 /*
- * Copyright 2026, TeamDev. All rights reserved.
+ * Copyright 2026 CodeMatters, Lda.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
  * https://www.apache.org/licenses/LICENSE-2.0
  *
- * Redistribution and use in source and/or binary forms, with or without
- * modification, must retain the above copyright notice and the following
- * disclaimer.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 
 package io.spine.tools.gradle.project
 
+import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.spine.tools.code.Java
+import io.spine.tools.code.Kotlin
 import io.spine.tools.code.SourceSetName
 import io.spine.tools.code.SourceSetName.Companion.main
 import io.spine.tools.code.SourceSetName.Companion.test
@@ -46,6 +37,7 @@ import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
@@ -90,6 +82,50 @@ class ProjectExtsSpec {
             it.hasJava() shouldBe true
             it.hasKotlin() shouldBe false
             it.hasJavaOrKotlin() shouldBe true
+        }
+    }
+
+    @Nested inner class
+    `tell if there is a compile task for a language` {
+
+        @Test
+        fun `detecting a lazily registered task`() {
+            project.tasks.register("compileKotlin")
+
+            project.hasKotlin() shouldBe true
+            project.hasCompileTask(Kotlin) shouldBe true
+            // The `java` plugin registers `compileJava` lazily too.
+            project.hasCompileTask(Java) shouldBe true
+        }
+
+        @Test
+        fun `detecting a task of a custom source set`() {
+            project.tasks.register("compileIntegrationTestKotlin")
+
+            project.hasKotlin() shouldBe true
+        }
+
+        @Test
+        fun `ignoring a task which does not follow the naming pattern`() {
+            project.tasks.register("kotlinCompile")
+
+            project.hasKotlin() shouldBe false
+        }
+
+        @Test
+        fun `without realizing tasks`() {
+            var compileKotlinConfigured = false
+            project.tasks.register("compileKotlin") { compileKotlinConfigured = true }
+            val realized = mutableListOf<String>()
+            project.tasks.configureEach { realized += it.name }
+            // `configureEach` runs at once for the tasks created earlier, so start afresh.
+            realized.clear()
+
+            project.hasKotlin() shouldBe true
+            project.hasCompileTask(Java) shouldBe true
+
+            compileKotlinConfigured shouldBe false
+            realized.shouldBeEmpty()
         }
     }
 
