@@ -32,9 +32,8 @@ import org.gradle.kotlin.dsl.named
  * a consumer resolves for its own build classpath, and no `force(...)` can replace it:
  * the copy is bytecode inside another artifact, not a dependency. Should the copy be
  * older than the code generated for the consumer, loading that code fails with
- * `ProtobufRuntimeVersionException`. Declared as a dependency, the runtime takes
- * part in the dependency resolution of the consumer, so the version the consumer
- * resolves wins.
+ * `ProtobufRuntimeVersionException`. Declared as a dependency, the runtime takes part in
+ * the dependency resolution of the consumer, so the version the consumer resolves wins.
  *
  * The libraries are declared:
  *  1. in the `shadow` configuration, from which the Shadow plugin writes the dependencies
@@ -42,15 +41,17 @@ import org.gradle.kotlin.dsl.named
  *  2. in the POM of the `fatJar` publication of `uber-jar-module`, which publishes
  *     the uber JAR with `artifact(...)` and so receives no dependencies from Gradle.
  *
- * Each library is declared non-transitively. Its own dependencies are either declared
- * here too (`protobuf-java`), or bundled into the uber JAR (Guava, Gson), or provided
- * by the Gradle runtime (the Kotlin runtime). So the uber JAR reaches consumers
- * along with the same classes as before, except that those of the Protobuf runtime
- * come from genuine artifacts.
+ * Each library is declared non-transitively. Its own dependencies are declared here too
+ * (`protobuf-java`), bundled into the uber JAR (Guava, Gson), or provided by the Gradle
+ * runtime (the Kotlin runtime). So consumers get the same classes as before, except that
+ * those of the Protobuf runtime come from genuine artifacts.
  *
  * The libraries are excluded by the dependency filter of the `shadowJar` task rather
  * than by the paths of their entries, so that the SBOM published with the uber JAR
  * does not describe them as bundled.
+ *
+ * Requires the `uber-jar-module` plugin, which brings the `shadowJar` task and
+ * the `fatJar` publication.
  */
 fun Project.unbundleProtobufRuntime() {
     Protobuf.libs.forEach {
@@ -81,19 +82,20 @@ private val protobufRuntimeModules: Set<String> =
  * in the POM of this publication, in the `runtime` scope and without
  * transitive dependencies.
  *
- * The publication must not declare dependencies of its own, as those created
- * by `uber-jar-module` do not: this function appends a new `dependencies` block
+ * The publication must not declare dependencies of its own, which holds for the `fatJar`
+ * publication of `uber-jar-module`: this function appends a new `dependencies` block
  * to the POM without merging into an existing one.
  */
 private fun MavenPublication.declareRuntimeDependencies(coordinates: List<String>) {
     pom.withXml {
         val dependencies = asNode().appendNode("dependencies")
         coordinates.forEach {
-            val (group, name, version) = it.split(':')
+            // Not `name` and `version`, which would hide those of the publication.
+            val (libGroup, libName, libVersion) = it.split(':')
             with(dependencies.appendNode("dependency")) {
-                appendNode("groupId", group)
-                appendNode("artifactId", name)
-                appendNode("version", version)
+                appendNode("groupId", libGroup)
+                appendNode("artifactId", libName)
+                appendNode("version", libVersion)
                 appendNode("scope", "runtime")
                 with(appendNode("exclusions").appendNode("exclusion")) {
                     appendNode("groupId", "*")
