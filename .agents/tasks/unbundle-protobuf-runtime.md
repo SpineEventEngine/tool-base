@@ -35,8 +35,10 @@ This repeats `unshade-intellij-platform-third-party` for a different library.
 ## Plan
 
 - [x] `buildSrc/…/shade/ProtobufRuntime.kt`: `Project.unbundleProtobufRuntime()`
-  — `shadow` dependencies (plugin publication metadata), dependency-filter
-  exclusion from `shadowJar`, `runtime` entries in the `fatJar` POM.
+  — a `protobufRuntime` configuration extended by `shadowRuntimeElements`
+  (plugin publication metadata), dependency-filter exclusion from `shadowJar`,
+  `runtime` entries in the `fatJar` POM. Not the `shadow` configuration: Shadow
+  writes it into the manifest `Class-Path`.
 - [x] Apply it in both modules.
 - [x] Verify: no `com/google/protobuf/` runtime classes in the JARs; the POMs and
   the `.module` files declare `Protobuf.libs`.

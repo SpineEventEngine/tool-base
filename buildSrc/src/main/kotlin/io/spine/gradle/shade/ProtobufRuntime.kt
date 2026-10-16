@@ -36,10 +36,16 @@ import org.gradle.kotlin.dsl.named
  * the dependency resolution of the consumer, so the version the consumer resolves wins.
  *
  * The libraries are declared:
- *  1. in the `shadow` configuration, from which the Shadow plugin writes the dependencies
- *     of the shadowed variant into the metadata of the Gradle plugin publication;
+ *  1. in the `protobufRuntime` configuration, which the `shadowRuntimeElements` variant
+ *     extends, so that the metadata of the Gradle plugin publication lists them;
  *  2. in the POM of the `fatJar` publication of `uber-jar-module`, which publishes
  *     the uber JAR with `artifact(...)` and so receives no dependencies from Gradle.
+ *
+ * The `shadow` configuration is not used for the purpose: Shadow writes its files into
+ * the `Class-Path` attribute of the JAR manifest. Such entries are relative to the JAR
+ * and carry the version of this build in the file names, so in a directory holding
+ * the JAR along with other Protobuf JARs, they would put the runtime of this build
+ * first again.
  *
  * Each library is declared non-transitively. Its own dependencies are declared here too
  * (`protobuf-java`), bundled into the uber JAR (Guava, Gson), or provided by the Gradle
@@ -54,10 +60,19 @@ import org.gradle.kotlin.dsl.named
  * the `fatJar` publication.
  */
 fun Project.unbundleProtobufRuntime() {
+    val protobufRuntime = configurations.create("protobufRuntime") {
+        description = "The Protobuf runtime, which the published artifacts declare" +
+                " rather than bundle."
+        isCanBeConsumed = false
+        isCanBeResolved = false
+    }
     Protobuf.libs.forEach {
-        dependencies.add("shadow", it) {
+        dependencies.add(protobufRuntime.name, it) {
             isTransitive = false
         }
+    }
+    configurations.named("shadowRuntimeElements") {
+        extendsFrom(protobufRuntime)
     }
     tasks.named<ShadowJar>("shadowJar") {
         dependencies {
