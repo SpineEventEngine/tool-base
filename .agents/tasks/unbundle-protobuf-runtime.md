@@ -34,11 +34,12 @@ This repeats `unshade-intellij-platform-third-party` for a different library.
 
 ## Plan
 
-- [x] `buildSrc/…/shade/ProtobufRuntime.kt`: `Project.unbundleProtobufRuntime()`
-  — a `protobufRuntime` configuration extended by `shadowRuntimeElements`
-  (plugin publication metadata), dependency-filter exclusion from `shadowJar`,
-  `runtime` entries in the `fatJar` POM. Not the `shadow` configuration: Shadow
-  writes it into the manifest `Class-Path`.
+- [x] `Project.unbundleProtobufRuntime()` — a `protobufRuntime` configuration
+  extended by `shadowRuntimeElements` (plugin publication metadata),
+  dependency-filter exclusion from `shadowJar`, `runtime` entries in the `fatJar`
+  POM. Not the `shadow` configuration: Shadow writes it into the manifest
+  `Class-Path`. First a repo-owned `buildSrc/…/shade/ProtobufRuntime.kt`; moved
+  into config (config#796) and taken from there with `./config/pull`.
 - [x] Apply it in both modules.
 - [x] Verify: no `com/google/protobuf/` runtime classes in the JARs; the POMs and
   the `.module` files declare `Protobuf.libs`.
@@ -49,3 +50,4 @@ This repeats `unshade-intellij-platform-third-party` for a different library.
 
 - 2026-10-16 — implemented; version `2.0.0-SNAPSHOT.427` (skips the wave's `.426`).
 - 2026-10-16 — `build dokkaGenerate` green; JARs and metadata verified.
+- 2026-10-16 — switched to `io.spine.gradle.publish.unbundleProtobufRuntime` of config#796.

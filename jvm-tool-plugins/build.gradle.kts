@@ -15,7 +15,7 @@
 import io.spine.dependency.lib.Kotlin
 import io.spine.gradle.report.license.LicenseReporter
 import io.spine.gradle.isSnapshot
-import io.spine.gradle.shade.unbundleProtobufRuntime
+import io.spine.gradle.publish.unbundleProtobufRuntime
 import io.spine.gradle.testing.enableTestKitCoverage
 
 plugins {

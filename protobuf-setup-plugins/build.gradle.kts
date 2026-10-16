@@ -18,8 +18,8 @@ import io.spine.dependency.local.Base
 import io.spine.dependency.local.Logging
 import io.spine.gradle.isSnapshot
 import io.spine.gradle.publish.SpinePublishing
+import io.spine.gradle.publish.unbundleProtobufRuntime
 import io.spine.gradle.report.license.LicenseReporter
-import io.spine.gradle.shade.unbundleProtobufRuntime
 import io.spine.gradle.testing.enableTestKitCoverage
 import org.gradle.plugin.devel.tasks.PluginUnderTestMetadata
 
