@@ -1,6 +1,6 @@
 
 
-# Dependencies of `io.spine.tools:archive:2.0.0-SNAPSHOT.426`
+# Dependencies of `io.spine.tools:archive:2.0.0-SNAPSHOT.427`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -839,7 +839,7 @@ This report was generated on **Thu Oct 15 20:14:11 WEST 2026** using
 
 
 
-# Dependencies of `io.spine.tools:classic-codegen:2.0.0-SNAPSHOT.426`
+# Dependencies of `io.spine.tools:classic-codegen:2.0.0-SNAPSHOT.427`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -1682,7 +1682,7 @@ This report was generated on **Thu Oct 15 20:14:11 WEST 2026** using
 
 
 
-# Dependencies of `io.spine.tools:code:2.0.0-SNAPSHOT.426`
+# Dependencies of `io.spine.tools:code:2.0.0-SNAPSHOT.427`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -2505,7 +2505,7 @@ This report was generated on **Thu Oct 15 20:14:11 WEST 2026** using
 
 
 
-# Dependencies of `io.spine.tools:fixtures:2.0.0-SNAPSHOT.426`
+# Dependencies of `io.spine.tools:fixtures:2.0.0-SNAPSHOT.427`
 
 ## Runtime
 1.  **Group** : com.google.android. **Name** : annotations. **Version** : 4.1.1.4.
@@ -3443,7 +3443,7 @@ This report was generated on **Thu Oct 15 20:14:11 WEST 2026** using
 
 
 
-# Dependencies of `io.spine.tools:fs:2.0.0-SNAPSHOT.426`
+# Dependencies of `io.spine.tools:fs:2.0.0-SNAPSHOT.427`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -4266,7 +4266,7 @@ This report was generated on **Thu Oct 15 20:14:11 WEST 2026** using
 
 
 
-# Dependencies of `io.spine.tools:gradle-plugin-api:2.0.0-SNAPSHOT.426`
+# Dependencies of `io.spine.tools:gradle-plugin-api:2.0.0-SNAPSHOT.427`
 
 ## Runtime
 1.  **Group** : com.fasterxml.jackson.core. **Name** : jackson-annotations. **Version** : 2.22.
@@ -5195,7 +5195,7 @@ This report was generated on **Thu Oct 15 20:14:11 WEST 2026** using
 
 
 
-# Dependencies of `io.spine.tools:gradle-plugin-api-test-fixtures:2.0.0-SNAPSHOT.426`
+# Dependencies of `io.spine.tools:gradle-plugin-api-test-fixtures:2.0.0-SNAPSHOT.427`
 
 ## Runtime
 1.  **Group** : com.fasterxml.jackson.core. **Name** : jackson-annotations. **Version** : 2.22.
@@ -5723,7 +5723,7 @@ This report was generated on **Thu Oct 15 20:14:11 WEST 2026** using
 
 
 
-# Dependencies of `io.spine.tools:gradle-root-plugin:2.0.0-SNAPSHOT.426`
+# Dependencies of `io.spine.tools:gradle-root-plugin:2.0.0-SNAPSHOT.427`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -6594,7 +6594,7 @@ This report was generated on **Thu Oct 15 20:14:11 WEST 2026** using
 
 
 
-# Dependencies of `io.spine.tools:intellij-platform:2.0.0-SNAPSHOT.426`
+# Dependencies of `io.spine.tools:intellij-platform:2.0.0-SNAPSHOT.427`
 
 ## Runtime
 1.  **Group** : be.cyberelf.nanoxml. **Name** : nanoxml. **Version** : 2.2.3.
@@ -7698,7 +7698,7 @@ This report was generated on **Thu Oct 15 20:14:11 WEST 2026** using
 
 
 
-# Dependencies of `io.spine.tools:intellij-platform-java:2.0.0-SNAPSHOT.426`
+# Dependencies of `io.spine.tools:intellij-platform-java:2.0.0-SNAPSHOT.427`
 
 ## Runtime
 1.  **Group** : be.cyberelf.nanoxml. **Name** : nanoxml. **Version** : 2.2.3.
@@ -9577,7 +9577,7 @@ This report was generated on **Thu Oct 15 20:14:11 WEST 2026** using
 
 
 
-# Dependencies of `io.spine.tools:java-code:2.0.0-SNAPSHOT.426`
+# Dependencies of `io.spine.tools:java-code:2.0.0-SNAPSHOT.427`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -10454,7 +10454,7 @@ This report was generated on **Thu Oct 15 20:14:11 WEST 2026** using
 
 
 
-# Dependencies of `io.spine.tools:jvm-tool-plugins:2.0.0-SNAPSHOT.426`
+# Dependencies of `io.spine.tools:jvm-tool-plugins:2.0.0-SNAPSHOT.427`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -11317,7 +11317,7 @@ This report was generated on **Thu Oct 15 20:14:11 WEST 2026** using
 
 
 
-# Dependencies of `io.spine.tools:jvm-tools:2.0.0-SNAPSHOT.426`
+# Dependencies of `io.spine.tools:jvm-tools:2.0.0-SNAPSHOT.427`
 
 ## Runtime
 1.  **Group** : org.jetbrains. **Name** : annotations. **Version** : 26.1.0.
@@ -12091,7 +12091,7 @@ This report was generated on **Thu Oct 15 20:14:11 WEST 2026** using
 
 
 
-# Dependencies of `io.spine.tools:kotlin-code:2.0.0-SNAPSHOT.426`
+# Dependencies of `io.spine.tools:kotlin-code:2.0.0-SNAPSHOT.427`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -12914,7 +12914,7 @@ This report was generated on **Thu Oct 15 20:14:11 WEST 2026** using
 
 
 
-# Dependencies of `io.spine.tools:plugin-base:2.0.0-SNAPSHOT.426`
+# Dependencies of `io.spine.tools:plugin-base:2.0.0-SNAPSHOT.427`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -13785,7 +13785,7 @@ This report was generated on **Thu Oct 15 20:14:11 WEST 2026** using
 
 
 
-# Dependencies of `io.spine.tools:plugin-testlib:2.0.0-SNAPSHOT.426`
+# Dependencies of `io.spine.tools:plugin-testlib:2.0.0-SNAPSHOT.427`
 
 ## Runtime
 1.  **Group** : com.google.auto.value. **Name** : auto-value-annotations. **Version** : 1.11.1.
@@ -14759,7 +14759,7 @@ This report was generated on **Thu Oct 15 20:14:11 WEST 2026** using
 
 
 
-# Dependencies of `io.spine.tools:proto-code:2.0.0-SNAPSHOT.426`
+# Dependencies of `io.spine.tools:proto-code:2.0.0-SNAPSHOT.427`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -15652,7 +15652,7 @@ This report was generated on **Thu Oct 15 20:14:11 WEST 2026** using
 
 
 
-# Dependencies of `io.spine.tools:protobuf-setup-plugins:2.0.0-SNAPSHOT.426`
+# Dependencies of `io.spine.tools:protobuf-setup-plugins:2.0.0-SNAPSHOT.427`
 
 ## Runtime
 1.  **Group** : com.google.code.findbugs. **Name** : jsr305. **Version** : 3.0.2.
@@ -16535,7 +16535,7 @@ This report was generated on **Thu Oct 15 20:14:11 WEST 2026** using
 
 
 
-# Dependencies of `io.spine.tools:psi:2.0.0-SNAPSHOT.426`
+# Dependencies of `io.spine.tools:psi:2.0.0-SNAPSHOT.427`
 
 ## Runtime
 1.  **Group** : be.cyberelf.nanoxml. **Name** : nanoxml. **Version** : 2.2.3.
@@ -17670,7 +17670,7 @@ This report was generated on **Thu Oct 15 20:14:11 WEST 2026** using
 
 
 
-# Dependencies of `io.spine.tools:psi-java:2.0.0-SNAPSHOT.426`
+# Dependencies of `io.spine.tools:psi-java:2.0.0-SNAPSHOT.427`
 
 ## Runtime
 1.  **Group** : be.cyberelf.nanoxml. **Name** : nanoxml. **Version** : 2.2.3.
