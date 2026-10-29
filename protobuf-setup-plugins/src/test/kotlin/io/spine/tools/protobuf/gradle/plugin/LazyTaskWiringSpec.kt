@@ -120,11 +120,15 @@ internal class LazyTaskWiringSpec : ProtobufPluginTest() {
     /**
      * Writes the build file applying the Kotlin JVM, Protobuf, and both plugins
      * of this module, followed by the given [extra] code.
+     *
+     * The build also applies the `idea` plugin, which makes the Protobuf plugin read
+     * the source directories once the project is evaluated.
      */
     private fun writeKotlinBuildFile(extra: String = "") {
         Gradle.buildFile.under(projectDir).writeText(
             """
             plugins {
+                idea
                 // No version: resolved from the plugin-under-test classpath.
                 id("org.jetbrains.kotlin.jvm")
                 id("${ProtobufGradlePlugin.id}") version "${ProtobufGradlePlugin.version}"
