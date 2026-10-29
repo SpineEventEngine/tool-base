@@ -44,7 +44,8 @@ import static com.google.common.base.Preconditions.checkState;
  * the Gradle build lifecycle.
  *
  * <p>The wrapper refers to the task via its {@link TaskProvider}. Therefore, Gradle creates
- * the task only if the build needs it, or if {@link #getTask()} is called.
+ * the task only if the build needs it, or if the task is accessed via {@link #getTask()},
+ * {@link #getGroup()}, or {@link #getDescription()}.
  */
 @SuppressWarnings("PMD.MissingStaticMethodInNonInstantiatableClass") /* Instantiated via Builder. */
 public final class GradleTask {
@@ -411,13 +412,15 @@ public final class GradleTask {
         }
 
         /**
-         * Obtains the providers of the tasks named as
-         * the {@linkplain #insertAfterAllTasks(TaskName) previous task of all projects}
-         * in the hierarchy of the given project.
+         * Obtains the providers of the tasks which have the name set via
+         * {@linkplain #insertAfterAllTasks(TaskName) insertAfterAllTasks()} in
+         * the root project of the given project and all its subprojects.
          *
          * <p>The method looks only at the names of the tasks registered by the time of
          * this call, so it does not create the tasks.
          *
+         * @param project
+         *         the project whose root project and its subprojects to look at
          * @return the providers, or an empty list if the previous task of all projects
          *         is not set
          */
@@ -442,7 +445,7 @@ public final class GradleTask {
      *
      * <p>Gradle runs this action when it creates the task, which may happen long after
      * the builder is applied, if at all. Therefore, the action holds a copy of
-     * the builder state rather than refers to the builder.
+     * the builder state rather than a reference to the builder.
      */
     private static final class TaskSetup implements Action<Task> {
 

@@ -111,9 +111,7 @@ internal class GradleTaskBuilderSpec {
 
         val generateProtoTask = tasks.findByName(generateProto.name())
         generateProtoTask shouldBe null
-        val generateTestProtoTask = tasks.findByName(generateTestProto.name())
-        generateTestProtoTask shouldNotBe null
-        generateTestProtoTask!!.dependencies().shouldBeEmpty()
+        tasks.getByName(generateTestProto.name()).dependencies().shouldBeEmpty()
     }
 
     @Test

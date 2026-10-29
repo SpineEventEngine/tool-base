@@ -174,19 +174,6 @@ class GeneratedSourcePluginSpec : ProtobufPluginTest() {
     }
 
     /**
-     * Creates a minimal proto file in the [protoDir].
-     */
-    private fun writeSampleProto() {
-        File(protoDir, "sample.proto").writeText(
-            """
-            syntax = "proto3";
-            package sample;
-            message Msg {}
-            """.trimIndent()
-        )
-    }
-
-    /**
      * Writes the build file applying the `java`, Protobuf, and our plugins.
      *
      * @param idea If `true`, the build also applies the `idea` plugin.

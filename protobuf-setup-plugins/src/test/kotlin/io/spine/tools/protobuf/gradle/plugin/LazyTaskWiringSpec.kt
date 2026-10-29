@@ -23,7 +23,6 @@ import io.spine.tools.gradle.testing.Gradle
 import io.spine.tools.gradle.testing.runGradleBuild
 import io.spine.tools.gradle.testing.under
 import io.spine.tools.protobuf.gradle.ProtobufDependencies
-import java.io.File
 import org.gradle.api.Task
 import org.gradle.api.internal.project.ProjectInternal
 import org.gradle.api.plugins.JavaPlugin
@@ -105,16 +104,6 @@ internal class LazyTaskWiringSpec : ProtobufPluginTest() {
         val result = runGradleBuild(projectDir, listOf("compileKotlin", "--dry-run"))
 
         result.output shouldContain ":generateProto SKIPPED"
-    }
-
-    private fun writeSampleProto() {
-        File(protoDir, "sample.proto").writeText(
-            """
-            syntax = "proto3";
-            package sample;
-            message Msg {}
-            """.trimIndent()
-        )
     }
 
     /**

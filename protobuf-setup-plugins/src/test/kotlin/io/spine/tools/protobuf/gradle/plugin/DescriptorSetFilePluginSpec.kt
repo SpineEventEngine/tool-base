@@ -35,14 +35,7 @@ class DescriptorSetFilePluginSpec : ProtobufPluginTest() {
 
     @Test
     fun `create desc ref and descriptor file for main source set`() {
-        // Create a minimal proto file.
-        File(protoDir, "sample.proto").writeText(
-            """
-            syntax = "proto3";
-            package sample;
-            message Msg {}
-            """.trimIndent()
-        )
+        writeSampleProto()
 
         // Build file applying Protobuf plugin and our plugin.
         Gradle.buildFile.under(projectDir).writeText(
@@ -92,13 +85,7 @@ class DescriptorSetFilePluginSpec : ProtobufPluginTest() {
 
     @Test
     fun `create desc ref with the 'idea' plugin applied`() {
-        File(protoDir, "sample.proto").writeText(
-            """
-            syntax = "proto3";
-            package sample;
-            message Msg {}
-            """.trimIndent()
-        )
+        writeSampleProto()
 
         // Once the project is evaluated, the Protobuf plugin adds the generated
         // directories to the IDE sources, reading the source directories of

@@ -16,6 +16,7 @@ package io.spine.tools.protobuf.gradle.plugin
 
 import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper
 import com.google.protobuf.gradle.GenerateProtoTask
+import com.google.protobuf.gradle.ProtobufExtension.GenerateProtoTaskCollection
 import io.spine.tools.protobuf.gradle.protobufExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -26,7 +27,7 @@ import org.gradle.api.Project
 public abstract class ProtobufSetupPlugin : Plugin<Project> {
 
     /**
-     * Configures all `GenerateProtoTask`s to with the [setup] function.
+     * Configures all `GenerateProtoTask`s with the [setup] function.
      */
     @OverridingMethodsMustInvokeSuper
     override fun apply(project: Project): Unit = with(project) {
@@ -35,20 +36,19 @@ public abstract class ProtobufSetupPlugin : Plugin<Project> {
                 generateProtoTasks.all().configureEach { task ->
                     setup(task)
                 }
-                // Create the tasks in the first actions the Protobuf plugin runs once
-                // the project is evaluated. Otherwise, a later action of the Protobuf plugin
-                // may create them while iterating over the source directories of
-                // the source sets, e.g., to add them to the IDE sources when the `idea`
-                // plugin is applied. `setup()` modifying these directories would then
-                // fail the iteration with `ConcurrentModificationException`.
+                // Force the creation of `GenerateProtoTask`s in the first action the Protobuf
+                // plugin runs once the project is evaluated. Otherwise, a later action may
+                // create the tasks while iterating over the source directories of
+                // the source sets, e.g., to add the generated directories to the IDE sources
+                // when the `idea` plugin is applied. As `setup()` modifies these source
+                // directories, the iteration would fail with `ConcurrentModificationException`.
                 generateProtoTasks {
-                    it.all().size
+                    it.createAll()
                 }
                 afterEvaluate {
-                    // "Actualize" the collection of `GenerateProtoTask`s that
-                    // may not be brought to life yet because of lazy `configureEach()`
-                    // behaviour of new (9.1.0) Gradle.
-                    generateProtoTasks.all().size
+                    // Create the `GenerateProtoTask`s registered after the actions of
+                    // the Protobuf plugin ran, so that `setup()` runs for them too.
+                    generateProtoTasks.createAll()
                 }
             }
         }
@@ -58,4 +58,13 @@ public abstract class ProtobufSetupPlugin : Plugin<Project> {
      * Overriding classes must configure the given [task].
      */
     protected abstract fun setup(task: GenerateProtoTask)
+}
+
+/**
+ * Creates the registered tasks of this collection, which runs their configuration actions.
+ *
+ * Querying the size of a task collection creates the tasks registered in it.
+ */
+private fun GenerateProtoTaskCollection.createAll() {
+    all().size
 }
