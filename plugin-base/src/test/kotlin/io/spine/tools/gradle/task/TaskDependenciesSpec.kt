@@ -85,4 +85,17 @@ internal class TaskDependenciesSpec {
         dependsOn(task, TaskName.of("otherTask")) shouldBe false
         created.shouldBeEmpty()
     }
+
+    @Test
+    fun `detect a dependency declared in several ways at once`() {
+        val project = task.project
+        val lazyTask = project.tasks.register("lazyTask")
+
+        // The name comes first, so the provider and the collection are checked
+        // after the dependency is already found.
+        task.dependsOn("lazyTask", lazyTask, project.tasks.named { it == "lazyTask" })
+
+        dependsOn(task, TaskName.of("lazyTask")) shouldBe true
+        dependsOn(task, TaskName.of("otherTask")) shouldBe false
+    }
 }
