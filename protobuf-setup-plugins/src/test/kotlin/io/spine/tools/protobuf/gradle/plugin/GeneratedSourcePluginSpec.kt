@@ -1,27 +1,15 @@
 /*
- * Copyright 2026, TeamDev. All rights reserved.
+ * Copyright 2026 CodeMatters, Lda.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
  * https://www.apache.org/licenses/LICENSE-2.0
  *
- * Redistribution and use in source and/or binary forms, with or without
- * modification, must retain the above copyright notice and the following
- * disclaimer.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 
 package io.spine.tools.protobuf.gradle.plugin
@@ -170,29 +158,35 @@ class GeneratedSourcePluginSpec : ProtobufPluginTest() {
         sampleJava.exists() shouldBe true
     }
 
-    /**
-     * Creates a minimal proto file in the [protoDir].
-     */
-    private fun writeSampleProto() {
-        File(protoDir, "sample.proto").writeText(
-            """
-            syntax = "proto3";
-            package sample;
-            message Msg {}
-            """.trimIndent()
-        )
+    @Test
+    fun `copy generated sources with the 'idea' plugin applied`() {
+        writeSampleProto()
+        // Once the project is evaluated, the Protobuf plugin adds the generated
+        // directories to the IDE sources, reading the source directories of
+        // the source sets, which this plugin modifies.
+        writeJavaBuildFile(idea = true)
+
+        val task = ProtobufTaskName.generateProto
+        val result = runGradleBuild(projectDir, listOf(task.name()), debug = false)
+
+        result.task(task.path())?.outcome shouldBe TaskOutcome.SUCCESS
+        File(generatedJava, "sample/Sample.java").exists() shouldBe true
     }
 
     /**
      * Writes the build file applying the `java`, Protobuf, and our plugins.
+     *
+     * @param idea If `true`, the build also applies the `idea` plugin.
      */
-    private fun writeJavaBuildFile() {
+    private fun writeJavaBuildFile(idea: Boolean = false) {
+        val ideaPlugin = if (idea) "idea" else ""
         Gradle.buildFile.under(projectDir).writeText(
             """
             plugins {
                 id("java")
                 id("${ProtobufGradlePlugin.id}") version "${ProtobufGradlePlugin.version}"
                 id("${GeneratedSourcePlugin.id}")
+                $ideaPlugin
             }
 
             group = "$group"

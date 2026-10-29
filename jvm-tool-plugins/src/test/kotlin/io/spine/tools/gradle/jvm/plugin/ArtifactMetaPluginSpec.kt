@@ -1,31 +1,21 @@
 /*
- * Copyright 2025, TeamDev. All rights reserved.
+ * Copyright 2026 CodeMatters, Lda.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
  * https://www.apache.org/licenses/LICENSE-2.0
  *
- * Redistribution and use in source and/or binary forms, with or without
- * modification, must retain the above copyright notice and the following
- * disclaimer.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 
 package io.spine.tools.gradle.jvm.plugin
 
+import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.comparables.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -89,7 +79,7 @@ class ArtifactMetaPluginSpec {
     }
 
     @Test
-    fun `make 'processResources' depend on the 'ariteArtifactMeta' task`() {
+    fun `make 'processResources' depend on the 'writeArtifactMeta' task`() {
         project.pluginManager.apply(pluginClass)
 
         val processResources = project.tasks.getByName(processResources.value())
@@ -101,17 +91,21 @@ class ArtifactMetaPluginSpec {
     }
 
     @Test
-    fun `make 'sourcesJar' depend on the 'ariteArtifactMeta' task`() {
+    fun `make 'sourcesJar' depend on the 'writeArtifactMeta' task without creating it`() {
         project.pluginManager.apply(pluginClass)
+        // Registered after the plugin is applied, as a build script does it.
         project.extensions.findByType(JavaPluginExtension::class.java)?.withSourcesJar()
+        val created = mutableListOf<String>()
+        project.tasks.configureEach { created += it.name }
+        // `configureEach` runs at once for the tasks created earlier, so start afresh.
+        created.clear()
+
         (project as DefaultProject).evaluate()
 
+        created shouldNotContain sourcesJar.value()
         val sourcesJar = project.tasks.getByName(sourcesJar.value())
-        val hasDependency = sourcesJar.dependsOn.any {
-                dep -> dep.toString().contains(WriteArtifactMeta.TASK_NAME)
-        }
-
-        hasDependency shouldBe true
+        val dependencies = sourcesJar.taskDependencies.getDependencies(sourcesJar)
+        dependencies.map { it.name } shouldContain WriteArtifactMeta.TASK_NAME
     }
 
     /**
@@ -163,14 +157,14 @@ class ArtifactMetaPluginSpec {
                 id("java")
                 id("${ArtifactMetaPlugin.id}")
             }
-    
+
             group = "$group"
             version = "$version"
-            
+
             repositories {
                 mavenCentral()
             }
-            
+
             dependencies {
                 implementation("${dependencies[0]}")
                 implementation("${dependencies[1]}")
@@ -207,7 +201,7 @@ class ArtifactMetaPluginSpec {
         content shouldContain dependencies[0]
         content shouldContain dependencies[1]
     }
-    
+
     @Test
     fun `filter test configurations by default`(@TempDir projectDir: File) {
         Gradle.buildFile.under(projectDir).writeText(
@@ -389,20 +383,20 @@ class ArtifactMetaPluginSpec {
                     id("java")
                     id("io.spine.artifact-meta")
                 }
-    
+
                 group = "test.group"
                 version = "1.0.0"
-    
+
                 repositories {
                     mavenCentral()
                 }
-    
+
                 artifactMeta {
                     excludeConfigurations {
                         $clearStatement
                     }
                 }
-    
+
                 dependencies {
                     implementation("${dependencies[0]}")
                     implementation("${dependencies[1]}")

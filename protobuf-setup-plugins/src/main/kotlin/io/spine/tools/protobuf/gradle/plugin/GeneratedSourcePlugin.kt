@@ -47,9 +47,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
  *  - makes the `GenerateProtoTask` copy generated sources into
  *    `$projectDir/generated/<sourceSet>/{java,kotlin}`;
  *  - excludes Protobuf plugin output directories from Kotlin/Java source sets and
- *    includes the copied ones;
- *  - makes Kotlin compilation and `processResources` depend on the corresponding
- *    `GenerateProtoTask` to avoid race conditions.
+ *    includes the copied ones as built by the `GenerateProtoTask`, so that
+ *    the compilation tasks depend on it without being created by the plugin.
  */
 public class GeneratedSourcePlugin : ProtobufSetupPlugin(), GeneratedDirectoryContext {
 
@@ -66,7 +65,6 @@ public class GeneratedSourcePlugin : ProtobufSetupPlugin(), GeneratedDirectoryCo
         configureSourceSetDirs()
         declareGeneratedDirOutput()
         copyGeneratedFilesWhenDone()
-        setupKotlinCompile()
     }
 
     /**
@@ -240,9 +238,17 @@ private fun File.residesIn(directory: File): Boolean =
     canonicalFile.startsWith(directory.absolutePath)
 
 /**
- * Ensure Kotlin compilation explicitly depends on this `GenerateProtoTask`.
+ * Ensures Kotlin compilation explicitly depends on this `GenerateProtoTask`.
+ *
+ * The function creates the Kotlin compilation task if it is registered but
+ * not yet created. Calling it is no longer needed: the compilation depends on
+ * this task via the generated source directories added by [configureSourceSetDirs].
  */
 @Internal
+@Deprecated(
+    message = "No longer needed. Kotlin compilation depends on this task via" +
+            " the generated source directories added by `configureSourceSetDirs()`."
+)
 public fun GenerateProtoTask.setupKotlinCompile() {
     val taskName = sourceSet.getCompileTaskName("Kotlin")
     try {

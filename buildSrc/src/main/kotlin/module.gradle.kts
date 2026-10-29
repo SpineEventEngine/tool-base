@@ -38,7 +38,7 @@ import io.spine.dependency.local.Reflect
 import io.spine.dependency.local.Validation
 import io.spine.dependency.test.JUnit
 import io.spine.gradle.checkstyle.CheckStyleConfig
-import io.spine.gradle.github.pages.updateGitHubPages
+import io.spine.gradle.github.pages.publishApiDocs
 import io.spine.gradle.javac.configureErrorProne
 import io.spine.gradle.javac.configureJavac
 import io.spine.gradle.javadoc.JavadocConfig
@@ -77,7 +77,7 @@ project.run {
     applyGeneratedDirectories(generatedDir)
     configureTests()
 
-    configureGitHubPages()
+    configureApiDocs()
     configureTaskDependencies()
 
     tasks.clean.configure {
@@ -155,8 +155,15 @@ fun Module.configureTests() {
     }
 }
 
-fun Module.configureGitHubPages() {
-    updateGitHubPages {
+/**
+ * Applies the plugin that registers the `publishApiDocs` task of this module.
+ *
+ * The `publish-api-docs.yml` workflow runs the task through `publishAllApiDocs` of
+ * the root project, which depends on it for the published modules only. It is not
+ * a part of `publish`.
+ */
+fun Module.configureApiDocs() {
+    publishApiDocs {
         rootFolder.set(rootDir)
     }
 }
