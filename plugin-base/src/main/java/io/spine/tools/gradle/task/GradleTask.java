@@ -46,7 +46,15 @@ import static com.google.common.base.Preconditions.checkState;
  * <p>The wrapper refers to the task via its {@link TaskProvider}. Therefore, Gradle creates
  * the task only if the build needs it, or if the task is accessed via {@link #getTask()},
  * {@link #getGroup()}, or {@link #getDescription()}.
+ *
+ * @deprecated Please register the task via
+ *         {@link org.gradle.api.tasks.TaskContainer#register(String, Action)
+ *         TaskContainer.register()}, and make it depend on the previous task, or the following
+ *         task depend on it, via the returned {@link TaskProvider}, for example,
+ *         {@code tasks.named("clean").configure(clean -> clean.dependsOn(newTask))}.
+ *         The Gradle API does the same lazily without the wrapper.
  */
+@Deprecated
 @SuppressWarnings("PMD.MissingStaticMethodInNonInstantiatableClass") /* Instantiated via Builder. */
 public final class GradleTask {
 
@@ -144,7 +152,10 @@ public final class GradleTask {
      * this one provides {@link #applyNowTo(Project)} method instead of
      * {@code build(..)}. This is done to add some additional semantics to
      * such an irreversible action like this.
+     *
+     * @deprecated Please use the Gradle API instead, as described for {@link GradleTask}.
      */
+    @Deprecated
     public static final class Builder {
         private final TaskName name;
         private final Action<Task> action;

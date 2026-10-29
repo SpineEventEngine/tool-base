@@ -23,6 +23,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 @DisplayName("`GradleTask` should")
+@Suppress("DEPRECATION") // Covers the deprecated `GradleTask` until it is removed.
 class GradleTaskTest {
 
     @Test

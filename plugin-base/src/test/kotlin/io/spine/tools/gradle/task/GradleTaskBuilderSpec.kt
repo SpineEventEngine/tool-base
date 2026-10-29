@@ -46,6 +46,7 @@ import org.junit.jupiter.api.Test
  * Tests [GradleTask.Builder].
  */
 @DisplayName("`GradleTask.Builder` should")
+@Suppress("DEPRECATION") // Covers the deprecated `GradleTask` until it is removed.
 internal class GradleTaskBuilderSpec {
 
     private lateinit var project: Project
