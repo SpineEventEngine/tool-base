@@ -1,27 +1,15 @@
 /*
- * Copyright 2026, TeamDev. All rights reserved.
+ * Copyright 2026 CodeMatters, Lda.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
  * https://www.apache.org/licenses/LICENSE-2.0
  *
- * Redistribution and use in source and/or binary forms, with or without
- * modification, must retain the above copyright notice and the following
- * disclaimer.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 
 package io.spine.tools.protobuf.gradle.plugin
@@ -29,11 +17,8 @@ package io.spine.tools.protobuf.gradle.plugin
 import com.google.protobuf.gradle.GenerateProtoTask
 import io.spine.code.proto.DescriptorSetReferenceFile
 import io.spine.tools.code.SourceSetName
-import io.spine.tools.gradle.task.JavaTaskName
 import io.spine.tools.protobuf.gradle.descriptorSetFile
 import java.io.File
-import org.gradle.kotlin.dsl.withType
-import org.gradle.language.jvm.tasks.ProcessResources
 
 /**
  * A Gradle project plugin that configures Protobuf generation tasks to produce
@@ -76,7 +61,13 @@ public class DescriptorSetFilePlugin : ProtobufSetupPlugin() {
         // Add the `descriptors` directory to the resources so that
         // the descriptor set file, and the reference file which is created in
         // the `doLast` block below are packed together with the class files.
-        sourceSet.resources.srcDir(descriptorsDir.absolutePath)
+        //
+        // The directory is added as built by this task, so that `processResources`,
+        // and other tasks consuming the resources, depend on this task.
+        // The dependency cannot be set on `processResources` directly without creating
+        // the task: this function runs in the configuration action of `GenerateProtoTask`,
+        // where Gradle forbids configuring other tasks lazily.
+        sourceSet.resources.srcDir(project.files(descriptorsDir).builtBy(task))
 
         // Create a `desc.ref` file pointing to the descriptor file name once the task finishes.
         task.doLast {
@@ -84,8 +75,6 @@ public class DescriptorSetFilePlugin : ProtobufSetupPlugin() {
         }
         task.declareReferenceFileOutput(descriptorsDir)
         task.declareDescriptorSetNameInput(descriptorSetFile)
-
-        task.dependOnProcessResourcesTask()
     }
 }
 
@@ -133,17 +122,4 @@ private fun GenerateProtoTask.declareReferenceFileOutput(descriptorsDir: File) {
  */
 private fun GenerateProtoTask.declareDescriptorSetNameInput(descriptorSetFile: File) {
     inputs.property(DescriptorSetFilePlugin.DESCRIPTOR_SET_NAME_PROPERTY, descriptorSetFile.name)
-}
-
-/**
- * Make the `processResources` task depend on this `GenerateProtoTask`.
- */
-private fun GenerateProtoTask.dependOnProcessResourcesTask() {
-    val ssn = SourceSetName(sourceSet.name)
-    val processResources = JavaTaskName.processResources(ssn).value()
-    // Find the task via iteration because the call to `named()` fails at
-    // this project configuration stage.
-    project.tasks.withType<ProcessResources>()
-        .filter { it.name == processResources }
-        .forEach { it.dependsOn(this) }
 }

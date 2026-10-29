@@ -1,31 +1,20 @@
 /*
- * Copyright 2026, TeamDev. All rights reserved.
+ * Copyright 2026 CodeMatters, Lda.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
  * https://www.apache.org/licenses/LICENSE-2.0
  *
- * Redistribution and use in source and/or binary forms, with or without
- * modification, must retain the above copyright notice and the following
- * disclaimer.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 
 package io.spine.tools.gradle.task
 
+import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 import io.spine.tools.gradle.task.TaskDependencies.dependsOn
 import org.gradle.api.Task
@@ -64,5 +53,36 @@ internal class TaskDependenciesSpec {
     @Test
     fun `return 'false' when there is no dependency`() {
         dependsOn(task, ontoTask) shouldBe false
+    }
+
+    @Test
+    fun `detect a dependency on a task provider without creating the task`() {
+        val project = task.project
+        val lazyTask = project.tasks.register("lazyTask")
+        val created = mutableListOf<String>()
+        project.tasks.configureEach { created += it.name }
+        created.clear()
+
+        task.dependsOn(lazyTask)
+
+        dependsOn(task, TaskName.of("lazyTask")) shouldBe true
+        dependsOn(task, TaskName.of("otherTask")) shouldBe false
+        created.shouldBeEmpty()
+    }
+
+    @Test
+    fun `detect a dependency on a task collection without creating the tasks`() {
+        val project = task.project
+        val lazyTasks = project.tasks.named { it.startsWith("lazy") }
+        project.tasks.register("lazyTask")
+        val created = mutableListOf<String>()
+        project.tasks.configureEach { created += it.name }
+        created.clear()
+
+        task.dependsOn(lazyTasks)
+
+        dependsOn(task, TaskName.of("lazyTask")) shouldBe true
+        dependsOn(task, TaskName.of("otherTask")) shouldBe false
+        created.shouldBeEmpty()
     }
 }

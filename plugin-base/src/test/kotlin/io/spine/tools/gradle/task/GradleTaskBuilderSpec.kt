@@ -1,35 +1,27 @@
 /*
- * Copyright 2026, TeamDev. All rights reserved.
+ * Copyright 2026 CodeMatters, Lda.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
  * https://www.apache.org/licenses/LICENSE-2.0
  *
- * Redistribution and use in source and/or binary forms, with or without
- * modification, must retain the above copyright notice and the following
- * disclaimer.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 
 package io.spine.tools.gradle.task
 
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.maps.shouldContainKey
+import io.kotest.matchers.maps.shouldNotContainKey
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.spine.testing.Assertions.assertIllegalState
@@ -43,6 +35,7 @@ import io.spine.tools.gradle.testing.NoOp
 import java.io.File
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.api.UnknownTaskException
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -75,11 +68,10 @@ internal class GradleTaskBuilderSpec {
             .insertAfterAllTasks(compileJava)
             .applyNowTo(subProject)
         val subProjectTasks = subProject.tasks
-        val newTask = subProjectTasks.findByName(task.name.name())
-        newTask shouldNotBe null
-        val dependencies: Collection<*> = newTask!!.dependsOn
-        dependencies shouldContain subProjectTasks.findByName(compileJava.name())
-        dependencies shouldContain project.tasks.findByName(compileJava.name())
+        val newTask = subProjectTasks.getByName(task.name.name())
+        val dependencies = newTask.dependencies()
+        dependencies shouldContain subProjectTasks.getByName(compileJava.name())
+        dependencies shouldContain project.tasks.getByName(compileJava.name())
     }
 
     @Test
@@ -88,10 +80,11 @@ internal class GradleTaskBuilderSpec {
             .insertBeforeTask(classes)
             .applyNowTo(project)
         val tasks = project.tasks
-        val classes = tasks.findByName(classes.name())
-        classes shouldNotBe null
-        val verifyModelTask = tasks.findByName(verifyModel.name)
-        classes!!.dependsOn shouldContain verifyModelTask
+        val classes = tasks.getByName(classes.name())
+        val verifyModelTask = tasks.getByName(verifyModel.name)
+        classes.dependencies() shouldContain verifyModelTask
+        // The dependency is declared via a task provider, which the utility recognizes.
+        TaskDependencies.dependsOn(classes, verifyModel) shouldBe true
     }
 
     @Test
@@ -120,6 +113,7 @@ internal class GradleTaskBuilderSpec {
         generateProtoTask shouldBe null
         val generateTestProtoTask = tasks.findByName(generateTestProto.name())
         generateTestProtoTask shouldNotBe null
+        generateTestProtoTask!!.dependencies().shouldBeEmpty()
     }
 
     @Test
@@ -282,4 +276,98 @@ internal class GradleTaskBuilderSpec {
 
         task.name shouldBe taskName
     }
+
+    @Nested
+    inner class `register the task lazily` {
+
+        private val created = mutableListOf<String>()
+
+        @BeforeEach
+        fun recordCreatedTasks() {
+            project.tasks.configureEach { created += it.path }
+            // `configureEach` runs at once for the tasks created earlier, so start afresh.
+            created.clear()
+        }
+
+        @Test
+        fun `creating neither the task nor the tasks it is inserted between`() {
+            val subProject = ProjectBuilder.builder()
+                .withParent(project)
+                .build()
+            subProject.pluginManager.apply(GradleProject.javaPlugin)
+            subProject.tasks.configureEach { created += it.path }
+            created.clear()
+
+            GradleTask.newBuilder(preClean, NoOp.action())
+                .insertBeforeTask(BaseTaskName.clean)
+                .insertAfterTask(compileJava)
+                .insertAfterAllTasks(classes)
+                .applyNowTo(subProject)
+
+            created.shouldBeEmpty()
+        }
+
+        @Test
+        fun `creating the task on demand`() {
+            val task = GradleTask.newBuilder(preClean, NoOp.action())
+                .insertBeforeTask(BaseTaskName.clean)
+                .applyNowTo(project)
+
+            task.taskProvider.name shouldBe preClean.name
+            created.shouldBeEmpty()
+
+            task.task.name shouldBe preClean.name
+            created shouldContainExactly listOf(":${preClean.name}")
+        }
+
+        @Test
+        fun `ignoring changes to the builder made after it is applied`() {
+            val builder = GradleTask.newBuilder(preClean, NoOp.action())
+                .insertBeforeTask(BaseTaskName.clean)
+                .withDescription("Original description")
+            builder.applyNowTo(project)
+
+            builder.withDescription("Changed description")
+                .withInputProperty("late", "value")
+                .withOutputFiles(project.layout.files(File(".").absoluteFile))
+
+            val task = project.tasks.getByName(preClean.name)
+            task.description shouldBe "Original description"
+            task.inputs.properties shouldNotContainKey "late"
+            task.outputs.files.shouldBeEmpty()
+        }
+
+        @Test
+        fun `depending only on tasks of all projects registered before it`() {
+            val subProject = ProjectBuilder.builder()
+                .withParent(project)
+                .build()
+            val rootTask = project.tasks.register(verifyModel.name)
+            val task = GradleTask.newBuilder(annotateProto, NoOp.action())
+                .insertAfterAllTasks(verifyModel)
+                .applyNowTo(subProject)
+            subProject.tasks.register(verifyModel.name)
+
+            created.shouldBeEmpty()
+            task.task.dependencies() shouldContainExactly setOf(rootTask.get())
+        }
+
+        @Test
+        fun `not registering the task if the following task is not registered`() {
+            val builder = GradleTask.newBuilder(preClean, NoOp.action())
+                .insertBeforeTask(TaskName.of("missingTask"))
+
+            shouldThrow<UnknownTaskException> {
+                builder.applyNowTo(project)
+            }
+            project.tasks.names shouldNotContain preClean.name
+        }
+    }
 }
+
+/**
+ * Obtains the tasks this task depends on, resolving the dependencies
+ * declared via names, providers, and task collections.
+ */
+private fun Task.dependencies(): Set<Task> =
+    taskDependencies.getDependencies(this)

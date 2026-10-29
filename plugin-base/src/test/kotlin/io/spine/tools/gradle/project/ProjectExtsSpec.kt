@@ -15,6 +15,7 @@
 package io.spine.tools.gradle.project
 
 import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
@@ -156,6 +157,7 @@ class ProjectExtsSpec {
     }
 
     @Test
+    @Suppress("DEPRECATION") // Covers the deprecated functions until they are removed.
     fun `find compile tasks for a source set`() {
         val mainSet = project.sourceSet(main)
 
@@ -163,6 +165,59 @@ class ProjectExtsSpec {
             it.findJavaCompileFor(mainSet) shouldNotBe null
             // No Kotlin plugin is applied, so there is no Kotlin compile task.
             it.findKotlinCompileFor(mainSet) shouldBe null
+        }
+    }
+
+    @Nested inner class
+    `obtain compile tasks for a source set lazily` {
+
+        private val created = mutableListOf<String>()
+
+        @BeforeEach
+        fun recordCreatedTasks() {
+            project.tasks.configureEach { created += it.name }
+            // `configureEach` runs at once for the tasks created earlier, so start afresh.
+            created.clear()
+        }
+
+        @Test
+        fun `matching the task of the given source set`() {
+            project.let {
+                it.javaCompileTasksFor(it.sourceSet(main)).names shouldContainExactly
+                        setOf("compileJava")
+                it.javaCompileTasksFor(it.sourceSet(test)).names shouldContainExactly
+                        setOf("compileTestJava")
+            }
+        }
+
+        @Test
+        fun `including a task registered later`() {
+            val kotlinCompile = project.kotlinCompileTasksFor(project.sourceSet(main))
+            kotlinCompile.names.shouldBeEmpty()
+
+            // No Kotlin plugin is applied, so register a task with the expected name.
+            project.tasks.register("compileKotlin")
+
+            kotlinCompile.names shouldContainExactly setOf("compileKotlin")
+        }
+
+        @Test
+        fun `allowing to make the tasks depend on another task without creating any`() {
+            val mainSet = project.sourceSet(main)
+            project.tasks.register("compileKotlin")
+            val generateCode = project.tasks.register("generateCode")
+
+            project.javaCompileTasksFor(mainSet).configureEach { it.dependsOn(generateCode) }
+            project.kotlinCompileTasksFor(mainSet).configureEach { it.dependsOn(generateCode) }
+
+            created.shouldBeEmpty()
+
+            val compileJava = project.tasks.getByName("compileJava")
+            val compileKotlin = project.tasks.getByName("compileKotlin")
+            compileJava.taskDependencies.getDependencies(compileJava) shouldContain
+                    generateCode.get()
+            compileKotlin.taskDependencies.getDependencies(compileKotlin) shouldContain
+                    generateCode.get()
         }
     }
 

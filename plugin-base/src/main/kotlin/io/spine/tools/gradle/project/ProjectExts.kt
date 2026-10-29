@@ -26,10 +26,12 @@ import io.spine.tools.gradle.task.TaskName
 import io.spine.tools.meta.MavenArtifact
 import java.lang.reflect.Method
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
+import org.gradle.api.tasks.TaskCollection
 import org.gradle.api.tasks.compile.JavaCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
@@ -173,9 +175,17 @@ public fun Project.hasCompileTask(language: Language): Boolean =
 public fun Project.hasJavaOrKotlin(): Boolean = hasJava() || hasKotlin()
 
 /**
- * Attempts to obtain the [Java compilationGradle task][SourceSet.getCompileJavaTaskName]
+ * Attempts to obtain the [Java compilation Gradle task][SourceSet.getCompileJavaTaskName]
  * for the given source set.
+ *
+ * The call creates the task if it is registered but not yet created.
+ *
+ * @see javaCompileTasksFor
  */
+@Deprecated(
+    message = "Creates the task. Please use `javaCompileTasksFor()` and configure" +
+            " the task via `configureEach()` instead."
+)
 public fun Project.findJavaCompileFor(sourceSet: SourceSet): JavaCompile? {
     val taskName = sourceSet.compileJavaTaskName
     return tasks.findByName(taskName) as JavaCompile?
@@ -187,8 +197,75 @@ public fun Project.findJavaCompileFor(sourceSet: SourceSet): JavaCompile? {
  * Typically, the task is named by a pattern: `compile<SourceSet name>Kotlin`, or just
  * `compileKotlin` if the source set name is `"main"`.
  * If the task does not fit this described pattern, this method will not find it.
+ *
+ * The call creates the task if it is registered but not yet created.
+ *
+ * @see kotlinCompileTasksFor
  */
+@Deprecated(
+    message = "Creates the task. Please use `kotlinCompileTasksFor()` and configure" +
+            " the task via `configureEach()` instead."
+)
 public fun Project.findKotlinCompileFor(sourceSet: SourceSet): KotlinCompilationTask<*>? {
     val taskName = sourceSet.getCompileTaskName(Kotlin.name)
     return tasks.findByName(taskName) as KotlinCompilationTask<*>?
+}
+
+/**
+ * Obtains a live collection holding the
+ * [Java compilation task][SourceSet.getCompileJavaTaskName] for the given source set.
+ *
+ * The call does not create the task. The collection includes the task even if
+ * it is registered after the call, and remains empty if the project has no such task.
+ *
+ * Configure the task via [configureEach][TaskCollection.configureEach], so that
+ * the configuration runs only if the build needs the task:
+ *
+ * ```kotlin
+ * val myTask = project.tasks.register("myTask") { ... }
+ * project.javaCompileTasksFor(sourceSet).configureEach {
+ *     it.dependsOn(myTask)
+ * }
+ * ```
+ *
+ * Do not call `configureEach` from a configuration action of another task, such as
+ * the `register` block above: Gradle forbids configuring tasks lazily from there.
+ */
+public fun Project.javaCompileTasksFor(sourceSet: SourceSet): TaskCollection<JavaCompile> {
+    val taskName = sourceSet.compileJavaTaskName
+    return tasks.withType(JavaCompile::class.java).named { it == taskName }
+}
+
+/**
+ * Obtains a live collection holding the Kotlin compilation task for the given source set.
+ *
+ * Typically, the task is named by a pattern: `compile<SourceSet name>Kotlin`, or just
+ * `compileKotlin` if the source set name is `"main"`.
+ * If the task does not fit this described pattern, the collection does not include it.
+ *
+ * The call does not create the task. The collection includes the task even if
+ * it is registered after the call, e.g., when the Kotlin Gradle plugin is applied later.
+ * The collection remains empty if the project has no such task.
+ *
+ * Configure the task via [configureEach][TaskCollection.configureEach], so that
+ * the configuration runs only if the build needs the task:
+ *
+ * ```kotlin
+ * val myTask = project.tasks.register("myTask") { ... }
+ * project.kotlinCompileTasksFor(sourceSet).configureEach {
+ *     it.dependsOn(myTask)
+ * }
+ * ```
+ *
+ * Do not call `configureEach` from a configuration action of another task, such as
+ * the `register` block above: Gradle forbids configuring tasks lazily from there.
+ *
+ * The function matches the task by its name only, so that it works in a project which
+ * does not have the Kotlin Gradle plugin on its classpath. If the plugin is available,
+ * narrow the collection via `withType(KotlinCompilationTask::class.java)`, which
+ * does not create the task either.
+ */
+public fun Project.kotlinCompileTasksFor(sourceSet: SourceSet): TaskCollection<Task> {
+    val taskName = sourceSet.getCompileTaskName(Kotlin.name)
+    return tasks.named { it == taskName }
 }

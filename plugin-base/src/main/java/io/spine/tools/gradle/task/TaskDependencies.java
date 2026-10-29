@@ -1,37 +1,37 @@
 /*
- * Copyright 2026, TeamDev. All rights reserved.
+ * Copyright 2026 CodeMatters, Lda.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
  * https://www.apache.org/licenses/LICENSE-2.0
  *
- * Redistribution and use in source and/or binary forms, with or without
- * modification, must retain the above copyright notice and the following
- * disclaimer.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 
 package io.spine.tools.gradle.task;
 
 import org.gradle.api.Task;
+import org.gradle.api.tasks.TaskCollection;
+import org.gradle.api.tasks.TaskProvider;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Utilities for Gradle task dependencies management.
+ *
+ * <p>The utilities look at the dependencies declared via
+ * {@link Task#dependsOn(Object...) dependsOn()} as task names, task instances,
+ * task providers, and task collections. The utilities do not create tasks.
+ *
+ * <p>The dependencies which Gradle infers from task inputs, such as source directories
+ * {@linkplain org.gradle.api.file.ConfigurableFileCollection#builtBy(Object...) built by}
+ * another task, are not taken into account. Use
+ * {@link Task#getTaskDependencies() getTaskDependencies().getDependencies(task)} to obtain
+ * all the dependencies of a task.
  */
 public final class TaskDependencies {
 
@@ -73,6 +73,13 @@ public final class TaskDependencies {
             }
             if (anObject instanceof Task objectAsTask) {
                 contains = contains || ontoTaskWithName.equals(objectAsTask.getName());
+            }
+            if (anObject instanceof TaskProvider<?> provider) {
+                contains = contains || ontoTaskWithName.equals(provider.getName());
+            }
+            if (anObject instanceof TaskCollection<?> collection) {
+                contains = contains || collection.getNames()
+                                                 .contains(ontoTaskWithName);
             }
         }
         return contains;
