@@ -12,19 +12,13 @@
  * and limitations under the License.
  */
 
-import io.spine.dependency.lib.Kotlin
-import io.spine.gradle.report.license.LicenseReporter
 import io.spine.gradle.isSnapshot
 import io.spine.gradle.testing.enableTestKitCoverage
 
 plugins {
     module
-    kotlin("jvm")
-    `module-testing`
     `plugin-publish`
-    `write-manifest`
 }
-LicenseReporter.generateReportIn(project)
 
 // Credit coverage of the plugins executed in TestKit worker JVMs by the
 // `*PluginSpec` tests. See `io.spine.gradle.testing.enableTestKitCoverage`.
@@ -34,10 +28,6 @@ enableTestKitCoverage()
 val versionToPublish = extra["versionToPublish"] as String
 
 description = "Utilities for working with JVM projects under Gradle."
-
-kotlin {
-    explicitApi()
-}
 
 // Do not publish to Gradle Plugin Portal snapshot versions.
 // It is prohibited by their policy: https://plugins.gradle.org/docs/publish-plugin
@@ -74,7 +64,6 @@ dependencies {
     implementation(project(":code"))?.because("`ArtifactMetaPlugin` uses `SourceSetName`.")
 
     compileOnlyApi(gradleApi())
-    compileOnlyApi(Kotlin.GradlePlugin.api)
     compileOnly(gradleKotlinDsl())
     api(project(":jvm-tools"))
     implementation(project(":plugin-base"))?.because("We need `JavaTaskName` API.")
