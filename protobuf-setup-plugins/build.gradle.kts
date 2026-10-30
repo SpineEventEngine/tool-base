@@ -18,13 +18,12 @@ import io.spine.dependency.local.Base
 import io.spine.dependency.local.Logging
 import io.spine.gradle.isSnapshot
 import io.spine.gradle.publish.SpinePublishing
-import io.spine.gradle.publish.unbundleProtobufRuntime
 import io.spine.gradle.report.license.LicenseReporter
 import io.spine.gradle.testing.enableTestKitCoverage
 import org.gradle.plugin.devel.tasks.PluginUnderTestMetadata
 
 plugins {
-    `uber-jar-module`
+    module
     `plugin-publish`
     id("io.spine.artifact-meta")
 }
@@ -34,7 +33,7 @@ LicenseReporter.generateReportIn(project)
 // `*PluginSpec` tests. See `io.spine.gradle.testing.enableTestKitCoverage`.
 enableTestKitCoverage()
 
-val spinePublishing = the<SpinePublishing>()
+val spinePublishing = rootProject.the<SpinePublishing>()
 
 artifactMeta {
     artifactId.set(spinePublishing.artifactId(project))
@@ -91,17 +90,19 @@ dependencies {
     compileOnlyApi(gradleApi())
     compileOnly(gradleKotlinDsl())
 
-    // Access to `GenerateProtoTask` and related APIs at compile and runtime.
-    implementation(Protobuf.GradlePlugin.lib)
+    // The dependencies whose types appear in the public API are `api`.
 
-    implementation(Base.lib)?.because("We need `DescriptorSetReferenceFile` at compile time.")
-    implementation(project(":code"))?.because("We need `SourceSetName`.")
+    // Access to `GenerateProtoTask` and related APIs at compile and runtime.
+    api(Protobuf.GradlePlugin.lib)
+
+    api(Base.lib)?.because("`ProtoFiles.collect()` returns `FileSet`.")
+    api(project(":code"))?.because("Extensions take `SourceSetName`.")
     implementation(project(":fs"))?.because("We need `DescriptorsDir` and `DirectoryName`.")
     implementation(project(":java-code"))?.because("We need `DefaultJavaPaths`.")
     implementation(project(":proto-code"))?.because(
         "We need `FileDescriptorSuperset`, `MoreKnownTypes`, and the proto `Directory`."
     )
-    implementation(project(":plugin-base"))
+    api(project(":plugin-base"))?.because("`ProtobufTaskName` extends `TaskWithSourceSetName`.")
     implementation(Logging.lib)
 
     testImplementation(project(":plugin-testlib"))
@@ -116,16 +117,3 @@ val kotlinGradlePlugin = configurations.detachedConfiguration(
 tasks.withType<PluginUnderTestMetadata>().configureEach {
     pluginClasspath.from(kotlinGradlePlugin)
 }
-
-publishing.publications.withType<MavenPublication>().configureEach {
-    when (name) {
-        "fatJar" -> {
-            // Avoid the conflict with the `pluginMaven` publication.
-            artifactId = "protobuf-setup-plugins-all"
-        }
-    }
-}
-
-// Declare the Protobuf runtime as a dependency rather than bundle it,
-// so that the runtime resolved by the consumer wins.
-unbundleProtobufRuntime()

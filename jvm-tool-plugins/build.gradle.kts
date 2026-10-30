@@ -15,11 +15,10 @@
 import io.spine.dependency.lib.Kotlin
 import io.spine.gradle.report.license.LicenseReporter
 import io.spine.gradle.isSnapshot
-import io.spine.gradle.publish.unbundleProtobufRuntime
 import io.spine.gradle.testing.enableTestKitCoverage
 
 plugins {
-    `uber-jar-module`
+    module
     kotlin("jvm")
     `module-testing`
     `plugin-publish`
@@ -39,19 +38,6 @@ description = "Utilities for working with JVM projects under Gradle."
 kotlin {
     explicitApi()
 }
-
-publishing.publications.withType<MavenPublication>().configureEach {
-    when (name) {
-        "fatJar" -> {
-            // Avoid the conflict with the `pluginMaven` publication.
-            artifactId = "jvm-tool-plugins-all"
-        }
-    }
-}
-
-// Declare the Protobuf runtime as a dependency rather than bundle it,
-// so that the runtime resolved by the consumer wins.
-unbundleProtobufRuntime()
 
 // Do not publish to Gradle Plugin Portal snapshot versions.
 // It is prohibited by their policy: https://plugins.gradle.org/docs/publish-plugin
