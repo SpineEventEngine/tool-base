@@ -61,16 +61,20 @@ the owner's approval. Never edit the copies of repos in a cascade workspace.
       `classicCodegen`; drop the `org/jboss/forge/` and JNA fat-JAR entries.
       SpineEventEngine/core-jvm-compiler#126 (open).
 - [x] tool-base: remove `RoasterExts` and `api(Roaster.*)` from
-      `classic-codegen` (`ba6b78c5`, reports in `7af04c4b`). Ships on its own
-      as SpineEventEngine/tool-base#202 (open, `2.0.0-SNAPSHOT.441`). Once
-      it merges, merge `master` into this branch.
-- [ ] ProtoTap: remove Roaster `force` entries and fat-JAR exclusions.
+      `classic-codegen` (`ba6b78c5`, reports in `7af04c4b`). Shipped on its
+      own as SpineEventEngine/tool-base#202 (merged, `2.0.0-SNAPSHOT.441`);
+      `master` is merged into this branch (`1fbcea2f`).
+- [x] ProtoTap: remove Roaster `force` entries and fat-JAR exclusions
+      (SpineEventEngine/ProtoTap#25, merged).
 - [ ] validation: drop the `Roaster.group` exclusion in `java-bundle` once
       it uses `tool-base` `.441` or later.
 
 ### Phase 2 — JavaPoet in core-jvm-compiler
 
-Start after #126 merges, since it changes `signal/build.gradle.kts` too.
+Stacked on #126 (branch `claude/drop-roaster-968ba6`), which changes the same
+build lines and rejection tests. The PR targets that branch, and GitHub moves
+it to `master` once #126 merges. It bumps to `2.0.0-SNAPSHOT.104`, since #126
+already takes `.103`.
 
 - [ ] `base`: move the `FieldType` family to the Compiler's `JavaTypeName`,
       `ClassName`, `ParameterizedTypeName`; adjust `RThrowableBuilderCode`.
@@ -94,10 +98,13 @@ Start after #126 merges, since it changes `signal/build.gradle.kts` too.
 
 ### Phase 3 — tool-base
 
-- [ ] Delete the module: `git rm -r classic-codegen`, its `settings.gradle.kts`
+- [x] Delete the module: `git rm -r classic-codegen`, its `settings.gradle.kts`
       entry, and any mention in docs; regenerate the dependency reports.
+      No docs mentioned it; the reports drop its section and `javapoet`.
 - [ ] Bump the version once for the branch (`version-bumped`), run `pre-pr`,
       and open the PR from `drop-classic-codegen`.
+  - Bumped to `2.0.0-SNAPSHOT.450`: removing a published artifact is
+    breaking, as with #201 (`.431` → `.440`), and #205 holds `.443`.
 
 ### Phase 4 — after the tool-base release
 
@@ -117,3 +124,15 @@ Start after #126 merges, since it changes `signal/build.gradle.kts` too.
   into this branch; ProtoTap cleanup under way.
 - 2026-11-02 — JavaPoet analysis done; Phases 2–4 drafted, awaiting approval.
 - 2026-11-02 — The Roaster removal went to `master` as #202, bumped to `.441`.
+- 2026-11-02 — Phase 2 approved, in its own session, stacked on #126.
+- 2026-11-02 — #202 and #204 merged (`.442`). ProtoTap#25 merged. The config
+  `Roaster` deprecation is under way; the only references left are
+  core-jvm-compiler's `compiler-plugins` exclusion and validation's
+  `java-bundle` exclusion.
+- 2026-11-02 — `Roaster` deprecated in config: SpineEventEngine/config#829
+  (open). Phase 2 work has #126's latest commits merged in, and its build is
+  rerunning.
+- 2026-11-02 — `master` (`.442`) merged into this branch (`1fbcea2f`). Its
+  tree now differs from `master` only by this file; Phase 3 is unblocked.
+- 2026-11-02 — Phase 3: module deleted, bumped to `.450`; `./gradlew build`
+  passes.
