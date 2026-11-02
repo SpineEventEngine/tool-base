@@ -19,8 +19,8 @@ import com.intellij.openapi.util.text.StringUtilRt
 /**
  * Converts the line separators in the string to the one used by PSI (`"\n"`).
  *
- * If the string has no line separators other than `"\n"`, returns the same instance.
- * So, the calling code may normalize its input without checking it first.
+ * If the string has no line separators other than `"\n"`, returns this string
+ * without copying it. So, the calling code may convert its input without checking it first.
  */
 public fun String.convertLineSeparators(): String =
     StringUtilRt.convertLineSeparators(this)

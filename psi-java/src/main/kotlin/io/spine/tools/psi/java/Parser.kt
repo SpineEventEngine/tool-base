@@ -37,9 +37,9 @@ public class Parser(public val project: Project) {
      *
      * The file is not saved to the disk.
      *
-     * Line separators of [javaSource] are normalized to `\n`, which is the only
-     * separator PSI accepts. So, the code read from a file created under Windows
-     * can be passed as is. Text offsets in the resulting file refer to
+     * The line separators of [javaSource] are normalized to `\n`, which is the only
+     * separator PSI accepts. So, callers may pass the code read from a file created
+     * under Windows as is. Text offsets in the resulting file refer to
      * the normalized code.
      *
      * @param javaSource The previously loaded source code.

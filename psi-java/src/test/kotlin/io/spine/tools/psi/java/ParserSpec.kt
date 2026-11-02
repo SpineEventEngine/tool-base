@@ -15,7 +15,6 @@
 package io.spine.tools.psi.java
 
 import com.intellij.psi.PsiJavaFile
-import java.io.File
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldStartWith
@@ -24,6 +23,7 @@ import io.spine.string.Separator.CR
 import io.spine.string.Separator.CRLF
 import io.spine.string.Separator.LF
 import io.spine.tools.psi.readResource
+import java.io.File
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -74,24 +74,28 @@ class ParserSpec : PsiTest() {
 
         @Test
         fun `'CRLF' line separators`() {
-            assertParsedAsLf(code.withSeparators(CRLF))
+            assertParsedAsLf(CRLF)
         }
 
         @Test
         fun `'CR' line separators`() {
-            assertParsedAsLf(code.withSeparators(CR))
+            assertParsedAsLf(CR)
         }
 
         @Test
         fun `mixed line separators`() {
-            assertParsedAsLf(code.withSeparators(*Separator.entries.toTypedArray()))
+            assertParsedAsLf(LF, CR, CRLF)
         }
 
         /**
-         * Asserts that the given [source] is parsed into the same file as
-         * its version with `LF` line separators.
+         * Asserts that [code] with its line separators replaced by the given ones
+         * is parsed into a file with the same text as [code].
+         *
+         * The [separators] must include `CR` or `CRLF`, so that the parsed code
+         * differs from [code].
          */
-        private fun assertParsedAsLf(source: String) {
+        private fun assertParsedAsLf(vararg separators: Separator) {
+            val source = code.withSeparators(*separators)
             source shouldContain CR.value
             parser.parse(source).text shouldBe code
         }
@@ -99,12 +103,14 @@ class ParserSpec : PsiTest() {
 }
 
 /**
- * Replaces `LF` line separators of this text with the given ones, taking them in turn.
+ * Replaces the `LF` line separators of this text with the given ones,
+ * cycling through them.
  *
- * `CR` is never followed by `LF` in [Separator.entries], so the replacement
- * cannot merge two separators into one `CRLF`.
+ * The [separators] must not have `LF` right after `CR`. Otherwise, around
+ * an empty line, the two would merge into one `CRLF`.
  */
 private fun String.withSeparators(vararg separators: Separator): String {
+    require(separators.isNotEmpty()) { "At least one separator is required." }
     val lines = split(LF.value)
     return buildString {
         lines.forEachIndexed { index, line ->
