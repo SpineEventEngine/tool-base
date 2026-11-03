@@ -1,28 +1,17 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2026 CodeMatters, Lda.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
- * Redistribution and use in source and/or binary forms, with or without
- * modification, must retain the above copyright notice and the following
- * disclaimer.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
+
 package io.spine.tools.gradle.testing
 
 import io.spine.annotation.VisibleForTesting
@@ -93,8 +82,15 @@ public class GradleProjectSetup internal constructor(
     internal var debug = false
         private set
 
-    /** Whether a [shared Gradle TestKit folder][RootProject.testKitTempDir] should be used. */
+    /** Whether a [shared Gradle TestKit directory][withSharedTestKitDirectory] should be used. */
     internal var useSharedTestKit = false
+        private set
+
+    /**
+     * The shared TestKit directory [given][withSharedTestKitDirectory] explicitly,
+     * or `null` if none was given.
+     */
+    internal var sharedTestKitDir: File? = null
         private set
 
     /**
@@ -364,16 +360,36 @@ public class GradleProjectSetup internal constructor(
     }
 
     /**
-     * Tells the TestKit runner to use a [single shared folder][RootProject.testKitTempDir]
-     * for all tests.
+     * Tells the TestKit runner to use a TestKit directory shared by the tests.
      *
-     * The idea is that this folder is not deleted on `gradlew clean` phase,
-     * and therefore may be somewhat re-used to speed up the test execution.
+     * The TestKit directory is the Gradle user home of the test builds. When it is
+     * shared, a build can reuse what earlier builds left there, such as Gradle's
+     * instrumented copies of the JARs on the classpath of the plugin under test.
+     * The directory is not deleted by `clean`.
+     *
+     * @param dir The directory to use. If `null`, the runner uses `caches/spine-testkit`
+     *   under the Gradle user home. The Gradle user home is looked up in the order
+     *   Gradle uses: the `gradle.user.home` system property of the test JVM, then the
+     *   `GRADLE_USER_HOME` environment variable, then `.gradle` in the home directory
+     *   of the user.
      */
-    public fun withSharedTestKitDirectory() : GradleProjectSetup {
+    @JvmOverloads
+    public fun withSharedTestKitDirectory(dir: File? = null): GradleProjectSetup {
         this.useSharedTestKit = true
+        this.sharedTestKitDir = dir
         return this
     }
+
+    /**
+     * Obtains the TestKit directory to give the runner, or `null` to leave the choice
+     * to TestKit.
+     */
+    internal fun testKitDir(): File? =
+        if (useSharedTestKit) {
+            sharedTestKitDir ?: defaultSharedTestKitDir()
+        } else {
+            null
+        }
 
     /**
      * Creates a new project on the file system.

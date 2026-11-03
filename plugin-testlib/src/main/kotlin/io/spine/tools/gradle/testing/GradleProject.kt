@@ -108,13 +108,13 @@ import org.gradle.testkit.runner.UnexpectedBuildFailure
  *
  * ## TestKit directory
  *
- * The TestKit directory is the Gradle user home of the worker builds. Builds started
- * by this class and by [runGradleBuild] use the one TestKit picks, unless the project
- * is set up with [GradleProjectSetup.withSharedTestKitDirectory]. TestKit takes the
- * directory named by Gradle's `org.gradle.testkit.dir` system property of the test
- * JVM, or makes one under the temporary directory of the `Test` task otherwise. To
- * let the test JVMs of all modules share one directory, set that property on their
- * `Test` tasks. This choice is independent of the coverage setup above.
+ * The TestKit directory is the Gradle user home of the worker builds. A project set
+ * up with [GradleProjectSetup.withSharedTestKitDirectory] uses the directory given
+ * there, or `caches/spine-testkit` under the Gradle user home if given none. Other
+ * builds started by this class and by [runGradleBuild] use the directory TestKit
+ * picks: the one named by Gradle's `org.gradle.testkit.dir` system property of the
+ * test JVM, or one under the temporary directory of the `Test` task without it.
+ * This choice is independent of the coverage setup above.
  *
  * @see GradleProjectSetup
  */
@@ -147,9 +147,8 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
         val runner = GradleRunner.create()
             .withProjectDir(setup.projectDir)
             .withDebug(setup.debug)
-        if (setup.useSharedTestKit) {
-            val sharedTestKitDir = RootProject.testKitTempDir().toFile().apply { mkdirs() }
-            runner.withTestKitDir(sharedTestKitDir)
+        setup.testKitDir()?.let { dir ->
+            runner.withTestKitDir(dir.apply { mkdirs() })
         }
         runner
     }
