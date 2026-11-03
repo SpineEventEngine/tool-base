@@ -40,12 +40,11 @@ import org.gradle.testkit.runner.UnexpectedBuildFailure
  * of this class as well as by [runGradleBuild] — but only when the test JVM is started
  * with two system properties, which the consuming build is responsible for setting:
  *
- *  - `io.spine.tools.gradle.testkit.coverage.agent` — the absolute path to the
- *    standalone JaCoCo agent JAR, that is, the artifact
- *    `org.jacoco:org.jacoco.agent:<version>:runtime`.
- *  - `io.spine.tools.gradle.testkit.coverage.execDir` — the directory into which the
- *    worker should write its execution data. The harness creates a single
- *    per-module `testkit.exec` file inside it.
+ *  - [TestKitCoverage.AGENT_PROPERTY] — the absolute path to the standalone JaCoCo
+ *    agent JAR, that is, the artifact `org.jacoco:org.jacoco.agent:<version>:runtime`.
+ *  - [TestKitCoverage.EXEC_DIR_PROPERTY] — the directory into which the worker should
+ *    write its execution data. The harness creates a single per-module `testkit.exec`
+ *    file inside it.
  *
  * When either of these properties is absent, the harness is a no-op, so ordinary
  * runs and consumers that do not opt in are unaffected. A build started from
@@ -53,18 +52,19 @@ import org.gradle.testkit.runner.UnexpectedBuildFailure
  *
  * A third property is optional:
  *
- *  - `io.spine.tools.gradle.testkit.coverage.home` — the TestKit directory (the
- *    Gradle user home of the worker builds) to share among the test JVMs of all
- *    modules. Sharing it means that the dependencies of the worker builds are
- *    downloaded, and the Gradle API JARs generated, once rather than once per
- *    module, and a CI cache can keep the directory between runs. Without the
- *    property, each module gets a directory of its own. A project set up with
- *    [GradleProjectSetup.withSharedTestKitDirectory] keeps using that directory
- *    instead.
+ *  - [TestKitCoverage.TESTKIT_HOME_PROPERTY] — the TestKit directory (the Gradle user
+ *    home of the worker builds) to share among the test JVMs of all modules. Sharing
+ *    it means that the dependencies of the worker builds are downloaded, and the
+ *    Gradle API JARs generated, once rather than once per module, and a CI cache can
+ *    keep the directory between runs. Without the property, each module gets a
+ *    directory of its own. A project set up with
+ *    [GradleProjectSetup.withSharedTestKitDirectory] keeps using the directory it chose.
  *
  * The snippet below is a self-contained Gradle (Kotlin DSL) setup that a module
  * running TestKit-based tests can copy into its `build.gradle.kts`. Pin the agent
- * to the same JaCoCo version your coverage tooling uses.
+ * to the same JaCoCo version your coverage tooling uses. The snippet spells out the
+ * property names held by [TestKitCoverage], because a build script does not see
+ * the classes of this library.
  *
  * ```kotlin
  * import java.util.concurrent.atomic.AtomicBoolean
