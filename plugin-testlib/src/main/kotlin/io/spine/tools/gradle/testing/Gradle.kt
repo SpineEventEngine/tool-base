@@ -83,7 +83,6 @@ public fun runGradleBuild(
         .withProjectDir(projectDir)
         .withPluginClasspath()
         .withArguments(arguments.withTestKitCoverage())
-    runner.enableTestKitCoverage()
     stdOutput?.let {
         runner.forwardStdOutput(it)
     }

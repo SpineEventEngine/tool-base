@@ -50,16 +50,6 @@ import org.gradle.testkit.runner.UnexpectedBuildFailure
  * runs and consumers that do not opt in are unaffected. A build started from
  * [runner] directly gets no agent.
  *
- * A third property is optional:
- *
- *  - [TestKitCoverage.TESTKIT_HOME_PROPERTY] — the TestKit directory (the Gradle user
- *    home of the worker builds) to share among the test JVMs of all modules. Sharing
- *    it means that the worker builds create its contents, mostly Gradle's
- *    instrumented copies of the JARs on the classpath of the plugin under test, once
- *    rather than once per module, and a CI cache can keep them between runs. Without
- *    the property, each module gets a directory of its own. A project set up with
- *    [GradleProjectSetup.withSharedTestKitDirectory] keeps using the directory it chose.
- *
  * The snippet below is a self-contained Gradle (Kotlin DSL) setup that a module
  * running TestKit-based tests can copy into its `build.gradle.kts`. Pin the agent
  * to the same JaCoCo version your coverage tooling uses. The snippet spells out the
@@ -80,9 +70,6 @@ import org.gradle.testkit.runner.UnexpectedBuildFailure
  *
  * val agentJar = testKitJacocoAgent.elements.map { it.single().asFile.absolutePath }
  * val execDir = layout.buildDirectory.dir("jacoco-testkit")
- * // Optional: a TestKit directory shared by all modules. Under `caches/`, it is
- * // kept by CI caches of the Gradle user home.
- * val testKitHome = gradle.gradleUserHomeDir.resolve("caches/spine-testkit")
  *
  * // Wipe the exec directory at most once per build, from the first Test task
  * // that actually executes. The workers append to a single per-module exec
@@ -105,7 +92,6 @@ import org.gradle.testkit.runner.UnexpectedBuildFailure
  *         dir.mkdirs()
  *         systemProperty("io.spine.tools.gradle.testkit.coverage.agent", agentJar.get())
  *         systemProperty("io.spine.tools.gradle.testkit.coverage.execDir", dir.absolutePath)
- *         systemProperty("io.spine.tools.gradle.testkit.coverage.home", testKitHome.absolutePath)
  *     }
  * }
  * ```
@@ -119,6 +105,16 @@ import org.gradle.testkit.runner.UnexpectedBuildFailure
  * `io.spine.gradle.testing.enableTestKitCoverage` Gradle extension that ships in
  * `config`'s `buildSrc`, and the produced files are merged into Kover reports by
  * `KoverConfig`. Consumers outside that setup can use the snippet above instead.
+ *
+ * ## TestKit directory
+ *
+ * The TestKit directory is the Gradle user home of the worker builds. Builds started
+ * by this class and by [runGradleBuild] use the one TestKit picks, unless the project
+ * is set up with [GradleProjectSetup.withSharedTestKitDirectory]. TestKit takes the
+ * directory named by Gradle's `org.gradle.testkit.dir` system property of the test
+ * JVM, or makes one under the temporary directory of the `Test` task otherwise. To
+ * let the test JVMs of all modules share one directory, set that property on their
+ * `Test` tasks. This choice is independent of the coverage setup above.
  *
  * @see GradleProjectSetup
  */
@@ -151,15 +147,10 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
         val runner = GradleRunner.create()
             .withProjectDir(setup.projectDir)
             .withDebug(setup.debug)
-        val sharedTestKitDir = if (setup.useSharedTestKit) {
-            RootProject.testKitTempDir().toFile().apply { mkdirs() }
-        } else {
-            null
-        }
-        if (sharedTestKitDir != null) {
+        if (setup.useSharedTestKit) {
+            val sharedTestKitDir = RootProject.testKitTempDir().toFile().apply { mkdirs() }
             runner.withTestKitDir(sharedTestKitDir)
         }
-        runner.enableTestKitCoverage(sharedTestKitDir)
         runner
     }
 
