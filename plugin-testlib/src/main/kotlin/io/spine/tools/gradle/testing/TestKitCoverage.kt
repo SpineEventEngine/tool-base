@@ -1,27 +1,15 @@
 /*
- * Copyright 2026, TeamDev. All rights reserved.
+ * Copyright 2026 CodeMatters, Lda.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
  * https://www.apache.org/licenses/LICENSE-2.0
  *
- * Redistribution and use in source and/or binary forms, with or without
- * modification, must retain the above copyright notice and the following
- * disclaimer.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 
 package io.spine.tools.gradle.testing
@@ -30,52 +18,98 @@ import java.io.File
 import org.gradle.testkit.runner.GradleRunner
 
 /**
- * Attaches the JaCoCo coverage agent to the worker JVM spawned by this runner,
+ * Points this runner at the TestKit directory (the Gradle user home of the worker
+ * build) used for collecting the coverage of the worker JVM it spawns.
+ *
+ * Use it together with [withTestKitCoverage]: this function selects the directory,
+ * and that one adds the argument that attaches the JaCoCo agent to the worker JVM,
  * so that plugin code executed out-of-process via TestKit is credited to coverage.
  *
  * Does nothing unless the test JVM was started with the [AGENT_PROPERTY] and
  * [EXEC_DIR_PROPERTY] system properties. This keeps the harness a no-op for
  * ordinary runs and for consumers that do not opt in.
  *
- * Supplying those two properties on the test JVM is the responsibility of the
+ * Supplying those properties on the test JVM is the responsibility of the
  * consuming build. Consumer-facing setup instructions, including a copy-paste
  * Gradle recipe, live in the [GradleProject] KDoc (this function is `internal`,
  * so its own KDoc is not part of the published API documentation).
  *
- * When enabled, the method writes a `gradle.properties` carrying a `-javaagent:…`
- * argument into the TestKit directory (the Gradle user home of the worker build),
- * and points the runner at that directory. The JaCoCo agent appends to a single
- * per-module [execution-data file][EXEC_FILE]; on worker daemon shutdown — which
- * happens after the tests complete and before the coverage report task runs — the
- * data is flushed to disk.
- *
  * @param preferredTestKitDir The TestKit directory the caller already intends to
- *   use (e.g. a [shared one][GradleProjectSetup.withSharedTestKitDirectory]), or
- *   `null` to let this method pick the per-module [TESTKIT_HOME_DIR].
+ *   use (e.g. the one of [GradleProjectSetup.withSharedTestKitDirectory]), or
+ *   `null` to let [coverageTestKitDir] pick one.
  */
 internal fun GradleRunner.enableTestKitCoverage(preferredTestKitDir: File? = null) {
-    val agentJar = System.getProperty(AGENT_PROPERTY) ?: return
-    val execDirPath = System.getProperty(EXEC_DIR_PROPERTY) ?: return
-
-    val execDir = File(execDirPath).apply { mkdirs() }
-    val execFile = File(execDir, EXEC_FILE)
-    val testKitDir = (preferredTestKitDir ?: File(execDir.parentFile, TESTKIT_HOME_DIR))
-        .apply { mkdirs() }
-
-    val jvmArg = "-javaagent:${agentJar.forProperties()}=" +
-            "destfile=${execFile.invariantSeparatorsPath}," +
-            "append=true,dumponexit=true,output=file,jmx=false"
-    File(testKitDir, "gradle.properties")
-        .writeText("org.gradle.jvmargs=$jvmArg\n")
-
-    withTestKitDir(testKitDir)
+    val testKitDir = coverageTestKitDir(preferredTestKitDir) ?: return
+    withTestKitDir(testKitDir.apply { mkdirs() })
 }
 
 /**
- * Normalizes a file-system path for safe inclusion into a `*.properties` file
- * by using forward slashes regardless of the host platform.
+ * Returns the TestKit directory for the coverage-enabled worker builds, or `null`
+ * when TestKit coverage is not enabled for this test JVM.
+ *
+ * In the order of precedence, the directory is:
+ *
+ *  1. The [preferred] one, which the caller already intends to use.
+ *  2. The one [shared by the worker builds of all modules][TESTKIT_HOME_PROPERTY],
+ *     when the consuming build names it.
+ *  3. A per-module [TESTKIT_HOME_DIR] next to the execution-data directory.
  */
-private fun String.forProperties(): String = File(this).invariantSeparatorsPath
+internal fun coverageTestKitDir(preferred: File? = null): File? {
+    val coverage = CoverageSetup.fromSystemProperties() ?: return null
+    return preferred
+        ?: System.getProperty(TESTKIT_HOME_PROPERTY)?.let(::File)
+        ?: File(coverage.execDir.parentFile, TESTKIT_HOME_DIR)
+}
+
+/**
+ * Returns these arguments with the `-Dorg.gradle.jvmargs` argument that attaches
+ * the JaCoCo agent to the worker JVM appended, or the same arguments when TestKit
+ * coverage is not enabled.
+ *
+ * The agent appends to a single per-module [execution-data file][EXEC_FILE]; on
+ * worker daemon shutdown — which happens after the tests complete and before the
+ * coverage report task runs — the data is flushed to disk.
+ *
+ * The agent is passed on the command line rather than in a `gradle.properties` file
+ * in the TestKit directory, so that the directory carries nothing specific to a
+ * module and can be shared. The argument replaces the `org.gradle.jvmargs` the
+ * worker build would use otherwise, such as the one of the `gradle.properties` of
+ * the test project, or one passed earlier in these arguments.
+ */
+internal fun List<String>.withTestKitCoverage(): List<String> {
+    val coverage = CoverageSetup.fromSystemProperties() ?: return this
+    val execFile = File(coverage.execDir, EXEC_FILE)
+    // Forward slashes work on every platform and need no escaping.
+    val jvmArg = "-javaagent:${coverage.agentJar.invariantSeparatorsPath}=" +
+            "destfile=${execFile.invariantSeparatorsPath}," +
+            "append=true,dumponexit=true,output=file,jmx=false"
+    return this + "-Dorg.gradle.jvmargs=$jvmArg"
+}
+
+/**
+ * The TestKit coverage setup the consuming build passed to this test JVM.
+ *
+ * @property agentJar The JaCoCo agent JAR.
+ * @property execDir The directory for the execution data of the worker JVMs.
+ */
+private class CoverageSetup(val agentJar: File, val execDir: File) {
+
+    companion object {
+
+        /**
+         * Reads the setup from the system properties of this test JVM,
+         * or returns `null` when TestKit coverage is not enabled for it.
+         */
+        fun fromSystemProperties(): CoverageSetup? {
+            val agentJar = System.getProperty(AGENT_PROPERTY)
+            val execDir = System.getProperty(EXEC_DIR_PROPERTY)
+            if (agentJar == null || execDir == null) {
+                return null
+            }
+            return CoverageSetup(File(agentJar), File(execDir))
+        }
+    }
+}
 
 /**
  * The name of the system property carrying the absolute path to the JaCoCo
@@ -112,11 +146,31 @@ private const val EXEC_DIR_PROPERTY: String =
 private const val EXEC_FILE: String = "testkit.exec"
 
 /**
- * The name of the directory, placed next to the [execution-data directory][EXEC_DIR_PROPERTY],
- * that serves as the dedicated Gradle user home (the TestKit directory) for the
- * coverage-enabled worker builds.
+ * The name of the system property carrying the absolute path to the TestKit
+ * directory shared by the coverage-enabled worker builds of all modules.
  *
- * Reusing one TestKit directory per module lets a single TestKit daemon serve all
- * the test cases, keeping the agent attached with a stable `destfile`.
+ * Optional: when it is absent, each module gets its own [TESTKIT_HOME_DIR]. With a
+ * shared directory, the dependencies of the worker builds are downloaded, and the
+ * Gradle API JARs generated, once rather than once per module, and a CI cache can
+ * keep the directory between runs. Sharing is safe because the directory holds
+ * nothing specific to a module: [withTestKitCoverage] passes the agent on the
+ * command line, and the workers of each module, started with their own JVM
+ * arguments, get daemons of their own.
+ *
+ * The property takes effect only together with [AGENT_PROPERTY] and [EXEC_DIR_PROPERTY].
+ *
+ * Set by the `io.spine.gradle.testing.enableTestKitCoverage` extension in
+ * `config`'s `buildSrc`; keep the two values in sync.
+ */
+private const val TESTKIT_HOME_PROPERTY: String =
+    "io.spine.tools.gradle.testkit.coverage.home"
+
+/**
+ * The name of the directory, placed next to the [execution-data directory][EXEC_DIR_PROPERTY],
+ * that serves as the TestKit directory of the coverage-enabled worker builds when no
+ * [shared one][TESTKIT_HOME_PROPERTY] is set.
+ *
+ * Reusing one directory for all the test cases of a module lets a single TestKit
+ * daemon serve them.
  */
 private const val TESTKIT_HOME_DIR: String = "testkit-home"
