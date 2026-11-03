@@ -90,8 +90,7 @@ public class GradleProjectSetup internal constructor(
      * The shared TestKit directory [given][withSharedTestKitDirectory] explicitly,
      * or `null` if none was given.
      */
-    internal var sharedTestKitDir: File? = null
-        private set
+    private var sharedTestKitDir: File? = null
 
     /**
      * Determines whether the plugin under test classpath is defined and

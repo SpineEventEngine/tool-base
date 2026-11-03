@@ -49,8 +49,8 @@ internal fun defaultSharedTestKitDir(
  * @param environment Returns the value of the environment variable with the given name.
  */
 internal fun gradleUserHome(
-    property: (String) -> String? = System::getProperty,
-    environment: (String) -> String? = System::getenv
+    property: (String) -> String?,
+    environment: (String) -> String?
 ): File {
     val given = property(GRADLE_USER_HOME_PROPERTY).nonBlank()
         ?: environment(GRADLE_USER_HOME_VARIABLE).nonBlank()

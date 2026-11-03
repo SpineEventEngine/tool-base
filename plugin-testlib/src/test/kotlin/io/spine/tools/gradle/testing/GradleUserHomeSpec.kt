@@ -15,10 +15,12 @@
 package io.spine.tools.gradle.testing
 
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import java.io.File
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.condition.EnabledOnOs
 import org.junit.jupiter.api.condition.OS
 
@@ -60,6 +62,15 @@ internal class GradleUserHomeSpec {
         )
 
         home shouldBe File("/home/me", ".gradle")
+    }
+
+    @Test
+    fun `fail when the home directory of the user is not known`() {
+        val error = assertThrows<IllegalStateException> {
+            gradleUserHome(systemProperties(), environment())
+        }
+
+        error.message shouldContain "user.home"
     }
 
     @Test
