@@ -56,12 +56,12 @@ public object TestKitCoverage {
      * directory shared by the coverage-enabled worker builds of all modules.
      *
      * Optional: when it is absent, each module gets a TestKit directory of its own.
-     * With a shared directory, the work the worker builds keep in their Gradle user
-     * home, chiefly instrumenting the JARs on the classpath of the plugin under test,
-     * is done once rather than once per module, and a CI cache can keep its results
-     * between runs. Sharing is safe because the directory holds nothing specific to
-     * a module: the agent is passed on the command line, and the workers of each
-     * module, started with their own JVM arguments, get daemons of their own.
+     * With a shared directory, the worker builds create the contents of their Gradle
+     * user home, mostly Gradle's instrumented copies of the JARs on the classpath of
+     * the plugin under test, once rather than once per module, and a CI cache can
+     * keep them between runs. Sharing is safe because the directory holds nothing
+     * specific to a module: the agent is passed on the command line, and the workers
+     * of each module, started with their own JVM arguments, get daemons of their own.
      *
      * The property takes effect only together with [AGENT_PROPERTY] and [EXEC_DIR_PROPERTY].
      */

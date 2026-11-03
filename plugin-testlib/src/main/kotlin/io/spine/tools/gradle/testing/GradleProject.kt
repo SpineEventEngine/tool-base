@@ -54,10 +54,10 @@ import org.gradle.testkit.runner.UnexpectedBuildFailure
  *
  *  - [TestKitCoverage.TESTKIT_HOME_PROPERTY] — the TestKit directory (the Gradle user
  *    home of the worker builds) to share among the test JVMs of all modules. Sharing
- *    it means that the work the worker builds keep there, chiefly instrumenting the
- *    JARs on the classpath of the plugin under test, is done once rather than once
- *    per module, and a CI cache can keep its results between runs. Without the
- *    property, each module gets a directory of its own. A project set up with
+ *    it means that the worker builds create its contents, mostly Gradle's
+ *    instrumented copies of the JARs on the classpath of the plugin under test, once
+ *    rather than once per module, and a CI cache can keep them between runs. Without
+ *    the property, each module gets a directory of its own. A project set up with
  *    [GradleProjectSetup.withSharedTestKitDirectory] keeps using the directory it chose.
  *
  * The snippet below is a self-contained Gradle (Kotlin DSL) setup that a module
