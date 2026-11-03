@@ -34,19 +34,22 @@ public object TestKitCoverage {
     // depend on this library.
 
     /**
+     * The prefix shared by the names of the properties.
+     */
+    private const val PREFIX: String = "io.spine.tools.gradle.testkit.coverage"
+
+    /**
      * The name of the system property carrying the absolute path to the JaCoCo
      * agent JAR to attach to a Gradle TestKit worker JVM. The JAR is the artifact
      * `org.jacoco:org.jacoco.agent:<version>:runtime`.
      */
-    public const val AGENT_PROPERTY: String =
-        "io.spine.tools.gradle.testkit.coverage.agent"
+    public const val AGENT_PROPERTY: String = "$PREFIX.agent"
 
     /**
      * The name of the system property carrying the absolute path to the directory
      * where the TestKit worker should write its JaCoCo execution data.
      */
-    public const val EXEC_DIR_PROPERTY: String =
-        "io.spine.tools.gradle.testkit.coverage.execDir"
+    public const val EXEC_DIR_PROPERTY: String = "$PREFIX.execDir"
 
     /**
      * The name of the system property carrying the absolute path to the TestKit
@@ -62,8 +65,7 @@ public object TestKitCoverage {
      *
      * The property takes effect only together with [AGENT_PROPERTY] and [EXEC_DIR_PROPERTY].
      */
-    public const val TESTKIT_HOME_PROPERTY: String =
-        "io.spine.tools.gradle.testkit.coverage.home"
+    public const val TESTKIT_HOME_PROPERTY: String = "$PREFIX.home"
 }
 
 /**
