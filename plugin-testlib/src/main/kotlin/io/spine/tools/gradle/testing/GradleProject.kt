@@ -1,27 +1,15 @@
 /*
- * Copyright 2026, TeamDev. All rights reserved.
+ * Copyright 2026 CodeMatters, Lda.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
  * https://www.apache.org/licenses/LICENSE-2.0
  *
- * Redistribution and use in source and/or binary forms, with or without
- * modification, must retain the above copyright notice and the following
- * disclaimer.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 
 package io.spine.tools.gradle.testing
@@ -48,23 +36,25 @@ import org.gradle.testkit.runner.UnexpectedBuildFailure
  * Plugin code exercised through Gradle TestKit runs in a separate worker JVM, which
  * JaCoCo/Kover do not instrument by default, so that out-of-process execution is
  * otherwise not credited to coverage. This library attaches the JaCoCo agent to the
- * worker JVM automatically — for projects run via this class as well as via
- * [runGradleBuild] — but only when the test JVM is started with two system
- * properties, which the consuming build is responsible for setting:
+ * worker JVM automatically — for builds started by [executeTask] and [executeAndFail]
+ * of this class as well as by [runGradleBuild] — but only when the test JVM is started
+ * with two system properties, which the consuming build is responsible for setting:
  *
- *  - `io.spine.tools.gradle.testkit.coverage.agent` — the absolute path to the
- *    standalone JaCoCo agent JAR, that is, the artifact
- *    `org.jacoco:org.jacoco.agent:<version>:runtime`.
- *  - `io.spine.tools.gradle.testkit.coverage.execDir` — the directory into which the
- *    worker should write its execution data. The harness creates a single
- *    per-module `testkit.exec` file inside it.
+ *  - [TestKitCoverage.AGENT_PROPERTY] — the absolute path to the standalone JaCoCo
+ *    agent JAR, that is, the artifact `org.jacoco:org.jacoco.agent:<version>:runtime`.
+ *  - [TestKitCoverage.EXEC_DIR_PROPERTY] — the directory into which the worker should
+ *    write its execution data. The harness creates a single per-module `testkit.exec`
+ *    file inside it.
  *
- * When the properties are absent the harness is a no-op, so ordinary runs and
- * consumers that do not opt in are unaffected.
+ * When either of these properties is absent, the harness is a no-op, so ordinary
+ * runs and consumers that do not opt in are unaffected. A build started from
+ * [runner] directly gets no agent.
  *
  * The snippet below is a self-contained Gradle (Kotlin DSL) setup that a module
  * running TestKit-based tests can copy into its `build.gradle.kts`. Pin the agent
- * to the same JaCoCo version your coverage tooling uses.
+ * to the same JaCoCo version your coverage tooling uses. The snippet spells out the
+ * property names held by [TestKitCoverage], because a build script does not see
+ * the classes of this library.
  *
  * ```kotlin
  * import java.util.concurrent.atomic.AtomicBoolean
@@ -116,6 +106,16 @@ import org.gradle.testkit.runner.UnexpectedBuildFailure
  * `config`'s `buildSrc`, and the produced files are merged into Kover reports by
  * `KoverConfig`. Consumers outside that setup can use the snippet above instead.
  *
+ * ## TestKit directory
+ *
+ * The TestKit directory is the Gradle user home of the worker builds. A project set
+ * up with [GradleProjectSetup.withSharedTestKitDirectory] uses the directory given
+ * there, or `caches/spine-testkit` under the Gradle user home if given none. Other
+ * builds started by this class and by [runGradleBuild] use the directory TestKit
+ * picks: the one named by Gradle's `org.gradle.testkit.dir` system property of the
+ * test JVM, or one under the temporary directory of the `Test` task without it.
+ * This choice is independent of the coverage setup above.
+ *
  * @see GradleProjectSetup
  */
 public class GradleProject internal constructor(setup: GradleProjectSetup) {
@@ -139,20 +139,17 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
 
     /**
      * The runner for executing tasks.
+     *
+     * A build started from the runner directly, rather than by [executeTask] or
+     * [executeAndFail], runs without the TestKit coverage agent.
      */
     public val runner: GradleRunner by lazy {
         val runner = GradleRunner.create()
             .withProjectDir(setup.projectDir)
             .withDebug(setup.debug)
-        val sharedTestKitDir = if (setup.useSharedTestKit) {
-            RootProject.testKitTempDir().toFile().apply { mkdirs() }
-        } else {
-            null
+        setup.testKitDir()?.let { dir ->
+            runner.withTestKitDir(dir.apply { mkdirs() })
         }
-        if (sharedTestKitDir != null) {
-            runner.withTestKitDir(sharedTestKitDir)
-        }
-        runner.enableTestKitCoverage(sharedTestKitDir)
         runner
     }
 
@@ -264,7 +261,7 @@ public class GradleProject internal constructor(setup: GradleProjectSetup) {
 
     private fun prepareRun(taskName: TaskName): GradleRunner {
         val args = arguments.forTask(taskName)
-        return runner.withArguments(args)
+        return runner.withArguments(args.withTestKitCoverage())
     }
 
     /**
